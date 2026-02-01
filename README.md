@@ -1,8 +1,8 @@
 # Type and Learn
 
-## MonkeyType for learning languages
+### MonkeyType for learning languages
 
-### Contributing
+## Contributing
 
 1. Fork the repository
 2. Clone your fork:
