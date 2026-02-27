@@ -12,3 +12,5 @@
 4. Commit and push:
    git push origin feature-name
 5. Open a Pull Request
+
+For now use Gemini with your own API key in .env file. Future plans include adding support for other LLMs and allowing users to choose their preferred model.

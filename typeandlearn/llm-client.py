@@ -6,7 +6,7 @@ import os
 load_dotenv()
 
 # Set the file path and prompt path
-file_path = "./test_files/text.md"
+file_path = "./test_files/freq_table_prompt.md"
 prompt_path = "./test_files/prompt.md"
 
 # Set the model name
@@ -24,9 +24,10 @@ client = genai.Client(api_key=os.getenv("GOOGLE_GENAI_API_KEY"))
 
 # Generate text using the Gemini model
 try:
+    print("Generating content...")
     response = client.models.generate_content(
         model=model,
-        contents=[input_text, prompt],
+        contents=[prompt, input_text],
     )
     print(response.text)
     exit(0)
