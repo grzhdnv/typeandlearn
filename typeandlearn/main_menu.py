@@ -8,14 +8,14 @@ locale.setlocale(locale.LC_ALL, "")
 def process(file_path):
     """
     Placeholder for your processing logic.
-    Returns a dictionary of {ID: "Sentence"}.
+    Returns a list of sentences.
     """
     # Example output:
-    return {
-        1: "The cat sat on the warm windowsill and watched the birds outside.",
-        2: "She decided to learn a new language before her trip abroad.",
-        3: "The old library smelled of dust and forgotten stories.",
-    }
+    return [
+        "The cat sat on the warm windowsill and watched the birds outside.",
+        "She decided to learn a new language before her trip abroad.",
+        "The old library smelled of dust and forgotten stories.",
+    ]
 
 
 def run_sentence_session(stdscr, target_text, current_num, total_num):
@@ -53,12 +53,18 @@ def run_sentence_session(stdscr, target_text, current_num, total_num):
         stdscr.refresh()
 
         # Check for completion of the current sentence
-        if user_input == target_text:
+        if len(user_input) == len(target_text):
+            mistakes = sum(
+                1 for i, char in enumerate(user_input) if char != target_text[i]
+            )
+            result_color = (
+                curses.color_pair(1) if mistakes == 0 else curses.color_pair(2)
+            )
             stdscr.addstr(
                 7,
                 2,
-                "Perfect! Press any key for the next sentence...",
-                curses.color_pair(1),
+                f"Done! Mistakes: {mistakes}. Press any key for the next sentence...",
+                result_color,
             )
             stdscr.getch()
             return True
@@ -97,12 +103,12 @@ def main(stdscr):
     path = stdscr.getstr(4, 4).decode("utf-8").strip().strip("'\"")
     curses.noecho()
 
-    # 2. Get the Dictionary from your process function
+    # 2. Get the sentence list from your process function
     training_data = process(path)
     total = len(training_data)
 
-    # 3. Loop through the dictionary
-    for index, (key_id, sentence) in enumerate(training_data.items(), 1):
+    # 3. Loop through the sentence list
+    for index, sentence in enumerate(training_data, 1):
         # Run the typing logic for each sentence
         continue_session = run_sentence_session(stdscr, sentence, index, total)
 
