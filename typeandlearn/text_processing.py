@@ -6,7 +6,10 @@ import json
 
 import nltk
 import pandas as pd
-from nltk.tokenize import sent_tokenize
+from nltk.corpus import wordnet
+from nltk.stem import WordNetLemmatizer
+from nltk.tag import pos_tag
+from nltk.tokenize import sent_tokenize, word_tokenize
 
 nltk.download("punkt")
 nltk.download("punkt_tab")
@@ -54,7 +57,7 @@ def lemmatized_frequency_distribution(text):
         else:
             lemmatized_str.append(
                 lemmatizer.lemmatize(word, get_wordnet_pos(tag)))
-    return pd.DataFrame(nltk.FreqDist(lemmatized_str), columns=['Word', 'Frequency'])
+    return pd.DataFrame(nltk.FreqDist(lemmatized_str).items(), columns=['Word', 'Frequency'])
 
 def clean_freq_dist(freq_dist):
     """
