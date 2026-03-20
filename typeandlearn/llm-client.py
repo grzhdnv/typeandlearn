@@ -30,9 +30,19 @@ try:
         contents=[prompt, input_text],
     )
     print(response.text)
-    exit(0)
 # Handle any exceptions that may occur during the API call
 # Common exceptions include 503 UNAVAILABLE and 429 TOO_MANY_REQUESTS
 except Exception as e:
     print(e)
-    exit(1)
+
+
+def translate_to_english(text):
+    try:
+        response = client.models.generate_content(
+            model=model,
+            contents=[f"Translate the following text to English:\n\n{text}"],
+        )
+        return response.text
+    except Exception as e:
+        print(f"Error during translation: {e}")
+        return None
