@@ -2,6 +2,14 @@
 
 ### MonkeyType for learning languages
 
+### SolidJS Frontend
+Run the following to start the frontend:
+```bash
+cd frontend/typeandlearn
+npm install
+npm run dev
+```
+
 ## Contributing
 
 1. Fork the repository
