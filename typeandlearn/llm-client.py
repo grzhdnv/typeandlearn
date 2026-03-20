@@ -36,11 +36,11 @@ except Exception as e:
     print(e)
 
 
-def translate_to_english(text):
+def translate_to_english(text, prompt="Translate the given text to English."):
     try:
         response = client.models.generate_content(
             model=model,
-            contents=[f"Translate the following text to English:\n\n{text}"],
+            contents=[prompt, text],
         )
         return response.text
     except Exception as e:

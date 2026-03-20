@@ -1,2 +1,2 @@
-Translate the following text to English:
+Translate the given text to English. 
 
