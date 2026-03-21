@@ -2,23 +2,36 @@
 
 ### MonkeyType for learning languages
 
-### SolidJS Frontend
-Run the following to start the frontend:
+## Run locally
+
+Start the backend and frontend in separate terminals.
+
+### 1. Start backend (FastAPI)
+
+From the project root:
+
 ```bash
-cd frontend/typeandlearn
+source .venv/bin/activate
+fastapi dev backend/main.py
+```
+
+Backend runs at `http://127.0.0.1:8000`.
+
+### 2. Start frontend (SolidJS + Vite)
+
+In a second terminal:
+
+```bash
+cd frontend
 npm install
 npm run dev
 ```
 
-## Contributing
+Frontend runs at `http://localhost:3000`.
 
-1. Fork the repository
-2. Clone your fork:
-   git clone https://github.com/YOUR-USERNAME/typeandlearn.git
-3. Create a branch:
-   git checkout -b feature-name
-4. Commit and push:
-   git push origin feature-name
-5. Open a Pull Request
+The frontend is configured to proxy `/api/*` requests to the backend during development.
 
-For now use Gemini with your own API key in .env file. Future plans include adding support for other LLMs and allowing users to choose their preferred model.
+## TODO
+
+- [ ] Add database to store translations and user data.
+- [ ] Implement user authentication.
