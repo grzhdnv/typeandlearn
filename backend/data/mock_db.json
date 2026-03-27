@@ -1,0 +1,61 @@
+{
+  "a1b2c3d4-1234-5678-90ab-cdef12345678": {
+    "id": "a1b2c3d4-1234-5678-90ab-cdef12345678",
+    "title": "Die Verwandlung - Kapitel 1",
+    "original_paragraphs": [
+      {
+        "paragraph_index": 0,
+        "sentences": [
+          {
+            "text": "Eines Morgens wachte Gregor Samsa aus unruhigen Träumen auf.",
+            "hints": {
+              "Eines": "One",
+              "Morgens": "morning",
+              "wachte": "woke"
+            }
+          },
+          {
+            "text": "Er fand sich in seinem Bett zu einem ungeheuren Ungeziefer verwandelt.",
+            "hints": {
+              "Er": "He",
+              "fand": "found",
+              "sich": "himself"
+            }
+          }
+        ]
+      },
+      {
+        "paragraph_index": 1,
+        "sentences": [
+          {
+            "text": "Was ist mit mir geschehen?, dachte er.",
+            "hints": {
+              "Was": "What",
+              "ist": "is",
+              "mit": "with",
+              "mir": "me"
+            }
+          },
+          {
+            "text": "Es war kein Traum.",
+            "hints": {
+              "Es": "It",
+              "war": "was",
+              "kein": "no",
+              "Traum": "dream"
+            }
+          }
+        ]
+      }
+    ],
+    "practice_sentences": [
+      {
+        "text": "Gregor wachte in seinem Bett auf.",
+        "hints": {
+          "Gregor": "Gregor",
+          "wachte": "woke"
+        }
+      }
+    ]
+  }
+}

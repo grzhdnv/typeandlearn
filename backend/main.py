@@ -1,19 +1,21 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 
 app = FastAPI()
 
 
-@app.get("/")
-def read_root():
-    return {"message": "Hello World"}
+@app.get("/texts")
+def get_texts():
+    """Endpoint to retrieve all texts."""
+    return {"message": "Here is all the texts data!"}
 
 
-@app.get("/translation")
-def read_translation():
-    return {"message": "Translation endpoint"}
+@app.get("/texts/{text_id}")
+def get_text(text_id: str):
+    """Endpoint to retrieve text data by ID."""
+    return {"message": f"Data for text {text_id}"}
 
 
-# POST: to create data.
-# GET: to read data.
-# PUT: to update data.
-# DELETE: to delete data.
+@app.post("/texts")
+def create_text(text: dict):
+    """Endpoint to add new text."""
+    return {"message": "Text created successfully!", "text": text}
