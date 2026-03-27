@@ -1,0 +1,174 @@
+[{
+    "id": "a1b2c3d4-1234-5678-90ab-cdef12345678",
+    "title": "Die Verwandlung - Kapitel 1",
+    "original_paragraphs": [
+      {
+        "paragraph_index": 0,
+        "sentences": [
+          {
+            "text": "Eines Morgens wachte Gregor Samsa aus unruhigen Träumen auf.",
+            "hints": {
+              "Eines": "One",
+              "Morgens": "morning",
+              "wachte": "woke"
+            }
+          },
+          {
+            "text": "Er fand sich in seinem Bett zu einem ungeheuren Ungeziefer verwandelt.",
+            "hints": {
+              "Er": "He",
+              "fand": "found",
+              "sich": "himself"
+            }
+          }
+        ]
+      },
+      {
+        "paragraph_index": 1,
+        "sentences": [
+          {
+            "text": "Was ist mit mir geschehen?, dachte er.",
+            "hints": {
+              "Was": "What",
+              "ist": "is",
+              "mit": "with",
+              "mir": "me"
+            }
+          },
+          {
+            "text": "Es war kein Traum.",
+            "hints": {
+              "Es": "It",
+              "war": "was",
+              "kein": "no",
+              "Traum": "dream"
+            }
+          }
+        ]
+      }
+    ],
+    "practice_sentences": [
+      {
+        "text": "Gregor wachte in seinem Bett auf.",
+        "hints": {
+          "Gregor": "Gregor",
+          "wachte": "woke"
+        }
+      }
+    ]
+  },
+  {
+    "id": "b7e9f210-2233-4455-8899-aabbccddeeff",
+    "title": "Der Besuch - Kapitel 1",
+    "original_paragraphs": [
+      {
+        "paragraph_index": 0,
+        "sentences": [
+          {
+            "text": "Am Abend klopfte jemand leise an die Tür.",
+            "hints": {
+              "Am": "At the",
+              "Abend": "evening",
+              "klopfte": "knocked"
+            }
+          },
+          {
+            "text": "Marta legte ihr Buch zur Seite und lauschte.",
+            "hints": {
+              "Marta": "Marta",
+              "Buch": "book",
+              "lauschte": "listened"
+            }
+          }
+        ]
+      },
+      {
+        "paragraph_index": 1,
+        "sentences": [
+          {
+            "text": "Draußen stand ein Fremder mit nassem Mantel.",
+            "hints": {
+              "Draußen": "Outside",
+              "stand": "stood",
+              "Fremder": "stranger"
+            }
+          },
+          {
+            "text": "Er fragte nach dem alten Haus am Fluss.",
+            "hints": {
+              "Er": "He",
+              "fragte": "asked",
+              "Fluss": "river"
+            }
+          }
+        ]
+      }
+    ],
+    "practice_sentences": [
+      {
+        "text": "Jemand klopfte an die Tür.",
+        "hints": {
+          "Jemand": "someone",
+          "Tür": "door"
+        }
+      }
+    ]
+  },
+  {
+    "id": "c3d4e5f6-7788-9900-a1b2-c3d4e5f67890",
+    "title": "Ein Wintermorgen - Kapitel 1",
+    "original_paragraphs": [
+      {
+        "paragraph_index": 0,
+        "sentences": [
+          {
+            "text": "Die Straßen waren noch still unter frischem Schnee.",
+            "hints": {
+              "Straßen": "streets",
+              "still": "quiet",
+              "Schnee": "snow"
+            }
+          },
+          {
+            "text": "Lena zog den Schal enger um den Hals.",
+            "hints": {
+              "Lena": "Lena",
+              "Schal": "scarf",
+              "Hals": "neck"
+            }
+          }
+        ]
+      },
+      {
+        "paragraph_index": 1,
+        "sentences": [
+          {
+            "text": "Aus der Bäckerei kam der Duft von warmem Brot.",
+            "hints": {
+              "Bäckerei": "bakery",
+              "Duft": "scent",
+              "Brot": "bread"
+            }
+          },
+          {
+            "text": "Sie lächelte und beschleunigte ihre Schritte.",
+            "hints": {
+              "Sie": "She",
+              "lächelte": "smiled",
+              "Schritte": "steps"
+            }
+          }
+        ]
+      }
+    ],
+    "practice_sentences": [
+      {
+        "text": "Lena zog den Schal enger.",
+        "hints": {
+          "Lena": "Lena",
+          "Schal": "scarf"
+        }
+      }
+    ]
+  }
+]

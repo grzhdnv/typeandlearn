@@ -1,20 +1,26 @@
 # To run server: fastapi dev backend/main.py
 
 from fastapi import FastAPI, HTTPException
+from backend.storage import load_data, save_data
 
 app = FastAPI()
 
 
 @app.get("/texts")
 def get_texts():
-    """Endpoint to retrieve all texts."""
-    return {"message": "Here is all the texts data!"}
+    """Retrieve all texts."""
+    data: list[dict] = load_data()
+    return {"message": "Here is all the texts data!", "data": data}
 
 
 @app.get("/texts/{text_id}")
 def get_text(text_id: str):
-    """Endpoint to retrieve text data by ID."""
-    return {"message": f"Data for text {text_id}"}
+    """Retrieve text data by ID."""
+    data: list[dict] = load_data()
+    for text in data:
+        if text["id"] == text_id:
+            return {"message": "Here is the text data!", "data": text}
+    raise HTTPException(status_code=404, detail="Text not found")
 
 
 @app.post("/texts")
