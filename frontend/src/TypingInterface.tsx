@@ -1,11 +1,18 @@
-import { type Component, For, createSignal, onMount, onCleanup } from 'solid-js';
+import { type Component, For, createSignal, createEffect, onMount, onCleanup } from 'solid-js';
 
 interface TypingInterfaceProps {
   targetText: string;
+  onComplete?: () => void;
 }
 
 export const TypingInterface: Component<TypingInterfaceProps> = (props) => {
   const [typed, setTyped] = createSignal('');
+
+  // Reset typed text whenever the target sentence changes
+  createEffect(() => {
+    props.targetText; // track dependency
+    setTyped('');
+  });
 
   const handleKeyDown = (e: KeyboardEvent) => {
     if (e.ctrlKey || e.metaKey || e.altKey) return;
@@ -17,7 +24,15 @@ export const TypingInterface: Component<TypingInterfaceProps> = (props) => {
       setTyped((prev) => {
         // Prevent typing beyond the length of the text
         if (prev.length < props.targetText.length) {
-          return prev + e.key;
+          const next = prev + e.key;
+
+          // If the sentence is now fully typed and all characters match, advance
+          if (next.length === props.targetText.length && next === props.targetText) {
+            // Use setTimeout so the final character renders before advancing
+            setTimeout(() => props.onComplete?.(), 300);
+          }
+
+          return next;
         }
         return prev;
       });

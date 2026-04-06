@@ -1,15 +1,22 @@
-import { type Component } from 'solid-js';
+import { type Component, createSignal } from 'solid-js';
 import { fetchTexts } from './fetchText';
 import { TypingInterface } from './TypingInterface';
 
 const App: Component = () => {
   const texts = fetchTexts();
+  const [sentenceIndex, setSentenceIndex] = createSignal(0);
 
-  // Starting with just the first sentence
-  const targetText = texts[0]
+  const handleSentenceComplete = () => {
+    if (sentenceIndex() < texts.length - 1) {
+      setSentenceIndex((i) => i + 1);
+    }
+  };
 
   return (
-    <TypingInterface targetText={targetText} />
+    <TypingInterface
+      targetText={texts[sentenceIndex()]}
+      onComplete={handleSentenceComplete}
+    />
   );
 };
 
