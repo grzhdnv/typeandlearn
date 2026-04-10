@@ -1,27 +1,56 @@
-import { type Component, createSignal } from "solid-js";
-import { fetchTexts } from "./fetchText";
+import { type Component, createSignal, Show } from "solid-js";
 import { TypingInterface } from "./TypingInterface";
 
 const App: Component = () => {
-  const texts = fetchTexts();
-  const [sentenceIndex, setSentenceIndex] = createSignal(0);
+  const [activeTab, setActiveTab] = createSignal<"original" | "generated">(
+    "original",
+  );
 
-  const handleSentenceComplete = () => {
-    if (sentenceIndex() < texts.length - 1) {
-      setSentenceIndex((i) => i + 1);
+  const [customText, setCustomText] = createSignal("");
+
+  const originalSentences = () =>
+    customText()
+      .split("\n")
+      .filter((s) => s.trim() !== "");
+  const generatedSentences = [
+    "Placeholder generated sentence one.",
+    "Placeholder generated sentence two.",
+  ];
+
+  const [originalIndex, setOriginalIndex] = createSignal(0);
+  const [generatedIndex, setGeneratedIndex] = createSignal(0);
+
+  const handleOriginalComplete = () => {
+    if (originalIndex() < originalSentences().length - 1) {
+      setOriginalIndex((i) => i + 1);
     }
   };
 
-  const [customText, setCustomText] = createSignal('');
+  const handleGeneratedComplete = () => {
+    if (generatedIndex() < generatedSentences.length - 1) {
+      setGeneratedIndex((i) => i + 1);
+    }
+  };
 
   const handleTextInput = (e: InputEvent) => {
     const textarea = e.currentTarget as HTMLTextAreaElement;
 
     // When text is inputted, adjust textarea size to match
-    textarea.style.height = 'auto';
-    textarea.style.height = textarea.scrollHeight + 'px'
-    setCustomText(textarea.value)
+    textarea.style.height = "auto";
+    textarea.style.height = textarea.scrollHeight + "px";
+    setCustomText(textarea.value);
   };
+
+  // Style for tabs, specific to each of the two
+  const tabButtonStyle = (tab: "original" | "generated") => ({
+    "font-size": "18px",
+    padding: "8px 16px",
+    "font-family": "monospace",
+    cursor: "pointer",
+    border: "1px solid #ccc",
+    "background-color": activeTab() === tab ? "#ddd" : "transparent",
+    "font-weight": activeTab() === tab ? "bold" : "normal",
+  });
 
   return (
     <div>
@@ -34,13 +63,37 @@ const App: Component = () => {
           width: "100%",
           resize: "none",
           overflow: "hidden",
-          "min-height": "40px"
+          "min-height": "40px",
         }}
       />
-      <TypingInterface
-        targetText={texts[sentenceIndex()]}
-        onComplete={handleSentenceComplete}
-      />
+      <div style={{ display: "flex", gap: "8px", padding: "20px 20px 0 20px" }}>
+        <button
+          style={tabButtonStyle("original")}
+          onClick={() => setActiveTab("original")}
+        >
+          Original
+        </button>
+        <button
+          style={tabButtonStyle("generated")}
+          onClick={() => setActiveTab("generated")}
+        >
+          Generated
+        </button>
+      </div>
+      <Show
+        when={activeTab() === "original"}
+        fallback={
+          <TypingInterface
+            targetText={generatedSentences[generatedIndex()]}
+            onComplete={handleGeneratedComplete}
+          />
+        }
+      >
+        <TypingInterface
+          targetText={originalSentences()[originalIndex()] ?? ""}
+          onComplete={handleOriginalComplete}
+        />
+      </Show>
     </div>
   );
 };
