@@ -15,6 +15,7 @@ export const TypingInterface: Component<TypingInterfaceProps> = (props) => {
   });
 
   const handleKeyDown = (e: KeyboardEvent) => {
+    if (document.activeElement?.tagName === 'TEXTAREA') return;
     if (e.ctrlKey || e.metaKey || e.altKey) return;
 
     // If backspace, remove last character from typed
