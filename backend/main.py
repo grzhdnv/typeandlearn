@@ -2,6 +2,7 @@
 
 from fastapi import FastAPI, HTTPException
 from backend.storage import load_data, save_data
+from backend.llm_client import text_to_db
 
 app = FastAPI()
 
@@ -24,6 +25,10 @@ def get_text(text_id: str):
 
 
 @app.post("/texts")
-def create_text(text: dict):
+def upload_text(text: str):
     """Endpoint to add new text."""
-    return {"message": "Text created successfully!", "text": text}
+    data = text_to_db(text).dict()  # Convert Pydantic model to dict
+    # Save the new text data to the JSON file
+    save_data(data)
+
+    return {"text": text}

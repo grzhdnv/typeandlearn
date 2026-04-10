@@ -1,0 +1,243 @@
+{
+  "title": "Vorwort zur neuen Auflage",
+  "original_paragraphs": [
+    {
+      "index": 0,
+      "sentences": [
+        {
+          "index": 0,
+          "text": "Die vorliegende Auflage zeigt ihrer Vorgängerin gegenüber ein ziemlich verändertes Gesicht.",
+          "translation": "The present edition shows a rather changed face compared to its predecessor.",
+          "translation_hints": {
+            "Die": "The",
+            "vorliegende": "present",
+            "Auflage": "edition",
+            "zeigt": "shows",
+            "ihrer": "its",
+            "Vorgängerin": "predecessor",
+            "gegenüber": "compared to",
+            "ein": "a",
+            "ziemlich": "rather",
+            "verändertes": "changed",
+            "Gesicht": "face"
+          }
+        },
+        {
+          "index": 1,
+          "text": "Haben doch gerade die letzten Jahre besonders wichtige neue Arbeiten über Schumann gebracht, die dem Bilde seines Lebens, sowohl als seines Schaffens neue Seiten abgewonnen haben.",
+          "translation": "After all, the last few years in particular have brought important new works about Schumann, which have gained new aspects of the image of his life as well as his work.",
+          "translation_hints": {
+            "Haben": "have",
+            "doch": "after all",
+            "gerade": "especially",
+            "die": "the",
+            "letzten": "last",
+            "Jahre": "years",
+            "besonders": "particularly",
+            "wichtige": "important",
+            "neue": "new",
+            "Arbeiten": "works",
+            "über": "about",
+            "Schumann": "Schumann",
+            "gebracht": "brought",
+            "dem": "the",
+            "Bilde": "image",
+            "seines": "his",
+            "Lebens": "life",
+            "sowohl": "as well",
+            "als": "as",
+            "Schaffens": "work/creation",
+            "Seiten": "aspects/sides",
+            "abgewonnen": "gained/extracted"
+          }
+        },
+        {
+          "index": 2,
+          "text": "Auch dem Verfasser selbst sind in den letzten sechs Jahren so manche Lücken in den bisherigen Forschungen über Schumann zum Bewusstsein gekommen, die vor allem die historische und ästhetische Seite betreffen.",
+          "translation": "Also, the author himself has become aware of many gaps in the previous research on Schumann over the last six years, which primarily concern the historical and aesthetic aspects.",
+          "translation_hints": {
+            "Auch": "Also",
+            "dem": "the",
+            "Verfasser": "author",
+            "selbst": "himself",
+            "sind": "have",
+            "in": "in",
+            "den": "the",
+            "letzten": "last",
+            "sechs": "six",
+            "Jahren": "years",
+            "manche": "many",
+            "Lücken": "gaps",
+            "bisherigen": "previous",
+            "Forschungen": "research",
+            "Bewusstsein": "awareness",
+            "gekommen": "come",
+            "die": "which",
+            "vor": "above",
+            "allem": "all",
+            "historische": "historical",
+            "ästhetische": "aesthetic",
+            "Seite": "aspect/side",
+            "betreffen": "concern"
+          }
+        }
+      ]
+    },
+    {
+      "index": 1,
+      "sentences": [
+        {
+          "index": 0,
+          "text": "Daraus ergab sich zunächst die Notwendigkeit eines Versuchs, einmal Schumanns gesamte historische Stellung, sein Verhältnis zu seinen Vorgängern und Zeitgenossen, und zwar nicht allein den Musikern, sondern auch den Dichtern, im Zusammenhang darzustellen und so die gesamten kulturellen Grundlagen aufzudecken, denen diese einzigartige Kunst entstammt.",
+          "translation": "This resulted first of all in the necessity of an attempt to present Schumann's entire historical position, his relationship to his predecessors and contemporaries – and indeed not only to musicians but also to poets – in context, and thus to uncover the entire cultural foundations from which this unique art originates.",
+          "translation_hints": {
+            "Daraus": "From this",
+            "ergab": "resulted",
+            "sich": "itself",
+            "zunächst": "firstly",
+            "Notwendigkeit": "necessity",
+            "Versuchs": "attempt",
+            "gesamte": "entire",
+            "Stellung": "position",
+            "Verhältnis": "relationship",
+            "Vorgängern": "predecessors",
+            "Zeitgenossen": "contemporaries",
+            "allein": "only",
+            "Musikern": "musicians",
+            "sondern": "but",
+            "Dichtern": "poets",
+            "Zusammenhang": "context",
+            "darzustellen": "to present",
+            "kulturellen": "cultural",
+            "Grundlagen": "foundations",
+            "aufzudecken": "to uncover",
+            "einzigartige": "unique",
+            "Kunst": "art",
+            "entstammt": "originates"
+          }
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "sentences": [
+        {
+          "index": 0,
+          "text": "Dieser erste Schritt aber zog alsbald weitere nach sich.",
+          "translation": "This first step, however, soon led to further ones.",
+          "translation_hints": {
+            "Dieser": "This",
+            "erste": "first",
+            "Schritt": "step",
+            "aber": "however",
+            "zog": "drew/led",
+            "alsbald": "soon",
+            "weitere": "further",
+            "nach": "after",
+            "sich": "itself"
+          }
+        },
+        {
+          "index": 1,
+          "text": "Vor allem wurde der Abschnitt über die Klaviermusik einer vollständigen Neugestaltung unterworfen, aber auch die Abschnitte über das Lied, die Chor-, Kammer- und Orchestermusik haben mehr oder minder durchgreifende Aenderungen erfahren.",
+          "translation": "Above all, the section on piano music was subjected to a complete redesign, but the sections on song, choral, chamber, and orchestral music have also undergone more or less radical changes.",
+          "translation_hints": {
+            "Abschnitt": "section",
+            "Klaviermusik": "piano music",
+            "vollständigen": "complete",
+            "Neugestaltung": "redesign",
+            "unterworfen": "subjected",
+            "Lied": "song",
+            "Chormusik": "choral music",
+            "Kammermusik": "chamber music",
+            "Orchestermusik": "orchestral music",
+            "mehr": "more",
+            "minder": "less",
+            "durchgreifende": "radical/thorough",
+            "Aenderungen": "changes",
+            "erfahren": "experienced/undergone"
+          }
+        },
+        {
+          "index": 2,
+          "text": "Aeussere Anlage und Zweck des Büchleins sind dagegen dieselben geblieben.",
+          "translation": "The external layout and purpose of the booklet, on the other hand, have remained the same.",
+          "translation_hints": {
+            "Aeussere": "External",
+            "Anlage": "layout",
+            "Zweck": "purpose",
+            "Büchleins": "booklet",
+            "dagegen": "on the other hand",
+            "dieselben": "the same",
+            "geblieben": "remained"
+          }
+        },
+        {
+          "index": 3,
+          "text": "Auch in seiner neuen Gestalt will es sein Scherflein beitragen zum Verständnis Schumanns, des Menschen und des Musikers, und seines Zusammenhangs mit den Strömungen seiner Zeit.",
+          "translation": "Even in its new form, it aims to make its small contribution to the understanding of Schumann, the man and the musician, and his connection with the trends of his time.",
+          "translation_hints": {
+            "Gestalt": "form",
+            "will": "wants/aims",
+            "Scherflein": "mite/small contribution",
+            "beitragen": "contribute",
+            "Verständnis": "understanding",
+            "Menschen": "human/man",
+            "Musikers": "musician",
+            "Strömungen": "trends/currents",
+            "Zeit": "time"
+          }
+        }
+      ]
+    }
+  ],
+  "practice_sentences": [
+    {
+      "index": 0,
+      "sentence": "Die neue Auflage des Buches zeigt viele wichtige Änderungen.",
+      "translation": "The new edition of the book shows many important changes.",
+      "translation_hints": {
+        "Die": "The",
+        "neue": "new",
+        "Auflage": "edition",
+        "des": "of the",
+        "Buches": "book",
+        "zeigt": "shows",
+        "viele": "many",
+        "wichtige": "important",
+        "Änderungen": "changes"
+      }
+    },
+    {
+      "index": 1,
+      "sentence": "Der Verfasser möchte die historischen Grundlagen der Kunst aufdecken.",
+      "translation": "The author wants to uncover the historical foundations of the art.",
+      "translation_hints": {
+        "Der": "The",
+        "Verfasser": "author",
+        "möchte": "wants to",
+        "die": "the",
+        "historischen": "historical",
+        "Grundlagen": "foundations",
+        "der": "of the",
+        "Kunst": "art",
+        "aufdecken": "to uncover"
+      }
+    },
+    {
+      "index": 2,
+      "sentence": "Diese Forschung trägt zum Verständnis der Musik bei.",
+      "translation": "This research contributes to the understanding of the music.",
+      "translation_hints": {
+        "Diese": "This",
+        "Forschung": "research",
+        "trägt": "contributes",
+        "zum": "to the",
+        "Verständnis": "understanding",
+        "der": "of the",
+        "Musik": "music",
+        "bei": "to (part of beitragen)"
+      }
+    }
+  ]
+}
