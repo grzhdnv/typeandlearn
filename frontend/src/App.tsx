@@ -1,27 +1,32 @@
 import { type Component, createSignal, Show } from "solid-js";
 import { TypingInterface } from "./TypingInterface";
+import storyData from "../../test_files/20141246.json";
+
+type Sentence = { text: string; hints: Record<string, string> };
+
+const originalSentences: Sentence[] = storyData.original_paragraphs.flatMap(
+  (p) =>
+    p.sentences.map((s) => ({
+      text: s.text,
+      hints: s.translation_hints as unknown as Record<string, string>,
+    })),
+);
+
+const generatedSentences: Sentence[] = storyData.practice_sentences.map((p) => ({
+  text: p.sentence,
+  hints: p.translation_hints as unknown as Record<string, string>,
+}));
 
 const App: Component = () => {
   const [activeTab, setActiveTab] = createSignal<"original" | "generated">(
     "original",
   );
 
-  const [customText, setCustomText] = createSignal("");
-
-  const originalSentences = () =>
-    customText()
-      .split("\n")
-      .filter((s) => s.trim() !== "");
-  const generatedSentences = [
-    "Placeholder generated sentence one.",
-    "Placeholder generated sentence two.",
-  ];
-
   const [originalIndex, setOriginalIndex] = createSignal(0);
   const [generatedIndex, setGeneratedIndex] = createSignal(0);
 
   const handleOriginalComplete = () => {
-    if (originalIndex() < originalSentences().length - 1) {
+    if (originalIndex() < originalSentences.length - 1) {
       setOriginalIndex((i) => i + 1);
     }
   };
@@ -32,16 +37,6 @@ const App: Component = () => {
     }
   };
 
-  const handleTextInput = (e: InputEvent) => {
-    const textarea = e.currentTarget as HTMLTextAreaElement;
-
-    // When text is inputted, adjust textarea size to match
-    textarea.style.height = "auto";
-    textarea.style.height = textarea.scrollHeight + "px";
-    setCustomText(textarea.value);
-  };
-
-  // Style for tabs, specific to each of the two
   const tabButtonStyle = (tab: "original" | "generated") => ({
     "font-size": "18px",
     padding: "8px 16px",
@@ -54,18 +49,15 @@ const App: Component = () => {
 
   return (
     <div>
-      <textarea
-        placeholder="Enter sentences..."
-        onInput={handleTextInput}
+      <h2
         style={{
-          "font-size": "24px",
-          padding: "8px",
-          width: "100%",
-          resize: "none",
-          overflow: "hidden",
-          "min-height": "40px",
+          "font-family": "monospace",
+          padding: "20px 20px 0 20px",
+          margin: 0,
         }}
-      />
+      >
+        {storyData.title}
+      </h2>
       <div style={{ display: "flex", gap: "8px", padding: "20px 20px 0 20px" }}>
         <button
           style={tabButtonStyle("original")}
@@ -84,13 +76,15 @@ const App: Component = () => {
         when={activeTab() === "original"}
         fallback={
           <TypingInterface
-            targetText={generatedSentences[generatedIndex()]}
+            targetText={generatedSentences[generatedIndex()].text}
+            hints={generatedSentences[generatedIndex()].hints}
             onComplete={handleGeneratedComplete}
           />
         }
       >
         <TypingInterface
-          targetText={originalSentences()[originalIndex()] ?? ""}
+          targetText={originalSentences[originalIndex()].text}
+          hints={originalSentences[originalIndex()].hints}
           onComplete={handleOriginalComplete}
         />
       </Show>

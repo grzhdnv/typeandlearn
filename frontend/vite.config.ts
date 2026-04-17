@@ -6,6 +6,10 @@ export default defineConfig({
   plugins: [devtools(), solidPlugin()],
   server: {
     port: 3000,
+    // Allow importing files from root
+    fs: {
+      allow: ['..'],
+    },
     // Proxy API requests to the backend server
     proxy: {
       '/api': {
