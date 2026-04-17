@@ -1,243 +1,763 @@
-{
-  "title": "Vorwort zur neuen Auflage",
-  "original_paragraphs": [
-    {
-      "index": 0,
-      "sentences": [
-        {
-          "index": 0,
-          "text": "Die vorliegende Auflage zeigt ihrer Vorgängerin gegenüber ein ziemlich verändertes Gesicht.",
-          "translation": "The present edition shows a rather changed face compared to its predecessor.",
-          "translation_hints": {
-            "Die": "The",
-            "vorliegende": "present",
-            "Auflage": "edition",
-            "zeigt": "shows",
-            "ihrer": "its",
-            "Vorgängerin": "predecessor",
-            "gegenüber": "compared to",
-            "ein": "a",
-            "ziemlich": "rather",
-            "verändertes": "changed",
-            "Gesicht": "face"
+[
+  {
+    "title": "Vorwort zur neuen Auflage",
+    "original_paragraphs": [
+      {
+        "index": 0,
+        "sentences": [
+          {
+            "index": 0,
+            "text": "Die vorliegende Auflage zeigt ihrer Vorgängerin gegenüber ein ziemlich verändertes Gesicht.",
+            "translation": "The present edition shows a rather changed face compared to its predecessor.",
+            "translation_hints": {
+              "Die": "The",
+              "vorliegende": "present",
+              "Auflage": "edition",
+              "zeigt": "shows",
+              "ihrer": "its",
+              "Vorgängerin": "predecessor",
+              "gegenüber": "compared to",
+              "ein": "a",
+              "ziemlich": "rather",
+              "verändertes": "changed",
+              "Gesicht": "face"
+            }
+          },
+          {
+            "index": 1,
+            "text": "Haben doch gerade die letzten Jahre besonders wichtige neue Arbeiten über Schumann gebracht, die dem Bilde seines Lebens, sowohl als seines Schaffens neue Seiten abgewonnen haben.",
+            "translation": "After all, the last few years in particular have brought important new works about Schumann, which have gained new aspects of the image of his life as well as his work.",
+            "translation_hints": {
+              "Haben": "have",
+              "doch": "after all",
+              "gerade": "especially",
+              "die": "the",
+              "letzten": "last",
+              "Jahre": "years",
+              "besonders": "particularly",
+              "wichtige": "important",
+              "neue": "new",
+              "Arbeiten": "works",
+              "über": "about",
+              "Schumann": "Schumann",
+              "gebracht": "brought",
+              "dem": "the",
+              "Bilde": "image",
+              "seines": "his",
+              "Lebens": "life",
+              "sowohl": "as well",
+              "als": "as",
+              "Schaffens": "work/creation",
+              "Seiten": "aspects/sides",
+              "abgewonnen": "gained/extracted"
+            }
+          },
+          {
+            "index": 2,
+            "text": "Auch dem Verfasser selbst sind in den letzten sechs Jahren so manche Lücken in den bisherigen Forschungen über Schumann zum Bewusstsein gekommen, die vor allem die historische und ästhetische Seite betreffen.",
+            "translation": "Also, the author himself has become aware of many gaps in the previous research on Schumann over the last six years, which primarily concern the historical and aesthetic aspects.",
+            "translation_hints": {
+              "Auch": "Also",
+              "dem": "the",
+              "Verfasser": "author",
+              "selbst": "himself",
+              "sind": "have",
+              "in": "in",
+              "den": "the",
+              "letzten": "last",
+              "sechs": "six",
+              "Jahren": "years",
+              "manche": "many",
+              "Lücken": "gaps",
+              "bisherigen": "previous",
+              "Forschungen": "research",
+              "Bewusstsein": "awareness",
+              "gekommen": "come",
+              "die": "which",
+              "vor": "above",
+              "allem": "all",
+              "historische": "historical",
+              "ästhetische": "aesthetic",
+              "Seite": "aspect/side",
+              "betreffen": "concern"
+            }
           }
-        },
-        {
-          "index": 1,
-          "text": "Haben doch gerade die letzten Jahre besonders wichtige neue Arbeiten über Schumann gebracht, die dem Bilde seines Lebens, sowohl als seines Schaffens neue Seiten abgewonnen haben.",
-          "translation": "After all, the last few years in particular have brought important new works about Schumann, which have gained new aspects of the image of his life as well as his work.",
-          "translation_hints": {
-            "Haben": "have",
-            "doch": "after all",
-            "gerade": "especially",
-            "die": "the",
-            "letzten": "last",
-            "Jahre": "years",
-            "besonders": "particularly",
-            "wichtige": "important",
-            "neue": "new",
-            "Arbeiten": "works",
-            "über": "about",
-            "Schumann": "Schumann",
-            "gebracht": "brought",
-            "dem": "the",
-            "Bilde": "image",
-            "seines": "his",
-            "Lebens": "life",
-            "sowohl": "as well",
-            "als": "as",
-            "Schaffens": "work/creation",
-            "Seiten": "aspects/sides",
-            "abgewonnen": "gained/extracted"
+        ]
+      },
+      {
+        "index": 1,
+        "sentences": [
+          {
+            "index": 0,
+            "text": "Daraus ergab sich zunächst die Notwendigkeit eines Versuchs, einmal Schumanns gesamte historische Stellung, sein Verhältnis zu seinen Vorgängern und Zeitgenossen, und zwar nicht allein den Musikern, sondern auch den Dichtern, im Zusammenhang darzustellen und so die gesamten kulturellen Grundlagen aufzudecken, denen diese einzigartige Kunst entstammt.",
+            "translation": "This resulted first of all in the necessity of an attempt to present Schumann's entire historical position, his relationship to his predecessors and contemporaries – and indeed not only to musicians but also to poets – in context, and thus to uncover the entire cultural foundations from which this unique art originates.",
+            "translation_hints": {
+              "Daraus": "From this",
+              "ergab": "resulted",
+              "sich": "itself",
+              "zunächst": "firstly",
+              "Notwendigkeit": "necessity",
+              "Versuchs": "attempt",
+              "gesamte": "entire",
+              "Stellung": "position",
+              "Verhältnis": "relationship",
+              "Vorgängern": "predecessors",
+              "Zeitgenossen": "contemporaries",
+              "allein": "only",
+              "Musikern": "musicians",
+              "sondern": "but",
+              "Dichtern": "poets",
+              "Zusammenhang": "context",
+              "darzustellen": "to present",
+              "kulturellen": "cultural",
+              "Grundlagen": "foundations",
+              "aufzudecken": "to uncover",
+              "einzigartige": "unique",
+              "Kunst": "art",
+              "entstammt": "originates"
+            }
           }
-        },
-        {
-          "index": 2,
-          "text": "Auch dem Verfasser selbst sind in den letzten sechs Jahren so manche Lücken in den bisherigen Forschungen über Schumann zum Bewusstsein gekommen, die vor allem die historische und ästhetische Seite betreffen.",
-          "translation": "Also, the author himself has become aware of many gaps in the previous research on Schumann over the last six years, which primarily concern the historical and aesthetic aspects.",
-          "translation_hints": {
-            "Auch": "Also",
-            "dem": "the",
-            "Verfasser": "author",
-            "selbst": "himself",
-            "sind": "have",
-            "in": "in",
-            "den": "the",
-            "letzten": "last",
-            "sechs": "six",
-            "Jahren": "years",
-            "manche": "many",
-            "Lücken": "gaps",
-            "bisherigen": "previous",
-            "Forschungen": "research",
-            "Bewusstsein": "awareness",
-            "gekommen": "come",
-            "die": "which",
-            "vor": "above",
-            "allem": "all",
-            "historische": "historical",
-            "ästhetische": "aesthetic",
-            "Seite": "aspect/side",
-            "betreffen": "concern"
+        ]
+      },
+      {
+        "index": 2,
+        "sentences": [
+          {
+            "index": 0,
+            "text": "Dieser erste Schritt aber zog alsbald weitere nach sich.",
+            "translation": "This first step, however, soon led to further ones.",
+            "translation_hints": {
+              "Dieser": "This",
+              "erste": "first",
+              "Schritt": "step",
+              "aber": "however",
+              "zog": "drew/led",
+              "alsbald": "soon",
+              "weitere": "further",
+              "nach": "after",
+              "sich": "itself"
+            }
+          },
+          {
+            "index": 1,
+            "text": "Vor allem wurde der Abschnitt über die Klaviermusik einer vollständigen Neugestaltung unterworfen, aber auch die Abschnitte über das Lied, die Chor-, Kammer- und Orchestermusik haben mehr oder minder durchgreifende Aenderungen erfahren.",
+            "translation": "Above all, the section on piano music was subjected to a complete redesign, but the sections on song, choral, chamber, and orchestral music have also undergone more or less radical changes.",
+            "translation_hints": {
+              "Abschnitt": "section",
+              "Klaviermusik": "piano music",
+              "vollständigen": "complete",
+              "Neugestaltung": "redesign",
+              "unterworfen": "subjected",
+              "Lied": "song",
+              "Chormusik": "choral music",
+              "Kammermusik": "chamber music",
+              "Orchestermusik": "orchestral music",
+              "mehr": "more",
+              "minder": "less",
+              "durchgreifende": "radical/thorough",
+              "Aenderungen": "changes",
+              "erfahren": "experienced/undergone"
+            }
+          },
+          {
+            "index": 2,
+            "text": "Aeussere Anlage und Zweck des Büchleins sind dagegen dieselben geblieben.",
+            "translation": "The external layout and purpose of the booklet, on the other hand, have remained the same.",
+            "translation_hints": {
+              "Aeussere": "External",
+              "Anlage": "layout",
+              "Zweck": "purpose",
+              "Büchleins": "booklet",
+              "dagegen": "on the other hand",
+              "dieselben": "the same",
+              "geblieben": "remained"
+            }
+          },
+          {
+            "index": 3,
+            "text": "Auch in seiner neuen Gestalt will es sein Scherflein beitragen zum Verständnis Schumanns, des Menschen und des Musikers, und seines Zusammenhangs mit den Strömungen seiner Zeit.",
+            "translation": "Even in its new form, it aims to make its small contribution to the understanding of Schumann, the man and the musician, and his connection with the trends of his time.",
+            "translation_hints": {
+              "Gestalt": "form",
+              "will": "wants/aims",
+              "Scherflein": "mite/small contribution",
+              "beitragen": "contribute",
+              "Verständnis": "understanding",
+              "Menschen": "human/man",
+              "Musikers": "musician",
+              "Strömungen": "trends/currents",
+              "Zeit": "time"
+            }
           }
-        }
-      ]
-    },
-    {
-      "index": 1,
-      "sentences": [
-        {
-          "index": 0,
-          "text": "Daraus ergab sich zunächst die Notwendigkeit eines Versuchs, einmal Schumanns gesamte historische Stellung, sein Verhältnis zu seinen Vorgängern und Zeitgenossen, und zwar nicht allein den Musikern, sondern auch den Dichtern, im Zusammenhang darzustellen und so die gesamten kulturellen Grundlagen aufzudecken, denen diese einzigartige Kunst entstammt.",
-          "translation": "This resulted first of all in the necessity of an attempt to present Schumann's entire historical position, his relationship to his predecessors and contemporaries – and indeed not only to musicians but also to poets – in context, and thus to uncover the entire cultural foundations from which this unique art originates.",
-          "translation_hints": {
-            "Daraus": "From this",
-            "ergab": "resulted",
-            "sich": "itself",
-            "zunächst": "firstly",
-            "Notwendigkeit": "necessity",
-            "Versuchs": "attempt",
-            "gesamte": "entire",
-            "Stellung": "position",
-            "Verhältnis": "relationship",
-            "Vorgängern": "predecessors",
-            "Zeitgenossen": "contemporaries",
-            "allein": "only",
-            "Musikern": "musicians",
-            "sondern": "but",
-            "Dichtern": "poets",
-            "Zusammenhang": "context",
-            "darzustellen": "to present",
-            "kulturellen": "cultural",
-            "Grundlagen": "foundations",
-            "aufzudecken": "to uncover",
-            "einzigartige": "unique",
-            "Kunst": "art",
-            "entstammt": "originates"
-          }
-        }
-      ]
-    },
-    {
-      "index": 2,
-      "sentences": [
-        {
-          "index": 0,
-          "text": "Dieser erste Schritt aber zog alsbald weitere nach sich.",
-          "translation": "This first step, however, soon led to further ones.",
-          "translation_hints": {
-            "Dieser": "This",
-            "erste": "first",
-            "Schritt": "step",
-            "aber": "however",
-            "zog": "drew/led",
-            "alsbald": "soon",
-            "weitere": "further",
-            "nach": "after",
-            "sich": "itself"
-          }
-        },
-        {
-          "index": 1,
-          "text": "Vor allem wurde der Abschnitt über die Klaviermusik einer vollständigen Neugestaltung unterworfen, aber auch die Abschnitte über das Lied, die Chor-, Kammer- und Orchestermusik haben mehr oder minder durchgreifende Aenderungen erfahren.",
-          "translation": "Above all, the section on piano music was subjected to a complete redesign, but the sections on song, choral, chamber, and orchestral music have also undergone more or less radical changes.",
-          "translation_hints": {
-            "Abschnitt": "section",
-            "Klaviermusik": "piano music",
-            "vollständigen": "complete",
-            "Neugestaltung": "redesign",
-            "unterworfen": "subjected",
-            "Lied": "song",
-            "Chormusik": "choral music",
-            "Kammermusik": "chamber music",
-            "Orchestermusik": "orchestral music",
-            "mehr": "more",
-            "minder": "less",
-            "durchgreifende": "radical/thorough",
-            "Aenderungen": "changes",
-            "erfahren": "experienced/undergone"
-          }
-        },
-        {
-          "index": 2,
-          "text": "Aeussere Anlage und Zweck des Büchleins sind dagegen dieselben geblieben.",
-          "translation": "The external layout and purpose of the booklet, on the other hand, have remained the same.",
-          "translation_hints": {
-            "Aeussere": "External",
-            "Anlage": "layout",
-            "Zweck": "purpose",
-            "Büchleins": "booklet",
-            "dagegen": "on the other hand",
-            "dieselben": "the same",
-            "geblieben": "remained"
-          }
-        },
-        {
-          "index": 3,
-          "text": "Auch in seiner neuen Gestalt will es sein Scherflein beitragen zum Verständnis Schumanns, des Menschen und des Musikers, und seines Zusammenhangs mit den Strömungen seiner Zeit.",
-          "translation": "Even in its new form, it aims to make its small contribution to the understanding of Schumann, the man and the musician, and his connection with the trends of his time.",
-          "translation_hints": {
-            "Gestalt": "form",
-            "will": "wants/aims",
-            "Scherflein": "mite/small contribution",
-            "beitragen": "contribute",
-            "Verständnis": "understanding",
-            "Menschen": "human/man",
-            "Musikers": "musician",
-            "Strömungen": "trends/currents",
-            "Zeit": "time"
-          }
-        }
-      ]
-    }
-  ],
-  "practice_sentences": [
-    {
-      "index": 0,
-      "sentence": "Die neue Auflage des Buches zeigt viele wichtige Änderungen.",
-      "translation": "The new edition of the book shows many important changes.",
-      "translation_hints": {
-        "Die": "The",
-        "neue": "new",
-        "Auflage": "edition",
-        "des": "of the",
-        "Buches": "book",
-        "zeigt": "shows",
-        "viele": "many",
-        "wichtige": "important",
-        "Änderungen": "changes"
+        ]
       }
-    },
-    {
-      "index": 1,
-      "sentence": "Der Verfasser möchte die historischen Grundlagen der Kunst aufdecken.",
-      "translation": "The author wants to uncover the historical foundations of the art.",
-      "translation_hints": {
-        "Der": "The",
-        "Verfasser": "author",
-        "möchte": "wants to",
-        "die": "the",
-        "historischen": "historical",
-        "Grundlagen": "foundations",
-        "der": "of the",
-        "Kunst": "art",
-        "aufdecken": "to uncover"
+    ],
+    "practice_sentences": [
+      {
+        "index": 0,
+        "sentence": "Die neue Auflage des Buches zeigt viele wichtige Änderungen.",
+        "translation": "The new edition of the book shows many important changes.",
+        "translation_hints": {
+          "Die": "The",
+          "neue": "new",
+          "Auflage": "edition",
+          "des": "of the",
+          "Buches": "book",
+          "zeigt": "shows",
+          "viele": "many",
+          "wichtige": "important",
+          "Änderungen": "changes"
+        }
+      },
+      {
+        "index": 1,
+        "sentence": "Der Verfasser möchte die historischen Grundlagen der Kunst aufdecken.",
+        "translation": "The author wants to uncover the historical foundations of the art.",
+        "translation_hints": {
+          "Der": "The",
+          "Verfasser": "author",
+          "möchte": "wants to",
+          "die": "the",
+          "historischen": "historical",
+          "Grundlagen": "foundations",
+          "der": "of the",
+          "Kunst": "art",
+          "aufdecken": "to uncover"
+        }
+      },
+      {
+        "index": 2,
+        "sentence": "Diese Forschung trägt zum Verständnis der Musik bei.",
+        "translation": "This research contributes to the understanding of the music.",
+        "translation_hints": {
+          "Diese": "This",
+          "Forschung": "research",
+          "trägt": "contributes",
+          "zum": "to the",
+          "Verständnis": "understanding",
+          "der": "of the",
+          "Musik": "music",
+          "bei": "to (part of beitragen)"
+        }
       }
-    },
-    {
-      "index": 2,
-      "sentence": "Diese Forschung trägt zum Verständnis der Musik bei.",
-      "translation": "This research contributes to the understanding of the music.",
-      "translation_hints": {
-        "Diese": "This",
-        "Forschung": "research",
-        "trägt": "contributes",
-        "zum": "to the",
-        "Verständnis": "understanding",
-        "der": "of the",
-        "Musik": "music",
-        "bei": "to (part of beitragen)"
+    ]
+  },
+  {
+    "title": "Rapunzel",
+    "original_paragraphs": [
+      {
+        "index": 0,
+        "sentences": [
+          {
+            "index": 0,
+            "text": "Es war einmal ein Mann und eine Frau, die wünschten sich schon lange vergeblich ein Kind, endlich machte sich die Frau Hoffnung der liebe Gott werde ihren Wunsch erfüllen.",
+            "translation": "Once upon a time there were a man and a woman who had long wished for a child in vain; finally, the woman began to hope that the dear God would fulfill their wish.",
+            "translation_hints": {
+              "Es war einmal": "Once upon a time",
+              "Mann": "man",
+              "Frau": "woman",
+              "wünschten": "wished",
+              "lange": "long",
+              "vergeblich": "in vain",
+              "Kind": "child",
+              "Hoffnung": "hope",
+              "Wunsch": "wish",
+              "erfüllen": "fulfill"
+            }
+          },
+          {
+            "index": 1,
+            "text": "Die Leute hatten in ihrem Hinterhaus ein kleines Fenster, daraus konnte man in einen prächtigen Garten sehen, der voll der schönsten Blumen und Kräuter stand.",
+            "translation": "The people had a small window in their back house, from which one could see into a magnificent garden that was full of the most beautiful flowers and herbs.",
+            "translation_hints": {
+              "Leute": "people",
+              "Hinterhaus": "back house",
+              "Fenster": "window",
+              "prächtigen": "magnificent",
+              "Garten": "garden",
+              "Blumen": "flowers",
+              "Kräuter": "herbs"
+            }
+          }
+        ]
+      },
+      {
+        "index": 1,
+        "sentences": [
+          {
+            "index": 0,
+            "text": "Eines Tags stand die Frau an diesem Fenster und sah in den Garten hinab, da erblickte sie ein Beet, das mit den schönsten Rapunzeln bepflanzt war.",
+            "translation": "One day the woman stood at this window and looked down into the garden, where she saw a bed planted with the most beautiful rampions.",
+            "translation_hints": {
+              "Eines Tags": "One day",
+              "stand": "stood",
+              "sah": "saw",
+              "hinab": "down",
+              "erblickte": "spotted/saw",
+              "Beet": "garden bed",
+              "Rapunzeln": "rampions (a type of salad green)",
+              "bepflanzt": "planted"
+            }
+          },
+          {
+            "index": 1,
+            "text": "Sie wurde lüstern und empfand das größte Verlangen, von den Rapunzeln zu essen.",
+            "translation": "She became longingly hungry and felt the greatest desire to eat some of the rampions.",
+            "translation_hints": {
+              "lüstern": "desirous/lustful",
+              "empfand": "felt",
+              "Verlangen": "desire",
+              "essen": "to eat"
+            }
+          }
+        ]
+      },
+      {
+        "index": 2,
+        "sentences": [
+          {
+            "index": 0,
+            "text": "Der Mann stieg über die Mauer in den Garten der Zauberin und brachte seiner Frau eine Hand voll Rapunzeln.",
+            "translation": "The man climbed over the wall into the enchantress's garden and brought his wife a handful of rampions.",
+            "translation_hints": {
+              "stieg": "climbed",
+              "Mauer": "wall",
+              "Zauberin": "enchantress/witch",
+              "brachte": "brought",
+              "Hand voll": "handful"
+            }
+          },
+          {
+            "index": 1,
+            "text": "Aber die Zauberin erwischte ihn und sagte: 'Du mußt mir das Kind geben, das deine Frau zur Welt bringen wird.'",
+            "translation": "But the enchantress caught him and said: 'You must give me the child that your wife will bring into the world.'",
+            "translation_hints": {
+              "erwischte": "caught",
+              "geben": "to give",
+              "Welt": "world",
+              "bringen": "to bring"
+            }
+          }
+        ]
+      },
+      {
+        "index": 3,
+        "sentences": [
+          {
+            "index": 0,
+            "text": "Rapunzel hatte lange prächtige Haare, fein wie gesponnen Gold.",
+            "translation": "Rapunzel had long, magnificent hair, as fine as spun gold.",
+            "translation_hints": {
+              "hatte": "had",
+              "lange": "long",
+              "prächtige": "magnificent",
+              "Haare": "hair",
+              "fein": "fine",
+              "gesponnen": "spun",
+              "Gold": "gold"
+            }
+          },
+          {
+            "index": 1,
+            "text": "Wenn die Zauberin hinein wollte, so rief sie: 'Rapunzel, Rapunzel, laß mir dein Haar herunter.'",
+            "translation": "Whenever the enchantress wanted to get in, she called out: 'Rapunzel, Rapunzel, let down your hair for me.'",
+            "translation_hints": {
+              "hinein": "inside",
+              "wollte": "wanted",
+              "rief": "called",
+              "laß": "let",
+              "herunter": "down"
+            }
+          }
+        ]
       }
-    }
-  ]
-}
+    ],
+    "practice_sentences": [
+      {
+        "index": 0,
+        "sentence": "Die Frau wünscht sich einen großen Garten mit vielen Blumen.",
+        "translation": "The woman wishes for a large garden with many flowers.",
+        "translation_hints": {
+          "Frau": "woman",
+          "wünscht": "wishes",
+          "großen": "large",
+          "Garten": "garden",
+          "vielen": "many",
+          "Blumen": "flowers"
+        }
+      },
+      {
+        "index": 1,
+        "sentence": "Der Mann sieht durch das Fenster und sieht das Kind im Park.",
+        "translation": "The man looks through the window and sees the child in the park.",
+        "translation_hints": {
+          "Mann": "man",
+          "sieht": "sees",
+          "durch": "through",
+          "Fenster": "window",
+          "Kind": "child",
+          "Park": "park"
+        }
+      },
+      {
+        "index": 2,
+        "sentence": "Die Zauberin hat große Macht in diesem Wald.",
+        "translation": "The enchantress has great power in this forest.",
+        "translation_hints": {
+          "Zauberin": "enchantress",
+          "hat": "has",
+          "große": "great",
+          "Macht": "power",
+          "Wald": "forest"
+        }
+      }
+    ]
+  },
+  {
+    "title": "Marienkind",
+    "original_paragraphs": [
+      {
+        "index": 0,
+        "sentences": [
+          {
+            "index": 0,
+            "text": "Vor einem großen Walde lebte ein Holzhacker mit seiner Frau, der hatte nur ein einziges Kind, das war ein Mädchen von drei Jahren.",
+            "translation": "Before a great forest lived a woodcutter with his wife, who had only a single child, which was a girl of three years.",
+            "translation_hints": {
+              "Vor": "Before",
+              "einem": "a",
+              "großen": "great",
+              "Walde": "forest",
+              "lebte": "lived",
+              "ein": "a",
+              "Holzhacker": "woodcutter",
+              "mit": "with",
+              "seiner": "his",
+              "Frau": "wife",
+              "hatte": "had",
+              "nur": "only",
+              "einziges": "single",
+              "Kind": "child",
+              "Mädchen": "girl",
+              "drei": "three",
+              "Jahren": "years"
+            }
+          },
+          {
+            "index": 1,
+            "text": "Sie waren aber so arm, daß sie nicht mehr das tägliche Brot hatten und nicht wußten was sie ihm sollten zu essen geben.",
+            "translation": "But they were so poor that they no longer had their daily bread and did not know what they should give it to eat.",
+            "translation_hints": {
+              "Sie": "They",
+              "waren": "were",
+              "aber": "but",
+              "so": "so",
+              "arm": "poor",
+              "daß": "that",
+              "nicht": "not",
+              "mehr": "more",
+              "tägliche": "daily",
+              "Brot": "bread",
+              "hatten": "had",
+              "wußten": "knew",
+              "essen": "eat",
+              "geben": "give"
+            }
+          }
+        ]
+      },
+      {
+        "index": 1,
+        "sentences": [
+          {
+            "index": 0,
+            "text": "Eines Morgens gieng der Holzhacker voller Sorgen hinaus in den Wald an seine Arbeit, und wie er da Holz hackte, stand auf einmal eine schöne große Frau vor ihm, die hatte eine Krone von leuchtenden Sternen auf dem Haupt.",
+            "translation": "One morning the woodcutter went out into the forest to his work full of worries, and as he was chopping wood there, suddenly a beautiful tall woman stood before him, who had a crown of shining stars on her head.",
+            "translation_hints": {
+              "Eines": "One",
+              "Morgens": "morning",
+              "gieng": "went",
+              "voller": "full of",
+              "Sorgen": "worries",
+              "hinaus": "out",
+              "Wald": "forest",
+              "Arbeit": "work",
+              "Holz": "wood",
+              "hackte": "chopped",
+              "stand": "stood",
+              "auf einmal": "suddenly",
+              "schöne": "beautiful",
+              "große": "tall",
+              "Frau": "woman",
+              "Krone": "crown",
+              "leuchtenden": "shining",
+              "Sternen": "stars",
+              "Haupt": "head"
+            }
+          },
+          {
+            "index": 1,
+            "text": "Sie sprach zu ihm: 'ich bin die Jungfrau Maria, die Mutter des Christkindleins: du bist arm und dürftig, bring mir dein Kind, ich will es mit mir nehmen, seine Mutter sein und für es sorgen.'",
+            "translation": "She spoke to him: 'I am the Virgin Mary, the mother of the Christ-child: you are poor and needy, bring me your child, I will take it with me, be its mother and care for it.'",
+            "translation_hints": {
+              "sprach": "spoke",
+              "Jungfrau": "Virgin",
+              "Mutter": "mother",
+              "Christkindleins": "Christ-child",
+              "bist": "are",
+              "dürftig": "needy",
+              "bring": "bring",
+              "nehmen": "take",
+              "sein": "be",
+              "sorgen": "care"
+            }
+          }
+        ]
+      },
+      {
+        "index": 2,
+        "sentences": [
+          {
+            "index": 0,
+            "text": "Der Holzhacker gehorchte, holte sein Kind und übergab es der Jungfrau Maria, die nahm es mit sich hinauf in den Himmel.",
+            "translation": "The woodcutter obeyed, fetched his child and handed it over to the Virgin Mary, who took it with her up into heaven.",
+            "translation_hints": {
+              "gehorchte": "obeyed",
+              "holte": "fetched",
+              "übergab": "handed over",
+              "nahm": "took",
+              "hinauf": "up",
+              "Himmel": "heaven"
+            }
+          },
+          {
+            "index": 1,
+            "text": "Da gieng es ihm wohl, es aß Zuckerbrot und trank süße Milch, und seine Kleider waren von Gold, und die Englein spielten mit ihm.",
+            "translation": "There it fared well, it ate sweet bread and drank sweet milk, and its clothes were of gold, and the little angels played with it.",
+            "translation_hints": {
+              "wohl": "well",
+              "aß": "ate",
+              "Zuckerbrot": "sweet bread",
+              "trank": "drank",
+              "süße": "sweet",
+              "Milch": "milk",
+              "Kleider": "clothes",
+              "Gold": "gold",
+              "Englein": "little angels",
+              "spielten": "played"
+            }
+          }
+        ]
+      }
+    ],
+    "practice_sentences": [
+      {
+        "index": 0,
+        "sentence": "Die arme Frau hat kein Brot für das Kind.",
+        "translation": "The poor woman has no bread for the child.",
+        "translation_hints": {
+          "Die": "The",
+          "arme": "poor",
+          "Frau": "woman",
+          "hat": "has",
+          "kein": "no",
+          "Brot": "bread",
+          "für": "for",
+          "das": "the",
+          "Kind": "child"
+        }
+      },
+      {
+        "index": 1,
+        "sentence": "Der Mann arbeitet jeden Tag im großen Wald.",
+        "translation": "The man works every day in the great forest.",
+        "translation_hints": {
+          "Der": "The",
+          "Mann": "man",
+          "arbeitet": "works",
+          "jeden": "every",
+          "Tag": "day",
+          "im": "in the",
+          "großen": "great",
+          "Wald": "forest"
+        }
+      },
+      {
+        "index": 2,
+        "sentence": "Die Kinder spielen mit den Engeln im Himmel.",
+        "translation": "The children are playing with the angels in heaven.",
+        "translation_hints": {
+          "Die": "The",
+          "Kinder": "children",
+          "spielen": "are playing",
+          "mit": "with",
+          "den": "the",
+          "Engeln": "angels",
+          "im": "in the",
+          "Himmel": "heaven"
+        }
+      }
+    ]
+  },
+  {
+    "title": "Der alte Sultan",
+    "original_paragraphs": [
+      {
+        "index": 0,
+        "sentences": [
+          {
+            "index": 0,
+            "text": "Es hatte ein Bauer einen treuen Hund, der Sultan hieß, der war alt geworden und hatte alle Zähne verloren, so daß er nichts mehr fest packen konnte.",
+            "translation": "A farmer had a faithful dog named Sultan, who had grown old and lost all his teeth, so that he could no longer grip anything firmly.",
+            "translation_hints": {
+              "Es hatte": "There was",
+              "ein Bauer": "a farmer",
+              "einen treuen Hund": "a faithful dog",
+              "der Sultan hieß": "who was named Sultan",
+              "alt geworden": "grown old",
+              "alle Zähne verloren": "lost all teeth",
+              "nichts mehr": "nothing anymore",
+              "fest packen": "grip firmly"
+            }
+          },
+          {
+            "index": 1,
+            "text": "Zu einer Zeit stand der Bauer mit seiner Frau vor der Hausthüre und sprach 'den alten Sultan schieß ich morgen todt, der ist zu nichts mehr nütze.'",
+            "translation": "Once, the farmer stood with his wife in front of the house door and said, 'I will shoot old Sultan dead tomorrow; he is of no use anymore.'",
+            "translation_hints": {
+              "Zu einer Zeit": "At one time",
+              "stand": "stood",
+              "seiner Frau": "his wife",
+              "Hausthüre": "house door",
+              "schieß ich": "I will shoot",
+              "morgen": "tomorrow",
+              "todt": "dead",
+              "nichts mehr nütze": "no longer of use"
+            }
+          },
+          {
+            "index": 2,
+            "text": "Die Frau, die Mitleid mit dem treuen Thiere hatte, antwortete 'da er uns so lange Jahr gedient hat und ehrlich bei uns gehalten, so könnten wir ihm wohl das Gnadenbrot geben.'",
+            "translation": "The wife, who had pity on the faithful animal, answered, 'since he has served us for so many years and stayed honest with us, we could surely give him his retirement.'",
+            "translation_hints": {
+              "Mitleid": "pity",
+              "Thiere": "animal",
+              "gedient": "served",
+              "ehrlich": "honestly",
+              "gehalten": "held/stayed",
+              "Gnadenbrot": "charity/retirement bread"
+            }
+          },
+          {
+            "index": 3,
+            "text": "'Ei was,' sagte der Mann, 'du bist nicht recht gescheidt: er hat keinen Zahn mehr im Maul, und kein Dieb fürchtet sich vor ihm, er kann jetzt abgehen.'",
+            "translation": "'Oh come on,' said the man, 'you are not very bright: he has no teeth left in his mouth, and no thief is afraid of him; he can leave now.'",
+            "translation_hints": {
+              "nicht recht gescheidt": "not very smart",
+              "keinen Zahn": "no tooth",
+              "Maul": "mouth",
+              "Dieb": "thief",
+              "fürchtet sich": "is afraid",
+              "abgehen": "depart/pass away"
+            }
+          }
+        ]
+      },
+      {
+        "index": 1,
+        "sentences": [
+          {
+            "index": 0,
+            "text": "Der arme Hund, der nicht weit davon in der Sonne ausgestreckt lag, hatte alles mit angehört und war traurig daß morgen sein letzter Tag sein sollte.",
+            "translation": "The poor dog, who lay stretched out in the sun not far away, had overheard everything and was sad that tomorrow was to be his last day.",
+            "translation_hints": {
+              "arme Hund": "poor dog",
+              "ausgestreckt": "stretched out",
+              "lag": "lay",
+              "angehört": "overheard",
+              "traurig": "sad",
+              "letzter Tag": "last day"
+            }
+          },
+          {
+            "index": 1,
+            "text": "Er hatte einen guten Freund, das war der Wolf, zu dem schlich er Abends hinaus in den Wald und klagte über das Schicksal, das ihm bevorstände.",
+            "translation": "He had a good friend, who was the wolf, to whom he crept out in the evening into the forest and lamented the fate that lay before him.",
+            "translation_hints": {
+              "Freund": "friend",
+              "Wolf": "wolf",
+              "schlich": "crept",
+              "Wald": "forest",
+              "klagte": "lamented",
+              "Schicksal": "fate"
+            }
+          }
+        ]
+      },
+      {
+        "index": 2,
+        "sentences": [
+          {
+            "index": 0,
+            "text": "Der Anschlag gefiel dem Hund, und wie er ausgedacht war, so ward er auch ausgeführt.",
+            "translation": "The plot pleased the dog, and just as it was devised, it was also carried out.",
+            "translation_hints": {
+              "Anschlag": "plot/plan",
+              "gefiel": "pleased",
+              "ausgedacht": "devised",
+              "ausgeführt": "carried out"
+            }
+          },
+          {
+            "index": 1,
+            "text": "Von nun an hatte es der alte Sultan so gut, als er sichs nur wünschen konnte.",
+            "translation": "From then on, old Sultan had it as good as he could ever wish for.",
+            "translation_hints": {
+              "Von nun an": "From now on",
+              "so gut": "so good",
+              "wünschen": "wish"
+            }
+          }
+        ]
+      }
+    ],
+    "practice_sentences": [
+      {
+        "index": 0,
+        "sentence": "Der alte Wolf schleicht leise durch den dunklen Wald.",
+        "translation": "The old wolf creeps quietly through the dark forest.",
+        "translation_hints": {
+          "Der alte": "The old",
+          "Wolf": "wolf",
+          "schleicht": "creeps",
+          "leise": "quietly",
+          "durch": "through",
+          "dunklen Wald": "dark forest"
+        }
+      },
+      {
+        "index": 1,
+        "sentence": "Die treue Katze bewacht das kleine Kind im Garten.",
+        "translation": "The faithful cat guards the little child in the garden.",
+        "translation_hints": {
+          "Die treue": "The faithful",
+          "Katze": "cat",
+          "bewacht": "guards",
+          "das kleine Kind": "the little child",
+          "im Garten": "in the garden"
+        }
+      },
+      {
+        "index": 2,
+        "sentence": "Der Bauer gibt dem Tier ein gutes Fressen.",
+        "translation": "The farmer gives the animal a good meal.",
+        "translation_hints": {
+          "Der Bauer": "The farmer",
+          "gibt": "gives",
+          "dem Tier": "to the animal",
+          "ein gutes Fressen": "a good meal"
+        }
+      }
+    ]
+  }
+]

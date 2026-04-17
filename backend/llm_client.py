@@ -1,6 +1,6 @@
+import os
 from dotenv import load_dotenv
 from google import genai
-import os
 from pydantic import BaseModel, ValidationError
 from typing import List, Dict
 
@@ -59,9 +59,9 @@ def text_to_db(
     client=client,
     model=model,
     prompt=prompt,
-):
+) -> TextData | None:
     try:
-        print("Generating content...")
+        print("Processing text...")
         response = client.models.generate_content(
             model=model,
             contents=[prompt, input_text],
