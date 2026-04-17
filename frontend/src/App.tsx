@@ -113,7 +113,7 @@ const App: Component = () => {
     
     <div>
             <textarea
-        placeholder="Enter sentences..."
+        placeholder="Enter text..."
         onInput={handleTextInput}
         style={{
           "font-size": "24px",
