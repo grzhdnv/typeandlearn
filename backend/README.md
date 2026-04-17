@@ -4,10 +4,22 @@ This backend is built using FastAPI and serves as the API layer for the TypeAndL
 
 ## Running the Backend Server
 
-To run the backend server from root directory, use the following command:
+To run the backend server, navigate to the root directory of the project and use the following command:
 
 ```bash
 fastapi dev backend/main.py
+```
+
+To update python dependencies, use:
+
+```bash
+uv sync
+```
+
+Rebuild clean env: 
+
+```bash
+rm -rf .venv && uv sync
 ```
 
 ## Structure
