@@ -1,6 +1,7 @@
 import { type Component, createSignal, Show } from "solid-js";
 import { TypingInterface } from "./TypingInterface";
-import storyData from "../../test_files/20141246.json";
+import { fetchStory } from "./fetchText";
+const storyData = await fetchStory();
 
 type Sentence = { text: string; hints: Record<string, string> };
 
@@ -18,6 +19,18 @@ const generatedSentences: Sentence[] = storyData.practice_sentences.map((p) => (
 }));
 
 const App: Component = () => {
+    const [customText, setCustomText] = createSignal("");
+
+    const handleTextInput = (e: InputEvent) => {
+      const textarea = e.currentTarget as HTMLTextAreaElement;
+
+      // When text is inputted, adjust textarea size to match
+      textarea.style.height = "auto";
+      textarea.style.height = textarea.scrollHeight + "px";
+      setCustomText(textarea.value);
+    };
+
+
   const [activeTab, setActiveTab] = createSignal<"original" | "generated">(
     "original",
   );
@@ -48,7 +61,20 @@ const App: Component = () => {
   });
 
   return (
+    
     <div>
+            <textarea
+        placeholder="Enter sentences..."
+        onInput={handleTextInput}
+        style={{
+          "font-size": "24px",
+          padding: "8px",
+          width: "100%",
+          resize: "none",
+          overflow: "hidden",
+          "min-height": "40px"
+        }}
+      />
       <h2
         style={{
           "font-family": "monospace",
@@ -90,6 +116,6 @@ const App: Component = () => {
       </Show>
     </div>
   );
-};
+};;;
 
 export default App;
