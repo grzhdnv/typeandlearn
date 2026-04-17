@@ -759,5 +759,641 @@
         }
       }
     ]
+  },
+  {
+    "title": "Der singende Knochen",
+    "original_paragraphs": [
+      {
+        "index": 0,
+        "sentences": [
+          {
+            "index": 0,
+            "text": "Es war einmal in einem Lande große Klage über ein Wildschwein, das den Bauern die Äcker umwühlte, das Vieh tödtete und den Menschen mit seinen Hauern den Leib aufriß.",
+            "translation": "Once upon a time in a country, there was a great lament over a wild boar that rooted up the farmers' fields, killed the livestock, and ripped open people's bodies with its tusks.",
+            "translation_hints": {
+              "Es war einmal": "Once upon a time",
+              "Lande": "country",
+              "große": "great",
+              "Klage": "lament",
+              "Wildschwein": "wild boar",
+              "Bauern": "farmers",
+              "Äcker": "fields",
+              "umwühlte": "rooted up",
+              "Vieh": "livestock",
+              "tödtete": "killed",
+              "Hauern": "tusks",
+              "Leib": "body",
+              "aufriß": "ripped open"
+            }
+          },
+          {
+            "index": 1,
+            "text": "Der König versprach einem jeden, der das Land von dieser Plage befreien würde, eine große Belohnung: aber das Thier war so groß und stark, daß sich niemand in die Nähe des Waldes wagte, worin es hauste.",
+            "translation": "The King promised everyone who would free the land from this plague a great reward: but the animal was so big and strong that no one ventured near the forest in which it lived.",
+            "translation_hints": {
+              "König": "King",
+              "versprach": "promised",
+              "einem jeden": "everyone",
+              "Land": "land",
+              "Plage": "plague",
+              "befreien": "free",
+              "Belohnung": "reward",
+              "Thier": "animal",
+              "stark": "strong",
+              "niemand": "no one",
+              "Nähe": "vicinity",
+              "wagte": "ventured",
+              "hauste": "lived"
+            }
+          },
+          {
+            "index": 2,
+            "text": "Endlich ließ der König bekannt machen wer das Wildschwein einfange oder tödte solle seine einzige Tochter zur Gemahlin haben.",
+            "translation": "Finally, the King made it known that whoever caught or killed the wild boar should have his only daughter as his wife.",
+            "translation_hints": {
+              "Endlich": "Finally",
+              "bekannt machen": "made it known",
+              "einfange": "caught",
+              "tödte": "killed",
+              "einzige": "only",
+              "Tochter": "daughter",
+              "Gemahlin": "wife"
+            }
+          }
+        ]
+      },
+      {
+        "index": 1,
+        "sentences": [
+          {
+            "index": 0,
+            "text": "Nun lebten zwei Brüder in dem Lande, Söhne eines armen Mannes, die meldeten sich und wollten das Wagnis übernehmen.",
+            "translation": "Now two brothers lived in the country, sons of a poor man, who came forward and wanted to take on the venture.",
+            "translation_hints": {
+              "lebten": "lived",
+              "zwei": "two",
+              "Brüder": "brothers",
+              "Söhne": "sons",
+              "armen": "poor",
+              "meldeten": "forward",
+              "Wagnis": "venture",
+              "übernehmen": "take on"
+            }
+          },
+          {
+            "index": 1,
+            "text": "Der älteste, der listig und klug war, that es aus Hochmuth, der jüngste, der unschuldig und dumm war, aus gutem Herzen.",
+            "translation": "The eldest, who was cunning and clever, did it out of pride; the youngest, who was innocent and simple, did it out of a good heart.",
+            "translation_hints": {
+              "älteste": "eldest",
+              "listig": "cunning",
+              "klug": "clever",
+              "Hochmuth": "pride",
+              "jüngste": "youngest",
+              "unschuldig": "innocent",
+              "dumm": "simple",
+              "Herzen": "heart"
+            }
+          },
+          {
+            "index": 2,
+            "text": "Der König sagte 'damit ihr desto sicherer das Thier findet, so sollt ihr von entgegengesetzten Seiten in den Wald gehen.'",
+            "translation": "The King said, 'so that you find the animal more surely, you shall go into the forest from opposite sides.'",
+            "translation_hints": {
+              "sagte": "said",
+              "sicherer": "surely",
+              "entgegengesetzten": "opposite",
+              "Seiten": "sides",
+              "Wald": "forest"
+            }
+          },
+          {
+            "index": 3,
+            "text": "Da gieng der älteste von Abend und der jüngste von Morgen hinein.",
+            "translation": "Then the eldest went in from the west and the youngest from the east.",
+            "translation_hints": {
+              "gieng": "went",
+              "Abend": "west (evening)",
+              "Morgen": "east (morning)"
+            }
+          },
+          {
+            "index": 4,
+            "text": "Und als der jüngste ein Weilchen gegangen war, so trat ein kleines Männlein zu ihm: das hielt einen schwarzen Spieß in der Hand und sprach 'diesen Spieß gebe ich dir, weil dein Herz unschuldig und gut ist: damit kannst du getrost auf das wilde Schwein eingehen, es wird dir keinen Schaden zufügen.'",
+            "translation": "And when the youngest had walked for a little while, a little man stepped up to him: he held a black spear in his hand and spoke, 'I give you this spear because your heart is innocent and good: with it you can confidently go toward the wild pig, it will do you no harm.'",
+            "translation_hints": {
+              "Weilchen": "little while",
+              "Männlein": "little man",
+              "hielt": "held",
+              "schwarzen": "black",
+              "Spieß": "spear",
+              "Hand": "hand",
+              "getrost": "confidently",
+              "Schaden": "harm",
+              "zufügen": "do"
+            }
+          },
+          {
+            "index": 5,
+            "text": "Er dankte dem Männlein, nahm den Spieß auf die Schulter und gieng ohne Furcht weiter.",
+            "translation": "He thanked the little man, took the spear on his shoulder and went further without fear.",
+            "translation_hints": {
+              "dankte": "thanked",
+              "Schulter": "shoulder",
+              "ohne": "without",
+              "Furcht": "fear",
+              "weiter": "further"
+            }
+          },
+          {
+            "index": 6,
+            "text": "Nicht lange so erblickte er das Thier, das auf ihn los rannte, er hielt ihm aber den Spieß entgegen, und in seiner blinden Wuth rannte es so gewaltig hinein, daß ihm das Herz entzwei geschnitten ward.",
+            "translation": "Not long after, he saw the animal, which ran at him, but he held the spear against it, and in its blind rage, it ran into it so violently that its heart was cut in two.",
+            "translation_hints": {
+              "erblickte": "saw",
+              "rannte": "ran",
+              "entgegen": "against",
+              "blinden": "blind",
+              "Wuth": "rage",
+              "gewaltig": "violently",
+              "Herz": "heart",
+              "entzwei": "in two"
+            }
+          },
+          {
+            "index": 7,
+            "text": "Da nahm er das Ungethüm auf die Schulter, gieng heimwärts und wollte es dem Könige bringen.",
+            "translation": "Then he took the monster on his shoulder, went homeward and wanted to bring it to the King.",
+            "translation_hints": {
+              "Ungethüm": "monster",
+              "heimwärts": "homeward",
+              "bringen": "bring"
+            }
+          }
+        ]
+      },
+      {
+        "index": 2,
+        "sentences": [
+          {
+            "index": 0,
+            "text": "Als er auf der andern Seite des Waldes heraus kam, stand da am Eingang ein Haus, wo die Leute sich mit Tanz und Wein lustig machten.",
+            "translation": "When he came out on the other side of the forest, there stood a house at the entrance where people were making merry with dancing and wine.",
+            "translation_hints": {
+              "Seite": "side",
+              "Eingang": "entrance",
+              "Haus": "house",
+              "Leute": "people",
+              "Tanz": "dancing",
+              "Wein": "wine",
+              "lustig": "merry"
+            }
+          },
+          {
+            "index": 1,
+            "text": "Sein ältester Bruder war da eingetreten und hatte gedacht das Schwein liefe ihm doch nicht fort, erst wollte er sich einen rechten Muth trinken.",
+            "translation": "His eldest brother had entered there and thought the pig would not run away from him anyway; first, he wanted to drink to get some real courage.",
+            "translation_hints": {
+              "eingetreten": "entered",
+              "gedacht": "thought",
+              "liefe": "run",
+              "fort": "away",
+              "Muth": "courage",
+              "trinken": "drink"
+            }
+          },
+          {
+            "index": 2,
+            "text": "Als er nun den jüngsten erblickte, der mit seiner Beute beladen aus dem Wald kam, so ließ ihm sein neidisches und boshaftes Herz keine Ruhe.",
+            "translation": "When he now saw the youngest, who came out of the forest laden with his prey, his envious and malicious heart gave him no rest.",
+            "translation_hints": {
+              "Beute": "prey",
+              "beladen": "laden",
+              "neidisches": "envious",
+              "boshaftes": "malicious",
+              "Ruhe": "rest"
+            }
+          },
+          {
+            "index": 3,
+            "text": "Er rief ihm zu 'komm doch herein, lieber Bruder, ruhe dich aus und stärke dich mit einem Becher Wein.'",
+            "translation": "He called out to him, 'do come in, dear brother, rest and strengthen yourself with a cup of wine.'",
+            "translation_hints": {
+              "rief": "called",
+              "herein": "in",
+              "lieber": "dear",
+              "ruhe": "rest",
+              "stärke": "strengthen",
+              "Becher": "cup"
+            }
+          },
+          {
+            "index": 4,
+            "text": "Der jüngste, der nichts arges dahinter vermuthete, gieng hinein und erzählte ihm von dem guten Männlein, das ihm einen Spieß gegeben, womit er das Schwein getödtet hätte.",
+            "translation": "The youngest, who suspected nothing bad behind it, went in and told him about the good little man who had given him a spear with which he had killed the pig.",
+            "translation_hints": {
+              "arges": "bad",
+              "vermuthete": "suspected",
+              "erzählte": "told",
+              "gegeben": "given"
+            }
+          },
+          {
+            "index": 5,
+            "text": "Der älteste hielt ihn bis zum Abend zurück, da giengen sie zusammen fort.",
+            "translation": "The eldest kept him back until evening, then they went away together.",
+            "translation_hints": {
+              "hielt": "kept",
+              "zurück": "back",
+              "zusammen": "together"
+            }
+          },
+          {
+            "index": 6,
+            "text": "Als sie aber in der Dunkelheit zu der Brücke über einen Bach kamen, ließ der älteste den jüngsten vorangehen, und als er mitten über dem Wasser war, gab er ihm von hinten einen Schlag, daß er todt hinabstürzte.",
+            "translation": "But when they came to the bridge over a stream in the darkness, the eldest let the youngest go ahead, and when he was in the middle of the water, he gave him a blow from behind so that he fell down dead.",
+            "translation_hints": {
+              "Dunkelheit": "darkness",
+              "Brücke": "bridge",
+              "Bach": "stream",
+              "vorangehen": "go ahead",
+              "mitten": "middle",
+              "Schlag": "blow",
+              "todt": "dead",
+              "hinabstürzte": "fell down"
+            }
+          },
+          {
+            "index": 7,
+            "text": "Er begrub ihn unter der Brücke, nahm dann das Schwein und brachte es dem König mit dem Vorgeben er hätte es getödtet; worauf er die Tochter des Königs zur Gemahlin erhielt.",
+            "translation": "He buried him under the bridge, then took the pig and brought it to the King with the pretense that he had killed it; whereupon he received the King's daughter as his wife.",
+            "translation_hints": {
+              "begrub": "buried",
+              "Vorgeben": "pretense",
+              "erhielt": "received"
+            }
+          },
+          {
+            "index": 8,
+            "text": "Als der jüngste Bruder nicht wieder kommen wollte, sagte er 'das Schwein wird ihm den Leib aufgerissen haben,' und das glaubte jedermann.",
+            "translation": "When the youngest brother did not want to come back, he said, 'the pig must have ripped open his body,' and everyone believed that.",
+            "translation_hints": {
+              "wieder": "back",
+              "glaubte": "believed",
+              "jedermann": "everyone"
+            }
+          }
+        ]
+      },
+      {
+        "index": 3,
+        "sentences": [
+          {
+            "index": 0,
+            "text": "Weil aber vor Gott nichts verborgen bleibt, sollte auch diese schwarze That ans Licht kommen.",
+            "translation": "But because nothing remains hidden before God, this black deed was also to come to light.",
+            "translation_hints": {
+              "verborgen": "hidden",
+              "bleibt": "remains",
+              "schwarze": "black",
+              "That": "deed",
+              "Licht": "light"
+            }
+          },
+          {
+            "index": 1,
+            "text": "Nach langen Jahren trieb ein Hirt einmal seine Herde über die Brücke und sah unten im Sande ein schneeweißes Knöchlein liegen und dachte das gäbe ein gutes Mundstück.",
+            "translation": "After many years, a shepherd once drove his herd over the bridge and saw a snow-white little bone lying down in the sand and thought it would make a good mouthpiece.",
+            "translation_hints": {
+              "Jahren": "years",
+              "Hirt": "shepherd",
+              "Herde": "herd",
+              "Sande": "sand",
+              "schneeweißes": "snow-white",
+              "Knöchlein": "little bone",
+              "Mundstück": "mouthpiece"
+            }
+          },
+          {
+            "index": 2,
+            "text": "Da stieg er herab, hob es auf und schnitzte ein Mundstück daraus für sein Horn.",
+            "translation": "Then he climbed down, picked it up, and carved a mouthpiece out of it for his horn.",
+            "translation_hints": {
+              "stieg herab": "climbed down",
+              "hob auf": "picked up",
+              "schnitzte": "carved",
+              "Horn": "horn"
+            }
+          },
+          {
+            "index": 3,
+            "text": "Als er zum erstenmal darauf geblasen hatte, so fieng das Knöchlein zu großer Verwunderung des Hirten von selbst an zu singen",
+            "translation": "When he had blown on it for the first time, to the shepherd's great astonishment, the little bone began to sing by itself",
+            "translation_hints": {
+              "erstenmal": "first time",
+              "geblasen": "blown",
+              "Verwunderung": "astonishment",
+              "singen": "sing"
+            }
+          },
+          {
+            "index": 4,
+            "text": "'Ach, du liebes Hirtelein, du bläst auf meinem Knöchelein, mein Bruder hat mich erschlagen, unter der Brücke begraben, um das wilde Schwein, für des Königs Töchterlein.'",
+            "translation": "'Ah, you dear shepherd, you blow on my little bone, my brother has slain me, buried under the bridge, for the wild pig, for the King's little daughter.'",
+            "translation_hints": {
+              "Hirtelein": "shepherd",
+              "erschlagen": "slain",
+              "begraben": "buried",
+              "Töchterlein": "little daughter"
+            }
+          },
+          {
+            "index": 5,
+            "text": "'Was für ein wunderliches Hörnchen,' sagte der Hirt, 'das von selber singt, das muß ich dem Herrn König bringen.'",
+            "translation": "'What a wonderful little horn,' said the shepherd, 'that sings by itself, I must bring that to the Lord King.'",
+            "translation_hints": {
+              "wunderliches": "wonderful",
+              "Hörnchen": "little horn",
+              "selber": "itself"
+            }
+          },
+          {
+            "index": 6,
+            "text": "Als er damit vor den König kam, fieng das Hörnchen abermals an sein Liedchen zu singen.",
+            "translation": "When he came before the King with it, the little horn began to sing its little song once again.",
+            "translation_hints": {
+              "abermals": "once again",
+              "Liedchen": "little song"
+            }
+          },
+          {
+            "index": 7,
+            "text": "Der König verstand es wohl, und ließ die Erde unter der Brücke aufgraben, da kam das ganze Gerippe des Erschlagenen zum Vorschein.",
+            "translation": "The King understood it well and had the earth under the bridge dug up, then the whole skeleton of the slain man came to light.",
+            "translation_hints": {
+              "verstand": "understood",
+              "wohl": "well",
+              "aufgraben": "dug up",
+              "Gerippe": "skeleton",
+              "Vorschein": "light"
+            }
+          },
+          {
+            "index": 8,
+            "text": "Der böse Bruder konnte die That nicht läugnen, ward in einen Sack genäht und lebendig ersäuft, die Gebeine des Gemordeten aber wurden auf den Kirchhof in ein schönes Grab zur Ruhe gelegt.",
+            "translation": "The evil brother could not deny the deed, was sewn into a sack and drowned alive, but the bones of the murdered man were laid to rest in a beautiful grave in the churchyard.",
+            "translation_hints": {
+              "böse": "evil",
+              "läugnen": "deny",
+              "Sack": "sack",
+              "genäht": "sewn",
+              "lebendig": "alive",
+              "ersäuft": "drowned",
+              "Gebeine": "bones",
+              "Kirchhof": "churchyard",
+              "Grab": "grave"
+            }
+          }
+        ]
+      }
+    ],
+    "practice_sentences": [
+      {
+        "index": 0,
+        "sentence": "Der Jäger findet ein altes Horn im dunklen Wald.",
+        "translation": "The hunter finds an old horn in the dark forest.",
+        "translation_hints": {
+          "Der": "The",
+          "Jäger": "hunter",
+          "findet": "finds",
+          "altes": "old",
+          "Horn": "horn",
+          "dunklen": "dark",
+          "Wald": "forest"
+        }
+      },
+      {
+        "index": 1,
+        "sentence": "Die Tochter des Königs tanzt im großen Haus.",
+        "translation": "The daughter of the King is dancing in the big house.",
+        "translation_hints": {
+          "Tochter": "daughter",
+          "Königs": "King",
+          "tanzt": "is dancing",
+          "großen": "big",
+          "Haus": "house"
+        }
+      },
+      {
+        "index": 2,
+        "sentence": "Mein Bruder versprach mir eine kleine Belohnung für die Arbeit.",
+        "translation": "My brother promised me a small reward for the work.",
+        "translation_hints": {
+          "Bruder": "brother",
+          "versprach": "promised",
+          "kleine": "small",
+          "Belohnung": "reward",
+          "Arbeit": "work"
+        }
+      }
+    ]
+  },
+  {
+    "title": "Tischchen deck dich, Goldesel, und Knüppel aus dem Sack",
+    "original_paragraphs": [
+      {
+        "index": 0,
+        "sentences": [
+          {
+            "index": 0,
+            "text": "Vor Zeiten war ein Schneider, der drei Söhne hatte und nur eine einzige Ziege.",
+            "translation": "Long ago there was a tailor who had three sons and only a single goat.",
+            "translation_hints": {
+              "Vor Zeiten": "Long ago",
+              "war": "was",
+              "ein": "a",
+              "Schneider": "tailor",
+              "der": "who",
+              "drei": "three",
+              "Söhne": "sons",
+              "hatte": "had",
+              "und": "and",
+              "nur": "only",
+              "eine einzige": "a single",
+              "Ziege": "goat"
+            }
+          },
+          {
+            "index": 1,
+            "text": "Aber die Ziege, weil sie alle zusammen mit ihrer Milch ernährte, mußte ihr gutes Futter haben und täglich hinaus auf die Weide geführt werden.",
+            "translation": "But the goat, because she fed them all together with her milk, had to have good fodder and be led out to the pasture daily.",
+            "translation_hints": {
+              "Aber": "But",
+              "die Ziege": "the goat",
+              "weil": "because",
+              "sie": "she",
+              "alle zusammen": "all together",
+              "mit": "with",
+              "ihrer": "her",
+              "Milch": "milk",
+              "ernährte": "fed",
+              "mußte": "had to",
+              "ihr": "her",
+              "gutes": "good",
+              "Futter": "fodder",
+              "haben": "have",
+              "täglich": "daily",
+              "hinaus": "out",
+              "auf die Weide": "to the pasture",
+              "geführt werden": "be led"
+            }
+          },
+          {
+            "index": 2,
+            "text": "Die Söhne thaten das auch nach der Reihe.",
+            "translation": "The sons also did this in turn.",
+            "translation_hints": {
+              "Die Söhne": "The sons",
+              "thaten": "did",
+              "das": "this",
+              "auch": "also",
+              "nach der Reihe": "in turn"
+            }
+          }
+        ]
+      },
+      {
+        "index": 1,
+        "sentences": [
+          {
+            "index": 0,
+            "text": "Einmal brachte sie der älteste auf den Kirchhof, wo die schönsten Kräuter standen, ließ sie da fressen und herumspringen.",
+            "translation": "Once the eldest brought her to the churchyard, where the finest herbs grew, and let her eat and jump around there.",
+            "translation_hints": {
+              "Einmal": "Once",
+              "brachte": "brought",
+              "sie": "her",
+              "der älteste": "the eldest",
+              "auf den Kirchhof": "to the churchyard",
+              "wo": "where",
+              "die schönsten": "the finest",
+              "Kräuter": "herbs",
+              "standen": "grew",
+              "ließ": "let",
+              "da": "there",
+              "fressen": "eat",
+              "herumspringen": "jump around"
+            }
+          },
+          {
+            "index": 1,
+            "text": "Abends, als es Zeit war heim zu gehen, fragte er 'Ziege, bist du satt?'",
+            "translation": "In the evening, when it was time to go home, he asked, 'Goat, are you full?'",
+            "translation_hints": {
+              "Abends": "In the evening",
+              "als": "when",
+              "es Zeit war": "it was time",
+              "heim zu gehen": "to go home",
+              "fragte er": "he asked",
+              "Ziege": "goat",
+              "bist du": "are you",
+              "satt": "full"
+            }
+          },
+          {
+            "index": 2,
+            "text": "Die Ziege antwortete: 'ich bin so satt, ich mag kein Blatt: meh! meh!'",
+            "translation": "The goat answered: 'I am so full, I don't want a single leaf: baa! baa!'",
+            "translation_hints": {
+              "Die Ziege": "The goat",
+              "antwortete": "answered",
+              "ich bin": "I am",
+              "so satt": "so full",
+              "ich mag": "I want",
+              "kein": "not a single",
+              "Blatt": "leaf",
+              "meh": "baa"
+            }
+          }
+        ]
+      },
+      {
+        "index": 2,
+        "sentences": [
+          {
+            "index": 0,
+            "text": "'So komm nach Haus' sprach der Junge, faßte sie am Strickchen, führte sie in den Stall und band sie fest.",
+            "translation": "'Then come home,' said the boy, caught her by the little rope, led her into the stable and tied her up tight.",
+            "translation_hints": {
+              "So": "Then",
+              "komm": "come",
+              "nach Haus": "home",
+              "sprach": "said",
+              "der Junge": "the boy",
+              "faßte": "caught",
+              "sie": "her",
+              "am Strickchen": "by the little rope",
+              "führte": "led",
+              "in den Stall": "into the stable",
+              "band": "tied",
+              "fest": "up tight"
+            }
+          }
+        ]
+      }
+    ],
+    "practice_sentences": [
+      {
+        "index": 0,
+        "sentence": "Der Vater hat drei Kinder und einen Hund.",
+        "translation": "The father has three children and a dog.",
+        "translation_hints": {
+          "Der Vater": "The father",
+          "hat": "has",
+          "drei": "three",
+          "Kinder": "children",
+          "und": "and",
+          "einen Hund": "a dog"
+        }
+      },
+      {
+        "index": 1,
+        "sentence": "Die Kinder führen die Tiere täglich auf die Weide.",
+        "translation": "The children lead the animals to the pasture daily.",
+        "translation_hints": {
+          "Die Kinder": "The children",
+          "führen": "lead",
+          "die Tiere": "the animals",
+          "täglich": "daily",
+          "auf die Weide": "to the pasture"
+        }
+      },
+      {
+        "index": 2,
+        "sentence": "Bist du satt oder möchtest du ein Brot essen?",
+        "translation": "Are you full or would you like to eat some bread?",
+        "translation_hints": {
+          "Bist du": "Are you",
+          "satt": "full",
+          "oder": "or",
+          "möchtest du": "would you like",
+          "ein Brot": "some bread",
+          "essen": "to eat"
+        }
+      },
+      {
+        "index": 3,
+        "sentence": "Er führt das Pferd in den Stall und bindet es fest.",
+        "translation": "He leads the horse into the stable and ties it up tight.",
+        "translation_hints": {
+          "Er führt": "He leads",
+          "das Pferd": "the horse",
+          "in den Stall": "into the stable",
+          "bindet": "ties",
+          "es": "it",
+          "fest": "up tight"
+        }
+      }
+    ]
   }
 ]

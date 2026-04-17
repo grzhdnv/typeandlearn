@@ -1,6 +1,7 @@
 import { type Component, createSignal, Show } from "solid-js";
 import { TypingInterface } from "./TypingInterface";
 import { fetchStory } from "./fetchText";
+import { postText } from "./postText";
 const storyData = await fetchStory();
 
 type Sentence = { text: string; hints: Record<string, string> };
@@ -19,16 +20,46 @@ const generatedSentences: Sentence[] = storyData.practice_sentences.map((p) => (
 }));
 
 const App: Component = () => {
-    const [customText, setCustomText] = createSignal("");
+  const [customText, setCustomText] = createSignal("");
+  const [isSubmitting, setIsSubmitting] = createSignal(false);
+  const [submitMessage, setSubmitMessage] = createSignal("");
+  const [submitStatus, setSubmitStatus] = createSignal<"success" | "error" | "idle">(
+    "idle",
+  );
 
-    const handleTextInput = (e: InputEvent) => {
-      const textarea = e.currentTarget as HTMLTextAreaElement;
+  const handleTextInput = (e: InputEvent) => {
+    const textarea = e.currentTarget as HTMLTextAreaElement;
 
-      // When text is inputted, adjust textarea size to match
-      textarea.style.height = "auto";
-      textarea.style.height = textarea.scrollHeight + "px";
-      setCustomText(textarea.value);
-    };
+    // When text is inputted, adjust textarea size to match
+    textarea.style.height = "auto";
+    textarea.style.height = textarea.scrollHeight + "px";
+    setCustomText(textarea.value);
+    if (submitStatus() !== "idle") {
+      setSubmitStatus("idle");
+      setSubmitMessage("");
+    }
+  };
+
+  const handleSubmitText = async () => {
+    const text = customText().trim();
+    if (!text || isSubmitting()) return;
+
+    try {
+      setIsSubmitting(true);
+      await postText(text);
+      setCustomText("");
+      setSubmitStatus("success");
+      setSubmitMessage("Text was added successfully.");
+    } catch (error) {
+      console.error("Failed to submit text:", error);
+      setSubmitStatus("error");
+      setSubmitMessage(
+        error instanceof Error ? error.message : "Failed to submit text.",
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
 
   const [activeTab, setActiveTab] = createSignal<"original" | "generated">(
@@ -112,9 +143,10 @@ const App: Component = () => {
   return (
     
     <div>
-            <textarea
+      <textarea
         placeholder="Enter text..."
         onInput={handleTextInput}
+        value={customText()}
         style={{
           "font-size": "24px",
           padding: "8px",
@@ -124,6 +156,32 @@ const App: Component = () => {
           "min-height": "40px"
         }}
       />
+      <div style={{ padding: "8px 0 0 0" }}>
+        <button
+          onClick={handleSubmitText}
+          disabled={isSubmitting() || !customText().trim()}
+          style={{
+            "font-size": "16px",
+            padding: "8px 16px",
+            "font-family": "monospace",
+            cursor: isSubmitting() ? "not-allowed" : "pointer",
+          }}
+        >
+          {isSubmitting() ? "Submitting..." : "Submit Text"}
+        </button>
+      </div>
+      <Show when={submitStatus() !== "idle"}>
+        <p
+          style={{
+            margin: "8px 0 0 0",
+            "font-family": "monospace",
+            color: submitStatus() === "success" ? "#1f7a1f" : "#b00020",
+          }}
+        >
+          {submitMessage()}
+        </p>
+      </Show>
+      
       <h2
         style={{
           "font-family": "monospace",

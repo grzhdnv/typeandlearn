@@ -1,10 +1,15 @@
 # To run server: fastapi dev backend/main.py
 
 from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
 from backend.storage import load_data, save_data
 from backend.llm_client import text_to_db
 
 app = FastAPI()
+
+
+class TextUploadRequest(BaseModel):
+    text: str
 
 
 @app.get("/texts")
@@ -55,15 +60,15 @@ def get_text(text_id: str):
 
 
 @app.post("/texts")
-def upload_text(text):
+def upload_text(payload: TextUploadRequest):
     """Endpoint to add new text.
     This will process the text with the LLM and save the structured data to the JSON file.
     Note: Takes time to process due to LLM generation, frontend needs to handle loading state.
 
-    TODO: Need to change to {"text": "content"} format for the request body,
-    but frontend needs to process copied text to fix formatting (like explicit new lines).
-    "content" can not contain new lines, otherwise it will cause JSON parsing issues in the backend.
+    Expects JSON request body in the form: {"text": "content"}.
     """
+
+    text = payload.text
 
     # Validate input
     if not text or not text.strip():
