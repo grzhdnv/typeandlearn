@@ -11,6 +11,7 @@ import {
 interface TypingInterfaceProps {
   targetText: string;
   hints?: Record<string, string>;
+  fullTranslation?: string;
   onComplete?: () => void;
 }
 
@@ -45,7 +46,8 @@ const getCurrentWord = (target: string, cursor: number): string => {
 
 export const TypingInterface: Component<TypingInterfaceProps> = (props) => {
   const [typed, setTyped] = createSignal('');
-  const [hintVisible, setHintVisible] = createSignal(false);
+  const [optionPressed, setOptionPressed] = createSignal(false);
+  const [commandPressed, setCommandPressed] = createSignal(false);
 
   // Reset typed text whenever the target sentence changes
   createEffect(() => {
@@ -63,9 +65,17 @@ export const TypingInterface: Component<TypingInterfaceProps> = (props) => {
     return hints[clean] ?? hints[word] ?? null;
   };
 
+  const hintVisible = () => optionPressed();
+  const fullTranslationVisible = () => optionPressed() && commandPressed();
+
   const handleKeyDown = (e: KeyboardEvent) => {
     if (e.key === 'Alt') {
-      setHintVisible(true);
+      setOptionPressed(true);
+      return;
+    }
+
+    if (e.key === 'Meta') {
+      setCommandPressed(true);
       return;
     }
 
@@ -99,18 +109,29 @@ export const TypingInterface: Component<TypingInterfaceProps> = (props) => {
 
   const handleKeyUp = (e: KeyboardEvent) => {
     if (e.key === 'Alt') {
-      setHintVisible(false);
+      setOptionPressed(false);
     }
+
+    if (e.key === 'Meta') {
+      setCommandPressed(false);
+    }
+  };
+
+  const resetModifierState = () => {
+    setOptionPressed(false);
+    setCommandPressed(false);
   };
 
   // Event listener for keypresses
   onMount(() => {
     globalThis.addEventListener('keydown', handleKeyDown);
     globalThis.addEventListener('keyup', handleKeyUp);
+    globalThis.addEventListener('blur', resetModifierState);
   });
   onCleanup(() => {
     globalThis.removeEventListener('keydown', handleKeyDown);
     globalThis.removeEventListener('keyup', handleKeyUp);
+    globalThis.removeEventListener('blur', resetModifierState);
   });
 
   // Draw the UI
@@ -136,14 +157,24 @@ export const TypingInterface: Component<TypingInterfaceProps> = (props) => {
           when={hintVisible()}
           fallback={
             <span style={{ color: "#999", "font-style": "italic" }}>
-              Hold ⌥ Option for hint
+              Hold ⌥ Option for word hint, ⌥+⌘ for full translation
             </span>
           }
         >
-          <span>
-            <strong>{currentWord()}</strong>
-            {currentHint() ? ` → ${currentHint()}` : " (no hint)"}
-          </span>
+          <Show
+            when={fullTranslationVisible()}
+            fallback={
+              <span>
+                <strong>{currentWord()}</strong>
+                {currentHint() ? ` → ${currentHint()}` : " (no hint)"}
+              </span>
+            }
+          >
+            <span>
+              <strong>Translation</strong>
+              {props.fullTranslation ? ` → ${props.fullTranslation}` : " (not available)"}
+            </span>
+          </Show>
         </Show>
       </div>
       {/* Use a for loop to put each char into its own little span */}

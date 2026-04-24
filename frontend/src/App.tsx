@@ -4,22 +4,31 @@ import { fetchStory } from "./fetchText";
 import { postText } from "./postText";
 const storyData = await fetchStory();
 
-type Sentence = { text: string; hints: Record<string, string> };
+type Sentence = {
+  text: string;
+  hints: Record<string, string>;
+  translation: string;
+};
 
 const originalSentences: Sentence[] = storyData.original_paragraphs.flatMap(
   (p) =>
     p.sentences.map((s) => ({
       text: s.text,
       hints: s.translation_hints as unknown as Record<string, string>,
+      translation: s.translation,
     })),
 );
 
 const generatedSentences: Sentence[] = storyData.practice_sentences.map((p) => ({
   text: p.sentence,
   hints: p.translation_hints as unknown as Record<string, string>,
+  translation: p.translation,
 }));
 
+const TEXTAREA_MIN_HEIGHT_PX = 40;
+
 const App: Component = () => {
+  let textAreaRef: HTMLTextAreaElement | undefined;
   const [customText, setCustomText] = createSignal("");
   const [isSubmitting, setIsSubmitting] = createSignal(false);
   const [submitMessage, setSubmitMessage] = createSignal("");
@@ -27,12 +36,18 @@ const App: Component = () => {
     "idle",
   );
 
+  const resizeTextarea = (textarea: HTMLTextAreaElement) => {
+    const maxHeight = Math.floor(window.innerHeight * 0.5);
+    textarea.style.height = "auto";
+    textarea.style.height = `${Math.min(textarea.scrollHeight, maxHeight)}px`;
+    textarea.style.overflowY = textarea.scrollHeight > maxHeight ? "auto" : "hidden";
+  };
+
   const handleTextInput = (e: InputEvent) => {
     const textarea = e.currentTarget as HTMLTextAreaElement;
 
     // When text is inputted, adjust textarea size to match
-    textarea.style.height = "auto";
-    textarea.style.height = textarea.scrollHeight + "px";
+    resizeTextarea(textarea);
     setCustomText(textarea.value);
     if (submitStatus() !== "idle") {
       setSubmitStatus("idle");
@@ -48,6 +63,10 @@ const App: Component = () => {
       setIsSubmitting(true);
       await postText(text);
       setCustomText("");
+      if (textAreaRef) {
+        textAreaRef.style.height = `${TEXTAREA_MIN_HEIGHT_PX}px`;
+        textAreaRef.style.overflowY = "hidden";
+      }
       setSubmitStatus("success");
       setSubmitMessage("Text was added successfully.");
     } catch (error) {
@@ -141,9 +160,30 @@ const App: Component = () => {
 
 
   return (
-    
     <div>
+      <header
+        style={{
+          padding: "14px 0 12px 0",
+          "margin-bottom": "12px",
+          "border-bottom": "1px solid #e5e5e5",
+          "text-align": "center",
+        }}
+      >
+        <h1
+          style={{
+            margin: 0,
+            "font-family": "monospace",
+            "font-size": "22px",
+            "font-weight": 700,
+            "letter-spacing": "0.04em",
+            "text-transform": "lowercase",
+          }}
+        >
+          typeandlearn
+        </h1>
+      </header>
       <textarea
+        ref={textAreaRef}
         placeholder="Enter text..."
         onInput={handleTextInput}
         value={customText()}
@@ -153,7 +193,8 @@ const App: Component = () => {
           width: "100%",
           resize: "none",
           overflow: "hidden",
-          "min-height": "40px"
+          "min-height": `${TEXTAREA_MIN_HEIGHT_PX}px`,
+          "max-height": "50vh",
         }}
       />
       <div style={{ padding: "8px 0 0 0" }}>
@@ -211,6 +252,7 @@ const App: Component = () => {
           <TypingInterface
             targetText={generatedSentences[generatedIndex()].text}
             hints={generatedSentences[generatedIndex()].hints}
+            fullTranslation={generatedSentences[generatedIndex()].translation}
             onComplete={handleGeneratedComplete}
           />
         }
@@ -218,6 +260,7 @@ const App: Component = () => {
         <TypingInterface
           targetText={originalSentences[originalIndex()].text}
           hints={originalSentences[originalIndex()].hints}
+          fullTranslation={originalSentences[originalIndex()].translation}
           onComplete={handleOriginalComplete}
         />
       </Show>

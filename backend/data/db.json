@@ -1395,5 +1395,577 @@
         }
       }
     ]
+  },
+  {
+    "title": "Tischchen deck dich, Goldesel, und Knüppel aus dem Sack",
+    "original_paragraphs": [
+      {
+        "index": 0,
+        "sentences": [
+          {
+            "index": 0,
+            "text": "Vor Zeiten war ein Schneider, der drei Söhne hatte und nur eine einzige Ziege.",
+            "translation": "Once upon a time there was a tailor who had three sons and only one single goat.",
+            "translation_hints": {
+              "Vor Zeiten": "Once upon a time",
+              "war": "was",
+              "ein Schneider": "a tailor",
+              "drei Söhne": "three sons",
+              "hatte": "had",
+              "eine einzige Ziege": "a single goat"
+            }
+          },
+          {
+            "index": 1,
+            "text": "Aber die Ziege, weil sie alle zusammen mit ihrer Milch ernährte, mußte ihr gutes Futter haben und täglich hinaus auf die Weide geführt werden.",
+            "translation": "But the goat, because she fed them all together with her milk, had to have her good fodder and be led out to the pasture daily.",
+            "translation_hints": {
+              "weil": "because",
+              "ernährte": "fed",
+              "Milch": "milk",
+              "gutes Futter": "good fodder",
+              "täglich": "daily",
+              "Weide": "pasture",
+              "geführt": "led"
+            }
+          }
+        ]
+      },
+      {
+        "index": 1,
+        "sentences": [
+          {
+            "index": 0,
+            "text": "Einmal brachte sie der älteste auf den Kirchhof, wo die schönsten Kräuter standen, ließ sie da fressen und herumspringen.",
+            "translation": "Once the eldest brought her to the churchyard, where the finest herbs grew, and let her eat and jump around there.",
+            "translation_hints": {
+              "Einmal": "Once",
+              "älteste": "eldest",
+              "Kirchhof": "churchyard",
+              "Kräuter": "herbs",
+              "fressen": "eat",
+              "herumspringen": "jump around"
+            }
+          },
+          {
+            "index": 1,
+            "text": "Abends, als es Zeit war heim zu gehen, fragte er 'Ziege, bist du satt?'",
+            "translation": "In the evening, when it was time to go home, he asked, 'Goat, are you full?'",
+            "translation_hints": {
+              "Abends": "In the evening",
+              "Zeit": "time",
+              "heim": "home",
+              "gefragt": "asked",
+              "satt": "full"
+            }
+          }
+        ]
+      },
+      {
+        "index": 2,
+        "sentences": [
+          {
+            "index": 0,
+            "text": "Die Ziege antwortete: 'ich bin so satt, ich mag kein Blatt: meh! meh!'",
+            "translation": "The goat answered: 'I am so full, I don't want a single leaf: meh! meh!'",
+            "translation_hints": {
+              "antwortete": "answered",
+              "mag": "want/like",
+              "kein Blatt": "no leaf"
+            }
+          }
+        ]
+      },
+      {
+        "index": 3,
+        "sentences": [
+          {
+            "index": 0,
+            "text": "Der Vater aber wollte sich selbst überzeugen, gieng hinab in den Stall, streichelte das liebe Thier und fragte 'Ziege, bist du auch satt?'",
+            "translation": "But the father wanted to convince himself, went down to the stable, stroked the dear animal and asked 'Goat, are you also full?'",
+            "translation_hints": {
+              "überzeugen": "convince",
+              "hinab": "down",
+              "Stall": "stable",
+              "streichelte": "stroked",
+              "Thier": "animal"
+            }
+          },
+          {
+            "index": 1,
+            "text": "Die Ziege antwortete: 'wovon sollt ich satt sein? ich sprang nur über Gräbelein, und fand kein einzig Blättelein.'",
+            "translation": "The goat answered: 'What should I be full from? I only jumped over little ditches, and found not a single little leaf.'",
+            "translation_hints": {
+              "wovon": "from what",
+              "sprang": "jumped",
+              "Gräbelein": "little ditches",
+              "Blättelein": "little leaf"
+            }
+          }
+        ]
+      },
+      {
+        "index": 4,
+        "sentences": [
+          {
+            "index": 0,
+            "text": "Der älteste war zu einem Schreiner in die Lehre gegangen, und als seine Zeit herum war, schenkte ihm der Meister ein Tischchen.",
+            "translation": "The eldest had gone to a joiner as an apprentice, and when his time was up, the master gave him a little table.",
+            "translation_hints": {
+              "Schreiner": "joiner/carpenter",
+              "Lehre": "apprenticeship",
+              "herum": "over/up",
+              "schenkte": "gave/gifted",
+              "Tischchen": "little table"
+            }
+          },
+          {
+            "index": 1,
+            "text": "Wenn man sprach 'Tischchen, deck dich,' so war das Tischchen auf einmal mit einem saubern Tüchlein bedeckt.",
+            "translation": "When one said 'Little table, spread yourself,' the little table was suddenly covered with a clean cloth.",
+            "translation_hints": {
+              "sprach": "said/spoke",
+              "deck dich": "spread yourself",
+              "auf einmal": "suddenly",
+              "bedeckt": "covered"
+            }
+          }
+        ]
+      },
+      {
+        "index": 5,
+        "sentences": [
+          {
+            "index": 0,
+            "text": "Der zweite Sohn bekam einen Esel, der Gold speien konnte, wenn man 'Bricklebrit' sagte.",
+            "translation": "The second son received a donkey that could spit gold when one said 'Bricklebrit'.",
+            "translation_hints": {
+              "bekam": "received",
+              "Esel": "donkey",
+              "Gold": "gold",
+              "speien": "spit"
+            }
+          }
+        ]
+      },
+      {
+        "index": 6,
+        "sentences": [
+          {
+            "index": 0,
+            "text": "Der dritte Bruder erhielt einen Sack mit einem Knüppel darin.",
+            "translation": "The third brother received a sack with a club inside it.",
+            "translation_hints": {
+              "erhielt": "received",
+              "Sack": "sack",
+              "Knüppel": "club/cudgel",
+              "darin": "inside it"
+            }
+          },
+          {
+            "index": 1,
+            "text": "Wenn er sprach 'Knüppel, aus dem Sack,' so sprang der Knüppel heraus und tanzte auf dem Rücken der Leute.",
+            "translation": "When he said 'Club, out of the sack,' the club jumped out and danced on the people's backs.",
+            "translation_hints": {
+              "heraus": "out",
+              "tanzte": "danced",
+              "Rücken": "back"
+            }
+          }
+        ]
+      }
+    ],
+    "practice_sentences": [
+      {
+        "index": 0,
+        "sentence": "Der Schneider hat drei Söhne und eine Ziege in seinem Garten.",
+        "translation": "The tailor has three sons and a goat in his garden.",
+        "translation_hints": {
+          "Schneider": "tailor",
+          "Söhne": "sons",
+          "Ziege": "goat",
+          "Garten": "garden"
+        }
+      },
+      {
+        "index": 1,
+        "sentence": "Der Esel läuft auf die Weide, um Gras zu fressen.",
+        "translation": "The donkey runs to the pasture to eat grass.",
+        "translation_hints": {
+          "Esel": "donkey",
+          "Weide": "pasture",
+          "Gras": "grass",
+          "fressen": "eat"
+        }
+      },
+      {
+        "index": 2,
+        "sentence": "Leg das Brot auf das kleine Tischchen in der Küche.",
+        "translation": "Put the bread on the small table in the kitchen.",
+        "translation_hints": {
+          "Brot": "bread",
+          "Tischchen": "little table",
+          "Küche": "kitchen"
+        }
+      },
+      {
+        "index": 3,
+        "sentence": "Der Meister schenkt dem Jungen ein neues Werkzeug.",
+        "translation": "The master gives the boy a new tool.",
+        "translation_hints": {
+          "Meister": "master",
+          "schenkt": "gives",
+          "Werkzeug": "tool"
+        }
+      },
+      {
+        "index": 4,
+        "sentence": "Bist du satt nach dem großen Essen?",
+        "translation": "Are you full after the big meal?",
+        "translation_hints": {
+          "satt": "full",
+          "großen": "big",
+          "Essen": "meal/food"
+        }
+      }
+    ]
+  },
+  {
+    "title": "Der Räuberbräutigam",
+    "original_paragraphs": [
+      {
+        "index": 0,
+        "sentences": [
+          {
+            "index": 0,
+            "text": "Es war einmal ein Müller, der hatte eine schöne Tochter, und als sie herangewachsen war, so wünschte er sie wäre versorgt und gut verheirathet.",
+            "translation": "Once upon a time there was a miller who had a beautiful daughter, and when she had grown up, he wished she were provided for and well married.",
+            "translation_hints": {
+              "Es war einmal": "Once upon a time",
+              "Müller": "miller",
+              "schöne": "beautiful",
+              "Tochter": "daughter",
+              "herangewachsen": "grown up",
+              "wünschte": "wished",
+              "versorgt": "provided for",
+              "verheirathet": "married"
+            }
+          },
+          {
+            "index": 1,
+            "text": "Er dachte 'kommt ein ordentlicher Freier und hält um sie an, so will ich sie ihm geben.'",
+            "translation": "He thought, 'if a decent suitor comes and proposes to her, I will give her to him.'",
+            "translation_hints": {
+              "dachte": "thought",
+              "ordentlicher": "decent",
+              "Freier": "suitor",
+              "hält um sie an": "proposes to her",
+              "geben": "give"
+            }
+          },
+          {
+            "index": 2,
+            "text": "Nicht lange so kam ein Freier, der schien sehr reich zu sein, und da der Müller nichts an ihm auszusetzen wußte, so versprach er ihm seine Tochter.",
+            "translation": "Not long after, a suitor came who seemed to be very rich, and since the miller knew of nothing to find fault with in him, he promised him his daughter.",
+            "translation_hints": {
+              "schien": "seemed",
+              "reich": "rich",
+              "nichts": "nothing",
+              "auszusetzen": "to find fault with",
+              "versprach": "promised"
+            }
+          }
+        ]
+      },
+      {
+        "index": 1,
+        "sentences": [
+          {
+            "index": 0,
+            "text": "Das Mädchen aber hatte ihn nicht so recht lieb, wie eine Braut ihren Bräutigam lieb haben soll, und hatte kein Vertrauen zu ihm: so oft sie ihn ansah oder an ihn dachte, fühlte sie ein Grauen in ihrem Herzen.",
+            "translation": "The girl, however, did not love him quite as much as a bride should love her bridegroom, and had no trust in him: as often as she looked at him or thought of him, she felt a horror in her heart.",
+            "translation_hints": {
+              "Mädchen": "girl",
+              "lieb haben": "to love",
+              "Braut": "bride",
+              "Bräutigam": "bridegroom",
+              "Vertrauen": "trust",
+              "ansah": "looked at",
+              "fühlte": "felt",
+              "Grauen": "horror",
+              "Herzen": "heart"
+            }
+          }
+        ]
+      },
+      {
+        "index": 2,
+        "sentences": [
+          {
+            "index": 0,
+            "text": "Einmal sprach er zu ihr 'du bist meine Braut und besuchst mich nicht einmal.'",
+            "translation": "Once he said to her, 'you are my bride and you do not even visit me.'",
+            "translation_hints": {
+              "sprach": "said",
+              "besuchst": "visit",
+              "nicht einmal": "not even"
+            }
+          },
+          {
+            "index": 1,
+            "text": "Das Mädchen antwortete 'ich weiß nicht wo euer Haus ist.'",
+            "translation": "The girl answered, 'I do not know where your house is.'",
+            "translation_hints": {
+              "antwortete": "answered",
+              "weiß": "know",
+              "Haus": "house"
+            }
+          },
+          {
+            "index": 2,
+            "text": "Da sprach der Bräutigam 'mein Haus ist draußen im dunkeln Wald.'",
+            "translation": "Then the bridegroom said, 'my house is out there in the dark forest.'",
+            "translation_hints": {
+              "draußen": "out there",
+              "dunkeln": "dark",
+              "Wald": "forest"
+            }
+          }
+        ]
+      },
+      {
+        "index": 3,
+        "sentences": [
+          {
+            "index": 0,
+            "text": "Es suchte Ausreden und meinte es könnte den Weg dahin nicht finden.",
+            "translation": "She sought excuses and said she might not be able to find the way there.",
+            "translation_hints": {
+              "Ausreden": "excuses",
+              "Weg": "way",
+              "finden": "find"
+            }
+          },
+          {
+            "index": 1,
+            "text": "Der Bräutigam sagte 'künftigen Sonntag mußt du hinaus zu mir kommen, ich habe die Gäste schon eingeladen, und damit du den Weg durch den Wald findest, so will ich dir Asche streuen.'",
+            "translation": "The bridegroom said, 'next Sunday you must come out to me, I have already invited the guests, and so that you find the way through the forest, I will scatter ashes for you.'",
+            "translation_hints": {
+              "künftigen": "next",
+              "Sonntag": "Sunday",
+              "Gäste": "guests",
+              "eingeladen": "invited",
+              "Asche": "ashes",
+              "streuen": "scatter"
+            }
+          }
+        ]
+      },
+      {
+        "index": 4,
+        "sentences": [
+          {
+            "index": 0,
+            "text": "Als der Sonntag kam und das Mädchen sich auf den Weg machen sollte, ward ihm so angst, es wusste selbst nicht recht warum, und damit es den Weg bezeichnen könnte, steckte es sich beide Taschen voll Erbsen und Linsen.",
+            "translation": "When Sunday came and the girl was to set out on her way, she became so afraid, she herself did not really know why, and so that she could mark the path, she filled both her pockets with peas and lentils.",
+            "translation_hints": {
+              "angst": "afraid",
+              "bezeichnen": "mark",
+              "Taschen": "pockets",
+              "Erbsen": "peas",
+              "Linsen": "lentils"
+            }
+          },
+          {
+            "index": 1,
+            "text": "An dem Eingang des Waldes war Asche gestreut, der ging es nach, warf aber bei jedem Schritt rechts und links ein paar Erbsen auf die Erde.",
+            "translation": "At the entrance of the forest, ashes had been scattered, which she followed, but with every step she threw a few peas onto the ground to the right and left.",
+            "translation_hints": {
+              "Eingang": "entrance",
+              "Schritt": "step",
+              "rechts": "right",
+              "links": "left",
+              "Erde": "ground"
+            }
+          }
+        ]
+      },
+      {
+        "index": 5,
+        "sentences": [
+          {
+            "index": 0,
+            "text": "Es ging fast den ganzen Tag bis es mitten in den Wald kam, wo er am dunkelsten war, da stand ein einsames Haus, das gefiel ihm nicht, denn es sah so finster und unheimlich aus.",
+            "translation": "She walked almost the whole day until she came into the middle of the forest, where it was darkest, there stood a lonely house, which she did not like, for it looked so dark and eerie.",
+            "translation_hints": {
+              "ganzen Tag": "whole day",
+              "mitten": "middle",
+              "einsames": "lonely",
+              "gefiel": "liked",
+              "finster": "dark",
+              "unheimlich": "eerie"
+            }
+          },
+          {
+            "index": 1,
+            "text": "Es trat hinein, aber es war niemand darin und herrschte die größte Stille.",
+            "translation": "She stepped inside, but no one was in there and the greatest silence reigned.",
+            "translation_hints": {
+              "trat hinein": "stepped inside",
+              "niemand": "no one",
+              "Stille": "silence"
+            }
+          }
+        ]
+      },
+      {
+        "index": 6,
+        "sentences": [
+          {
+            "index": 0,
+            "text": "Plötzlich rief eine Stimme 'kehr um, kehr um, du junge Braut, du bist in einem Mörderhaus.'",
+            "translation": "Suddenly a voice cried, 'turn back, turn back, you young bride, you are in a murderer's house.'",
+            "translation_hints": {
+              "Plötzlich": "Suddenly",
+              "Stimme": "voice",
+              "kehr um": "turn back",
+              "Mörderhaus": "murderer's house"
+            }
+          },
+          {
+            "index": 1,
+            "text": "Das Mädchen blickte auf und sah daß die Stimme von einem Vogel kam, der da in einem Bauer an der Wand hing.",
+            "translation": "The girl looked up and saw that the voice came from a bird that hung there in a cage on the wall.",
+            "translation_hints": {
+              "blickte auf": "looked up",
+              "Vogel": "bird",
+              "Bauer": "cage",
+              "Wand": "wall"
+            }
+          }
+        ]
+      },
+      {
+        "index": 7,
+        "sentences": [
+          {
+            "index": 0,
+            "text": "Endlich kam sie auch in den Keller, da saß eine steinalte Frau, die wackelte mit dem Kopfe.",
+            "translation": "Finally she also came into the cellar, where an ancient woman sat, who was shaking her head.",
+            "translation_hints": {
+              "Keller": "cellar",
+              "steinalte": "ancient",
+              "wackelte": "shaking",
+              "Kopfe": "head"
+            }
+          },
+          {
+            "index": 1,
+            "text": "'Ach, du armes Kind,' antwortete die Alte, 'wo bist du hingerathen! du bist in einer Mördergrube.'",
+            "translation": "'Oh, you poor child,' answered the old woman, 'where have you ended up! you are in a murderer's den.'",
+            "translation_hints": {
+              "armes Kind": "poor child",
+              "hingerathen": "ended up",
+              "Mördergrube": "murderer's den"
+            }
+          }
+        ]
+      },
+      {
+        "index": 8,
+        "sentences": [
+          {
+            "index": 0,
+            "text": "Einer von ihnen bemerkte an dem kleinen Finger der Gemordeten einen goldenen Ring, und als er sich nicht gleich abziehen ließ, so nahm er ein Beil und hackte den Finger ab.",
+            "translation": "One of them noticed a golden ring on the little finger of the murdered woman, and when it would not come off immediately, he took an axe and chopped the finger off.",
+            "translation_hints": {
+              "Finger": "finger",
+              "goldenen Ring": "golden ring",
+              "abziehen": "pull off",
+              "Beil": "axe",
+              "hackte ab": "chopped off"
+            }
+          },
+          {
+            "index": 1,
+            "text": "Der Finger sprang in die Höhe über das Faß hinweg und fiel der Braut gerade in den Schooß.",
+            "translation": "The finger leapt up high over the barrel and fell right into the bride's lap.",
+            "translation_hints": {
+              "sprang": "leapt",
+              "Höhe": "height/air",
+              "Faß": "barrel",
+              "fiel": "fell",
+              "Schooß": "lap"
+            }
+          }
+        ]
+      },
+      {
+        "index": 9,
+        "sentences": [
+          {
+            "index": 0,
+            "text": "Bei diesen Worten zog sie ihn hervor und zeigte ihn den Anwesenden.",
+            "translation": "At these words, she pulled it out and showed it to those present.",
+            "translation_hints": {
+              "Worten": "words",
+              "zog hervor": "pulled out",
+              "zeigte": "showed",
+              "Anwesenden": "those present"
+            }
+          },
+          {
+            "index": 1,
+            "text": "Der Räuber sprang auf und wollte entfliehen, aber die Gäste hielten ihn fest und überlieferten ihn den Gerichten.",
+            "translation": "The robber jumped up and wanted to escape, but the guests held him fast and delivered him to the courts.",
+            "translation_hints": {
+              "Räuber": "robber",
+              "entfliehen": "escape",
+              "fest": "fast/tightly",
+              "überlieferten": "delivered",
+              "Gerichten": "courts"
+            }
+          }
+        ]
+      }
+    ],
+    "practice_sentences": [
+      {
+        "index": 0,
+        "sentence": "Die junge Braut geht allein durch den dunklen Wald.",
+        "translation": "The young bride walks alone through the dark forest.",
+        "translation_hints": {
+          "junge": "young",
+          "Braut": "bride",
+          "geht": "walks",
+          "allein": "alone",
+          "dunklen": "dark",
+          "Wald": "forest"
+        }
+      },
+      {
+        "index": 1,
+        "sentence": "Der Müller hat ein altes Haus mit einem großen Keller.",
+        "translation": "The miller has an old house with a large cellar.",
+        "translation_hints": {
+          "Müller": "miller",
+          "altes": "old",
+          "Haus": "house",
+          "großen": "large",
+          "Keller": "cellar"
+        }
+      },
+      {
+        "index": 2,
+        "sentence": "Sie findet einen goldenen Ring auf der Erde.",
+        "translation": "She finds a golden ring on the ground.",
+        "translation_hints": {
+          "findet": "finds",
+          "goldenen": "golden",
+          "Ring": "ring",
+          "Erde": "ground"
+        }
+      }
+    ]
   }
 ]

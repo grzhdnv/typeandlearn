@@ -50,10 +50,15 @@ const fetchTexts = async () => {
 export type StoryData = {
   title: string;
   original_paragraphs: {
-    sentences: { text: string; translation_hints: Record<string, string> }[];
+    sentences: {
+      text: string;
+      translation: string;
+      translation_hints: Record<string, string>;
+    }[];
   }[];
   practice_sentences: {
     sentence: string;
+    translation: string;
     translation_hints: Record<string, string>;
   }[];
 };
