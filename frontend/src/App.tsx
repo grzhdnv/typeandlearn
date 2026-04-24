@@ -184,7 +184,15 @@ const App: Component = () => {
 
 
   return (
-    <div>
+    <div
+      style={{
+        width: "100%",
+        "max-width": "980px",
+        margin: "0 auto",
+        padding: "0 20px 32px 20px",
+        "box-sizing": "border-box",
+      }}
+    >
       <header
         style={{
           padding: "14px 0 12px 0",
