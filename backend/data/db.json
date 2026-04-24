@@ -1733,5 +1733,279 @@
         }
       }
     ]
+  },
+  {
+    "title": "Le voyage",
+    "original_paragraphs": [
+      {
+        "index": 0,
+        "sentences": [
+          {
+            "index": 0,
+            "text": "Je m’appelle Hugo et j’ai seize ans.",
+            "translation": "My name is Hugo and I am sixteen years old.",
+            "translation_hints": {
+              "Je m’appelle": "My name is",
+              "Hugo": "Hugo",
+              "et": "and",
+              "j’ai": "I have",
+              "seize": "sixteen",
+              "ans": "years old"
+            }
+          },
+          {
+            "index": 1,
+            "text": "Aujourd’hui, avec mes parents et ma sœur nous partons en voyage.",
+            "translation": "Today, with my parents and my sister we are going on a trip.",
+            "translation_hints": {
+              "Aujourd’hui": "Today",
+              "avec": "with",
+              "mes": "my",
+              "parents": "parents",
+              "et": "and",
+              "ma": "my",
+              "sœur": "sister",
+              "nous": "we",
+              "partons": "are going / leaving",
+              "en": "on",
+              "voyage": "trip"
+            }
+          },
+          {
+            "index": 2,
+            "text": "Ma sœur s’appelle Laura, elle a treize ans.",
+            "translation": "My sister's name is Laura, she is thirteen years old.",
+            "translation_hints": {
+              "Ma": "My",
+              "sœur": "sister",
+              "s’appelle": "is named",
+              "elle": "she",
+              "a": "has",
+              "treize": "thirteen",
+              "ans": "years old"
+            }
+          },
+          {
+            "index": 3,
+            "text": "Nous sommes à l’aéroport : direction Barcelone en Espagne !",
+            "translation": "We are at the airport: heading to Barcelona in Spain!",
+            "translation_hints": {
+              "Nous": "We",
+              "sommes": "are",
+              "à": "at",
+              "l’aéroport": "the airport",
+              "direction": "heading to",
+              "Barcelone": "Barcelona",
+              "en": "in",
+              "Espagne": "Spain"
+            }
+          }
+        ]
+      },
+      {
+        "index": 1,
+        "sentences": [
+          {
+            "index": 0,
+            "text": "J’ai déjà pris l’avion car nous sommes allés à Rome en Italie, il y a deux ans.",
+            "translation": "I have already taken the plane because we went to Rome in Italy two years ago.",
+            "translation_hints": {
+              "J’ai": "I have",
+              "déjà": "already",
+              "pris": "taken",
+              "l’avion": "the plane",
+              "car": "because",
+              "nous": "we",
+              "sommes allés": "went",
+              "à": "to",
+              "Rome": "Rome",
+              "en": "in",
+              "Italie": "Italy",
+              "il y a": "ago",
+              "deux": "two",
+              "ans": "years"
+            }
+          },
+          {
+            "index": 1,
+            "text": "À Barcelone, mes parents ont réservé un appartement près de la plage.",
+            "translation": "In Barcelona, my parents reserved an apartment near the beach.",
+            "translation_hints": {
+              "À": "In",
+              "Barcelone": "Barcelona",
+              "mes": "my",
+              "parents": "parents",
+              "ont réservé": "reserved",
+              "un": "an",
+              "appartement": "apartment",
+              "près de": "near",
+              "la": "the",
+              "plage": "beach"
+            }
+          },
+          {
+            "index": 2,
+            "text": "Mes parents souhaitent louer des vélos pour visiter Barcelone.",
+            "translation": "My parents want to rent bicycles to visit Barcelona.",
+            "translation_hints": {
+              "Mes": "My",
+              "parents": "parents",
+              "souhaitent": "want / wish",
+              "louer": "to rent",
+              "des": "some",
+              "vélos": "bicycles",
+              "pour": "to",
+              "visiter": "visit",
+              "Barcelone": "Barcelona"
+            }
+          },
+          {
+            "index": 3,
+            "text": "Ils veulent admirer la célèbre Sagrada Familia, se balader dans le Parc Güell et goûter la nourriture locale.",
+            "translation": "They want to admire the famous Sagrada Familia, stroll in Park Güell and taste the local food.",
+            "translation_hints": {
+              "Ils": "They",
+              "veulent": "want",
+              "admirer": "to admire",
+              "la": "the",
+              "célèbre": "famous",
+              "se balader": "to stroll",
+              "dans": "in",
+              "le": "the",
+              "goûter": "to taste",
+              "la nourriture": "the food",
+              "locale": "local"
+            }
+          },
+          {
+            "index": 4,
+            "text": "Moi, je veux aller au zoo et à l’aquarium… et manger des glaces.",
+            "translation": "Me, I want to go to the zoo and the aquarium… and eat ice cream.",
+            "translation_hints": {
+              "Moi": "Me",
+              "je": "I",
+              "veux": "want",
+              "aller": "to go",
+              "au": "to the",
+              "zoo": "zoo",
+              "et": "and",
+              "à": "to",
+              "l’aquarium": "the aquarium",
+              "manger": "to eat",
+              "des": "some",
+              "glaces": "ice cream"
+            }
+          },
+          {
+            "index": 5,
+            "text": "Ma sœur préfère aller à la plage pour lire et bronzer.",
+            "translation": "My sister prefers to go to the beach to read and sunbathe.",
+            "translation_hints": {
+              "Ma": "My",
+              "sœur": "sister",
+              "préfère": "prefers",
+              "aller": "to go",
+              "à": "to",
+              "la": "the",
+              "plage": "beach",
+              "pour": "to",
+              "lire": "read",
+              "et": "and",
+              "bronzer": "sunbathe"
+            }
+          },
+          {
+            "index": 6,
+            "text": "Nous séjournons pendant deux semaines à Barcelone.",
+            "translation": "We are staying for two weeks in Barcelona.",
+            "translation_hints": {
+              "Nous": "We",
+              "séjournons": "are staying",
+              "pendant": "for",
+              "deux": "two",
+              "semaines": "weeks",
+              "à": "in",
+              "Barcelone": "Barcelona"
+            }
+          }
+        ]
+      },
+      {
+        "index": 2,
+        "sentences": [
+          {
+            "index": 0,
+            "text": "J’espère qu’il y aura beaucoup de soleil.",
+            "translation": "I hope there will be a lot of sun.",
+            "translation_hints": {
+              "J’espère": "I hope",
+              "qu’il y aura": "that there will be",
+              "beaucoup de": "a lot of",
+              "soleil": "sun"
+            }
+          },
+          {
+            "index": 1,
+            "text": "Je n’aime pas la pluie, surtout pendant les vacances.",
+            "translation": "I don't like rain, especially during the holidays.",
+            "translation_hints": {
+              "Je n’aime pas": "I don't like",
+              "la": "the",
+              "pluie": "rain",
+              "surtout": "especially",
+              "pendant": "during",
+              "les": "the",
+              "vacances": "holidays"
+            }
+          }
+        ]
+      }
+    ],
+    "practice_sentences": [
+      {
+        "index": 0,
+        "sentence": "Ma famille et moi voyageons en Italie cet été.",
+        "translation": "My family and I are traveling to Italy this summer.",
+        "translation_hints": {
+          "Ma": "My",
+          "famille": "family",
+          "et": "and",
+          "moi": "me / I",
+          "voyageons": "are traveling",
+          "en": "to",
+          "Italie": "Italy",
+          "cet": "this",
+          "été": "summer"
+        }
+      },
+      {
+        "index": 1,
+        "sentence": "Il aime manger des glaces quand il y a du soleil.",
+        "translation": "He likes to eat ice cream when it is sunny.",
+        "translation_hints": {
+          "Il": "He",
+          "aime": "likes",
+          "manger": "to eat",
+          "des": "some",
+          "glaces": "ice cream",
+          "quand": "when",
+          "il y a du": "there is",
+          "soleil": "sun"
+        }
+      },
+      {
+        "index": 2,
+        "sentence": "Nous louons un appartement près du centre-ville.",
+        "translation": "We are renting an apartment near the city center.",
+        "translation_hints": {
+          "Nous": "We",
+          "louons": "are renting",
+          "un": "an",
+          "appartement": "apartment",
+          "près du": "near the",
+          "centre-ville": "city center"
+        }
+      }
+    ]
   }
 ]

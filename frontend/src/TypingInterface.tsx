@@ -91,13 +91,10 @@ export const TypingInterface: Component<TypingInterfaceProps> = (props) => {
         if (prev.length < props.targetText.length) {
           const next = prev + e.key;
 
-          // If the sentence is now fully typed and all characters match, advance
-          if (
-            next.length === props.targetText.length &&
-            next === props.targetText
-          ) {
+          // Advance as soon as user has typed the full sentence length.
+          if (next.length === props.targetText.length) {
             // Use setTimeout so the final character renders before moving on
-            setTimeout(() => props.onComplete?.(), 300);
+            setTimeout(() => props.onComplete?.(), 1000);
           }
 
           return next;
@@ -139,9 +136,10 @@ export const TypingInterface: Component<TypingInterfaceProps> = (props) => {
     <div
       style={{
         "font-size": "24px",
-        padding: "20px",
+        padding: "20px 0",
         "font-family": "monospace",
-        "max-width": "800px",
+        width: "100%",
+        "box-sizing": "border-box",
         "line-height": "1.5",
       }}
     >

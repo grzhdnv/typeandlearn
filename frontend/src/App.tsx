@@ -128,11 +128,76 @@ const App: Component = () => {
     "font-size": "18px",
     padding: "8px 16px",
     "font-family": "monospace",
+    outline: "none",
     cursor: "pointer",
     border: "1px solid #ccc",
     "background-color": activeTab() === tab ? "#ddd" : "transparent",
     "font-weight": activeTab() === tab ? "bold" : "normal",
   });
+
+  const navButtonStyle = (disabled: boolean) => ({
+    "font-size": "16px",
+    padding: "8px 16px",
+    width: "130px",
+    display: "inline-flex",
+    "align-items": "center",
+    "justify-content": "center",
+    gap: "8px",
+    "font-family": "monospace",
+    outline: "none",
+    border: "1px solid #ccc",
+    "background-color": disabled ? "#efefef" : "#fff",
+    color: disabled ? "#999" : "#111",
+    cursor: disabled ? "not-allowed" : "pointer",
+  });
+
+  const previousDisabled = () =>
+    activeTab() === "original" ? originalIndex() === 0 : generatedIndex() === 0;
+
+  const nextDisabled = () =>
+    activeTab() === "original"
+      ? originalIndex() >= originalSentences().length - 1
+      : generatedIndex() >= generatedSentences().length - 1;
+
+  const goToPreviousSentence = () => {
+    if (activeTab() === "original") {
+      if (originalIndex() > 0) {
+        setOriginalIndex((i) => i - 1);
+      }
+      return;
+    }
+
+    if (generatedIndex() > 0) {
+      setGeneratedIndex((i) => i - 1);
+    }
+  };
+
+  const goToNextSentence = () => {
+    if (activeTab() === "original") {
+      if (originalIndex() < originalSentences().length - 1) {
+        setOriginalIndex((i) => i + 1);
+      }
+      return;
+    }
+
+    if (generatedIndex() < generatedSentences().length - 1) {
+      setGeneratedIndex((i) => i + 1);
+    }
+  };
+
+  const handleMouseOnlyClick = (action: () => void) => (e: MouseEvent) => {
+    if (e.detail === 0) {
+      e.preventDefault();
+      return;
+    }
+
+    action();
+    (e.currentTarget as HTMLButtonElement).blur();
+  };
+
+  const blurButtonOnFocus = (e: FocusEvent) => {
+    (e.currentTarget as HTMLButtonElement).blur();
+  };
 
 //   // --- Types ---
 //   type Dictionary = { [key: string]: unknown };
@@ -231,13 +296,16 @@ const App: Component = () => {
       />
       <div style={{ padding: "8px 0 0 0" }}>
         <button
-          onClick={handleSubmitText}
+          onClick={handleMouseOnlyClick(() => void handleSubmitText())}
+          onFocus={blurButtonOnFocus}
+          tabIndex={-1}
           disabled={isSubmitting() || !customText().trim()}
           style={{
             "font-size": "16px",
             padding: "8px 16px",
             "font-family": "monospace",
             cursor: isSubmitting() ? "not-allowed" : "pointer",
+            outline: "none",
           }}
         >
           {isSubmitting() ? "Submitting..." : "Submit Text"}
@@ -303,13 +371,17 @@ const App: Component = () => {
       <div style={{ display: "flex", gap: "8px", padding: "20px 20px 0 20px" }}>
         <button
           style={tabButtonStyle("original")}
-          onClick={() => setActiveTab("original")}
+          onClick={handleMouseOnlyClick(() => setActiveTab("original"))}
+          onFocus={blurButtonOnFocus}
+          tabIndex={-1}
         >
           Original
         </button>
         <button
           style={tabButtonStyle("generated")}
-          onClick={() => setActiveTab("generated")}
+          onClick={handleMouseOnlyClick(() => setActiveTab("generated"))}
+          onFocus={blurButtonOnFocus}
+          tabIndex={-1}
         >
           Generated
         </button>
@@ -355,6 +427,26 @@ const App: Component = () => {
           onComplete={handleOriginalComplete}
         />
       </Show>
+      <div style={{ display: "flex", gap: "8px", padding: "8px 20px 0 20px" }}>
+        <button
+          onClick={handleMouseOnlyClick(goToPreviousSentence)}
+          onFocus={blurButtonOnFocus}
+          tabIndex={-1}
+          disabled={previousDisabled()}
+          style={navButtonStyle(previousDisabled())}
+        >
+          Previous
+        </button>
+        <button
+          onClick={handleMouseOnlyClick(goToNextSentence)}
+          onFocus={blurButtonOnFocus}
+          tabIndex={-1}
+          disabled={nextDisabled()}
+          style={navButtonStyle(nextDisabled())}
+        >
+          Next
+        </button>
+      </div>
       </Show>
     </div>
   );
