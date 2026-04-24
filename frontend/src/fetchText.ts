@@ -63,6 +63,24 @@ export type StoryData = {
   }[];
 };
 
+export type TextTitle = {
+  id: string;
+  title: string;
+};
+
+type TextTitlesResponse = {
+  message?: string;
+  titles?: TextTitle[];
+};
+
+export const fetchTextTitles = async (): Promise<TextTitle[]> => {
+  const response = await fetch("/api/texts/titles");
+  if (!response.ok)
+    throw new Error(`Request failed with status ${response.status}`);
+  const json: TextTitlesResponse = await response.json();
+  return json.titles ?? [];
+};
+
 export const fetchStory = async (id: string = "00"): Promise<StoryData> => {
   const response = await fetch(`/api/texts/${id}`);
   if (!response.ok)

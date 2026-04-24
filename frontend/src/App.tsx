@@ -1,8 +1,14 @@
-import { type Component, createSignal, Show } from "solid-js";
+import {
+  type Component,
+  Show,
+  createEffect,
+  createMemo,
+  createResource,
+  createSignal,
+} from "solid-js";
 import { TypingInterface } from "./TypingInterface";
-import { fetchStory } from "./fetchText";
+import { fetchStory, fetchTextTitles } from "./fetchText";
 import { postText } from "./postText";
-const storyData = await fetchStory();
 
 type Sentence = {
   text: string;
@@ -10,25 +16,36 @@ type Sentence = {
   translation: string;
 };
 
-const originalSentences: Sentence[] = storyData.original_paragraphs.flatMap(
-  (p) =>
-    p.sentences.map((s) => ({
-      text: s.text,
-      hints: s.translation_hints as unknown as Record<string, string>,
-      translation: s.translation,
-    })),
-);
-
-const generatedSentences: Sentence[] = storyData.practice_sentences.map((p) => ({
-  text: p.sentence,
-  hints: p.translation_hints as unknown as Record<string, string>,
-  translation: p.translation,
-}));
-
 const TEXTAREA_MIN_HEIGHT_PX = 40;
 
 const App: Component = () => {
   let textAreaRef: HTMLTextAreaElement | undefined;
+  const [selectedTextId, setSelectedTextId] = createSignal("00");
+  const [availableTexts] = createResource(fetchTextTitles);
+  const [storyData] = createResource(selectedTextId, fetchStory);
+
+  const originalSentences = createMemo<Sentence[]>(() => {
+    const story = storyData();
+    if (!story) return [];
+    return story.original_paragraphs.flatMap((p) =>
+      p.sentences.map((s) => ({
+        text: s.text,
+        hints: s.translation_hints as unknown as Record<string, string>,
+        translation: s.translation,
+      })),
+    );
+  });
+
+  const generatedSentences = createMemo<Sentence[]>(() => {
+    const story = storyData();
+    if (!story) return [];
+    return story.practice_sentences.map((p) => ({
+      text: p.sentence,
+      hints: p.translation_hints as unknown as Record<string, string>,
+      translation: p.translation,
+    }));
+  });
+
   const [customText, setCustomText] = createSignal("");
   const [isSubmitting, setIsSubmitting] = createSignal(false);
   const [submitMessage, setSubmitMessage] = createSignal("");
@@ -88,14 +105,21 @@ const App: Component = () => {
   const [originalIndex, setOriginalIndex] = createSignal(0);
   const [generatedIndex, setGeneratedIndex] = createSignal(0);
 
+  createEffect(() => {
+    const story = storyData();
+    if (!story) return;
+    setOriginalIndex(0);
+    setGeneratedIndex(0);
+  });
+
   const handleOriginalComplete = () => {
-    if (originalIndex() < originalSentences.length - 1) {
+    if (originalIndex() < originalSentences().length - 1) {
       setOriginalIndex((i) => i + 1);
     }
   };
 
   const handleGeneratedComplete = () => {
-    if (generatedIndex() < generatedSentences.length - 1) {
+    if (generatedIndex() < generatedSentences().length - 1) {
       setGeneratedIndex((i) => i + 1);
     }
   };
@@ -223,6 +247,42 @@ const App: Component = () => {
         </p>
       </Show>
       
+      <div style={{ padding: "20px 20px 0 20px" }}>
+        <label
+          for="text-select"
+          style={{
+            display: "block",
+            "font-family": "monospace",
+            "font-size": "14px",
+            "margin-bottom": "6px",
+          }}
+        >
+          Choose a text
+        </label>
+        <select
+          id="text-select"
+          value={selectedTextId()}
+          onChange={(e) => setSelectedTextId(e.currentTarget.value)}
+          disabled={availableTexts.loading}
+          style={{
+            "font-family": "monospace",
+            "font-size": "16px",
+            padding: "6px 10px",
+            "min-width": "280px",
+            "max-width": "100%",
+          }}
+        >
+          <Show
+            when={(availableTexts() ?? []).length > 0}
+            fallback={<option value="00">No texts found</option>}
+          >
+            {(availableTexts() ?? []).map((text) => (
+              <option value={text.id}>{text.title}</option>
+            ))}
+          </Show>
+        </select>
+      </div>
+
       <h2
         style={{
           "font-family": "monospace",
@@ -230,7 +290,7 @@ const App: Component = () => {
           margin: 0,
         }}
       >
-        {storyData.title}
+        {storyData.loading ? "Loading text..." : storyData()?.title ?? ""}
       </h2>
       <div style={{ display: "flex", gap: "8px", padding: "20px 20px 0 20px" }}>
         <button
@@ -247,22 +307,46 @@ const App: Component = () => {
         </button>
       </div>
       <Show
-        when={activeTab() === "original"}
+        when={
+          !storyData.loading &&
+          !storyData.error &&
+          ((activeTab() === "original" && originalSentences().length > 0) ||
+            (activeTab() === "generated" && generatedSentences().length > 0))
+        }
+        fallback={
+          <p
+            style={{
+              "font-family": "monospace",
+              padding: "20px",
+              color: "#666",
+            }}
+          >
+            {storyData.error
+              ? "Failed to load selected text."
+              : storyData.loading
+                ? "Loading..."
+                : "No sentences available for this text."}
+          </p>
+        }
+      >
+        <Show
+          when={activeTab() === "original"}
         fallback={
           <TypingInterface
-            targetText={generatedSentences[generatedIndex()].text}
-            hints={generatedSentences[generatedIndex()].hints}
-            fullTranslation={generatedSentences[generatedIndex()].translation}
+            targetText={generatedSentences()[generatedIndex()].text}
+            hints={generatedSentences()[generatedIndex()].hints}
+            fullTranslation={generatedSentences()[generatedIndex()].translation}
             onComplete={handleGeneratedComplete}
           />
         }
       >
         <TypingInterface
-          targetText={originalSentences[originalIndex()].text}
-          hints={originalSentences[originalIndex()].hints}
-          fullTranslation={originalSentences[originalIndex()].translation}
+          targetText={originalSentences()[originalIndex()].text}
+          hints={originalSentences()[originalIndex()].hints}
+          fullTranslation={originalSentences()[originalIndex()].translation}
           onComplete={handleOriginalComplete}
         />
+      </Show>
       </Show>
     </div>
   );
