@@ -1,37 +1,39 @@
-# Type and Learn
+# TypeAndLearn
 
-### MonkeyType for learning languages
+Monorepo-style workspace for the TypeAndLearn app.
+
+## Repository layout
+
+- `apps/backend` — FastAPI API (layered: api/schemas/services/repositories/core)
+- `apps/frontend` — SolidJS UI (feature-first structure)
+- `packages/shared/contracts` — shared API contract artifacts
+- `tests` — repository-level tests and fixtures
+- `docs` — architecture and migration documentation
+- `archive` — legacy prototypes and historical artifacts
+
+## Quick start
+
+```bash
+npm run bootstrap
+```
 
 ## Run locally
 
-Start the backend and frontend in separate terminals.
-
-### 1. Start backend (FastAPI)
-
-From the project root:
+Start backend:
 
 ```bash
 source .venv/bin/activate
-fastapi dev backend/main.py
+fastapi dev apps/backend/main.py
 ```
 
-Backend runs at `http://127.0.0.1:8000`.
-
-### 2. Start frontend (SolidJS + Vite)
-
-In a second terminal:
+Start frontend:
 
 ```bash
-cd frontend
-npm install
-npm run dev
+npm --prefix apps/frontend run dev
 ```
 
-Frontend runs at `http://localhost:3000`.
+## Quality checks
 
-The frontend is configured to proxy `/api/*` requests to the backend during development.
-
-## TODO
-
-- [ ] Add database to store translations and user data.
-- [ ] Implement user authentication.
+```bash
+npm run check
+```

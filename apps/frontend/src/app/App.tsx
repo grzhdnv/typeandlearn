@@ -1,0 +1,393 @@
+import {
+  type Component,
+  Show,
+  createEffect,
+  createMemo,
+  createResource,
+  createSignal,
+} from "solid-js";
+
+import { fetchStory, fetchTextTitles, postText } from "../features/texts/api/textsApi";
+import { TypingInterface } from "../features/typing/components/TypingInterface";
+
+const TEXTAREA_MIN_HEIGHT_PX = 40;
+
+type UiSentence = {
+  text: string;
+  hints: Record<string, string>;
+  translation: string;
+};
+
+const App: Component = () => {
+  let textAreaRef: HTMLTextAreaElement | undefined;
+
+  const [selectedTextId, setSelectedTextId] = createSignal("00");
+  const [availableTexts] = createResource(fetchTextTitles);
+  const [storyData] = createResource(selectedTextId, fetchStory);
+
+  const originalSentences = createMemo<UiSentence[]>(() => {
+    const story = storyData();
+    if (!story) return [];
+    return story.original_paragraphs.flatMap((paragraph) =>
+      paragraph.sentences.map((sentence) => ({
+        text: sentence.text,
+        hints: sentence.translation_hints,
+        translation: sentence.translation,
+      })),
+    );
+  });
+
+  const generatedSentences = createMemo<UiSentence[]>(() => {
+    const story = storyData();
+    if (!story) return [];
+    return story.practice_sentences.map((sentence) => ({
+      text: sentence.sentence,
+      hints: sentence.translation_hints,
+      translation: sentence.translation,
+    }));
+  });
+
+  const [customText, setCustomText] = createSignal("");
+  const [isSubmitting, setIsSubmitting] = createSignal(false);
+  const [submitMessage, setSubmitMessage] = createSignal("");
+  const [submitStatus, setSubmitStatus] = createSignal<"success" | "error" | "idle">(
+    "idle",
+  );
+
+  const [activeTab, setActiveTab] = createSignal<"original" | "generated">(
+    "original",
+  );
+  const [originalIndex, setOriginalIndex] = createSignal(0);
+  const [generatedIndex, setGeneratedIndex] = createSignal(0);
+
+  createEffect(() => {
+    if (storyData()) {
+      setOriginalIndex(0);
+      setGeneratedIndex(0);
+    }
+  });
+
+  const resizeTextarea = (textarea: HTMLTextAreaElement) => {
+    const maxHeight = Math.floor(window.innerHeight * 0.5);
+    textarea.style.height = "auto";
+    textarea.style.height = `${Math.min(textarea.scrollHeight, maxHeight)}px`;
+    textarea.style.overflowY = textarea.scrollHeight > maxHeight ? "auto" : "hidden";
+  };
+
+  const handleTextInput = (event: InputEvent) => {
+    const textarea = event.currentTarget as HTMLTextAreaElement;
+    resizeTextarea(textarea);
+    setCustomText(textarea.value);
+    if (submitStatus() !== "idle") {
+      setSubmitStatus("idle");
+      setSubmitMessage("");
+    }
+  };
+
+  const handleSubmitText = async () => {
+    const text = customText().trim();
+    if (!text || isSubmitting()) return;
+
+    try {
+      setIsSubmitting(true);
+      await postText(text);
+      setCustomText("");
+      if (textAreaRef) {
+        textAreaRef.style.height = `${TEXTAREA_MIN_HEIGHT_PX}px`;
+        textAreaRef.style.overflowY = "hidden";
+      }
+      setSubmitStatus("success");
+      setSubmitMessage("Text was added successfully.");
+    } catch (error) {
+      console.error("Failed to submit text:", error);
+      setSubmitStatus("error");
+      setSubmitMessage(
+        error instanceof Error ? error.message : "Failed to submit text.",
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const previousDisabled = () =>
+    activeTab() === "original" ? originalIndex() === 0 : generatedIndex() === 0;
+  const nextDisabled = () =>
+    activeTab() === "original"
+      ? originalIndex() >= originalSentences().length - 1
+      : generatedIndex() >= generatedSentences().length - 1;
+
+  const goToPreviousSentence = () => {
+    if (activeTab() === "original" && originalIndex() > 0) {
+      setOriginalIndex((i) => i - 1);
+      return;
+    }
+    if (activeTab() === "generated" && generatedIndex() > 0) {
+      setGeneratedIndex((i) => i - 1);
+    }
+  };
+
+  const goToNextSentence = () => {
+    if (activeTab() === "original" && originalIndex() < originalSentences().length - 1) {
+      setOriginalIndex((i) => i + 1);
+      return;
+    }
+    if (activeTab() === "generated" && generatedIndex() < generatedSentences().length - 1) {
+      setGeneratedIndex((i) => i + 1);
+    }
+  };
+
+  const handleOriginalComplete = () => {
+    if (originalIndex() < originalSentences().length - 1) setOriginalIndex((i) => i + 1);
+  };
+  const handleGeneratedComplete = () => {
+    if (generatedIndex() < generatedSentences().length - 1) setGeneratedIndex((i) => i + 1);
+  };
+
+  const handleMouseOnlyClick = (action: () => void) => (event: MouseEvent) => {
+    if (event.detail === 0) {
+      event.preventDefault();
+      return;
+    }
+    action();
+    (event.currentTarget as HTMLButtonElement).blur();
+  };
+
+  const blurButtonOnFocus = (event: FocusEvent) => {
+    (event.currentTarget as HTMLButtonElement).blur();
+  };
+
+  const tabButtonStyle = (tab: "original" | "generated") => ({
+    "font-size": "18px",
+    padding: "8px 16px",
+    "font-family": "monospace",
+    outline: "none",
+    cursor: "pointer",
+    border: "1px solid #ccc",
+    "background-color": activeTab() === tab ? "#ddd" : "transparent",
+    "font-weight": activeTab() === tab ? "bold" : "normal",
+  });
+
+  const navButtonStyle = (disabled: boolean) => ({
+    "font-size": "16px",
+    padding: "8px 16px",
+    width: "130px",
+    display: "inline-flex",
+    "align-items": "center",
+    "justify-content": "center",
+    gap: "8px",
+    "font-family": "monospace",
+    outline: "none",
+    border: "1px solid #ccc",
+    "background-color": disabled ? "#efefef" : "#fff",
+    color: disabled ? "#999" : "#111",
+    cursor: disabled ? "not-allowed" : "pointer",
+  });
+
+  return (
+    <div
+      style={{
+        width: "100%",
+        "max-width": "980px",
+        margin: "0 auto",
+        padding: "0 20px 32px 20px",
+        "box-sizing": "border-box",
+      }}
+    >
+      <header
+        style={{
+          padding: "14px 0 12px 0",
+          "margin-bottom": "12px",
+          "border-bottom": "1px solid #e5e5e5",
+          "text-align": "center",
+        }}
+      >
+        <h1
+          style={{
+            margin: 0,
+            "font-family": "monospace",
+            "font-size": "22px",
+            "font-weight": 700,
+            "letter-spacing": "0.04em",
+            "text-transform": "lowercase",
+          }}
+        >
+          typeandlearn
+        </h1>
+      </header>
+
+      <textarea
+        ref={textAreaRef}
+        placeholder="Enter text..."
+        onInput={handleTextInput}
+        value={customText()}
+        style={{
+          "font-size": "24px",
+          padding: "8px",
+          width: "100%",
+          resize: "none",
+          overflow: "hidden",
+          "min-height": `${TEXTAREA_MIN_HEIGHT_PX}px`,
+          "max-height": "50vh",
+        }}
+      />
+      <div style={{ padding: "8px 0 0 0" }}>
+        <button
+          onClick={handleMouseOnlyClick(() => void handleSubmitText())}
+          onFocus={blurButtonOnFocus}
+          tabIndex={-1}
+          disabled={isSubmitting() || !customText().trim()}
+          style={{
+            "font-size": "16px",
+            padding: "8px 16px",
+            "font-family": "monospace",
+            cursor: isSubmitting() ? "not-allowed" : "pointer",
+            outline: "none",
+          }}
+        >
+          {isSubmitting() ? "Submitting..." : "Submit Text"}
+        </button>
+      </div>
+      <Show when={submitStatus() !== "idle"}>
+        <p
+          style={{
+            margin: "8px 0 0 0",
+            "font-family": "monospace",
+            color: submitStatus() === "success" ? "#1f7a1f" : "#b00020",
+          }}
+        >
+          {submitMessage()}
+        </p>
+      </Show>
+
+      <div style={{ padding: "20px 20px 0 20px" }}>
+        <label
+          for="text-select"
+          style={{
+            display: "block",
+            "font-family": "monospace",
+            "font-size": "14px",
+            "margin-bottom": "6px",
+          }}
+        >
+          Choose a text
+        </label>
+        <select
+          id="text-select"
+          value={selectedTextId()}
+          onChange={(event) => setSelectedTextId(event.currentTarget.value)}
+          disabled={availableTexts.loading}
+          style={{
+            "font-family": "monospace",
+            "font-size": "16px",
+            padding: "6px 10px",
+            "min-width": "280px",
+            "max-width": "100%",
+          }}
+        >
+          <Show
+            when={(availableTexts() ?? []).length > 0}
+            fallback={<option value="00">No texts found</option>}
+          >
+            {(availableTexts() ?? []).map((text) => (
+              <option value={text.id}>{text.title}</option>
+            ))}
+          </Show>
+        </select>
+      </div>
+
+      <h2
+        style={{
+          "font-family": "monospace",
+          padding: "20px 20px 0 20px",
+          margin: 0,
+        }}
+      >
+        {storyData.loading ? "Loading text..." : storyData()?.title ?? ""}
+      </h2>
+
+      <div style={{ display: "flex", gap: "8px", padding: "20px 20px 0 20px" }}>
+        <button
+          style={tabButtonStyle("original")}
+          onClick={handleMouseOnlyClick(() => setActiveTab("original"))}
+          onFocus={blurButtonOnFocus}
+          tabIndex={-1}
+        >
+          Original
+        </button>
+        <button
+          style={tabButtonStyle("generated")}
+          onClick={handleMouseOnlyClick(() => setActiveTab("generated"))}
+          onFocus={blurButtonOnFocus}
+          tabIndex={-1}
+        >
+          Generated
+        </button>
+      </div>
+
+      <Show
+        when={
+          !storyData.loading &&
+          !storyData.error &&
+          ((activeTab() === "original" && originalSentences().length > 0) ||
+            (activeTab() === "generated" && generatedSentences().length > 0))
+        }
+        fallback={
+          <p
+            style={{
+              "font-family": "monospace",
+              padding: "20px",
+              color: "#666",
+            }}
+          >
+            {storyData.error
+              ? "Failed to load selected text."
+              : storyData.loading
+                ? "Loading..."
+                : "No sentences available for this text."}
+          </p>
+        }
+      >
+        <Show
+          when={activeTab() === "original"}
+          fallback={
+            <TypingInterface
+              targetText={generatedSentences()[generatedIndex()].text}
+              hints={generatedSentences()[generatedIndex()].hints}
+              fullTranslation={generatedSentences()[generatedIndex()].translation}
+              onComplete={handleGeneratedComplete}
+            />
+          }
+        >
+          <TypingInterface
+            targetText={originalSentences()[originalIndex()].text}
+            hints={originalSentences()[originalIndex()].hints}
+            fullTranslation={originalSentences()[originalIndex()].translation}
+            onComplete={handleOriginalComplete}
+          />
+        </Show>
+        <div style={{ display: "flex", gap: "8px", padding: "8px 20px 0 20px" }}>
+          <button
+            onClick={handleMouseOnlyClick(goToPreviousSentence)}
+            onFocus={blurButtonOnFocus}
+            tabIndex={-1}
+            disabled={previousDisabled()}
+            style={navButtonStyle(previousDisabled())}
+          >
+            Previous
+          </button>
+          <button
+            onClick={handleMouseOnlyClick(goToNextSentence)}
+            onFocus={blurButtonOnFocus}
+            tabIndex={-1}
+            disabled={nextDisabled()}
+            style={navButtonStyle(nextDisabled())}
+          >
+            Next
+          </button>
+        </div>
+      </Show>
+    </div>
+  );
+};
+
+export default App;

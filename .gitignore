@@ -2,4 +2,6 @@
 .venv/
 venv/
 .vscode/
-notes/
+apps/frontend/node_modules/
+apps/frontend/dist/
+__pycache__/
