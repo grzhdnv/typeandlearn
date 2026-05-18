@@ -1,8 +1,9 @@
 import os
+from typing import Dict, List, Optional
+
 from dotenv import load_dotenv
 from google import genai
 from pydantic import BaseModel, ValidationError
-from typing import List, Dict
 
 
 # Pydantic models for validation
@@ -59,7 +60,7 @@ def text_to_db(
     client=client,
     model=model,
     prompt=prompt,
-) -> TextData | None:
+) -> Optional[TextData]:
     try:
         print("Processing text...")
         response = client.models.generate_content(
@@ -67,7 +68,10 @@ def text_to_db(
             contents=[prompt, input_text],
         )
 
-        print("Content generated successfully!\n")
+        if response is None or response.text is None:
+            raise ValueError("Empty response from LLM")
+
+        print("Content generated successfully!")
         print(response.text)  # This will print the raw JSON response from the model
 
         # strip the response to get the only contents inside {...}
@@ -84,20 +88,10 @@ def text_to_db(
     # Handle any exceptions that may occur during the API call or validation
     except ValidationError as ve:
         print(f"Pydantic Validation Error: {ve}")
+        return None
     except Exception as e:
         print(f"Error: {e}")
-
-
-# def translate_to_english(text, prompt="Translate the given text to English."):
-#     try:
-#         response = client.models.generate_content(
-#             model=model,
-#             contents=[prompt, text],
-#         )
-#         return response.text
-#     except Exception as e:
-#         print(f"Error during translation: {e}")
-#         return None
+        return None
 
 
 def main():

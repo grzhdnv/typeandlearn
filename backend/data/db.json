@@ -2007,5 +2007,410 @@
         }
       }
     ]
+  },
+  {
+    "title": "Aufenthalt",
+    "original_paragraphs": [
+      {
+        "index": 0,
+        "sentences": [
+          {
+            "index": 0,
+            "text": "Rauschender Strom, brausender Wald, starrender Fels mein Aufenthalt.",
+            "translation": "Rushing stream, roaring forest, rigid rock is my abode.",
+            "translation_hints": {
+              "Rauschender": "Rushing",
+              "Strom": "stream",
+              "brausender": "roaring",
+              "Wald": "forest",
+              "starrender": "rigid",
+              "Fels": "rock",
+              "mein": "my",
+              "Aufenthalt": "abode"
+            }
+          },
+          {
+            "index": 1,
+            "text": "Wie sich die Welle an Welle reiht, fliessen die Tränen mir ewig erneut.",
+            "translation": "As wave follows upon wave, my tears flow eternally anew.",
+            "translation_hints": {
+              "Wie": "As",
+              "sich": "itself",
+              "die": "the",
+              "Welle": "wave",
+              "an": "upon",
+              "reiht": "ranks/follows",
+              "fliessen": "flow",
+              "Tränen": "tears",
+              "mir": "to me",
+              "ewig": "eternally",
+              "erneut": "anew"
+            }
+          }
+        ]
+      },
+      {
+        "index": 1,
+        "sentences": [
+          {
+            "index": 0,
+            "text": "Hoch in den Kronen wogend sich’s regt, so unaufhörlich mein Herze schlägt.",
+            "translation": "High in the crowns swaying it stirs, so incessantly my heart beats.",
+            "translation_hints": {
+              "Hoch": "High",
+              "in": "in",
+              "den": "the",
+              "Kronen": "crowns",
+              "wogend": "swaying",
+              "sich’s": "it stirs itself",
+              "regt": "moves",
+              "so": "so",
+              "unaufhörlich": "incessantly",
+              "mein": "my",
+              "Herze": "heart",
+              "schlägt": "beats"
+            }
+          },
+          {
+            "index": 1,
+            "text": "Und wie des Felsen uraltes Erz ewig derselbe bleibet mein Schmerz.",
+            "translation": "And like the rock's ancient ore, my pain remains eternally the same.",
+            "translation_hints": {
+              "Und": "And",
+              "wie": "like",
+              "des": "the",
+              "Felsen": "rock's",
+              "uraltes": "ancient",
+              "Erz": "ore",
+              "ewig": "eternally",
+              "derselbe": "the same",
+              "bleibet": "remains",
+              "Schmerz": "pain"
+            }
+          }
+        ]
+      }
+    ],
+    "practice_sentences": [
+      {
+        "index": 0,
+        "sentence": "Der Wald ist heute sehr ruhig.",
+        "translation": "The forest is very quiet today.",
+        "translation_hints": {
+          "Der": "The",
+          "Wald": "forest",
+          "ist": "is",
+          "heute": "today",
+          "sehr": "very",
+          "ruhig": "quiet"
+        }
+      },
+      {
+        "index": 1,
+        "sentence": "Sein Herz schlägt für die Natur.",
+        "translation": "His heart beats for nature.",
+        "translation_hints": {
+          "Sein": "His",
+          "Herz": "heart",
+          "schlägt": "beats",
+          "für": "for",
+          "die": "the",
+          "Natur": "nature"
+        }
+      },
+      {
+        "index": 2,
+        "sentence": "Wir sehen die hohen Wellen am Meer.",
+        "translation": "We see the high waves at the sea.",
+        "translation_hints": {
+          "Wir": "We",
+          "sehen": "see",
+          "die": "the",
+          "hohen": "high",
+          "Wellen": "waves",
+          "am": "at the",
+          "Meer": "sea"
+        }
+      }
+    ]
+  },
+  {
+    "title": "Die Brieftaube",
+    "original_paragraphs": [
+      {
+        "index": 0,
+        "sentences": [
+          {
+            "index": 0,
+            "text": "Ich hab’ eine Brieftaub in meinem Sold, Die ist gar ergeben und treu,",
+            "translation": "I have a carrier pigeon in my service, she is very devoted and faithful,",
+            "translation_hints": {
+              "Ich": "I",
+              "hab’": "have",
+              "eine": "a",
+              "Brieftaub": "carrier pigeon",
+              "in": "in",
+              "meinem": "my",
+              "Sold": "service/pay",
+              "Die": "she/who",
+              "ist": "is",
+              "gar": "very/quite",
+              "ergeben": "devoted",
+              "und": "and",
+              "treu": "faithful"
+            }
+          },
+          {
+            "index": 1,
+            "text": "Sie nimmt mir nie das Ziel zu kurz, Und fliegt auch nie vorbei.",
+            "translation": "She never falls short of the goal for me, and never flies past.",
+            "translation_hints": {
+              "Sie": "She",
+              "nimmt": "takes",
+              "mir": "me/for me",
+              "nie": "never",
+              "das": "the",
+              "Ziel": "goal/target",
+              "zu": "too",
+              "kurz": "short",
+              "Und": "and",
+              "fliegt": "flies",
+              "auch": "also",
+              "vorbei": "past"
+            }
+          }
+        ]
+      },
+      {
+        "index": 1,
+        "sentences": [
+          {
+            "index": 0,
+            "text": "Ich sende sie viel tausendmal Auf Kundschaft täglich hinaus, Vorbei an manchem lieben Ort, Bis zu der Liebsten Haus.",
+            "translation": "I send her out many thousand times on errands daily, past many a dear place, all the way to my beloved's house.",
+            "translation_hints": {
+              "Ich": "I",
+              "sende": "send",
+              "sie": "her",
+              "viel": "many",
+              "tausendmal": "thousand times",
+              "Auf": "on",
+              "Kundschaft": "errands/reconnaissance",
+              "täglich": "daily",
+              "hinaus": "out",
+              "Vorbei": "past",
+              "an": "by",
+              "manchem": "many a",
+              "lieben": "dear",
+              "Ort": "place",
+              "Bis": "until/to",
+              "zu": "to",
+              "der": "the",
+              "Liebsten": "beloved's",
+              "Haus": "house"
+            }
+          }
+        ]
+      },
+      {
+        "index": 2,
+        "sentences": [
+          {
+            "index": 0,
+            "text": "Dort schaut sie zum Fenster heimlich hinein, Belauscht ihren Blick und Schritt, Gibt meine Grüsse scherzend ab Und nimmt die ihren mit.",
+            "translation": "There she looks secretly into the window, eavesdrops on her gaze and step, delivers my greetings jokingly and takes hers back with her.",
+            "translation_hints": {
+              "Dort": "There",
+              "schaut": "looks",
+              "sie": "she",
+              "zum": "at the",
+              "Fenster": "window",
+              "heimlich": "secretly",
+              "hinein": "into",
+              "Belauscht": "eavesdrops on",
+              "ihren": "her",
+              "Blick": "gaze",
+              "Schritt": "step",
+              "Gibt": "gives/delivers",
+              "meine": "my",
+              "Grüsse": "greetings",
+              "scherzend": "jokingly",
+              "ab": "off",
+              "nimmt": "takes",
+              "mit": "with/along"
+            }
+          }
+        ]
+      },
+      {
+        "index": 3,
+        "sentences": [
+          {
+            "index": 0,
+            "text": "Kein Briefchen brauch’ ich zu schreiben mehr, Die Träne selbst geb’ ich ihr: O sie verträgt sie sicher nicht, Gar eifrig dient sie mir.",
+            "translation": "I no longer need to write a little letter, I give her the tear itself: Oh, she certainly does not mind carrying it, she serves me so eagerly.",
+            "translation_hints": {
+              "Kein": "No",
+              "Briefchen": "little letter",
+              "brauch’": "need",
+              "ich": "I",
+              "zu": "to",
+              "schreiben": "write",
+              "mehr": "anymore",
+              "Die": "the",
+              "Träne": "tear",
+              "selbst": "itself",
+              "geb’": "give",
+              "ihr": "her",
+              "sie": "she",
+              "verträgt": "bears/endures",
+              "sicher": "certainly",
+              "nicht": "not",
+              "Gar": "very",
+              "eifrig": "eagerly",
+              "dient": "serves"
+            }
+          }
+        ]
+      },
+      {
+        "index": 4,
+        "sentences": [
+          {
+            "index": 0,
+            "text": "Bei Tag, bei Nacht, im Wachen, im Traum, Ihr gilt das alles gleich: Wenn sie nur wandern, wandern kann, Dann ist sie überreich!",
+            "translation": "By day, by night, in waking, in dreaming, it is all the same to her: if she can only wander, wander, then she is abundantly rich!",
+            "translation_hints": {
+              "Bei": "By/During",
+              "Tag": "day",
+              "Nacht": "night",
+              "im": "in the",
+              "Wachen": "waking",
+              "Traum": "dream",
+              "Ihr": "to her",
+              "gilt": "is/counts",
+              "alles": "everything",
+              "gleich": "the same",
+              "Wenn": "if",
+              "nur": "only",
+              "wandern": "wander/travel",
+              "kann": "can",
+              "Dann": "then",
+              "überreich": "abundantly rich"
+            }
+          }
+        ]
+      },
+      {
+        "index": 5,
+        "sentences": [
+          {
+            "index": 0,
+            "text": "Sie wird nicht müd’, sie wird nicht matt, Der Weg ist stets ihr neu; Sie braucht nicht Lockung, braucht nicht Lohn, Die Taub’ ist so mir treu!",
+            "translation": "She does not get tired, she does not get weary, the path is always new to her; she needs no enticement, needs no reward, the pigeon is so faithful to me!",
+            "translation_hints": {
+              "wird": "becomes/gets",
+              "müd’": "tired",
+              "matt": "weary",
+              "Weg": "path/way",
+              "stets": "always",
+              "neu": "new",
+              "braucht": "needs",
+              "Lockung": "enticement/lure",
+              "Lohn": "reward/wage",
+              "Taub’": "pigeon",
+              "treu": "faithful"
+            }
+          }
+        ]
+      },
+      {
+        "index": 6,
+        "sentences": [
+          {
+            "index": 0,
+            "text": "Drum heg’ ich sie auch so treu an der Brust, Versichert des schönsten Gewinns; Sie heisst – die Sehnsucht! Kennt ihr sie? Die Botin treuen Sinns.",
+            "translation": "Therefore I cherish her so faithfully at my breast, assured of the most beautiful gain; her name is – Longing! Do you know her? The messenger of a faithful mind.",
+            "translation_hints": {
+              "Drum": "Therefore",
+              "heg’": "cherish/nurture",
+              "an": "at",
+              "Brust": "breast/chest",
+              "Versichert": "assured",
+              "schönsten": "most beautiful",
+              "Gewinns": "gain/profit",
+              "heisst": "is called/named",
+              "Sehnsucht": "longing",
+              "Kennt": "know",
+              "Botin": "messenger (female)",
+              "treuen": "faithful",
+              "Sinns": "mind/spirit"
+            }
+          }
+        ]
+      }
+    ],
+    "practice_sentences": [
+      {
+        "index": 0,
+        "sentence": "Ich habe einen Hund, der mir sehr treu dient.",
+        "translation": "I have a dog that serves me very faithfully.",
+        "translation_hints": {
+          "Ich": "I",
+          "habe": "have",
+          "einen": "a",
+          "Hund": "dog",
+          "der": "who/that",
+          "mir": "me",
+          "sehr": "very",
+          "treu": "faithfully",
+          "dient": "serves"
+        }
+      },
+      {
+        "index": 1,
+        "sentence": "Die Sehnsucht nach dem Meer ist groß.",
+        "translation": "The longing for the sea is great.",
+        "translation_hints": {
+          "Die": "The",
+          "Sehnsucht": "longing",
+          "nach": "for",
+          "dem": "the",
+          "Meer": "sea",
+          "ist": "is",
+          "groß": "great/big"
+        }
+      },
+      {
+        "index": 2,
+        "sentence": "Er schaut täglich aus dem Fenster auf den Weg.",
+        "translation": "He looks out of the window at the path every day.",
+        "translation_hints": {
+          "Er": "He",
+          "schaut": "looks",
+          "täglich": "daily",
+          "aus": "out of",
+          "dem": "the",
+          "Fenster": "window",
+          "auf": "at",
+          "den": "the",
+          "Weg": "path/way"
+        }
+      },
+      {
+        "index": 3,
+        "sentence": "Wir wandern oft an diesem schönen Ort.",
+        "translation": "We often wander/hike at this beautiful place.",
+        "translation_hints": {
+          "Wir": "We",
+          "wandern": "wander/hike",
+          "oft": "often",
+          "an": "at/by",
+          "diesem": "this",
+          "schönen": "beautiful",
+          "Ort": "place"
+        }
+      }
+    ]
   }
 ]

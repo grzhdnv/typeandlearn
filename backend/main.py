@@ -2,8 +2,9 @@
 
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from backend.storage import load_data, save_data
+
 from backend.llm_client import text_to_db
+from backend.storage import load_data, save_data
 
 app = FastAPI()
 
@@ -76,7 +77,10 @@ def upload_text(payload: TextUploadRequest):
 
     try:
         # Process text with LLM
-        new_entry = text_to_db(text).dict()
+        new_entry = text_to_db(text)
+        if new_entry is None:
+            raise HTTPException(status_code=500, detail="LLM returned no data")
+        new_entry = new_entry.model_dump()
     except Exception as e:
         raise HTTPException(
             status_code=500, detail=f"Error processing text with LLM: {str(e)}"
