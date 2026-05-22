@@ -7,7 +7,11 @@ import {
   createSignal,
 } from "solid-js";
 
-import { fetchStory, fetchTextTitles, postText } from "../features/texts/api/textsApi";
+import {
+  fetchStory,
+  fetchTextTitles,
+  postText,
+} from "../features/texts/api/textsApi";
 import { TypingInterface } from "../features/typing/components/TypingInterface";
 
 const TEXTAREA_MIN_HEIGHT_PX = 40;
@@ -18,6 +22,9 @@ type UiSentence = {
   translation: string;
 };
 
+/**
+ * Root frontend screen for text submission, text selection, and typing practice.
+ */
 const App: Component = () => {
   let textAreaRef: HTMLTextAreaElement | undefined;
 
@@ -50,9 +57,9 @@ const App: Component = () => {
   const [customText, setCustomText] = createSignal("");
   const [isSubmitting, setIsSubmitting] = createSignal(false);
   const [submitMessage, setSubmitMessage] = createSignal("");
-  const [submitStatus, setSubmitStatus] = createSignal<"success" | "error" | "idle">(
-    "idle",
-  );
+  const [submitStatus, setSubmitStatus] = createSignal<
+    "success" | "error" | "idle"
+  >("idle");
 
   const [activeTab, setActiveTab] = createSignal<"original" | "generated">(
     "original",
@@ -67,13 +74,20 @@ const App: Component = () => {
     }
   });
 
+  /**
+   * Auto-resizes the text input area up to half viewport height.
+   */
   const resizeTextarea = (textarea: HTMLTextAreaElement) => {
     const maxHeight = Math.floor(window.innerHeight * 0.5);
     textarea.style.height = "auto";
     textarea.style.height = `${Math.min(textarea.scrollHeight, maxHeight)}px`;
-    textarea.style.overflowY = textarea.scrollHeight > maxHeight ? "auto" : "hidden";
+    textarea.style.overflowY =
+      textarea.scrollHeight > maxHeight ? "auto" : "hidden";
   };
 
+  /**
+   * Handles user text input and clears prior submit status messages.
+   */
   const handleTextInput = (event: InputEvent) => {
     const textarea = event.currentTarget as HTMLTextAreaElement;
     resizeTextarea(textarea);
@@ -84,6 +98,9 @@ const App: Component = () => {
     }
   };
 
+  /**
+   * Submits user text to the backend and updates UI submit state.
+   */
   const handleSubmitText = async () => {
     const text = customText().trim();
     if (!text || isSubmitting()) return;
@@ -116,6 +133,9 @@ const App: Component = () => {
       ? originalIndex() >= originalSentences().length - 1
       : generatedIndex() >= generatedSentences().length - 1;
 
+  /**
+   * Moves active tab index one sentence backward when possible.
+   */
   const goToPreviousSentence = () => {
     if (activeTab() === "original" && originalIndex() > 0) {
       setOriginalIndex((i) => i - 1);
@@ -126,23 +146,43 @@ const App: Component = () => {
     }
   };
 
+  /**
+   * Moves active tab index one sentence forward when possible.
+   */
   const goToNextSentence = () => {
-    if (activeTab() === "original" && originalIndex() < originalSentences().length - 1) {
+    if (
+      activeTab() === "original" &&
+      originalIndex() < originalSentences().length - 1
+    ) {
       setOriginalIndex((i) => i + 1);
       return;
     }
-    if (activeTab() === "generated" && generatedIndex() < generatedSentences().length - 1) {
+    if (
+      activeTab() === "generated" &&
+      generatedIndex() < generatedSentences().length - 1
+    ) {
       setGeneratedIndex((i) => i + 1);
     }
   };
 
+  /**
+   * Advances original sentence index after a sentence is fully typed.
+   */
   const handleOriginalComplete = () => {
-    if (originalIndex() < originalSentences().length - 1) setOriginalIndex((i) => i + 1);
+    if (originalIndex() < originalSentences().length - 1)
+      setOriginalIndex((i) => i + 1);
   };
+  /**
+   * Advances generated sentence index after a sentence is fully typed.
+   */
   const handleGeneratedComplete = () => {
-    if (generatedIndex() < generatedSentences().length - 1) setGeneratedIndex((i) => i + 1);
+    if (generatedIndex() < generatedSentences().length - 1)
+      setGeneratedIndex((i) => i + 1);
   };
 
+  /**
+   * Wraps click handlers so keyboard-triggered synthetic clicks do not fire actions.
+   */
   const handleMouseOnlyClick = (action: () => void) => (event: MouseEvent) => {
     if (event.detail === 0) {
       event.preventDefault();
@@ -152,6 +192,9 @@ const App: Component = () => {
     (event.currentTarget as HTMLButtonElement).blur();
   };
 
+  /**
+   * Keeps button focus outlines from persisting in the typing UI.
+   */
   const blurButtonOnFocus = (event: FocusEvent) => {
     (event.currentTarget as HTMLButtonElement).blur();
   };
@@ -302,7 +345,7 @@ const App: Component = () => {
           margin: 0,
         }}
       >
-        {storyData.loading ? "Loading text..." : storyData()?.title ?? ""}
+        {storyData.loading ? "Loading text..." : (storyData()?.title ?? "")}
       </h2>
 
       <div style={{ display: "flex", gap: "8px", padding: "20px 20px 0 20px" }}>
@@ -353,7 +396,9 @@ const App: Component = () => {
             <TypingInterface
               targetText={generatedSentences()[generatedIndex()].text}
               hints={generatedSentences()[generatedIndex()].hints}
-              fullTranslation={generatedSentences()[generatedIndex()].translation}
+              fullTranslation={
+                generatedSentences()[generatedIndex()].translation
+              }
               onComplete={handleGeneratedComplete}
             />
           }
@@ -365,7 +410,9 @@ const App: Component = () => {
             onComplete={handleOriginalComplete}
           />
         </Show>
-        <div style={{ display: "flex", gap: "8px", padding: "8px 20px 0 20px" }}>
+        <div
+          style={{ display: "flex", gap: "8px", padding: "8px 20px 0 20px" }}
+        >
           <button
             onClick={handleMouseOnlyClick(goToPreviousSentence)}
             onFocus={blurButtonOnFocus}

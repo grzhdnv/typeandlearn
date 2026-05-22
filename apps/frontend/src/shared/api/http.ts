@@ -2,6 +2,11 @@ type FastApiError = {
   detail?: string;
 };
 
+/**
+ * Performs a GET request and returns JSON payload with consistent API error handling.
+ *
+ * @param url Relative or absolute request URL.
+ */
 export const getJson = async <T>(url: string): Promise<T> => {
   const response = await fetch(url);
   const contentType = response.headers.get("content-type") ?? "";
@@ -22,6 +27,12 @@ export const getJson = async <T>(url: string): Promise<T> => {
   return (await response.json()) as T;
 };
 
+/**
+ * Performs a POST request with JSON body and returns JSON payload.
+ *
+ * @param url Relative or absolute request URL.
+ * @param payload Serializable body for the API request.
+ */
 export const postJson = async <T>(
   url: string,
   payload: Record<string, unknown>,

@@ -12,4 +12,5 @@ if (import.meta.env.DEV && !(root instanceof HTMLElement)) {
   );
 }
 
+/** Mount the app into the root element created by Vite's index.html template. */
 render(() => <App />, root!);

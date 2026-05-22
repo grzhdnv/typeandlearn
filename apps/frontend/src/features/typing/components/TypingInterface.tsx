@@ -15,6 +15,11 @@ interface TypingInterfaceProps {
   onComplete?: () => void;
 }
 
+/**
+ * Resolves the active word from a cursor offset in the target text.
+ *
+ * If the cursor is on whitespace or at the end, it falls back to the next/last word.
+ */
 const getCurrentWord = (target: string, cursor: number): string => {
   if (target.length === 0) return "";
   const isSpace = (char: string | undefined) => !!char && /\s/.test(char);
@@ -42,6 +47,9 @@ const getCurrentWord = (target: string, cursor: number): string => {
   return target.slice(start, end);
 };
 
+/**
+ * Keyboard-driven typing surface with per-word hint and translation reveal controls.
+ */
 export const TypingInterface: Component<TypingInterfaceProps> = (props) => {
   const [typed, setTyped] = createSignal("");
   const [optionPressed, setOptionPressed] = createSignal(false);
@@ -64,6 +72,9 @@ export const TypingInterface: Component<TypingInterfaceProps> = (props) => {
   const hintVisible = () => optionPressed();
   const fullTranslationVisible = () => optionPressed() && commandPressed();
 
+  /**
+   * Updates typing state and modifier-key visibility state on keydown.
+   */
   const handleKeyDown = (event: KeyboardEvent) => {
     if (event.key === "Alt") {
       setOptionPressed(true);
@@ -96,11 +107,17 @@ export const TypingInterface: Component<TypingInterfaceProps> = (props) => {
     }
   };
 
+  /**
+   * Clears modifier-key visibility state when modifier keys are released.
+   */
   const handleKeyUp = (event: KeyboardEvent) => {
     if (event.key === "Alt") setOptionPressed(false);
     if (event.key === "Meta") setCommandPressed(false);
   };
 
+  /**
+   * Ensures hint overlays are cleared when the window loses focus.
+   */
   const resetModifierState = () => {
     setOptionPressed(false);
     setCommandPressed(false);
