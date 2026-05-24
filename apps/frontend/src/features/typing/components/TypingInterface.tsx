@@ -22,29 +22,30 @@ interface TypingInterfaceProps {
  */
 const getCurrentWord = (target: string, cursor: number): string => {
   if (target.length === 0) return "";
-  const isSpace = (char: string | undefined) => !!char && /\s/.test(char);
-  const pos = Math.min(cursor, target.length);
+  const isSpace = (char: string) => /\s/.test(char);
 
-  if (pos >= target.length || isSpace(target[pos])) {
-    let start = pos;
-    while (start < target.length && isSpace(target[start])) start++;
-    if (start >= target.length) {
-      let end = target.length;
-      while (end > 0 && isSpace(target[end - 1])) end--;
-      let wordStart = end;
-      while (wordStart > 0 && !isSpace(target[wordStart - 1])) wordStart--;
-      return target.slice(wordStart, end);
+  let lastWord = "";
+  let i = 0;
+  while (i < target.length) {
+    while (i < target.length && isSpace(target[i])) {
+      i++;
     }
-    let end = start;
-    while (end < target.length && !isSpace(target[end])) end++;
-    return target.slice(start, end);
+    if (i >= target.length) break;
+
+    const wordStart = i;
+    while (i < target.length && !isSpace(target[i])) {
+      i++;
+    }
+    const wordEnd = i;
+
+    if (wordStart <= cursor) {
+      lastWord = target.slice(wordStart, wordEnd);
+    } else {
+      break;
+    }
   }
 
-  let start = pos;
-  while (start > 0 && !isSpace(target[start - 1])) start--;
-  let end = pos;
-  while (end < target.length && !isSpace(target[end])) end++;
-  return target.slice(start, end);
+  return lastWord;
 };
 
 /**
