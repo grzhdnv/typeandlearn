@@ -42,7 +42,7 @@ def get_text_titles() -> TitlesResponse:
 
 @router.get("/{text_id}", response_model=TextResponse)
 def get_text(text_id: str) -> TextResponse:
-    """Return one text entry identified by its list index."""
+    """Return one text entry identified by its database ID."""
 
     try:
         data = text_service.get_one(text_id)
@@ -80,7 +80,7 @@ def upload_text(payload: TextUploadRequest) -> UploadResponse:
 
 @router.delete("/{text_id}", response_model=DeleteResponse)
 def delete_text(text_id: str) -> DeleteResponse:
-    """Delete one stored text entry by list index."""
+    """Delete one stored text entry by database ID."""
 
     try:
         deleted = text_service.delete(text_id)
@@ -95,3 +95,4 @@ def delete_text(text_id: str) -> DeleteResponse:
         raise HTTPException(status_code=404, detail="Text not found")
     except Exception as error:
         raise HTTPException(status_code=500, detail=f"Error deleting text: {error}")
+

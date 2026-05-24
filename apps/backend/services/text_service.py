@@ -1,5 +1,6 @@
 """Domain service for text retrieval, upload, and deletion workflows."""
 
+from models.texts import TextRecord
 from repositories.text_repository import TextRepository
 from schemas.texts import TextData, TextTitle
 from services.llm_service import LlmService
@@ -17,38 +18,69 @@ class TextService:
     def get_all(self) -> list[TextData]:
         """Return all stored text entries."""
 
-        return self._repository.load_all()
+        records = self._repository.load_all()
+        return [
+            TextData(
+                id=record.id,
+                title=record.title,
+                original_paragraphs=record.original_paragraphs,
+                practice_sentences=record.practice_sentences,
+            )
+            for record in records
+        ]
 
     def get_titles(self) -> list[TextTitle]:
-        """Return index-based title metadata for text selection."""
+        """Return database-backed title metadata for text selection."""
 
-        items = self._repository.load_all()
-        return [TextTitle(id=f"{i:02d}", title=item.title) for i, item in enumerate(items)]
+        titles = self._repository.load_titles()
+        # Convert integer ID to string representation for contract compatibility
+        return [TextTitle(id=str(tid), title=title) for tid, title in titles]
 
     def get_one(self, text_id: str) -> TextData:
-        """Return one text entry by index encoded as string."""
+        """Return one text entry by its database ID."""
 
-        index = int(text_id)
-        items = self._repository.load_all()
-        if index < 0 or index >= len(items):
+        try:
+            tid = int(text_id)
+        except ValueError as error:
+            raise ValueError(f"Invalid text ID format: {text_id}") from error
+
+        record = self._repository.load_one(tid)
+        if record is None:
             raise IndexError("Text not found")
-        return items[index]
 
-    def upload(self, text: str) -> None:
+        return TextData(
+            id=record.id,
+            title=record.title,
+            original_paragraphs=record.original_paragraphs,
+            practice_sentences=record.practice_sentences,
+        )
+
+    def upload(self, text: str) -> TextRecord:
         """Generate and persist a new text entry from raw input."""
 
         new_entry = self._llm.text_to_db(text)
-        items = self._repository.load_all()
-        items.append(new_entry)
-        self._repository.save_all(items)
+        record = TextRecord(
+            title=new_entry.title,
+            original_paragraphs=new_entry.original_paragraphs,
+            practice_sentences=new_entry.practice_sentences,
+        )
+        return self._repository.save(record)
 
     def delete(self, text_id: str) -> TextData:
-        """Delete and return one text entry by index."""
+        """Delete and return one text entry by its database ID."""
 
-        index = int(text_id)
-        items = self._repository.load_all()
-        if index < 0 or index >= len(items):
+        try:
+            tid = int(text_id)
+        except ValueError as error:
+            raise ValueError(f"Invalid text ID format: {text_id}") from error
+
+        record = self._repository.delete(tid)
+        if record is None:
             raise IndexError("Text not found")
-        deleted = items.pop(index)
-        self._repository.save_all(items)
-        return deleted
+
+        return TextData(
+            id=record.id,
+            title=record.title,
+            original_paragraphs=record.original_paragraphs,
+            practice_sentences=record.practice_sentences,
+        )

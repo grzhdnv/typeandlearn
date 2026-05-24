@@ -28,9 +28,19 @@ type UiSentence = {
 const App: Component = () => {
   let textAreaRef: HTMLTextAreaElement | undefined;
 
-  const [selectedTextId, setSelectedTextId] = createSignal("00");
+  const [selectedTextId, setSelectedTextId] = createSignal<string | null>(null);
   const [availableTexts] = createResource(fetchTextTitles);
-  const [storyData] = createResource(selectedTextId, fetchStory);
+  const [storyData] = createResource(selectedTextId, (id) => fetchStory(id));
+
+  createEffect(() => {
+    const texts = availableTexts();
+    if (texts && texts.length > 0) {
+      const currentId = selectedTextId();
+      if (!currentId || !texts.some((t) => t.id === currentId)) {
+        setSelectedTextId(texts[0].id);
+      }
+    }
+  });
 
   const originalSentences = createMemo<UiSentence[]>(() => {
     const story = storyData();
@@ -316,7 +326,7 @@ const App: Component = () => {
         </label>
         <select
           id="text-select"
-          value={selectedTextId()}
+          value={selectedTextId() ?? ""}
           onChange={(event) => setSelectedTextId(event.currentTarget.value)}
           disabled={availableTexts.loading}
           style={{
@@ -329,7 +339,7 @@ const App: Component = () => {
         >
           <Show
             when={(availableTexts() ?? []).length > 0}
-            fallback={<option value="00">No texts found</option>}
+            fallback={<option value="">No texts found</option>}
           >
             {(availableTexts() ?? []).map((text) => (
               <option value={text.id}>{text.title}</option>
