@@ -1,10 +1,10 @@
 """Database-backed repository for text records."""
 
 from typing import List, Optional, Tuple
-from sqlalchemy import Engine
-from sqlmodel import Session, select
 
 from models.texts import TextRecord
+from sqlalchemy import Engine
+from sqlmodel import Session, select
 
 
 class TextRepository:
@@ -17,7 +17,7 @@ class TextRepository:
     def load_all(self) -> List[TextRecord]:
         """Load all stored text entries."""
         with Session(self._engine) as session:
-            statement = select(TextRecord).order_by(TextRecord.id)
+            statement = select(TextRecord).order_by(TextRecord.id)  # pyright: ignore[reportArgumentType]
             return list(session.exec(statement).all())
 
     def load_one(self, text_id: int) -> Optional[TextRecord]:
@@ -28,10 +28,10 @@ class TextRepository:
     def load_titles(self) -> List[Tuple[int, str]]:
         """Load ID and title of all texts for lightweight lists."""
         with Session(self._engine) as session:
-            statement = select(TextRecord.id, TextRecord.title).order_by(TextRecord.id)
+            statement = select(TextRecord.id, TextRecord.title).order_by(TextRecord.id)  # pyright: ignore[reportArgumentType]
             results = session.exec(statement).all()
             # SQLModel returns list of tuple-like rows
-            return [(row[0], row[1]) for row in results]
+            return [(row[0], row[1]) for row in results]  # pyright: ignore[reportReturnType]
 
     def save(self, record: TextRecord) -> TextRecord:
         """Write a new or updated text record to the database."""
