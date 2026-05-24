@@ -30,6 +30,7 @@ export type PracticeSentence = {
  * Canonical text payload returned by the backend.
  */
 export type TextData = {
+  id?: number;
   title: string;
   original_paragraphs: Paragraph[];
   practice_sentences: PracticeSentence[];

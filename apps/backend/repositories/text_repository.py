@@ -1,42 +1,51 @@
-"""JSON-backed repository for text records."""
+"""Database-backed repository for text records."""
 
-import json
-from pathlib import Path
+from typing import List, Optional, Tuple
+from sqlalchemy import Engine
+from sqlmodel import Session, select
 
-from schemas.texts import TextData
+from models.texts import TextRecord
 
 
 class TextRepository:
-    """Persist and retrieve text entries from a local JSON file."""
+    """Persist and retrieve text entries using a relational database (SQLite/PostgreSQL)."""
 
-    def __init__(self, data_file: Path) -> None:
-        """Initialize the repository with a path to the JSON database file."""
+    def __init__(self, engine: Engine) -> None:
+        """Initialize the repository with a SQLAlchemy database engine."""
+        self._engine = engine
 
-        self._data_file = data_file
+    def load_all(self) -> List[TextRecord]:
+        """Load all stored text entries."""
+        with Session(self._engine) as session:
+            statement = select(TextRecord).order_by(TextRecord.id)
+            return list(session.exec(statement).all())
 
-    def load_all(self) -> list[TextData]:
-        """Load and validate all stored text entries."""
+    def load_one(self, text_id: int) -> Optional[TextRecord]:
+        """Load a single text entry by database ID."""
+        with Session(self._engine) as session:
+            return session.get(TextRecord, text_id)
 
-        if not self._data_file.exists():
-            return []
+    def load_titles(self) -> List[Tuple[int, str]]:
+        """Load ID and title of all texts for lightweight lists."""
+        with Session(self._engine) as session:
+            statement = select(TextRecord.id, TextRecord.title).order_by(TextRecord.id)
+            results = session.exec(statement).all()
+            # SQLModel returns list of tuple-like rows
+            return [(row[0], row[1]) for row in results]
 
-        content = self._data_file.read_text(encoding="utf-8")
-        if not content.strip():
-            return []
+    def save(self, record: TextRecord) -> TextRecord:
+        """Write a new or updated text record to the database."""
+        with Session(self._engine) as session:
+            session.add(record)
+            session.commit()
+            session.refresh(record)
+            return record
 
-        loaded = json.loads(content)
-        if isinstance(loaded, dict):
-            return [TextData.model_validate(loaded)]
-        if isinstance(loaded, list):
-            return [TextData.model_validate(item) for item in loaded]
-        raise ValueError("Database content must be a JSON list or object")
-
-    def save_all(self, data: list[TextData]) -> None:
-        """Write the full text collection to disk as JSON."""
-
-        self._data_file.parent.mkdir(parents=True, exist_ok=True)
-        payload = [item.model_dump() for item in data]
-        self._data_file.write_text(
-            json.dumps(payload, ensure_ascii=False, indent=2),
-            encoding="utf-8",
-        )
+    def delete(self, text_id: int) -> Optional[TextRecord]:
+        """Delete one text entry from the database by ID."""
+        with Session(self._engine) as session:
+            record = session.get(TextRecord, text_id)
+            if record is not None:
+                session.delete(record)
+                session.commit()
+            return record

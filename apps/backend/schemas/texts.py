@@ -1,6 +1,6 @@
 """Pydantic models for text domain and API payloads."""
 
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 from pydantic import BaseModel
 
@@ -33,9 +33,11 @@ class PracticeSentence(BaseModel):
 class TextData(BaseModel):
     """Canonical stored representation of one text unit."""
 
+    id: Optional[int] = None
     title: str
     original_paragraphs: List[Paragraph]
     practice_sentences: List[PracticeSentence]
+
 
 
 class TextUploadRequest(BaseModel):
