@@ -2,10 +2,10 @@
 
 import json
 from pathlib import Path
-from sqlmodel import Session, select
 
 from core.database import engine, init_db
-from models.texts import TextRecord
+from models.texts import PracticeSentenceRecord, SentenceRecord, TextRecord
+from sqlmodel import Session, select
 
 
 def migrate_data() -> None:
@@ -26,7 +26,9 @@ def migrate_data() -> None:
         # Check if any texts already exist
         first_record = session.exec(select(TextRecord)).first()
         if first_record is not None:
-            print("Database already contains data. Skipping migration to prevent duplicates.")
+            print(
+                "Database already contains data. Skipping migration to prevent duplicates."
+            )
             return
 
         print(f"Reading data from {db_json_path}...")
@@ -51,16 +53,42 @@ def migrate_data() -> None:
 
         print(f"Found {len(records_to_migrate)} texts to migrate. Migrating...")
         for i, item in enumerate(records_to_migrate):
-            title = item.get("title", f"Imported Text {i+1}")
+            title = item.get("title", f"Imported Text {i + 1}")
             original_paragraphs = item.get("original_paragraphs", [])
             practice_sentences = item.get("practice_sentences", [])
 
-            record = TextRecord(
-                title=title,
-                original_paragraphs=original_paragraphs,
-                practice_sentences=practice_sentences,
-            )
+            # 1. Insert TextRecord
+            record = TextRecord(title=title, status="completed")
             session.add(record)
+            session.flush()  # Flushes to the database so `record.id` is populated!
+
+            # 2. Insert SentenceRecords
+            for p in original_paragraphs:
+                p_index = p.get("index", 0)
+                for s in p.get("sentences", []):
+                    session.add(
+                        SentenceRecord(
+                            text_id=record.id,  # type: ignore
+                            paragraph_index=p_index,
+                            sentence_index=s.get("index", 0),
+                            original_text=s.get("text", ""),
+                            translation=s.get("translation", ""),
+                            translation_hints=s.get("translation_hints", {}),
+                            status="completed",
+                        )
+                    )
+
+            # 3. Insert PracticeSentenceRecords
+            for ps in practice_sentences:
+                session.add(
+                    PracticeSentenceRecord(
+                        text_id=record.id,  # type: ignore
+                        sentence_index=ps.get("index", 0),
+                        sentence=ps.get("sentence", ""),
+                        translation=ps.get("translation", ""),
+                        translation_hints=ps.get("translation_hints", {}),
+                    )
+                )
 
         session.commit()
         print("Migration completed successfully!")
