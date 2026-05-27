@@ -5,3 +5,5 @@ venv/
 apps/frontend/node_modules/
 apps/frontend/dist/
 __pycache__/
+apps/backend/data/
+apps/backend/logs/

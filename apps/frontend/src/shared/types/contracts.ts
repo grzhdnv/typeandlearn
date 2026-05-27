@@ -1,11 +1,19 @@
 /**
  * Sentence item in original text paragraphs.
  */
+export type HintGroup = {
+  words: string[];
+  hint: string;
+};
+
+/**
+ * Sentence item in original text paragraphs.
+ */
 export type Sentence = {
   index: number;
   text: string;
   translation: string;
-  translation_hints: Record<string, string>;
+  translation_hints: HintGroup[];
 };
 
 /**
@@ -23,7 +31,7 @@ export type PracticeSentence = {
   index: number;
   sentence: string;
   translation: string;
-  translation_hints: Record<string, string>;
+  translation_hints: HintGroup[];
 };
 
 /**
@@ -32,6 +40,7 @@ export type PracticeSentence = {
 export type TextData = {
   id?: number;
   title: string;
+  status: string;
   original_paragraphs: Paragraph[];
   practice_sentences: PracticeSentence[];
 };

@@ -1,6 +1,6 @@
 """HTTP routes for text CRUD and processing workflows."""
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, BackgroundTasks, HTTPException
 
 from app_state import text_service
 from schemas.texts import (
@@ -59,7 +59,7 @@ def get_text(text_id: str) -> TextResponse:
 
 
 @router.post("", response_model=UploadResponse)
-def upload_text(payload: TextUploadRequest) -> UploadResponse:
+def upload_text(payload: TextUploadRequest, background_tasks: BackgroundTasks) -> UploadResponse:
     """Generate and persist structured text content from raw input."""
 
     text = payload.text.strip()
@@ -67,7 +67,10 @@ def upload_text(payload: TextUploadRequest) -> UploadResponse:
         raise HTTPException(status_code=400, detail="Text cannot be empty")
 
     try:
-        text_service.upload(text)
+        record = text_service.upload(text)
+        if record.id is not None:
+            background_tasks.add_task(text_service.process_pending_text, record.id)
+            
         return UploadResponse(message="Text uploaded successfully", text=text)
     except HTTPException:
         raise

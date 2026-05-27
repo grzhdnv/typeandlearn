@@ -50,6 +50,16 @@ class TextRepository:
             )
             return list(session.exec(statement).all())
 
+    def load_word_frequencies(self, text_id: int) -> List[WordFrequencyRecord]:
+        """Load word frequencies for a specific text, sorted by highest count."""
+        with Session(self._engine) as session:
+            statement = (
+                select(WordFrequencyRecord)
+                .where(WordFrequencyRecord.text_id == text_id)
+                .order_by(WordFrequencyRecord.count.desc())  # pyright: ignore
+            )
+            return list(session.exec(statement).all())
+
     def load_titles(self) -> List[Tuple[int, str]]:
         """Load ID and title of all texts for lightweight lists."""
         with Session(self._engine) as session:
@@ -59,6 +69,22 @@ class TextRepository:
 
     def save_text(self, record: TextRecord) -> TextRecord:
         """Write a new or updated text record to the database."""
+        with Session(self._engine) as session:
+            session.add(record)
+            session.commit()
+            session.refresh(record)
+            return record
+
+    def update_text(self, record: TextRecord) -> TextRecord:
+        """Update an existing text record in the database."""
+        with Session(self._engine) as session:
+            session.add(record)
+            session.commit()
+            session.refresh(record)
+            return record
+
+    def update_sentence(self, record: SentenceRecord) -> SentenceRecord:
+        """Update an existing sentence record in the database."""
         with Session(self._engine) as session:
             session.add(record)
             session.commit()

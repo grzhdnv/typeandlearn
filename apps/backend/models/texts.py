@@ -1,6 +1,6 @@
 """Database models for structured text records."""
 
-from typing import Dict, Optional
+from typing import Any, Dict, List, Optional
 
 from sqlalchemy import JSON, Column
 from sqlmodel import Field, SQLModel
@@ -27,8 +27,8 @@ class SentenceRecord(SQLModel, table=True):
     sentence_index: int
     original_text: str
     translation: Optional[str] = None
-    translation_hints: Optional[Dict[str, str]] = Field(
-        default_factory=dict,
+    translation_hints: Optional[List[Dict[str, Any]]] = Field(
+        default_factory=list,
         sa_column=Column(JSON),
     )
     status: str = Field(default="pending", index=True)
@@ -55,7 +55,7 @@ class PracticeSentenceRecord(SQLModel, table=True):
     sentence_index: int
     sentence: str
     translation: str
-    translation_hints: Optional[Dict[str, str]] = Field(
-        default_factory=dict,
+    translation_hints: Optional[List[Dict[str, Any]]] = Field(
+        default_factory=list,
         sa_column=Column(JSON),
     )

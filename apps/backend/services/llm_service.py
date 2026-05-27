@@ -1,47 +1,78 @@
-"""Service for generating structured text data via an LLM provider."""
+"""Service for generating structured text data via an LLM provider using Pydantic AI."""
 
+import json
+import logging
 import os
+from typing import List
 
-from google import genai
-from pydantic import ValidationError
-from schemas.texts import TextData
+# Create logs directory if it doesn't exist
+os.makedirs("apps/backend/logs", exist_ok=True)
+
+logger = logging.getLogger("typeandlearn.llm")
+logger.setLevel(logging.INFO)
+
+if not logger.handlers:
+    fh = logging.FileHandler("apps/backend/logs/llm.log", encoding="utf-8")
+    fh.setLevel(logging.INFO)
+    formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+    fh.setFormatter(formatter)
+    logger.addHandler(fh)
+
+from pydantic_ai import Agent
+from schemas.texts import PracticeSentencesResponse, SentenceTranslation
 
 
 class LlmService:
-    """Translate raw text into validated domain models using LLM output."""
+    """Generate translations and practice sentences using Pydantic AI."""
 
-    def __init__(self, prompt_path: str, model_name: str) -> None:
-        """Configure prompt source and model identity."""
-
-        self._prompt_path = prompt_path
+    def __init__(
+        self,
+        translation_prompt_path: str,
+        practice_prompt_path: str,
+        model_name: str
+    ) -> None:
+        """Configure prompt sources and initialize Pydantic AI agents."""
         self._model_name = model_name
-
-    def text_to_db(self, input_text: str) -> TextData:
-        """Generate and validate one `TextData` object from input text."""
-
-        api_key = os.getenv("GEMINI_API_KEY")
-        if not api_key:
-            raise RuntimeError("GEMINI_API_KEY is not configured")
-
-        prompt = self._load_prompt()
-        client = genai.Client(api_key=api_key)
-        response = client.models.generate_content(
-            model=self._model_name,
-            contents=[prompt, input_text],
+        self._translation_prompt = self._read_prompt(translation_prompt_path)
+        self._practice_prompt = self._read_prompt(practice_prompt_path)
+        
+        self._translation_agent = Agent(
+            self._model_name,
+            output_type=SentenceTranslation,
+            system_prompt=self._translation_prompt
         )
-        if response is None or response.text is None:
-            raise RuntimeError("Empty response from LLM")
+        
+        self._practice_agent = Agent(
+            self._model_name,
+            output_type=PracticeSentencesResponse,
+            system_prompt=self._practice_prompt
+        )
 
-        jsonified = response.text[
-            response.text.find("{") : response.text.rfind("}") + 1
-        ]
-        try:
-            return TextData.model_validate_json(jsonified)
-        except ValidationError as error:
-            raise RuntimeError(f"Invalid LLM response shape: {error}") from error
-
-    def _load_prompt(self) -> str:
-        """Read the prompt template from disk."""
-
-        with open(self._prompt_path, "r", encoding="utf-8") as file:
+    def _read_prompt(self, path: str) -> str:
+        """Read a prompt template from disk."""
+        with open(path, "r", encoding="utf-8") as file:
             return file.read()
+
+    def translate_sentence(self, title: str, context: str, target_sentence: str) -> SentenceTranslation:
+        """Generate translation and hints for a single sentence."""
+        input_data = (
+            f"TITLE: {title}\n"
+            f"CONTEXT: {context}\n"
+            f"TARGET_SENTENCE: {target_sentence}"
+        )
+        
+        logger.info(f"--- LLM REQUEST (Translation) ---\nInput Data:\n{input_data}")
+        result = self._translation_agent.run_sync(input_data)
+        logger.info(f"--- LLM RESPONSE ---\nTokens: {result.usage()}\nOutput:\n{result.output.model_dump_json(indent=2)}\n---------------------------------")
+        
+        return result.output
+
+    def generate_practice_sentences(self, words: List[str]) -> PracticeSentencesResponse:
+        """Generate distinct practice sentences based on a list of vocabulary words."""
+        input_data = f"WORDS: {json.dumps(words, ensure_ascii=False)}"
+        
+        logger.info(f"--- LLM REQUEST (Practice) ---\nInput Data:\n{input_data}")
+        result = self._practice_agent.run_sync(input_data)
+        logger.info(f"--- LLM RESPONSE ---\nTokens: {result.usage()}\nOutput:\n{result.output.model_dump_json(indent=2)}\n------------------------------")
+        
+        return result.output

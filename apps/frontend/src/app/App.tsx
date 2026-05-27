@@ -16,9 +16,12 @@ import { TypingInterface } from "../features/typing/components/TypingInterface";
 
 const TEXTAREA_MIN_HEIGHT_PX = 40;
 
+// HintGroup is imported from contracts
+import { HintGroup } from "../shared/types/contracts";
+
 type UiSentence = {
   text: string;
-  hints: Record<string, string>;
+  hints: HintGroup[];
   translation: string;
 };
 
@@ -381,6 +384,7 @@ const App: Component = () => {
         when={
           !storyData.loading &&
           !storyData.error &&
+          storyData()?.status !== "processing" &&
           ((activeTab() === "original" && originalSentences().length > 0) ||
             (activeTab() === "generated" && generatedSentences().length > 0))
         }
@@ -396,7 +400,9 @@ const App: Component = () => {
               ? "Failed to load selected text."
               : storyData.loading
                 ? "Loading..."
-                : "No sentences available for this text."}
+                : storyData()?.status === "processing"
+                  ? "Translating text with AI... (Reload the page shortly)"
+                  : "No sentences available for this text."}
           </p>
         }
       >

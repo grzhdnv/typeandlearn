@@ -10,7 +10,7 @@ import {
 
 interface TypingInterfaceProps {
   targetText: string;
-  hints?: Record<string, string>;
+  hints?: { words: string[]; hint: string }[];
   fullTranslation?: string;
   onComplete?: () => void;
 }
@@ -62,16 +62,32 @@ export const TypingInterface: Component<TypingInterfaceProps> = (props) => {
   });
 
   const currentWord = () => getCurrentWord(props.targetText, typed().length);
-  const currentHint = () => {
+  const currentHintGroup = () => {
     const word = currentWord();
     if (!word) return null;
     const clean = word.replace(/[.,;:!?"'`„“»«]/g, "");
-    const hints = props.hints ?? {};
-    return hints[clean] ?? hints[word] ?? null;
+    const hints = props.hints ?? [];
+    return hints.find((h) => h.words.includes(clean) || h.words.includes(word)) ?? null;
+  };
+
+  const currentHint = () => {
+    const group = currentHintGroup();
+    return group ? group.hint : null;
   };
 
   const hintVisible = () => optionPressed();
   const fullTranslationVisible = () => optionPressed() && commandPressed();
+
+  const isHighlighted = (index: number) => {
+    if (!hintVisible()) return false;
+    const group = currentHintGroup();
+    if (!group) return false;
+
+    const wordAtIndex = getCurrentWord(props.targetText, index);
+    if (!wordAtIndex) return false;
+    const cleanWordAtIndex = wordAtIndex.replace(/[.,;:!?"'`„“»«]/g, "");
+    return group.words.includes(cleanWordAtIndex) || group.words.includes(wordAtIndex);
+  };
 
   /**
    * Updates typing state and modifier-key visibility state on keydown.
@@ -193,7 +209,9 @@ export const TypingInterface: Component<TypingInterfaceProps> = (props) => {
                 typed()[index()] !== char &&
                 char === " "
                   ? "rgba(255, 0, 0, 0.2)"
-                  : "transparent",
+                  : isHighlighted(index()) && char !== " "
+                    ? "rgba(255, 255, 0, 0.3)"
+                    : "transparent",
             }}
           >
             {char}

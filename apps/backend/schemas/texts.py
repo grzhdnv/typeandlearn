@@ -1,8 +1,15 @@
 """Pydantic models for text domain and API payloads."""
 
-from typing import Dict, List, Optional
+from typing import List, Optional
 
 from pydantic import BaseModel
+
+
+class HintGroup(BaseModel):
+    """A group of words and their combined translation hint."""
+
+    words: List[str]
+    hint: str
 
 
 class Sentence(BaseModel):
@@ -11,7 +18,7 @@ class Sentence(BaseModel):
     index: int
     text: str
     translation: str
-    translation_hints: Dict[str, str]
+    translation_hints: List[HintGroup]
 
 
 class Paragraph(BaseModel):
@@ -27,7 +34,7 @@ class PracticeSentence(BaseModel):
     index: int
     sentence: str
     translation: str
-    translation_hints: Dict[str, str]
+    translation_hints: List[HintGroup]
 
 
 class TextData(BaseModel):
@@ -35,8 +42,27 @@ class TextData(BaseModel):
 
     id: Optional[int] = None
     title: str
+    status: str
     original_paragraphs: List[Paragraph]
     practice_sentences: List[PracticeSentence]
+
+
+class SentenceTranslation(BaseModel):
+    """LLM response schema for a single sentence translation."""
+    
+    translation: str
+    translation_hints: List[HintGroup]
+
+
+class PracticeSentencesResponse(BaseModel):
+    """LLM response schema for generating practice sentences."""
+    
+    class GeneratedSentence(BaseModel):
+        sentence: str
+        translation: str
+        translation_hints: List[HintGroup]
+        
+    sentences: List[GeneratedSentence]
 
 
 
