@@ -12,7 +12,6 @@ load_dotenv()
 class Settings(BaseModel):
     """Strongly typed configuration values for backend services."""
 
-    data_file: Path = Path("apps/backend/data/db.json")
     translation_prompt_file: Path = Path("apps/backend/prompts/translate_sentence.md")
     practice_prompt_file: Path = Path("apps/backend/prompts/generate_practice.md")
     # The LLM model to use for translation and generation tasks
