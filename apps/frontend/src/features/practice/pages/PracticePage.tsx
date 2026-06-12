@@ -1,0 +1,206 @@
+import { Component, createResource, createSignal, createMemo, Show, createEffect } from 'solid-js';
+import { useParams } from '@solidjs/router';
+import { fetchStory, incrementProgress } from '../../../features/texts/api/textsApi';
+import { TypingInterface } from '../../../features/typing/components/TypingInterface';
+import { HintGroup } from '../../../shared/types/contracts';
+
+type UiSentence = {
+  text: string;
+  hints: HintGroup[];
+  translation: string;
+};
+
+const PracticePage: Component = () => {
+  const params = useParams();
+  const [storyData] = createResource(() => params.id, fetchStory);
+
+  const [activeTab, setActiveTab] = createSignal<"original" | "generated">("original");
+  const [originalIndex, setOriginalIndex] = createSignal(0);
+  const [generatedIndex, setGeneratedIndex] = createSignal(0);
+
+  createEffect(() => {
+    if (storyData()) {
+      setOriginalIndex(0);
+      setGeneratedIndex(0);
+    }
+  });
+
+  const originalSentences = createMemo<UiSentence[]>(() => {
+    const story = storyData();
+    if (!story) return [];
+    return story.original_paragraphs.flatMap((paragraph) =>
+      paragraph.sentences.map((sentence) => ({
+        text: sentence.text,
+        hints: sentence.translation_hints,
+        translation: sentence.translation,
+      }))
+    );
+  });
+
+  const generatedSentences = createMemo<UiSentence[]>(() => {
+    const story = storyData();
+    if (!story) return [];
+    return story.practice_sentences.map((sentence) => ({
+      text: sentence.sentence,
+      hints: sentence.translation_hints,
+      translation: sentence.translation,
+    }));
+  });
+
+  const previousDisabled = () =>
+    activeTab() === "original" ? originalIndex() === 0 : generatedIndex() === 0;
+  
+  const nextDisabled = () =>
+    activeTab() === "original"
+      ? originalIndex() >= originalSentences().length - 1
+      : generatedIndex() >= generatedSentences().length - 1;
+
+  const goToPreviousSentence = () => {
+    if (activeTab() === "original" && originalIndex() > 0) {
+      setOriginalIndex((i) => i - 1);
+    } else if (activeTab() === "generated" && generatedIndex() > 0) {
+      setGeneratedIndex((i) => i - 1);
+    }
+  };
+
+  const goToNextSentence = () => {
+    if (activeTab() === "original" && originalIndex() < originalSentences().length - 1) {
+      setOriginalIndex((i) => i + 1);
+    } else if (activeTab() === "generated" && generatedIndex() < generatedSentences().length - 1) {
+      setGeneratedIndex((i) => i + 1);
+    }
+  };
+
+  const handleOriginalComplete = () => {
+    if (params.id) incrementProgress(params.id).catch(console.error);
+    if (originalIndex() < originalSentences().length - 1) setOriginalIndex((i) => i + 1);
+  };
+  
+  const handleGeneratedComplete = () => {
+    if (params.id) incrementProgress(params.id).catch(console.error);
+    if (generatedIndex() < generatedSentences().length - 1) setGeneratedIndex((i) => i + 1);
+  };
+
+  // Prevent synthetic clicks on buttons from stealing focus during typing
+  const handleMouseOnlyClick = (action: () => void) => (event: MouseEvent) => {
+    if (event.detail === 0) {
+      event.preventDefault();
+      return;
+    }
+    action();
+    (event.currentTarget as HTMLButtonElement).blur();
+  };
+
+  const currentIndex = () => activeTab() === "original" ? originalIndex() : generatedIndex();
+  const totalSentences = () => activeTab() === "original" ? originalSentences().length : generatedSentences().length;
+  const progressPercent = () => totalSentences() === 0 ? 0 : ((currentIndex() + 1) / totalSentences()) * 100;
+
+  return (
+    <main class="flex-grow pt-32 pb-16 px-margin-desktop max-w-max-width-content mx-auto w-full flex flex-col">
+      <Show when={!storyData.loading && !storyData.error} fallback={
+        <div class="flex items-center justify-center h-64 font-mono-label text-on-surface-variant">
+          {storyData.error ? "Failed to load text." : "Loading..."}
+        </div>
+      }>
+        {/* Header Info */}
+        <div class="flex flex-col md:flex-row justify-between mb-12 gap-6 items-baseline">
+          <div class="space-y-4">
+            <div class="flex items-center gap-3">
+              <span class="bg-surface-container px-2 py-0.5 text-mono-label font-mono-label rounded-sm">UNKNOWN</span>
+              <span class="text-on-surface-variant text-mono-sm font-mono-sm opacity-60">ID: {params.id}</span>
+            </div>
+            <h1 class="font-headline-md text-headline-md leading-tight">{storyData()?.title || "Untitled"}</h1>
+          </div>
+          
+          {/* Real-time Stats - Placeholder for now since API doesn't return these yet */}
+          <div class="flex gap-12 border-l border-outline-variant pl-8 space-y-4">
+            <div class="flex flex-col">
+              <span class="text-mono-sm font-mono-sm text-on-surface-variant uppercase tracking-wider">Accuracy</span>
+              <span class="font-mono-label text-headline-md">--%</span>
+            </div>
+            <div class="flex flex-col">
+              <span class="text-mono-sm font-mono-sm text-on-surface-variant uppercase tracking-wider">WPM</span>
+              <span class="font-mono-label text-headline-md">--</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Tab Selection */}
+        <div class="mb-4 flex gap-2">
+          <div class="flex bg-surface-container border border-outline-variant p-0.5">
+            <button 
+              onClick={handleMouseOnlyClick(() => setActiveTab("original"))}
+              class={`px-6 py-1.5 text-mono-label font-mono-label shadow-sm transition-colors ${activeTab() === "original" ? "bg-primary text-on-primary" : "text-on-surface-variant hover:text-primary"}`}
+            >
+              Original
+            </button>
+            <button 
+              onClick={handleMouseOnlyClick(() => setActiveTab("generated"))}
+              class={`px-6 py-1.5 text-mono-label font-mono-label shadow-sm transition-colors ${activeTab() === "generated" ? "bg-primary text-on-primary" : "text-on-surface-variant hover:text-primary"}`}
+            >
+              Generated
+            </button>
+          </div>
+        </div>
+
+        <Show when={storyData()?.status === "processing"}>
+           <div class="p-6 mb-6 bg-tertiary-fixed border border-on-tertiary-fixed text-on-tertiary-fixed font-mono-label">
+             Translating text with AI... Please reload the page shortly.
+           </div>
+        </Show>
+
+        <Show when={storyData()?.status !== "processing" && totalSentences() > 0} fallback={
+          <div class="p-10 text-center font-mono-label text-outline">No sentences available for this text yet.</div>
+        }>
+          <Show when={activeTab() === "original"} fallback={
+            <TypingInterface
+              targetText={generatedSentences()[generatedIndex()].text}
+              hints={generatedSentences()[generatedIndex()].hints}
+              fullTranslation={generatedSentences()[generatedIndex()].translation}
+              onComplete={handleGeneratedComplete}
+            />
+          }>
+            <TypingInterface
+              targetText={originalSentences()[originalIndex()].text}
+              hints={originalSentences()[originalIndex()].hints}
+              fullTranslation={originalSentences()[originalIndex()].translation}
+              onComplete={handleOriginalComplete}
+            />
+          </Show>
+        </Show>
+
+        {/* Controls Footer */}
+        <div class="mt-16 pt-8 border-t border-outline-variant flex justify-between items-center">
+          <button 
+            disabled={previousDisabled()}
+            onClick={handleMouseOnlyClick(goToPreviousSentence)}
+            class="flex items-center gap-2 px-8 py-3 bg-white border border-outline-variant text-on-surface hover:border-primary transition-all active:scale-95 disabled:opacity-50 disabled:pointer-events-none"
+          >
+            <span class="material-symbols-outlined text-base">arrow_back</span>
+            <span class="font-mono-label text-mono-label uppercase tracking-widest">Previous</span>
+          </button>
+          
+          <div class="flex gap-4 items-center">
+            <span class="text-mono-sm font-mono-sm text-on-surface-variant">
+              Sentence {currentIndex() + 1} of {totalSentences()}
+            </span>
+            <div class="w-48 h-1 bg-surface-container overflow-hidden">
+              <div class="h-full bg-primary transition-all duration-300" style={{ width: `${progressPercent()}%` }}></div>
+            </div>
+          </div>
+
+          <button 
+            disabled={nextDisabled()}
+            onClick={handleMouseOnlyClick(goToNextSentence)}
+            class="flex items-center gap-2 px-10 py-3 bg-primary text-on-primary hover:bg-on-primary-fixed-variant transition-all active:scale-95 disabled:opacity-50 disabled:pointer-events-none"
+          >
+            <span class="font-mono-label text-mono-label uppercase tracking-widest">Next</span>
+            <span class="material-symbols-outlined text-base">arrow_forward</span>
+          </button>
+        </div>
+      </Show>
+    </main>
+  );
+};
+
+export default PracticePage;

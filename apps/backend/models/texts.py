@@ -14,6 +14,12 @@ class TextRecord(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     title: str = Field(index=True)
     status: str = Field(default="pending", index=True)
+    language: str = Field(default="Unknown", index=True)
+    difficulty_level: str = Field(default="Unrated", index=True)
+    word_count: int = Field(default=0)
+    completed_sentences: int = Field(default=0)
+    total_sentences: int = Field(default=0)
+    estimated_time_minutes: int = Field(default=0)
 
 
 class SentenceRecord(SQLModel, table=True):

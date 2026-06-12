@@ -17,8 +17,6 @@ interface TypingInterfaceProps {
 
 /**
  * Resolves the active word from a cursor offset in the target text.
- *
- * If the cursor is on whitespace or at the end, it falls back to the next/last word.
  */
 const getCurrentWord = (target: string, cursor: number): string => {
   if (target.length === 0) return "";
@@ -55,8 +53,10 @@ export const TypingInterface: Component<TypingInterfaceProps> = (props) => {
   const [typed, setTyped] = createSignal("");
   const [optionPressed, setOptionPressed] = createSignal(false);
   const [commandPressed, setCommandPressed] = createSignal(false);
+  let inputRef: HTMLInputElement | undefined;
 
   createEffect(() => {
+    // Reset when target text changes
     props.targetText;
     setTyped("");
   });
@@ -90,7 +90,7 @@ export const TypingInterface: Component<TypingInterfaceProps> = (props) => {
   };
 
   /**
-   * Updates typing state and modifier-key visibility state on keydown.
+   * Updates typing state
    */
   const handleKeyDown = (event: KeyboardEvent) => {
     if (event.key === "Alt") {
@@ -102,7 +102,6 @@ export const TypingInterface: Component<TypingInterfaceProps> = (props) => {
       return;
     }
 
-    if (document.activeElement?.tagName === "TEXTAREA") return;
     if (event.ctrlKey || event.metaKey || event.altKey) return;
 
     if (event.key === "Backspace") {
@@ -124,17 +123,11 @@ export const TypingInterface: Component<TypingInterfaceProps> = (props) => {
     }
   };
 
-  /**
-   * Clears modifier-key visibility state when modifier keys are released.
-   */
   const handleKeyUp = (event: KeyboardEvent) => {
     if (event.key === "Alt") setOptionPressed(false);
     if (event.key === "Meta") setCommandPressed(false);
   };
 
-  /**
-   * Ensures hint overlays are cleared when the window loses focus.
-   */
   const resetModifierState = () => {
     setOptionPressed(false);
     setCommandPressed(false);
@@ -144,6 +137,9 @@ export const TypingInterface: Component<TypingInterfaceProps> = (props) => {
     globalThis.addEventListener("keydown", handleKeyDown);
     globalThis.addEventListener("keyup", handleKeyUp);
     globalThis.addEventListener("blur", resetModifierState);
+    if (inputRef) {
+      inputRef.focus();
+    }
   });
 
   onCleanup(() => {
@@ -152,72 +148,87 @@ export const TypingInterface: Component<TypingInterfaceProps> = (props) => {
     globalThis.removeEventListener("blur", resetModifierState);
   });
 
+  const handleCanvasClick = () => {
+    if (inputRef) inputRef.focus();
+  };
+
   return (
-    <div
-      style={{
-        "font-size": "24px",
-        padding: "20px 0",
-        "font-family": "monospace",
-        width: "100%",
-        "box-sizing": "border-box",
-        "line-height": "1.5",
-      }}
-    >
-      <div
-        style={{
-          "min-height": "28px",
-          "margin-bottom": "12px",
-          "font-size": "16px",
-          color: "#555",
-        }}
-      >
-        <Show
-          when={hintVisible()}
-          fallback={
-            <span style={{ color: "#999", "font-style": "italic" }}>
-              Hold ⌥ Option for word hint, ⌥+⌘ for full translation
-            </span>
-          }
-        >
-          <Show
-            when={fullTranslationVisible()}
-            fallback={
-              <span>
-                <strong>{currentWord()}</strong>
-                {currentHint() ? ` → ${currentHint()}` : " (no hint)"}
-              </span>
-            }
-          >
-            <span>
-              <strong>Translation</strong>
-              {props.fullTranslation ? ` → ${props.fullTranslation}` : " (not available)"}
-            </span>
-          </Show>
-        </Show>
+    <>
+      <div class="relative group" onClick={handleCanvasClick}>
+        <div class="absolute -inset-4 border-2 border-primary opacity-0 group-focus-within:opacity-10 transition-opacity pointer-events-none"></div>
+        {/* The Typing Canvas */}
+        <div class="bg-surface-container-lowest border border-outline-variant p-10 min-h-[320px] shadow-sm relative focus-within:border-primary transition-colors cursor-text" id="typing-canvas">
+          <div class="mb-4 pb-2 border-b border-outline-variant/30 text-on-surface-variant font-mono-sm text-mono-sm opacity-60 flex justify-between items-center">
+            <span>Type the text as it appears.</span>
+            <span class="uppercase tracking-tighter">CTRL + R to restart</span>
+          </div>
+          
+          {/* Text Container */}
+          <div class="font-mono-input text-[24px] leading-[1.8] tracking-normal select-none relative z-10 whitespace-pre-wrap">
+            <For each={props.targetText.split("")}>
+              {(char, index) => {
+                const isMistake = index() < typed().length && typed()[index()] !== char;
+                const isCurrent = index() === typed().length;
+                const isTyped = index() < typed().length;
+                
+                return (
+                  <>
+                    <Show when={isCurrent}>
+                      <span class="caret-blink"></span>
+                    </Show>
+                    <span
+                      class={
+                        isMistake 
+                          ? "text-error bg-error-container" 
+                          : isTyped 
+                            ? "text-completed" 
+                            : "text-light"
+                      }
+                      style={{
+                        "background-color":
+                          isHighlighted(index()) && char !== " " && !isMistake
+                            ? "rgba(59, 130, 246, 0.2)" // Tertiary-like highlight
+                            : undefined,
+                      }}
+                    >
+                      {char}
+                    </span>
+                  </>
+                );
+              }}
+            </For>
+            <Show when={typed().length === props.targetText.length}>
+               <span class="caret-blink"></span>
+            </Show>
+          </div>
+          
+          {/* Hidden Input to catch focus */}
+          <input 
+            ref={inputRef}
+            autocomplete="off" 
+            autofocus 
+            class="absolute inset-0 opacity-0 cursor-default" 
+            spellcheck={false} 
+            type="text" 
+          />
+        </div>
       </div>
-      <For each={props.targetText.split("")}>
-        {(char, index) => (
-          <span
-            style={{
-              opacity: index() < typed().length ? 1 : 0.3,
-              color:
-                index() < typed().length && typed()[index()] !== char
-                  ? "red"
-                  : "inherit",
-              "background-color":
-                index() < typed().length &&
-                typed()[index()] !== char &&
-                char === " "
-                  ? "rgba(255, 0, 0, 0.2)"
-                  : isHighlighted(index()) && char !== " "
-                    ? "rgba(255, 255, 0, 0.3)"
-                    : "transparent",
-            }}
-          >
-            {char}
-          </span>
-        )}
-      </For>
-    </div>
+
+      {/* Contextual Hints */}
+      <div class="mt-6 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div class="text-on-surface-variant font-mono-sm text-mono-sm italic opacity-70">
+          Hold <span class="not-italic font-bold px-1.5 py-0.5 bg-surface-container border border-outline-variant rounded">⌥ Option</span> for word hint, <span class="not-italic font-bold px-1.5 py-0.5 bg-surface-container border border-outline-variant rounded">⌥+⌘</span> for full translation
+        </div>
+        <div class="text-on-surface font-mono-label text-mono-label">
+          <Show when={hintVisible()} fallback={<span class="opacity-0">Placeholder to maintain height</span>}>
+            <Show when={fullTranslationVisible()} fallback={
+              <span><strong>{currentWord()}</strong>{currentHint() ? ` → ${currentHint()}` : " (no hint)"}</span>
+            }>
+              <span><strong>Translation</strong>{props.fullTranslation ? ` → ${props.fullTranslation}` : " (not available)"}</span>
+            </Show>
+          </Show>
+        </div>
+      </div>
+    </>
   );
 };

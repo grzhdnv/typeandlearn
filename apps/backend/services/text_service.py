@@ -4,7 +4,7 @@ from itertools import groupby
 
 from models.texts import PracticeSentenceRecord, SentenceRecord, TextRecord, WordFrequencyRecord
 from repositories.text_repository import TextRepository
-from schemas.texts import Paragraph, PracticeSentence, Sentence, TextData, TextTitle
+from schemas.texts import Paragraph, PracticeSentence, Sentence, TextData, TextTitle, TextUpdateRequest
 from services.llm_service import LlmService
 from services.preprocessing_service import PreprocessingService
 
@@ -66,6 +66,12 @@ class TextService:
             id=record.id,
             title=record.title,
             status=record.status,
+            language=record.language,
+            difficulty_level=record.difficulty_level,
+            word_count=record.word_count,
+            completed_sentences=record.completed_sentences,
+            total_sentences=record.total_sentences,
+            estimated_time_minutes=record.estimated_time_minutes,
             original_paragraphs=paragraphs,
             practice_sentences=practice_sentences,
         )
@@ -84,8 +90,21 @@ class TextService:
 
     def get_titles(self) -> list[TextTitle]:
         """Return database-backed title metadata for text selection."""
-        titles = self._repository.load_titles()
-        return [TextTitle(id=str(tid), title=title) for tid, title in titles]
+        records = self._repository.load_titles()
+        return [
+            TextTitle(
+                id=str(record.id), 
+                title=record.title,
+                status=record.status,
+                language=record.language,
+                difficulty_level=record.difficulty_level,
+                word_count=record.word_count,
+                completed_sentences=record.completed_sentences,
+                total_sentences=record.total_sentences,
+                estimated_time_minutes=record.estimated_time_minutes
+            ) 
+            for record in records
+        ]
 
     def get_one(self, text_id: str) -> TextData:
         """Return one text entry by its database ID."""
@@ -103,14 +122,44 @@ class TextService:
 
         return self._build_text_data(record, s_records, p_records)
 
-    def upload(self, text: str, title: str = "New Uploaded Text") -> TextRecord:
+    def upload(self, text: str, language: str, title: Optional[str] = None, difficulty_level: Optional[str] = None) -> TextRecord:
         """Generate and persist a new text entry from raw input using local preprocessing."""
         
         # 1. Preprocess the text locally using spaCy
         paragraphs_data, word_frequencies = self._preprocessing.process_text(text)
         
-        # 2. Save the TextRecord (marked as processing initially since LLM work isn't done yet)
-        record = TextRecord(title=title, status="processing")
+        # 2. Extract metadata if missing
+        final_title = title
+        final_difficulty = difficulty_level
+        if not final_title or not final_difficulty:
+            try:
+                metadata = self._llm.extract_metadata(text)
+                if not final_title:
+                    final_title = f"[{metadata.title}]"
+                if not final_difficulty:
+                    final_difficulty = metadata.difficulty_level
+            except Exception as e:
+                print(f"Failed to extract metadata: {e}")
+                if not final_title:
+                    final_title = "[Untitled]"
+                if not final_difficulty:
+                    final_difficulty = "Unrated"
+
+        # Calculate basic metrics
+        word_count = sum(len(s["text"].split()) for p in paragraphs_data for s in p["sentences"])
+        total_sentences = sum(len(p["sentences"]) for p in paragraphs_data)
+        estimated_time = max(1, word_count // 40)
+        
+        # 3. Save the TextRecord
+        record = TextRecord(
+            title=final_title, 
+            status="processing",
+            language=language,
+            difficulty_level=final_difficulty,
+            word_count=word_count,
+            total_sentences=total_sentences,
+            estimated_time_minutes=estimated_time
+        )
         record = self._repository.save_text(record)
         
         if record.id is None:
@@ -165,6 +214,39 @@ class TextService:
 
         self._repository.delete_text(tid)
         return data_to_return
+
+    def increment_progress(self, text_id: str) -> TextRecord:
+        """Increment the completed sentences count for a text."""
+        try:
+            tid = int(text_id)
+        except ValueError as error:
+            raise ValueError(f"Invalid text ID format: {text_id}") from error
+
+        record = self._repository.load_one_text(tid)
+        if record is None or record.id is None:
+            raise IndexError("Text not found")
+            
+        record.completed_sentences += 1
+        return self._repository.update_text(record)
+
+    def update_metadata(self, text_id: str, payload: TextUpdateRequest) -> TextData:
+        """Update language and/or difficulty level of a text."""
+        try:
+            tid = int(text_id)
+        except ValueError as error:
+            raise ValueError(f"Invalid text ID format: {text_id}") from error
+
+        record = self._repository.load_one_text(tid)
+        if record is None or record.id is None:
+            raise IndexError("Text not found")
+            
+        if payload.language is not None:
+            record.language = payload.language
+        if payload.difficulty_level is not None:
+            record.difficulty_level = payload.difficulty_level
+            
+        self._repository.update_text(record)
+        return self.get_one(text_id)
 
     def process_pending_text(self, text_id: int) -> None:
         """Background worker to translate sentences and generate practice sentences."""

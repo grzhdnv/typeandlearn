@@ -1,4 +1,4 @@
-import { getJson, postJson } from "../../../shared/api/http";
+import { getJson, patchJson, postJson, deleteJson } from "../../../shared/api/http";
 import type {
   TextData,
   TextResponse,
@@ -30,10 +30,31 @@ export const fetchStory = async (id: string): Promise<TextData> => {
  *
  * @param text Raw user input from the editor.
  */
-export const postText = async (text: string): Promise<UploadResponse> => {
+export const postText = async (text: string, language: string, title?: string, difficultyLevel?: string): Promise<UploadResponse> => {
   const trimmed = text.trim();
   if (!trimmed) {
     throw new Error("Text cannot be empty");
   }
-  return postJson<UploadResponse>("/api/texts", { text: trimmed });
+  return postJson<UploadResponse>("/api/texts", { 
+    text: trimmed,
+    language,
+    title: title?.trim() || undefined,
+    difficulty_level: difficultyLevel?.trim() || undefined
+  });
+};
+
+export const incrementProgress = async (id: string): Promise<{completed_sentences: number}> => {
+  return postJson<{completed_sentences: number}>(`/api/texts/${id}/progress`, {});
+};
+
+export const updateTextMetadata = async (id: string, language?: string, difficultyLevel?: string): Promise<TextResponse> => {
+  const payload: Record<string, string> = {};
+  if (language) payload.language = language;
+  if (difficultyLevel) payload.difficulty_level = difficultyLevel;
+  
+  return patchJson<TextResponse>(`/api/texts/${id}`, payload);
+};
+
+export const deleteText = async (id: string): Promise<void> => {
+  await deleteJson(`/api/texts/${id}`);
 };

@@ -60,12 +60,13 @@ class TextRepository:
             )
             return list(session.exec(statement).all())
 
-    def load_titles(self) -> List[Tuple[int, str]]:
-        """Load ID and title of all texts for lightweight lists."""
+    def load_titles(self) -> List[TextRecord]:
+        """Load metadata for all texts for lightweight lists."""
         with Session(self._engine) as session:
-            statement = select(TextRecord.id, TextRecord.title).order_by(TextRecord.id)  # pyright: ignore
-            results = session.exec(statement).all()
-            return [(row[0], row[1]) for row in results]  # pyright: ignore
+            statement = select(
+                TextRecord
+            ).order_by(TextRecord.id)  # pyright: ignore
+            return list(session.exec(statement).all())
 
     def save_text(self, record: TextRecord) -> TextRecord:
         """Write a new or updated text record to the database."""

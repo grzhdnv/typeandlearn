@@ -43,6 +43,12 @@ class TextData(BaseModel):
     id: Optional[int] = None
     title: str
     status: str
+    language: str = "Unknown"
+    difficulty_level: str = "Unrated"
+    word_count: int = 0
+    completed_sentences: int = 0
+    total_sentences: int = 0
+    estimated_time_minutes: int = 0
     original_paragraphs: List[Paragraph]
     practice_sentences: List[PracticeSentence]
 
@@ -65,11 +71,27 @@ class PracticeSentencesResponse(BaseModel):
     sentences: List[GeneratedSentence]
 
 
+class GeneratedMetadata(BaseModel):
+    """LLM response schema for generating metadata."""
+    title: str
+    difficulty_level: str
+
+
 
 class TextUploadRequest(BaseModel):
     """Request payload for submitting raw text content."""
 
     text: str
+    language: str
+    title: Optional[str] = None
+    difficulty_level: Optional[str] = None
+
+
+class TextUpdateRequest(BaseModel):
+    """Request payload for updating text metadata."""
+
+    language: Optional[str] = None
+    difficulty_level: Optional[str] = None
 
 
 class TextTitle(BaseModel):
@@ -77,6 +99,13 @@ class TextTitle(BaseModel):
 
     id: str
     title: str
+    status: str
+    language: str = "Unknown"
+    difficulty_level: str = "Unrated"
+    word_count: int = 0
+    completed_sentences: int = 0
+    total_sentences: int = 0
+    estimated_time_minutes: int = 0
 
 
 class TextsResponse(BaseModel):

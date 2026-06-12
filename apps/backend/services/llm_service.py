@@ -19,7 +19,7 @@ if not logger.handlers:
     logger.addHandler(fh)
 
 from pydantic_ai import Agent
-from schemas.texts import PracticeSentencesResponse, SentenceTranslation
+from schemas.texts import PracticeSentencesResponse, SentenceTranslation, GeneratedMetadata
 
 
 class LlmService:
@@ -47,6 +47,13 @@ class LlmService:
             output_type=PracticeSentencesResponse,
             system_prompt=self._practice_prompt
         )
+        
+        metadata_prompt_path = "apps/backend/prompts/metadata_prompt.txt"
+        self._metadata_agent = Agent(
+            self._model_name,
+            output_type=GeneratedMetadata,
+            system_prompt=self._read_prompt(metadata_prompt_path)
+        )
 
     def _read_prompt(self, path: str) -> str:
         """Read a prompt template from disk."""
@@ -73,6 +80,16 @@ class LlmService:
         
         logger.info(f"--- LLM REQUEST (Practice) ---\nInput Data:\n{input_data}")
         result = self._practice_agent.run_sync(input_data)
+        logger.info(f"--- LLM RESPONSE ---\nTokens: {result.usage()}\nOutput:\n{result.output.model_dump_json(indent=2)}\n------------------------------")
+        
+        return result.output
+
+    def extract_metadata(self, text: str) -> GeneratedMetadata:
+        """Extract title and difficulty level from text."""
+        input_data = f"TEXT:\n{text[:2000]}" # only need first 2k chars for title/difficulty
+        
+        logger.info(f"--- LLM REQUEST (Metadata) ---\nInput Data:\n{input_data}")
+        result = self._metadata_agent.run_sync(input_data)
         logger.info(f"--- LLM RESPONSE ---\nTokens: {result.usage()}\nOutput:\n{result.output.model_dump_json(indent=2)}\n------------------------------")
         
         return result.output

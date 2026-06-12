@@ -6,6 +6,7 @@ from app_state import text_service
 from schemas.texts import (
     DeleteResponse,
     TextResponse,
+    TextUpdateRequest,
     TextUploadRequest,
     TextsResponse,
     TitlesResponse,
@@ -67,7 +68,12 @@ def upload_text(payload: TextUploadRequest, background_tasks: BackgroundTasks) -
         raise HTTPException(status_code=400, detail="Text cannot be empty")
 
     try:
-        record = text_service.upload(text)
+        record = text_service.upload(
+            text=text,
+            language=payload.language,
+            title=payload.title,
+            difficulty_level=payload.difficulty_level
+        )
         if record.id is not None:
             background_tasks.add_task(text_service.process_pending_text, record.id)
             
@@ -99,3 +105,34 @@ def delete_text(text_id: str) -> DeleteResponse:
     except Exception as error:
         raise HTTPException(status_code=500, detail=f"Error deleting text: {error}")
 
+
+@router.patch("/{text_id}", response_model=TextResponse)
+def update_text_metadata(text_id: str, payload: TextUpdateRequest) -> TextResponse:
+    """Update text metadata (language and/or difficulty level)."""
+
+    try:
+        data = text_service.update_metadata(text_id, payload)
+        return TextResponse(
+            message=f"Text metadata updated successfully!",
+            data=data,
+        )
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error))
+    except IndexError:
+        raise HTTPException(status_code=404, detail="Text not found")
+    except Exception as error:
+        raise HTTPException(status_code=500, detail=f"Error updating text: {error}")
+
+@router.post("/{text_id}/progress")
+def increment_progress(text_id: str):
+    """Increment the completed sentences count for a text."""
+    try:
+        tid = int(text_id)
+        record = text_service.get_one(str(tid)) # check if exists
+        
+        # We need a repository method to increment this directly, 
+        # or we can update it via service
+        updated = text_service.increment_progress(str(tid))
+        return {"message": "Progress incremented", "completed_sentences": updated.completed_sentences}
+    except Exception as error:
+        raise HTTPException(status_code=500, detail=f"Error incrementing progress: {error}")

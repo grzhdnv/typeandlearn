@@ -41,6 +41,12 @@ export type TextData = {
   id?: number;
   title: string;
   status: string;
+  language: string;
+  difficulty_level: string;
+  word_count: number;
+  completed_sentences: number;
+  total_sentences: number;
+  estimated_time_minutes: number;
   original_paragraphs: Paragraph[];
   practice_sentences: PracticeSentence[];
 };
@@ -51,6 +57,13 @@ export type TextData = {
 export type TextTitle = {
   id: string;
   title: string;
+  status: string;
+  language: string;
+  difficulty_level: string;
+  word_count: number;
+  completed_sentences: number;
+  total_sentences: number;
+  estimated_time_minutes: number;
 };
 
 /**

@@ -1,0 +1,243 @@
+<!DOCTYPE html><html class="light" lang="en" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Practice | typeandlearn</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-variant": "#e1e3e4",
+                        "tertiary-fixed-dim": "#adc6ff",
+                        "tertiary-container": "#001a42",
+                        "error-container": "#ffdad6",
+                        "background": "#f8f9fa",
+                        "on-tertiary": "#ffffff",
+                        "inverse-surface": "#2e3132",
+                        "primary-container": "#1b1b1b",
+                        "on-secondary-fixed-variant": "#005236",
+                        "on-error": "#ffffff",
+                        "on-tertiary-container": "#3980f4",
+                        "on-primary-fixed-variant": "#474747",
+                        "on-primary-container": "#848484",
+                        "on-surface": "#191c1d",
+                        "primary-fixed": "#e2e2e2",
+                        "surface-dim": "#d9dadb",
+                        "surface-container": "#edeeef",
+                        "on-surface-variant": "#4c4546",
+                        "outline": "#7e7576",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-fixed-dim": "#4edea3",
+                        "on-background": "#191c1d",
+                        "secondary-container": "#6cf8bb",
+                        "secondary": "#006c49",
+                        "on-error-container": "#93000a",
+                        "tertiary-fixed": "#d8e2ff",
+                        "on-secondary": "#ffffff",
+                        "on-secondary-fixed": "#002113",
+                        "on-secondary-container": "#00714d",
+                        "on-tertiary-fixed-variant": "#004395",
+                        "tertiary": "#000000",
+                        "surface-container-highest": "#e1e3e4",
+                        "surface": "#f8f9fa",
+                        "primary": "#000000",
+                        "inverse-on-surface": "#f0f1f2",
+                        "error": "#ba1a1a",
+                        "surface-bright": "#f8f9fa",
+                        "secondary-fixed": "#6ffbbe",
+                        "on-primary-fixed": "#1b1b1b",
+                        "surface-container-high": "#e7e8e9",
+                        "inverse-primary": "#c6c6c6",
+                        "on-primary": "#ffffff",
+                        "surface-tint": "#5e5e5e",
+                        "primary-fixed-dim": "#c6c6c6",
+                        "outline-variant": "#cfc4c5",
+                        "on-tertiary-fixed": "#001a42",
+                        "surface-container-low": "#f3f4f5"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "gutter": "24px",
+                        "base": "8px",
+                        "margin-mobile": "16px",
+                        "margin-desktop": "64px",
+                        "max-width-content": "800px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Hanken Grotesk"],
+                        "mono-sm": ["JetBrains Mono"],
+                        "mono-label": ["JetBrains Mono"],
+                        "body-lg": ["Hanken Grotesk"],
+                        "headline-md": ["Hanken Grotesk"],
+                        "body-md": ["Hanken Grotesk"],
+                        "mono-input": ["JetBrains Mono"]
+                    },
+                    "fontSize": {
+                        "mono-sm": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                        "mono-label": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "mono-input": ["24px", {"lineHeight": "40px", "fontWeight": "500"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .caret-blink {
+            display: inline-block;
+            width: 12px;
+            height: 32px;
+            background-color: #000;
+            vertical-align: middle;
+            animation: blink 1s step-end infinite;
+        }
+        @keyframes blink {
+            from, to { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        .text-light { color: #9CA3AF; }
+        .text-completed { color: #000; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen font-body-md flex flex-col">
+<!-- TopNavBar -->
+<header class="bg-surface dark:bg-background border-b border-outline dark:border-outline-variant flex justify-between items-center h-16 w-full px-margin-desktop max-w-max-width-content mx-auto fixed top-0 left-0 right-0 z-50">
+<div class="flex items-center gap-8">
+<span class="text-headline-md font-display-lg tracking-tighter text-primary dark:text-primary-fixed">typeandlearn</span>
+<nav class="hidden md:flex gap-6">
+<a class="text-on-surface-variant dark:text-on-surface-variant font-mono-label text-mono-label hover:text-primary dark:hover:text-tertiary-fixed-dim transition-colors duration-200" href="#">Library</a>
+<a class="text-primary dark:text-primary-fixed font-bold border-b-2 border-primary dark:border-primary-fixed pb-1 font-mono-label text-mono-label" href="#">Practice</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant font-mono-label text-mono-label hover:text-primary dark:hover:text-tertiary-fixed-dim transition-colors duration-200" href="#">Settings</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-primary hover:scale-95 duration-100 ease-in-out">leaderboard</button>
+<button class="material-symbols-outlined text-primary hover:scale-95 duration-100 ease-in-out" style="font-variation-settings: &quot;FILL&quot; 1;">person</button>
+</div>
+</header>
+<!-- Main Workspace -->
+<main class="flex-grow pt-32 pb-16 px-margin-desktop max-w-max-width-content mx-auto w-full flex flex-col">
+<!-- Header Info -->
+<div class="flex flex-col md:flex-row justify-between mb-12 gap-6 items-baseline">
+<div class="space-y-4">
+<div class="flex items-center gap-3">
+<span class="bg-surface-container px-2 py-0.5 text-mono-label font-mono-label rounded-sm">German</span><span class="bg-surface-container px-2 py-0.5 text-mono-label font-mono-label rounded-sm">B2</span><span class="bg-surface-container px-2 py-0.5 text-mono-label font-mono-label rounded-sm">Literature</span>
+<span class="text-on-surface-variant text-mono-sm font-mono-sm opacity-60">PH-01</span>
+</div>
+<h1 class="font-headline-md text-headline-md leading-tight">Vorwort zur neuen Auflage</h1>
+</div>
+<!-- Real-time Stats -->
+<div class="flex gap-12 border-l border-outline-variant pl-8 space-y-4">
+<div class="flex flex-col">
+<span class="text-mono-sm font-mono-sm text-on-surface-variant uppercase tracking-wider">Accuracy</span>
+<span class="font-mono-label text-headline-md">98.4%</span>
+</div>
+<div class="flex flex-col">
+<span class="text-mono-sm font-mono-sm text-on-surface-variant uppercase tracking-wider">WPM</span>
+<span class="font-mono-label text-headline-md">64</span>
+</div>
+<div class="flex flex-col">
+
+<div class="flex items-baseline gap-1">
+
+
+</div>
+</div>
+</div>
+</div>
+<!-- Typing Interface Area -->
+<div class="relative group">
+<div class="absolute -inset-4 border-2 border-primary opacity-0 group-focus-within:opacity-10 transition-opacity pointer-events-none"></div>
+<!-- The Typing Canvas -->
+<div class="bg-surface-container-lowest border border-outline-variant p-10 min-h-[320px] shadow-sm relative focus-within:border-primary transition-colors cursor-text" id="typing-canvas"><div class="mb-4 pb-2 border-b border-outline-variant/30 text-on-surface-variant font-mono-sm text-mono-sm opacity-60 flex justify-between items-center">
+    <span class="">Type the text as it appears.</span>
+    <span class="uppercase tracking-tighter">CTRL + R to restart</span>
+</div>
+<!-- Text Container -->
+<div class="font-mono-input text-mono-input leading-[1.8] tracking-normal select-none relative z-10">
+<span class="text-completed">Die vorliegende Auflage zeigt </span>
+<span class="relative">
+<span class="caret-blink"></span>
+<span class="text-light">ihrer Vorgängerin gegenüber ein ziemlich verändertes Gesicht.</span>
+</span>
+</div>
+<!-- Hidden Input to catch focus -->
+<input autocomplete="off" autofocus="" class="absolute inset-0 opacity-0 cursor-default" spellcheck="false" type="text">
+</div>
+<!-- Contextual Hints -->
+<div class="mt-6 flex flex-col md:flex-row justify-between items-center gap-4">
+<div class="flex gap-2">
+<div class="flex bg-surface-container border border-outline-variant p-0.5">
+<button class="px-6 py-1.5 text-mono-label font-mono-label bg-primary text-on-primary shadow-sm">Original</button>
+<button class="px-6 py-1.5 text-mono-label font-mono-label text-on-surface-variant hover:text-primary transition-colors">Generated</button>
+</div>
+</div>
+<div class="text-on-surface-variant font-mono-sm text-mono-sm italic opacity-70">
+                    Hold <span class="not-italic font-bold px-1.5 py-0.5 bg-surface-container border border-outline-variant rounded">⌥ Option</span> for word hint, <span class="not-italic font-bold px-1.5 py-0.5 bg-surface-container border border-outline-variant rounded">⌥+⌘</span> for full translation
+                </div>
+</div>
+</div>
+<!-- Controls Footer -->
+<div class="mt-16 pt-8 border-t border-outline-variant flex justify-between items-center">
+<button class="flex items-center gap-2 px-8 py-3 bg-white border border-outline-variant text-on-surface hover:border-primary transition-all active:scale-95">
+<span class="material-symbols-outlined text-base">arrow_back</span>
+<span class="font-mono-label text-mono-label uppercase tracking-widest">Previous</span>
+</button>
+<div class="flex gap-4 items-center">
+<span class="text-mono-sm font-mono-sm text-on-surface-variant">Section 1 of 12</span>
+<div class="w-48 h-1 bg-surface-container overflow-hidden">
+<div class="h-full bg-primary w-1/4"></div>
+</div>
+</div>
+<button class="flex items-center gap-2 px-10 py-3 bg-primary text-on-primary hover:bg-on-primary-fixed-variant transition-all active:scale-95">
+<span class="font-mono-label text-mono-label uppercase tracking-widest">Next</span>
+<span class="material-symbols-outlined text-base">arrow_forward</span>
+</button>
+</div>
+</main>
+<!-- Global Footer -->
+<footer class="bg-surface dark:bg-background flex flex-col md:flex-row justify-between items-center py-base px-margin-desktop mt-48 w-full max-w-max-width-content mx-auto border-t border-outline-variant dark:border-outline">
+<div class="flex items-center gap-4 mb-4 md:mb-0">
+<span class="font-mono-label text-mono-label text-primary">typeandlearn</span>
+<span class="text-on-surface-variant dark:text-on-surface-variant font-mono-sm text-mono-sm opacity-60">© 2024 typeandlearn. Academic Rigor meet Modern Efficiency.</span>
+</div>
+<div class="flex gap-6">
+<a class="text-on-surface-variant opacity-60 font-mono-sm text-mono-sm hover:opacity-100 hover:text-primary transition-opacity" href="#">Privacy</a>
+<a class="text-on-surface-variant opacity-60 font-mono-sm text-mono-sm hover:opacity-100 hover:text-primary transition-opacity" href="#">Terms</a>
+<a class="text-on-surface-variant opacity-60 font-mono-sm text-mono-sm hover:opacity-100 hover:text-primary transition-opacity" href="#">Support</a>
+</div>
+</footer>
+<script>
+        // Micro-interaction for typing simulation or cursor focus
+        document.addEventListener('keydown', (e) => {
+            // Placeholder for typing logic
+            const input = document.querySelector('input');
+            if (document.activeElement !== input) {
+                input.focus();
+            }
+        });
+
+        // Atmospheric focus effect on the canvas
+        const canvas = document.getElementById('typing-canvas');
+        canvas.addEventListener('click', () => {
+            canvas.querySelector('input').focus();
+        });
+    </script>
+
+
+</body></html>

@@ -1,454 +1,88 @@
-import {
-  type Component,
-  Show,
-  createEffect,
-  createMemo,
-  createResource,
-  createSignal,
-} from "solid-js";
+import { type Component, JSX } from "solid-js";
+import { A } from "@solidjs/router";
 
-import {
-  fetchStory,
-  fetchTextTitles,
-  postText,
-} from "../features/texts/api/textsApi";
-import { TypingInterface } from "../features/typing/components/TypingInterface";
-
-const TEXTAREA_MIN_HEIGHT_PX = 40;
-
-// HintGroup is imported from contracts
-import { HintGroup } from "../shared/types/contracts";
-
-type UiSentence = {
-  text: string;
-  hints: HintGroup[];
-  translation: string;
+type AppProps = {
+  children?: JSX.Element;
 };
 
-/**
- * Root frontend screen for text submission, text selection, and typing practice.
- */
-const App: Component = () => {
-  let textAreaRef: HTMLTextAreaElement | undefined;
-
-  const [selectedTextId, setSelectedTextId] = createSignal<string | null>(null);
-  const [availableTexts] = createResource(fetchTextTitles);
-  const [storyData] = createResource(selectedTextId, (id) => fetchStory(id));
-
-  createEffect(() => {
-    const texts = availableTexts();
-    if (texts && texts.length > 0) {
-      const currentId = selectedTextId();
-      if (!currentId || !texts.some((t) => t.id === currentId)) {
-        setSelectedTextId(texts[0].id);
-      }
-    }
-  });
-
-  const originalSentences = createMemo<UiSentence[]>(() => {
-    const story = storyData();
-    if (!story) return [];
-    return story.original_paragraphs.flatMap((paragraph) =>
-      paragraph.sentences.map((sentence) => ({
-        text: sentence.text,
-        hints: sentence.translation_hints,
-        translation: sentence.translation,
-      })),
-    );
-  });
-
-  const generatedSentences = createMemo<UiSentence[]>(() => {
-    const story = storyData();
-    if (!story) return [];
-    return story.practice_sentences.map((sentence) => ({
-      text: sentence.sentence,
-      hints: sentence.translation_hints,
-      translation: sentence.translation,
-    }));
-  });
-
-  const [customText, setCustomText] = createSignal("");
-  const [isSubmitting, setIsSubmitting] = createSignal(false);
-  const [submitMessage, setSubmitMessage] = createSignal("");
-  const [submitStatus, setSubmitStatus] = createSignal<
-    "success" | "error" | "idle"
-  >("idle");
-
-  const [activeTab, setActiveTab] = createSignal<"original" | "generated">(
-    "original",
-  );
-  const [originalIndex, setOriginalIndex] = createSignal(0);
-  const [generatedIndex, setGeneratedIndex] = createSignal(0);
-
-  createEffect(() => {
-    if (storyData()) {
-      setOriginalIndex(0);
-      setGeneratedIndex(0);
-    }
-  });
-
-  /**
-   * Auto-resizes the text input area up to half viewport height.
-   */
-  const resizeTextarea = (textarea: HTMLTextAreaElement) => {
-    const maxHeight = Math.floor(window.innerHeight * 0.5);
-    textarea.style.height = "auto";
-    textarea.style.height = `${Math.min(textarea.scrollHeight, maxHeight)}px`;
-    textarea.style.overflowY =
-      textarea.scrollHeight > maxHeight ? "auto" : "hidden";
-  };
-
-  /**
-   * Handles user text input and clears prior submit status messages.
-   */
-  const handleTextInput = (event: InputEvent) => {
-    const textarea = event.currentTarget as HTMLTextAreaElement;
-    resizeTextarea(textarea);
-    setCustomText(textarea.value);
-    if (submitStatus() !== "idle") {
-      setSubmitStatus("idle");
-      setSubmitMessage("");
-    }
-  };
-
-  /**
-   * Submits user text to the backend and updates UI submit state.
-   */
-  const handleSubmitText = async () => {
-    const text = customText().trim();
-    if (!text || isSubmitting()) return;
-
-    try {
-      setIsSubmitting(true);
-      await postText(text);
-      setCustomText("");
-      if (textAreaRef) {
-        textAreaRef.style.height = `${TEXTAREA_MIN_HEIGHT_PX}px`;
-        textAreaRef.style.overflowY = "hidden";
-      }
-      setSubmitStatus("success");
-      setSubmitMessage("Text was added successfully.");
-    } catch (error) {
-      console.error("Failed to submit text:", error);
-      setSubmitStatus("error");
-      setSubmitMessage(
-        error instanceof Error ? error.message : "Failed to submit text.",
-      );
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const previousDisabled = () =>
-    activeTab() === "original" ? originalIndex() === 0 : generatedIndex() === 0;
-  const nextDisabled = () =>
-    activeTab() === "original"
-      ? originalIndex() >= originalSentences().length - 1
-      : generatedIndex() >= generatedSentences().length - 1;
-
-  /**
-   * Moves active tab index one sentence backward when possible.
-   */
-  const goToPreviousSentence = () => {
-    if (activeTab() === "original" && originalIndex() > 0) {
-      setOriginalIndex((i) => i - 1);
-      return;
-    }
-    if (activeTab() === "generated" && generatedIndex() > 0) {
-      setGeneratedIndex((i) => i - 1);
-    }
-  };
-
-  /**
-   * Moves active tab index one sentence forward when possible.
-   */
-  const goToNextSentence = () => {
-    if (
-      activeTab() === "original" &&
-      originalIndex() < originalSentences().length - 1
-    ) {
-      setOriginalIndex((i) => i + 1);
-      return;
-    }
-    if (
-      activeTab() === "generated" &&
-      generatedIndex() < generatedSentences().length - 1
-    ) {
-      setGeneratedIndex((i) => i + 1);
-    }
-  };
-
-  /**
-   * Advances original sentence index after a sentence is fully typed.
-   */
-  const handleOriginalComplete = () => {
-    if (originalIndex() < originalSentences().length - 1)
-      setOriginalIndex((i) => i + 1);
-  };
-  /**
-   * Advances generated sentence index after a sentence is fully typed.
-   */
-  const handleGeneratedComplete = () => {
-    if (generatedIndex() < generatedSentences().length - 1)
-      setGeneratedIndex((i) => i + 1);
-  };
-
-  /**
-   * Wraps click handlers so keyboard-triggered synthetic clicks do not fire actions.
-   */
-  const handleMouseOnlyClick = (action: () => void) => (event: MouseEvent) => {
-    if (event.detail === 0) {
-      event.preventDefault();
-      return;
-    }
-    action();
-    (event.currentTarget as HTMLButtonElement).blur();
-  };
-
-  /**
-   * Keeps button focus outlines from persisting in the typing UI.
-   */
-  const blurButtonOnFocus = (event: FocusEvent) => {
-    (event.currentTarget as HTMLButtonElement).blur();
-  };
-
-  const tabButtonStyle = (tab: "original" | "generated") => ({
-    "font-size": "18px",
-    padding: "8px 16px",
-    "font-family": "monospace",
-    outline: "none",
-    cursor: "pointer",
-    border: "1px solid #ccc",
-    "background-color": activeTab() === tab ? "#ddd" : "transparent",
-    "font-weight": activeTab() === tab ? "bold" : "normal",
-  });
-
-  const navButtonStyle = (disabled: boolean) => ({
-    "font-size": "16px",
-    padding: "8px 16px",
-    width: "130px",
-    display: "inline-flex",
-    "align-items": "center",
-    "justify-content": "center",
-    gap: "8px",
-    "font-family": "monospace",
-    outline: "none",
-    border: "1px solid #ccc",
-    "background-color": disabled ? "#efefef" : "#fff",
-    color: disabled ? "#999" : "#111",
-    cursor: disabled ? "not-allowed" : "pointer",
-  });
-
+const App: Component<AppProps> = (props) => {
   return (
-    <div
-      style={{
-        width: "100%",
-        "max-width": "980px",
-        margin: "0 auto",
-        padding: "0 20px 32px 20px",
-        "box-sizing": "border-box",
-      }}
-    >
-      <header
-        style={{
-          padding: "14px 0 12px 0",
-          "margin-bottom": "12px",
-          "border-bottom": "1px solid #e5e5e5",
-          "text-align": "center",
-        }}
-      >
-        <h1
-          style={{
-            margin: 0,
-            "font-family": "monospace",
-            "font-size": "22px",
-            "font-weight": 700,
-            "letter-spacing": "0.04em",
-            "text-transform": "lowercase",
-          }}
-        >
-          typeandlearn
-        </h1>
-      </header>
-
-      <textarea
-        ref={textAreaRef}
-        placeholder="Enter text..."
-        onInput={handleTextInput}
-        value={customText()}
-        style={{
-          "font-size": "24px",
-          padding: "8px",
-          width: "100%",
-          resize: "none",
-          overflow: "hidden",
-          "min-height": `${TEXTAREA_MIN_HEIGHT_PX}px`,
-          "max-height": "50vh",
-        }}
-      />
-      <div style={{ padding: "8px 0 0 0" }}>
-        <button
-          onClick={handleMouseOnlyClick(() => void handleSubmitText())}
-          onFocus={blurButtonOnFocus}
-          tabIndex={-1}
-          disabled={isSubmitting() || !customText().trim()}
-          style={{
-            "font-size": "16px",
-            padding: "8px 16px",
-            "font-family": "monospace",
-            cursor: isSubmitting() ? "not-allowed" : "pointer",
-            outline: "none",
-          }}
-        >
-          {isSubmitting() ? "Submitting..." : "Submit Text"}
-        </button>
-      </div>
-      <Show when={submitStatus() !== "idle"}>
-        <p
-          style={{
-            margin: "8px 0 0 0",
-            "font-family": "monospace",
-            color: submitStatus() === "success" ? "#1f7a1f" : "#b00020",
-          }}
-        >
-          {submitMessage()}
-        </p>
-      </Show>
-
-      <div style={{ padding: "20px 20px 0 20px" }}>
-        <label
-          for="text-select"
-          style={{
-            display: "block",
-            "font-family": "monospace",
-            "font-size": "14px",
-            "margin-bottom": "6px",
-          }}
-        >
-          Choose a text
-        </label>
-        <select
-          id="text-select"
-          value={selectedTextId() ?? ""}
-          onChange={(event) => setSelectedTextId(event.currentTarget.value)}
-          disabled={availableTexts.loading}
-          style={{
-            "font-family": "monospace",
-            "font-size": "16px",
-            padding: "6px 10px",
-            "min-width": "280px",
-            "max-width": "100%",
-          }}
-        >
-          <Show
-            when={(availableTexts() ?? []).length > 0}
-            fallback={<option value="">No texts found</option>}
-          >
-            {(availableTexts() ?? []).map((text) => (
-              <option value={text.id}>{text.title}</option>
-            ))}
-          </Show>
-        </select>
-      </div>
-
-      <h2
-        style={{
-          "font-family": "monospace",
-          padding: "20px 20px 0 20px",
-          margin: 0,
-        }}
-      >
-        {storyData.loading ? "Loading text..." : (storyData()?.title ?? "")}
-      </h2>
-
-      <div style={{ display: "flex", gap: "8px", padding: "20px 20px 0 20px" }}>
-        <button
-          style={tabButtonStyle("original")}
-          onClick={handleMouseOnlyClick(() => setActiveTab("original"))}
-          onFocus={blurButtonOnFocus}
-          tabIndex={-1}
-        >
-          Original
-        </button>
-        <button
-          style={tabButtonStyle("generated")}
-          onClick={handleMouseOnlyClick(() => setActiveTab("generated"))}
-          onFocus={blurButtonOnFocus}
-          tabIndex={-1}
-        >
-          Generated
-        </button>
-      </div>
-
-      <Show
-        when={
-          !storyData.loading &&
-          !storyData.error &&
-          storyData()?.status !== "processing" &&
-          ((activeTab() === "original" && originalSentences().length > 0) ||
-            (activeTab() === "generated" && generatedSentences().length > 0))
-        }
-        fallback={
-          <p
-            style={{
-              "font-family": "monospace",
-              padding: "20px",
-              color: "#666",
-            }}
-          >
-            {storyData.error
-              ? "Failed to load selected text."
-              : storyData.loading
-                ? "Loading..."
-                : storyData()?.status === "processing"
-                  ? "Translating text with AI... (Reload the page shortly)"
-                  : "No sentences available for this text."}
-          </p>
-        }
-      >
-        <Show
-          when={activeTab() === "original"}
-          fallback={
-            <TypingInterface
-              targetText={generatedSentences()[generatedIndex()].text}
-              hints={generatedSentences()[generatedIndex()].hints}
-              fullTranslation={
-                generatedSentences()[generatedIndex()].translation
-              }
-              onComplete={handleGeneratedComplete}
-            />
-          }
-        >
-          <TypingInterface
-            targetText={originalSentences()[originalIndex()].text}
-            hints={originalSentences()[originalIndex()].hints}
-            fullTranslation={originalSentences()[originalIndex()].translation}
-            onComplete={handleOriginalComplete}
-          />
-        </Show>
-        <div
-          style={{ display: "flex", gap: "8px", padding: "8px 20px 0 20px" }}
-        >
-          <button
-            onClick={handleMouseOnlyClick(goToPreviousSentence)}
-            onFocus={blurButtonOnFocus}
-            tabIndex={-1}
-            disabled={previousDisabled()}
-            style={navButtonStyle(previousDisabled())}
-          >
-            Previous
-          </button>
-          <button
-            onClick={handleMouseOnlyClick(goToNextSentence)}
-            onFocus={blurButtonOnFocus}
-            tabIndex={-1}
-            disabled={nextDisabled()}
-            style={navButtonStyle(nextDisabled())}
-          >
-            Next
+    <div class="bg-surface text-on-surface min-h-screen font-body-md flex flex-col selection:bg-secondary-container selection:text-on-secondary-container">
+      {/* TopNavBar */}
+      <nav class="w-full h-16 bg-surface border-b border-outline-variant flex justify-between items-center px-margin-mobile md:px-margin-desktop max-w-content mx-auto sticky top-0 z-50">
+        <div class="flex items-center gap-8">
+          <span class="font-headline-md text-headline-md font-bold text-primary tracking-tight">
+            typeandlearn
+          </span>
+          <div class="hidden md:flex gap-6">
+            <A
+              class="font-body-md text-body-md"
+              href="/"
+              activeClass="border-primary text-primary font-bold border-b-2 pb-1"
+              inactiveClass="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200"
+              end
+            >
+              Library
+            </A>
+            <A
+              class="font-body-md text-body-md"
+              href="/practice"
+              activeClass="border-primary text-primary font-bold border-b-2 pb-1"
+              inactiveClass="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200"
+            >
+              Practice
+            </A>
+            <A
+              class="font-body-md text-body-md"
+              href="/settings"
+              activeClass="border-primary text-primary font-bold border-b-2 pb-1"
+              inactiveClass="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200"
+            >
+              Settings
+            </A>
+          </div>
+        </div>
+        <div class="flex items-center gap-4">
+          <button class="material-symbols-outlined text-primary p-2">
+            person
           </button>
         </div>
-      </Show>
+      </nav>
+
+      {/* Main Content Canvas */}
+      {props.children}
+
+      {/* Footer */}
+      <footer class="w-full py-base bg-surface border-t border-outline-variant mt-margin-desktop mt-auto">
+        <div class="flex flex-col md:flex-row justify-between items-center px-margin-mobile md:px-margin-desktop max-w-content mx-auto w-full gap-4 md:gap-0">
+          <span class="font-mono-label text-mono-label uppercase tracking-widest text-primary">
+            typeandlearn
+          </span>
+          <div class="flex gap-8">
+            <a
+              class="font-mono-sm text-mono-sm text-on-surface-variant opacity-60 hover:opacity-100 transition-opacity"
+              href="#"
+            >
+              Privacy Policy
+            </a>
+            <a
+              class="font-mono-sm text-mono-sm text-on-surface-variant opacity-60 hover:opacity-100 transition-opacity"
+              href="#"
+            >
+              Terms of Service
+            </a>
+            <a
+              class="font-mono-sm text-mono-sm text-on-surface-variant opacity-60 hover:opacity-100 transition-opacity"
+              href="#"
+            >
+              Cookie Settings
+            </a>
+          </div>
+          <span class="font-mono-sm text-mono-sm text-on-surface-variant opacity-60">
+            © 2024 typeandlearn. Built for precision.
+          </span>
+        </div>
+      </footer>
     </div>
   );
 };
