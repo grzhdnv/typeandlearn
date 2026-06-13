@@ -1,5 +1,5 @@
 import { Component, createResource, createSignal, createMemo, Show, For } from 'solid-js';
-import { fetchTextTitles, postText, updateTextMetadata, deleteText } from '../../../features/texts/api/textsApi';
+import { fetchTextTitles, postText, updateTextMetadata, deleteText, resetProgress } from '../../../features/texts/api/textsApi';
 
 const LANGUAGES = ["German", "French", "Italian", "Spanish"];
 const LEVELS = ["A1", "A2", "B1", "B2", "C1", "C2", "Unrated"];
@@ -116,8 +116,19 @@ const LibraryPage: Component = () => {
     }
   };
 
+  const handleResetProgress = async (id: string) => {
+    if (!confirm("Are you sure you want to reset your progress for this text?")) return;
+    try {
+      await resetProgress(id);
+      refetch();
+    } catch (error) {
+      console.error("Failed to reset progress:", error);
+      alert(error instanceof Error ? error.message : "Failed to reset progress.");
+    }
+  };
+
   return (
-    <main class="max-w-content mx-auto px-margin-mobile md:px-0 py-margin-desktop space-y-12">
+    <main class="w-full max-w-max-width-content mx-auto px-margin-mobile md:px-0 py-margin-desktop space-y-12">
       {/* Recently Practiced Section */}
       <Show when={recentlyPracticed()}>
         {(recent) => (
@@ -310,6 +321,15 @@ const LibraryPage: Component = () => {
                           <span class="font-mono-label text-mono-label text-on-surface-variant uppercase">
                             PROCESSING
                           </span>
+                        </Show>
+                        <Show when={text.completed_sentences > 0}>
+                          <button 
+                            class="text-outline-variant hover:text-primary transition-colors flex items-center justify-center" 
+                            onClick={() => handleResetProgress(text.id)}
+                            title="Reset Progress"
+                          >
+                            <span class="material-symbols-outlined text-[20px]">restart_alt</span>
+                          </button>
                         </Show>
                         <button 
                           class="text-outline-variant hover:text-error transition-colors flex items-center justify-center" 

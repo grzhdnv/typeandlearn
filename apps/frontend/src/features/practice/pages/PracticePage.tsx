@@ -1,6 +1,6 @@
-import { Component, createResource, createSignal, createMemo, Show, createEffect } from 'solid-js';
+import { Component, createResource, createSignal, createMemo, Show, createEffect, onMount, onCleanup } from 'solid-js';
 import { useParams } from '@solidjs/router';
-import { fetchStory, incrementProgress } from '../../../features/texts/api/textsApi';
+import { fetchStory, updateProgress, resetProgress } from '../../../features/texts/api/textsApi';
 import { TypingInterface } from '../../../features/typing/components/TypingInterface';
 import { HintGroup } from '../../../shared/types/contracts';
 
@@ -72,13 +72,26 @@ const PracticePage: Component = () => {
   };
 
   const handleOriginalComplete = () => {
-    if (params.id) incrementProgress(params.id).catch(console.error);
+    if (params.id) updateProgress(params.id, originalIndex()).catch(console.error);
     if (originalIndex() < originalSentences().length - 1) setOriginalIndex((i) => i + 1);
   };
   
   const handleGeneratedComplete = () => {
-    if (params.id) incrementProgress(params.id).catch(console.error);
+    if (params.id) updateProgress(params.id, generatedIndex()).catch(console.error);
     if (generatedIndex() < generatedSentences().length - 1) setGeneratedIndex((i) => i + 1);
+  };
+
+  const handleResetProgress = async () => {
+    if (!params.id) return;
+    if (!confirm("Are you sure you want to reset your progress for this text?")) return;
+    try {
+      await resetProgress(params.id);
+      setOriginalIndex(0);
+      setGeneratedIndex(0);
+    } catch (error) {
+      console.error("Failed to reset progress:", error);
+      alert(error instanceof Error ? error.message : "Failed to reset progress.");
+    }
   };
 
   // Prevent synthetic clicks on buttons from stealing focus during typing
@@ -90,6 +103,26 @@ const PracticePage: Component = () => {
     action();
     (event.currentTarget as HTMLButtonElement).blur();
   };
+
+  onMount(() => {
+    const handleGlobalKeyDown = (e: KeyboardEvent) => {
+      // Ignore if user is using modifier keys
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      
+      if (e.key === "[") {
+        e.preventDefault();
+        if (!previousDisabled()) goToPreviousSentence();
+      } else if (e.key === "]") {
+        e.preventDefault();
+        if (!nextDisabled()) goToNextSentence();
+      }
+    };
+    
+    globalThis.addEventListener("keydown", handleGlobalKeyDown);
+    onCleanup(() => {
+      globalThis.removeEventListener("keydown", handleGlobalKeyDown);
+    });
+  });
 
   const currentIndex = () => activeTab() === "original" ? originalIndex() : generatedIndex();
   const totalSentences = () => activeTab() === "original" ? originalSentences().length : generatedSentences().length;
@@ -106,7 +139,14 @@ const PracticePage: Component = () => {
         <div class="flex flex-col md:flex-row justify-between mb-12 gap-6 items-baseline">
           <div class="space-y-4">
             <div class="flex items-center gap-3">
-              <span class="bg-surface-container px-2 py-0.5 text-mono-label font-mono-label rounded-sm">UNKNOWN</span>
+              <span class="bg-surface-container border border-outline-variant px-2 py-0.5 text-mono-label font-mono-label">
+                {storyData()?.language?.toUpperCase() || "UNKNOWN"}
+              </span>
+              <Show when={storyData()?.difficulty_level && storyData()?.difficulty_level !== "Unrated"}>
+                <span class="bg-surface-container border border-outline-variant px-2 py-0.5 text-mono-label font-mono-label">
+                  {storyData()?.difficulty_level?.toUpperCase()}
+                </span>
+              </Show>
               <span class="text-on-surface-variant text-mono-sm font-mono-sm opacity-60">ID: {params.id}</span>
             </div>
             <h1 class="font-headline-md text-headline-md leading-tight">{storyData()?.title || "Untitled"}</h1>
@@ -187,6 +227,13 @@ const PracticePage: Component = () => {
             <div class="w-48 h-1 bg-surface-container overflow-hidden">
               <div class="h-full bg-primary transition-all duration-300" style={{ width: `${progressPercent()}%` }}></div>
             </div>
+            <button
+              onClick={handleMouseOnlyClick(handleResetProgress)}
+              class="text-outline-variant hover:text-primary transition-colors flex items-center justify-center ml-2"
+              title="Reset Progress"
+            >
+              <span class="material-symbols-outlined text-[20px]">restart_alt</span>
+            </button>
           </div>
 
           <button 

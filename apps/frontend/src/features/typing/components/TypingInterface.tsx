@@ -90,36 +90,30 @@ export const TypingInterface: Component<TypingInterfaceProps> = (props) => {
   };
 
   /**
-   * Updates typing state
+   * Track modifier keys for hints
    */
   const handleKeyDown = (event: KeyboardEvent) => {
-    if (event.key === "Alt") {
-      setOptionPressed(true);
-      return;
-    }
-    if (event.key === "Meta") {
-      setCommandPressed(true);
-      return;
-    }
+    if (event.key === "Alt") setOptionPressed(true);
+    if (event.key === "Meta") setCommandPressed(true);
 
-    if (event.ctrlKey || event.metaKey || event.altKey) return;
+    // Auto-focus the input if typing starts and focus is lost
+    if (
+      event.target instanceof HTMLElement && 
+      event.target.tagName !== "INPUT" && 
+      event.target.tagName !== "TEXTAREA"
+    ) {
+      // Don't steal focus if user is triggering a button with keyboard (Enter or Space)
+      const isButton = event.target.tagName === "BUTTON" || event.target.tagName === "A";
+      const isActionKey = event.key === "Enter" || event.key === " ";
+      
+      if (isButton && isActionKey) {
+        return;
+      }
 
-    if (event.key === "Backspace") {
-      setTyped((prev) => prev.slice(0, -1));
-      return;
-    }
-
-    if (event.key.length === 1) {
-      setTyped((prev) => {
-        if (prev.length < props.targetText.length) {
-          const next = prev + event.key;
-          if (next.length === props.targetText.length) {
-            setTimeout(() => props.onComplete?.(), 1000);
-          }
-          return next;
-        }
-        return prev;
-      });
+      // If it's a standard typing key (single character or backspace)
+      if (event.key.length === 1 || event.key === "Backspace") {
+        inputRef?.focus();
+      }
     }
   };
 
@@ -167,30 +161,31 @@ export const TypingInterface: Component<TypingInterfaceProps> = (props) => {
           <div class="font-mono-input text-[24px] leading-[1.8] tracking-normal select-none relative z-10 whitespace-pre-wrap">
             <For each={props.targetText.split("")}>
               {(char, index) => {
-                const isMistake = index() < typed().length && typed()[index()] !== char;
-                const isCurrent = index() === typed().length;
-                const isTyped = index() < typed().length;
+                const isMistake = () => index() < typed().length && typed()[index()] !== char;
+                const isCurrent = () => index() === typed().length;
+                const isTyped = () => index() < typed().length;
                 
                 return (
                   <>
-                    <Show when={isCurrent}>
-                      <span class="caret-blink"></span>
-                    </Show>
                     <span
                       class={
-                        isMistake 
+                        "relative " + 
+                        (isMistake() 
                           ? "text-error bg-error-container" 
-                          : isTyped 
+                          : isTyped() 
                             ? "text-completed" 
-                            : "text-light"
+                            : "text-light")
                       }
                       style={{
                         "background-color":
-                          isHighlighted(index()) && char !== " " && !isMistake
+                          isHighlighted(index()) && char !== " " && !isMistake()
                             ? "rgba(59, 130, 246, 0.2)" // Tertiary-like highlight
                             : undefined,
                       }}
                     >
+                      <Show when={isCurrent()}>
+                        <span class="caret-blink"></span>
+                      </Show>
                       {char}
                     </span>
                   </>
@@ -198,13 +193,25 @@ export const TypingInterface: Component<TypingInterfaceProps> = (props) => {
               }}
             </For>
             <Show when={typed().length === props.targetText.length}>
-               <span class="caret-blink"></span>
+               <span class="relative"><span class="caret-blink"></span>&nbsp;</span>
             </Show>
           </div>
           
           {/* Hidden Input to catch focus */}
           <input 
             ref={inputRef}
+            value={typed()}
+            onInput={(e) => {
+              const val = e.currentTarget.value;
+              if (val.length <= props.targetText.length) {
+                setTyped(val);
+                if (val.length === props.targetText.length) {
+                  setTimeout(() => props.onComplete?.(), 1000);
+                }
+              } else {
+                e.currentTarget.value = typed();
+              }
+            }}
             autocomplete="off" 
             autofocus 
             class="absolute inset-0 opacity-0 cursor-default" 

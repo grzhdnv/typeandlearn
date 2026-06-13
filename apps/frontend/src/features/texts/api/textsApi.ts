@@ -43,8 +43,12 @@ export const postText = async (text: string, language: string, title?: string, d
   });
 };
 
-export const incrementProgress = async (id: string): Promise<{completed_sentences: number}> => {
-  return postJson<{completed_sentences: number}>(`/api/texts/${id}/progress`, {});
+export const updateProgress = async (id: string, sentenceIndex: number): Promise<{completed_sentences: number}> => {
+  return postJson<{completed_sentences: number}>(`/api/texts/${id}/progress`, { sentence_index: sentenceIndex });
+};
+
+export const resetProgress = async (id: string): Promise<{completed_sentences: number}> => {
+  return postJson<{completed_sentences: number}>(`/api/texts/${id}/reset`, {});
 };
 
 export const updateTextMetadata = async (id: string, language?: string, difficultyLevel?: string): Promise<TextResponse> => {

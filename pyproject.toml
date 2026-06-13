@@ -18,3 +18,8 @@ dependencies = [
 
 [tool.fastapi]
 entrypoint = "apps/backend/main.py"
+
+[dependency-groups]
+dev = [
+    "pyright>=1.1.410",
+]

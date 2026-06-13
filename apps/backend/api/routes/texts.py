@@ -11,6 +11,7 @@ from schemas.texts import (
     TextsResponse,
     TitlesResponse,
     UploadResponse,
+    ProgressUpdateRequest,
 )
 
 
@@ -124,15 +125,23 @@ def update_text_metadata(text_id: str, payload: TextUpdateRequest) -> TextRespon
         raise HTTPException(status_code=500, detail=f"Error updating text: {error}")
 
 @router.post("/{text_id}/progress")
-def increment_progress(text_id: str):
-    """Increment the completed sentences count for a text."""
+def update_progress(text_id: str, payload: ProgressUpdateRequest):
+    """Update the completed sentences count for a text based on the highest completed index."""
     try:
-        tid = int(text_id)
-        record = text_service.get_one(str(tid)) # check if exists
-        
-        # We need a repository method to increment this directly, 
-        # or we can update it via service
-        updated = text_service.increment_progress(str(tid))
-        return {"message": "Progress incremented", "completed_sentences": updated.completed_sentences}
+        updated = text_service.update_progress(text_id, payload.sentence_index)
+        return {"message": "Progress updated", "completed_sentences": updated.completed_sentences}
     except Exception as error:
-        raise HTTPException(status_code=500, detail=f"Error incrementing progress: {error}")
+        raise HTTPException(status_code=500, detail=f"Error updating progress: {error}")
+
+@router.post("/{text_id}/reset")
+def reset_progress(text_id: str):
+    """Reset the completed sentences count for a text."""
+    try:
+        updated = text_service.reset_progress(text_id)
+        return {"message": "Progress reset", "completed_sentences": updated.completed_sentences}
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error))
+    except IndexError:
+        raise HTTPException(status_code=404, detail="Text not found")
+    except Exception as error:
+        raise HTTPException(status_code=500, detail=f"Error resetting progress: {error}")

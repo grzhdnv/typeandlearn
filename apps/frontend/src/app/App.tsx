@@ -79,7 +79,7 @@ const App: Component<AppProps> = (props) => {
             </a>
           </div>
           <span class="font-mono-sm text-mono-sm text-on-surface-variant opacity-60">
-            © 2024 typeandlearn. Built for precision.
+            © 2026 typeandlearn.
           </span>
         </div>
       </footer>

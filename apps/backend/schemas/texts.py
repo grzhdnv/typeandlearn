@@ -94,6 +94,12 @@ class TextUpdateRequest(BaseModel):
     difficulty_level: Optional[str] = None
 
 
+class ProgressUpdateRequest(BaseModel):
+    """Request payload for updating reading progress."""
+
+    sentence_index: int
+
+
 class TextTitle(BaseModel):
     """Compact text identifier and title pair."""
 

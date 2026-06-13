@@ -9,7 +9,7 @@ from sqlmodel import Field, SQLModel
 class TextRecord(SQLModel, table=True):
     """Database record representation of a text unit."""
 
-    __tablename__ = "texts"
+    __tablename__ = "texts"  # pyright: ignore[reportAssignmentType]
 
     id: Optional[int] = Field(default=None, primary_key=True)
     title: str = Field(index=True)
@@ -18,6 +18,10 @@ class TextRecord(SQLModel, table=True):
     difficulty_level: str = Field(default="Unrated", index=True)
     word_count: int = Field(default=0)
     completed_sentences: int = Field(default=0)
+    completed_sentence_indices: Optional[List[int]] = Field(
+        default_factory=list,
+        sa_column=Column(JSON),
+    )
     total_sentences: int = Field(default=0)
     estimated_time_minutes: int = Field(default=0)
 
@@ -25,7 +29,7 @@ class TextRecord(SQLModel, table=True):
 class SentenceRecord(SQLModel, table=True):
     """Database record representation of an individual sentence."""
 
-    __tablename__ = "sentences"
+    __tablename__ = "sentences"  # pyright: ignore[reportAssignmentType]
 
     id: Optional[int] = Field(default=None, primary_key=True)
     text_id: int = Field(foreign_key="texts.id", index=True, ondelete="CASCADE")
@@ -43,7 +47,7 @@ class SentenceRecord(SQLModel, table=True):
 class WordFrequencyRecord(SQLModel, table=True):
     """Word frequency counts extracted during preprocessing."""
 
-    __tablename__ = "word_frequencies"
+    __tablename__ = "word_frequencies"  # pyright: ignore[reportAssignmentType]
 
     id: Optional[int] = Field(default=None, primary_key=True)
     text_id: int = Field(foreign_key="texts.id", index=True, ondelete="CASCADE")
@@ -54,7 +58,7 @@ class WordFrequencyRecord(SQLModel, table=True):
 class PracticeSentenceRecord(SQLModel, table=True):
     """Generated practice sentences based on word frequencies."""
 
-    __tablename__ = "practice_sentences"
+    __tablename__ = "practice_sentences"  # pyright: ignore[reportAssignmentType]
 
     id: Optional[int] = Field(default=None, primary_key=True)
     text_id: int = Field(foreign_key="texts.id", index=True, ondelete="CASCADE")

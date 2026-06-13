@@ -63,7 +63,7 @@ export default {
         "full": "0.75rem"
       },
       spacing: {
-        "max-width-content": "800px",
+        "max-width-content": "1200px",
         "margin-mobile": "16px",
         "margin-desktop": "64px",
         "gutter": "24px",

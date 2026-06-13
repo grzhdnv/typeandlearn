@@ -4,7 +4,7 @@ from itertools import groupby
 
 from models.texts import PracticeSentenceRecord, SentenceRecord, TextRecord, WordFrequencyRecord
 from repositories.text_repository import TextRepository
-from schemas.texts import Paragraph, PracticeSentence, Sentence, TextData, TextTitle, TextUpdateRequest
+from schemas.texts import HintGroup, Paragraph, PracticeSentence, Sentence, TextData, TextTitle, TextUpdateRequest
 from services.llm_service import LlmService
 from services.preprocessing_service import PreprocessingService
 
@@ -42,7 +42,7 @@ class TextService:
                         index=s.sentence_index,
                         text=s.original_text,
                         translation=s.translation or "",
-                        translation_hints=hints,
+                        translation_hints=[HintGroup(**h) for h in hints] if hints else [],
                     )
                 )
             paragraphs.append(Paragraph(index=p_idx, sentences=sentences))
@@ -58,7 +58,7 @@ class TextService:
                     index=p.sentence_index,
                     sentence=p.sentence,
                     translation=p.translation,
-                    translation_hints=hints,
+                    translation_hints=[HintGroup(**h) for h in hints] if hints else [],
                 )
             )
 
@@ -122,7 +122,7 @@ class TextService:
 
         return self._build_text_data(record, s_records, p_records)
 
-    def upload(self, text: str, language: str, title: Optional[str] = None, difficulty_level: Optional[str] = None) -> TextRecord:
+    def upload(self, text: str, language: str, title: str | None = None, difficulty_level: str | None = None) -> TextRecord:
         """Generate and persist a new text entry from raw input using local preprocessing."""
         
         # 1. Preprocess the text locally using spaCy
@@ -215,8 +215,8 @@ class TextService:
         self._repository.delete_text(tid)
         return data_to_return
 
-    def increment_progress(self, text_id: str) -> TextRecord:
-        """Increment the completed sentences count for a text."""
+    def update_progress(self, text_id: str, sentence_index: int) -> TextRecord:
+        """Update the completed sentences count for a text by tracking unique completed indices."""
         try:
             tid = int(text_id)
         except ValueError as error:
@@ -226,7 +226,28 @@ class TextService:
         if record is None or record.id is None:
             raise IndexError("Text not found")
             
-        record.completed_sentences += 1
+        indices = set(record.completed_sentence_indices or [])
+        if sentence_index not in indices:
+            indices.add(sentence_index)
+            record.completed_sentence_indices = list(indices)
+            record.completed_sentences = len(indices)
+            return self._repository.update_text(record)
+            
+        return record
+
+    def reset_progress(self, text_id: str) -> TextRecord:
+        """Reset the completed sentences count for a text."""
+        try:
+            tid = int(text_id)
+        except ValueError as error:
+            raise ValueError(f"Invalid text ID format: {text_id}") from error
+
+        record = self._repository.load_one_text(tid)
+        if record is None or record.id is None:
+            raise IndexError("Text not found")
+            
+        record.completed_sentences = 0
+        record.completed_sentence_indices = []
         return self._repository.update_text(record)
 
     def update_metadata(self, text_id: str, payload: TextUpdateRequest) -> TextData:
