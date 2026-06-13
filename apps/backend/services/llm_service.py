@@ -31,6 +31,7 @@ class LlmService:
         translation_prompt_path: str,
         practice_prompt_path: str,
         model_name: str,
+        structured_model_name: str,
         fallback_models: List[str] | None = None
     ) -> None:
         """Configure prompt sources and initialize Pydantic AI agents."""
@@ -56,8 +57,17 @@ class LlmService:
             if model_str.startswith("deepseek:"):
                 from pydantic_ai.models.openai import OpenAIModel
                 from pydantic_ai.providers.deepseek import DeepSeekProvider
+                from pydantic_ai.profiles.openai import OpenAIModelProfile
                 ds_provider = DeepSeekProvider(http_client=client)
-                return OpenAIModel(model_str.replace("deepseek:", ""), provider=ds_provider)
+                model_name = model_str.replace("deepseek:", "")
+                
+                profile = DeepSeekProvider.model_profile(model_name)
+                if profile:
+                    profile = profile.update(OpenAIModelProfile(
+                        openai_supports_tool_choice_required=False
+                    ))
+                    
+                return OpenAIModel(model_name, provider=ds_provider, profile=profile)
             else:
                 from pydantic_ai.models.groq import GroqModel
                 from pydantic_ai.providers.groq import GroqProvider
@@ -66,12 +76,15 @@ class LlmService:
                 return GroqModel(primary_model_str, provider=groq_provider)
 
         primary_model = create_model(model_name)
+        structured_model = create_model(structured_model_name)
         
         if fallback_models:
             fallbacks = [create_model(fb) for fb in fallback_models]
             self._active_model = FallbackModel(primary_model, *fallbacks)
+            self._active_structured_model = FallbackModel(structured_model, *fallbacks)
         else:
             self._active_model = primary_model
+            self._active_structured_model = structured_model
             
         self._translation_agent = Agent(
             self._active_model,
@@ -81,7 +94,7 @@ class LlmService:
         )
         
         self._practice_agent = Agent(
-            self._active_model,
+            self._active_structured_model,
             output_type=PracticeSentencesResponse,
             system_prompt=self._practice_prompt,
             retries=3
@@ -89,7 +102,7 @@ class LlmService:
         
         metadata_prompt_path = "apps/backend/prompts/metadata_prompt.txt"
         self._metadata_agent = Agent(
-            self._active_model,
+            self._active_structured_model,
             output_type=GeneratedMetadata,
             system_prompt=self._read_prompt(metadata_prompt_path),
             retries=3
@@ -97,7 +110,7 @@ class LlmService:
         
         filter_prompt_path = "apps/backend/prompts/filter_words_prompt.txt"
         self._filter_agent = Agent(
-            self._active_model,
+            self._active_structured_model,
             output_type=FilteredWordsResponse,
             system_prompt=self._read_prompt(filter_prompt_path),
             retries=3

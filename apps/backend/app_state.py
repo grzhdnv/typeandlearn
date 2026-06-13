@@ -15,6 +15,7 @@ text_service = TextService(
         str(settings.translation_prompt_file),
         str(settings.practice_prompt_file),
         settings.model_name,
+        settings.structured_model_name,
         settings.fallback_models
     ),
     preprocessing=PreprocessingService(),
