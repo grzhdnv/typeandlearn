@@ -116,7 +116,7 @@ def update_text_metadata(text_id: str, payload: TextUpdateRequest) -> TextRespon
     try:
         data = text_service.update_metadata(text_id, payload)
         return TextResponse(
-            message=f"Text metadata updated successfully!",
+            message="Text metadata updated successfully!",
             data=data,
         )
     except ValueError as error:
@@ -149,7 +149,7 @@ def reset_progress(text_id: str):
         raise HTTPException(status_code=500, detail=f"Error resetting progress: {error}")
 
 @router.post("/{text_id}/regenerate-words", response_model=TextResponse)
-def regenerate_words(text_id: str, background_tasks: BackgroundTasks, payload: RegenerateWordsRequest = None) -> TextResponse:
+def regenerate_words(text_id: str, background_tasks: BackgroundTasks, payload: RegenerateWordsRequest | None = None) -> TextResponse:
     """Regenerate top words and trigger background practice sentence generation."""
     try:
         method = payload.filtering_method if payload else "spacy"

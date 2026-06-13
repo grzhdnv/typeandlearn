@@ -279,11 +279,21 @@ const PracticePage: Component = () => {
                   No frequency list available. Select a filter and regenerate to extract the top words.
                 </div>
               }>
-                <div class="flex flex-wrap gap-2">
-                  {storyData()!.top_words.map(word => (
-                    <span class="bg-surface-container border border-outline-variant px-3 py-1 text-mono-label font-mono-label text-on-surface">
-                      {word}
-                    </span>
+                <div class="flex flex-wrap gap-3">
+                  {storyData()!.top_words.map(item => (
+                    <div class="relative group inline-block">
+                      <span class="bg-surface-container border border-outline-variant px-3 py-1 text-mono-label font-mono-label text-on-surface cursor-help transition-colors group-hover:border-primary block">
+                        {item.word}
+                      </span>
+                      
+                      {/* Immediate Custom Tooltip */}
+                      <div class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max max-w-[300px] p-3 bg-[#1e1e1e] text-white text-[12px] leading-relaxed rounded opacity-0 group-hover:opacity-100 transition-opacity duration-150 z-50 shadow-xl whitespace-pre-wrap">
+                        {item.translation || "Translation unavailable"}
+                        
+                        {/* Tooltip arrow */}
+                        <div class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-[#1e1e1e]"></div>
+                      </div>
+                    </div>
                   ))}
                 </div>
               </Show>

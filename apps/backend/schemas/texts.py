@@ -37,6 +37,13 @@ class PracticeSentence(BaseModel):
     translation_hints: List[HintGroup]
 
 
+class TopWord(BaseModel):
+    """A top frequency word and its dictionary translation."""
+    
+    word: str
+    translation: Optional[str] = None
+
+
 class TextData(BaseModel):
     """Canonical stored representation of one text unit."""
 
@@ -51,7 +58,7 @@ class TextData(BaseModel):
     estimated_time_minutes: int = 0
     original_paragraphs: List[Paragraph]
     practice_sentences: List[PracticeSentence]
-    top_words: List[str] = []
+    top_words: List[TopWord] = []
 
 
 class SentenceTranslation(BaseModel):

@@ -1,6 +1,6 @@
 """Database-backed repository for text records."""
 
-from typing import List, Optional, Tuple
+from typing import List, Optional
 
 from models.texts import (
     PracticeSentenceRecord,
@@ -79,18 +79,26 @@ class TextRepository:
     def update_text(self, record: TextRecord) -> TextRecord:
         """Update an existing text record in the database."""
         with Session(self._engine) as session:
-            session.add(record)
+            merged_record = session.merge(record)
             session.commit()
-            session.refresh(record)
-            return record
+            session.refresh(merged_record)
+            return merged_record
 
     def update_sentence(self, record: SentenceRecord) -> SentenceRecord:
         """Update an existing sentence record in the database."""
         with Session(self._engine) as session:
-            session.add(record)
+            merged_record = session.merge(record)
             session.commit()
-            session.refresh(record)
-            return record
+            session.refresh(merged_record)
+            return merged_record
+
+    def update_word_frequency(self, record: WordFrequencyRecord) -> WordFrequencyRecord:
+        """Update an existing word frequency record in the database."""
+        with Session(self._engine) as session:
+            merged_record = session.merge(record)
+            session.commit()
+            session.refresh(merged_record)
+            return merged_record
 
     def save_sentences(self, sentences: List[SentenceRecord]) -> None:
         """Bulk save sentences to the database."""

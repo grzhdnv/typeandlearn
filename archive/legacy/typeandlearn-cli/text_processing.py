@@ -6,7 +6,6 @@ import json
 
 import nltk
 import pandas as pd
-from nltk.corpus import wordnet
 from nltk.stem import WordNetLemmatizer
 from nltk.tag import pos_tag
 from nltk.tokenize import sent_tokenize, word_tokenize

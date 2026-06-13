@@ -53,6 +53,7 @@ class WordFrequencyRecord(SQLModel, table=True):
     text_id: int = Field(foreign_key="texts.id", index=True, ondelete="CASCADE")
     word: str = Field(index=True)
     count: int = Field(default=1)
+    translation: Optional[str] = Field(default=None)
 
 
 class PracticeSentenceRecord(SQLModel, table=True):

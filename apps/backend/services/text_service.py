@@ -4,26 +4,28 @@ from itertools import groupby
 
 from models.texts import PracticeSentenceRecord, SentenceRecord, TextRecord, WordFrequencyRecord
 from repositories.text_repository import TextRepository
-from schemas.texts import HintGroup, Paragraph, PracticeSentence, Sentence, TextData, TextTitle, TextUpdateRequest
+from schemas.texts import HintGroup, Paragraph, PracticeSentence, Sentence, TextData, TextTitle, TextUpdateRequest, TopWord
 from services.llm_service import LlmService
 from services.preprocessing_service import PreprocessingService
+from services.dictionary_service import DictionaryService
 
 
 class TextService:
     """Coordinate repository persistence with NLP-backed preprocessing and generation."""
 
-    def __init__(self, repository: TextRepository, llm: LlmService, preprocessing: PreprocessingService) -> None:
+    def __init__(self, repository: TextRepository, llm: LlmService, preprocessing: PreprocessingService, dictionary: DictionaryService) -> None:
         """Bind storage and generation dependencies."""
         self._repository = repository
         self._llm = llm
         self._preprocessing = preprocessing
+        self._dictionary = dictionary
 
     def _build_text_data(
         self,
         record: TextRecord,
         sentence_records: list[SentenceRecord],
         practice_records: list[PracticeSentenceRecord],
-        top_words: list[str] | None = None,
+        top_words: list[TopWord] | None = None,
     ) -> TextData:
         """Reconstruct the nested API response from flat database records."""
 
@@ -122,7 +124,7 @@ class TextService:
         s_records = self._repository.load_sentences(record.id)
         p_records = self._repository.load_practice_sentences(record.id)
         frequencies = self._repository.load_word_frequencies(record.id)
-        top_words = [f.word for f in frequencies[:15]]
+        top_words = [TopWord(word=f.word, translation=f.translation) for f in frequencies[:15]]
 
         return self._build_text_data(record, s_records, p_records, top_words)
 
@@ -386,7 +388,19 @@ class TextService:
             except Exception as e:
                 print(f"Failed to generate practice sentences for text {text_id}: {e}")
                 
-        # 3. Mark text as fully processed
+        # 3. Fetch Dictionary Translations for Top Words
+        print("Fetching dictionary translations for top words...")
+        for freq in frequencies[:15]:
+            if not freq.translation:
+                try:
+                    translation = self._dictionary.translate_word(freq.word, record.language)
+                    if translation:
+                        freq.translation = translation
+                        self._repository.update_word_frequency(freq)
+                except Exception as e:
+                    print(f"Failed to fetch translation for '{freq.word}': {e}")
+
+        # 4. Mark text as fully processed
         record.status = "processed"
         self._repository.update_text(record)
         print(f"Successfully finished processing text '{record.title}' (ID: {text_id})!")

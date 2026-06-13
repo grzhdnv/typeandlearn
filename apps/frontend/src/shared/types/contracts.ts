@@ -35,6 +35,14 @@ export type PracticeSentence = {
 };
 
 /**
+ * Top frequency word with optional translation.
+ */
+export type TopWord = {
+  word: string;
+  translation?: string;
+};
+
+/**
  * Canonical text payload returned by the backend.
  */
 export type TextData = {
@@ -49,7 +57,7 @@ export type TextData = {
   estimated_time_minutes: number;
   original_paragraphs: Paragraph[];
   practice_sentences: PracticeSentence[];
-  top_words: string[];
+  top_words: TopWord[];
 };
 
 /**

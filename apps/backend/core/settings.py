@@ -14,9 +14,15 @@ class Settings(BaseModel):
 
     translation_prompt_file: Path = Path("apps/backend/prompts/translate_sentence.md")
     practice_prompt_file: Path = Path("apps/backend/prompts/generate_practice.md")
-    # The LLM model to use for translation and generation tasks
     # Pydantic AI format: "provider:model_name"
     model_name: str = Field(default="groq:llama-3.3-70b-versatile")
+    fallback_models: list[str] = Field(
+        default_factory=lambda: [
+            "groq:openai/gpt-oss-120b",
+            "groq:qwen/qwen3-32b",
+            "groq:openai/gpt-oss-20b"
+        ]
+    )
 
 
 settings = Settings()

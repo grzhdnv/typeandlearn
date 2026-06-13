@@ -3,7 +3,11 @@
 import json
 import logging
 import os
+import httpx
 from typing import List
+
+from pydantic_ai import Agent
+from schemas.texts import PracticeSentencesResponse, SentenceTranslation, GeneratedMetadata, FilteredWordsResponse
 
 # Create logs directory if it doesn't exist
 os.makedirs("apps/backend/logs", exist_ok=True)
@@ -18,9 +22,6 @@ if not logger.handlers:
     fh.setFormatter(formatter)
     logger.addHandler(fh)
 
-from pydantic_ai import Agent
-from schemas.texts import PracticeSentencesResponse, SentenceTranslation, GeneratedMetadata, FilteredWordsResponse
-
 
 class LlmService:
     """Generate translations and practice sentences using Pydantic AI."""
@@ -29,35 +30,69 @@ class LlmService:
         self,
         translation_prompt_path: str,
         practice_prompt_path: str,
-        model_name: str
+        model_name: str,
+        fallback_models: List[str] | None = None
     ) -> None:
         """Configure prompt sources and initialize Pydantic AI agents."""
         self._model_name = model_name
         self._translation_prompt = self._read_prompt(translation_prompt_path)
         self._practice_prompt = self._read_prompt(practice_prompt_path)
         
+        class HeaderCaptureTransport(httpx.AsyncBaseTransport):
+            def __init__(self, transport: httpx.AsyncBaseTransport):
+                self._transport = transport
+
+            async def handle_async_request(self, request: httpx.Request) -> httpx.Response:
+                response = await self._transport.handle_async_request(request)
+                remaining_tokens = response.headers.get("x-ratelimit-remaining-tokens")
+                if remaining_tokens:
+                    logger.info(f"Groq Rate Limit - Remaining Tokens: {remaining_tokens}")
+                return response
+                
+        client = httpx.AsyncClient(transport=HeaderCaptureTransport(httpx.AsyncHTTPTransport()))
+        
+        from pydantic_ai.models.fallback import FallbackModel
+        from pydantic_ai.models.groq import GroqModel
+        from pydantic_ai.providers.groq import GroqProvider
+        
+        primary_model_str = model_name.replace("groq:", "") if model_name.startswith("groq:") else model_name
+        
+        # Use GroqProvider to inject our custom http_client
+        groq_provider = GroqProvider(http_client=client)
+        
+        primary_model = GroqModel(primary_model_str, provider=groq_provider)
+        
+        if fallback_models:
+            fallbacks = []
+            for fb in fallback_models:
+                fb_str = fb.replace("groq:", "") if fb.startswith("groq:") else fb
+                fallbacks.append(GroqModel(fb_str, provider=groq_provider))
+            self._active_model = FallbackModel(primary_model, *fallbacks)
+        else:
+            self._active_model = primary_model
+            
         self._translation_agent = Agent(
-            self._model_name,
+            self._active_model,
             output_type=SentenceTranslation,
             system_prompt=self._translation_prompt
         )
         
         self._practice_agent = Agent(
-            self._model_name,
+            self._active_model,
             output_type=PracticeSentencesResponse,
             system_prompt=self._practice_prompt
         )
         
         metadata_prompt_path = "apps/backend/prompts/metadata_prompt.txt"
         self._metadata_agent = Agent(
-            self._model_name,
+            self._active_model,
             output_type=GeneratedMetadata,
             system_prompt=self._read_prompt(metadata_prompt_path)
         )
         
         filter_prompt_path = "apps/backend/prompts/filter_words_prompt.txt"
         self._filter_agent = Agent(
-            self._model_name,
+            self._active_model,
             output_type=FilteredWordsResponse,
             system_prompt=self._read_prompt(filter_prompt_path)
         )

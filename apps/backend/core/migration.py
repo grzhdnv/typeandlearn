@@ -5,7 +5,7 @@ from pathlib import Path
 
 from core.database import engine, init_db
 from models.texts import PracticeSentenceRecord, SentenceRecord, TextRecord
-from sqlmodel import Session, select
+from sqlmodel import Session
 
 
 def migrate_data() -> None:
