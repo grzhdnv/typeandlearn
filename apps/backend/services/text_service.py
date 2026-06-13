@@ -71,6 +71,8 @@ class TextService:
             status=record.status,
             language=record.language,
             difficulty_level=record.difficulty_level,
+            author=record.author,
+            category=record.category,
             word_count=record.word_count,
             completed_sentences=record.completed_sentences,
             total_sentences=record.total_sentences,
@@ -128,7 +130,7 @@ class TextService:
 
         return self._build_text_data(record, s_records, p_records, top_words)
 
-    def upload(self, text: str, language: str, title: str | None = None, difficulty_level: str | None = None, filtering_method: str = "spacy") -> TextRecord:
+    def upload(self, text: str, language: str, title: str | None = None, difficulty_level: str | None = None, author: str | None = None, category: str | None = None, filtering_method: str = "spacy") -> TextRecord:
         """Generate and persist a new text entry from raw input using local preprocessing."""
         
         # 1. Preprocess the text locally using spaCy
@@ -166,6 +168,8 @@ class TextService:
             status="processing",
             language=language,
             difficulty_level=final_difficulty,
+            author=author,
+            category=category,
             word_count=word_count,
             total_sentences=total_sentences,
             estimated_time_minutes=estimated_time
@@ -315,6 +319,10 @@ class TextService:
             record.language = payload.language
         if payload.difficulty_level is not None:
             record.difficulty_level = payload.difficulty_level
+        if payload.author is not None:
+            record.author = payload.author
+        if payload.category is not None:
+            record.category = payload.category
             
         self._repository.update_text(record)
         return self.get_one(text_id)

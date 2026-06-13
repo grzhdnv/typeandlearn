@@ -52,6 +52,8 @@ class TextData(BaseModel):
     status: str
     language: str = "Unknown"
     difficulty_level: str = "Unrated"
+    author: Optional[str] = None
+    category: Optional[str] = None
     word_count: int = 0
     completed_sentences: int = 0
     total_sentences: int = 0
@@ -103,6 +105,8 @@ class TextUploadRequest(BaseModel):
     language: str
     title: Optional[str] = None
     difficulty_level: Optional[str] = None
+    author: Optional[str] = None
+    category: Optional[str] = None
     filtering_method: str = "spacy"
 
 
@@ -111,6 +115,8 @@ class TextUpdateRequest(BaseModel):
 
     language: Optional[str] = None
     difficulty_level: Optional[str] = None
+    author: Optional[str] = None
+    category: Optional[str] = None
 
 
 class RegenerateWordsRequest(BaseModel):
@@ -133,6 +139,8 @@ class TextTitle(BaseModel):
     status: str
     language: str = "Unknown"
     difficulty_level: str = "Unrated"
+    author: Optional[str] = None
+    category: Optional[str] = None
     word_count: int = 0
     completed_sentences: int = 0
     total_sentences: int = 0

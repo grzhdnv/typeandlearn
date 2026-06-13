@@ -75,6 +75,8 @@ def upload_text(payload: TextUploadRequest, background_tasks: BackgroundTasks) -
             language=payload.language,
             title=payload.title,
             difficulty_level=payload.difficulty_level,
+            author=payload.author,
+            category=payload.category,
             filtering_method=payload.filtering_method
         )
         if record.id is not None:

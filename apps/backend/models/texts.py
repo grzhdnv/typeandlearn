@@ -16,6 +16,8 @@ class TextRecord(SQLModel, table=True):
     status: str = Field(default="pending", index=True)
     language: str = Field(default="Unknown", index=True)
     difficulty_level: str = Field(default="Unrated", index=True)
+    author: Optional[str] = Field(default=None, index=True)
+    category: Optional[str] = Field(default=None, index=True)
     word_count: int = Field(default=0)
     completed_sentences: int = Field(default=0)
     completed_sentence_indices: Optional[List[int]] = Field(

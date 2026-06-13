@@ -9,6 +9,8 @@ const LibraryPage: Component = () => {
   
   const [customText, setCustomText] = createSignal("");
   const [customTitle, setCustomTitle] = createSignal("");
+  const [customAuthor, setCustomAuthor] = createSignal("");
+  const [customCategory, setCustomCategory] = createSignal("");
   const [customLanguage, setCustomLanguage] = createSignal("German");
   const [customDifficulty, setCustomDifficulty] = createSignal("");
   const [isSubmitting, setIsSubmitting] = createSignal(false);
@@ -81,9 +83,11 @@ const LibraryPage: Component = () => {
 
     try {
       setIsSubmitting(true);
-      await postText(text, customLanguage(), customTitle(), customDifficulty());
+      await postText(text, customLanguage(), customTitle(), customDifficulty(), customAuthor(), customCategory());
       setCustomText("");
       setCustomTitle("");
+      setCustomAuthor("");
+      setCustomCategory("");
       setCustomDifficulty("");
       setIsAdding(false);
       refetch();
@@ -95,9 +99,9 @@ const LibraryPage: Component = () => {
     }
   };
 
-  const handleUpdateMetadata = async (id: string, updates: { language?: string; difficultyLevel?: string }) => {
+  const handleUpdateMetadata = async (id: string, updates: { language?: string; difficultyLevel?: string; author?: string; category?: string }) => {
     try {
-      await updateTextMetadata(id, updates.language, updates.difficultyLevel);
+      await updateTextMetadata(id, updates.language, updates.difficultyLevel, updates.author, updates.category);
       refetch();
     } catch (error) {
       console.error("Failed to update metadata:", error);
@@ -226,6 +230,20 @@ const LibraryPage: Component = () => {
                 <option value="C2">C2 (Mastery)</option>
               </select>
             </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <input
+                class="w-full p-3 bg-surface border border-outline-variant focus:border-primary focus:ring-0 font-mono-input outline-none"
+                placeholder="Author (Optional)"
+                value={customAuthor()}
+                onInput={(e) => setCustomAuthor(e.currentTarget.value)}
+              />
+              <input
+                class="w-full p-3 bg-surface border border-outline-variant focus:border-primary focus:ring-0 font-mono-input outline-none"
+                placeholder="Category (Optional)"
+                value={customCategory()}
+                onInput={(e) => setCustomCategory(e.currentTarget.value)}
+              />
+            </div>
             <textarea
               class="w-full p-4 border border-outline-variant focus:border-primary focus:ring-0 font-mono-input text-[18px] outline-none"
               rows={4}
@@ -342,6 +360,14 @@ const LibraryPage: Component = () => {
                     </div>
                     <div>
                       <h4 class="font-headline-md text-headline-md text-primary mb-1">{text.title}</h4>
+                      <div class="flex gap-4 font-mono-sm text-mono-sm text-on-surface-variant">
+                        <Show when={text.author}>
+                          <span>By {text.author}</span>
+                        </Show>
+                        <Show when={text.category}>
+                          <span class="px-2 bg-surface-container-high">{text.category}</span>
+                        </Show>
+                      </div>
                       
                       <div class="w-full bg-surface-container h-1 mt-4">
                         <div 

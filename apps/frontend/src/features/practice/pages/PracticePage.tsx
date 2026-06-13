@@ -179,9 +179,17 @@ const PracticePage: Component = () => {
                   {storyData()?.difficulty_level?.toUpperCase()}
                 </span>
               </Show>
+              <Show when={storyData()?.category}>
+                <span class="bg-surface-container border border-outline-variant px-2 py-0.5 text-mono-label font-mono-label">
+                  {storyData()?.category?.toUpperCase()}
+                </span>
+              </Show>
               <span class="text-on-surface-variant text-mono-sm font-mono-sm opacity-60">ID: {params.id}</span>
             </div>
             <h1 class="font-headline-md text-headline-md leading-tight">{storyData()?.title || "Untitled"}</h1>
+            <Show when={storyData()?.author}>
+              <div class="text-on-surface-variant font-mono-sm">By {storyData()?.author}</div>
+            </Show>
           </div>
           
           {/* Real-time Stats - Placeholder for now since API doesn't return these yet */}

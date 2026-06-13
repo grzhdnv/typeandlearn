@@ -30,7 +30,7 @@ export const fetchStory = async (id: string): Promise<TextData> => {
  *
  * @param text Raw user input from the editor.
  */
-export const postText = async (text: string, language: string, title?: string, difficultyLevel?: string, filteringMethod: "spacy" | "llm" = "spacy"): Promise<UploadResponse> => {
+export const postText = async (text: string, language: string, title?: string, difficultyLevel?: string, author?: string, category?: string, filteringMethod: "spacy" | "llm" = "spacy"): Promise<UploadResponse> => {
   const trimmed = text.trim();
   if (!trimmed) {
     throw new Error("Text cannot be empty");
@@ -40,6 +40,8 @@ export const postText = async (text: string, language: string, title?: string, d
     language,
     title: title?.trim() || undefined,
     difficulty_level: difficultyLevel?.trim() || undefined,
+    author: author?.trim() || undefined,
+    category: category?.trim() || undefined,
     filtering_method: filteringMethod,
   });
 };
@@ -59,10 +61,12 @@ export const regenerateTopWords = async (id: string, filteringMethod: "spacy" | 
   return response.data;
 };
 
-export const updateTextMetadata = async (id: string, language?: string, difficultyLevel?: string): Promise<TextResponse> => {
+export const updateTextMetadata = async (id: string, language?: string, difficultyLevel?: string, author?: string, category?: string): Promise<TextResponse> => {
   const payload: Record<string, string> = {};
   if (language) payload.language = language;
   if (difficultyLevel) payload.difficulty_level = difficultyLevel;
+  if (author !== undefined) payload.author = author;
+  if (category !== undefined) payload.category = category;
   
   return patchJson<TextResponse>(`/api/texts/${id}`, payload);
 };

@@ -51,6 +51,8 @@ export type TextData = {
   status: string;
   language: string;
   difficulty_level: string;
+  author?: string;
+  category?: string;
   word_count: number;
   completed_sentences: number;
   total_sentences: number;
@@ -69,6 +71,8 @@ export type TextTitle = {
   status: string;
   language: string;
   difficulty_level: string;
+  author?: string;
+  category?: string;
   word_count: number;
   completed_sentences: number;
   total_sentences: number;
