@@ -9,7 +9,7 @@ const App: Component<AppProps> = (props) => {
   return (
     <div class="bg-surface text-on-surface min-h-screen font-body-md flex flex-col selection:bg-secondary-container selection:text-on-secondary-container">
       {/* TopNavBar */}
-      <nav class="w-full h-16 bg-surface border-b border-outline-variant flex justify-between items-center px-margin-mobile md:px-margin-desktop max-w-content mx-auto sticky top-0 z-50">
+      <nav class="w-full h-16 bg-surface border-b border-outline-variant flex justify-between items-center px-margin-mobile md:px-margin-desktop max-w-max-width-content mx-auto sticky top-0 z-50">
         <div class="flex items-center gap-8">
           <span class="font-headline-md text-headline-md font-bold text-primary tracking-tight">
             typeandlearn
@@ -53,8 +53,8 @@ const App: Component<AppProps> = (props) => {
       {props.children}
 
       {/* Footer */}
-      <footer class="w-full py-base bg-surface border-t border-outline-variant mt-margin-desktop mt-auto">
-        <div class="flex flex-col md:flex-row justify-between items-center px-margin-mobile md:px-margin-desktop max-w-content mx-auto w-full gap-4 md:gap-0">
+      <footer class="w-full py-base bg-surface border-t border-outline-variant mt-auto">
+        <div class="flex flex-col md:flex-row justify-between items-center px-margin-mobile md:px-margin-desktop max-w-max-width-content mx-auto w-full gap-4 md:gap-0">
           <span class="font-mono-label text-mono-label uppercase tracking-widest text-primary">
             typeandlearn
           </span>
