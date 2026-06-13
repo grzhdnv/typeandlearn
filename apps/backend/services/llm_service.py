@@ -19,7 +19,7 @@ if not logger.handlers:
     logger.addHandler(fh)
 
 from pydantic_ai import Agent
-from schemas.texts import PracticeSentencesResponse, SentenceTranslation, GeneratedMetadata
+from schemas.texts import PracticeSentencesResponse, SentenceTranslation, GeneratedMetadata, FilteredWordsResponse
 
 
 class LlmService:
@@ -53,6 +53,13 @@ class LlmService:
             self._model_name,
             output_type=GeneratedMetadata,
             system_prompt=self._read_prompt(metadata_prompt_path)
+        )
+        
+        filter_prompt_path = "apps/backend/prompts/filter_words_prompt.txt"
+        self._filter_agent = Agent(
+            self._model_name,
+            output_type=FilteredWordsResponse,
+            system_prompt=self._read_prompt(filter_prompt_path)
         )
 
     def _read_prompt(self, path: str) -> str:
@@ -90,6 +97,19 @@ class LlmService:
         
         logger.info(f"--- LLM REQUEST (Metadata) ---\nInput Data:\n{input_data}")
         result = self._metadata_agent.run_sync(input_data)
+        logger.info(f"--- LLM RESPONSE ---\nTokens: {result.usage()}\nOutput:\n{result.output.model_dump_json(indent=2)}\n------------------------------")
+        
+        return result.output
+
+    def filter_meaningful_words(self, raw_frequencies: List[dict], language: str) -> FilteredWordsResponse:
+        """Filter raw word frequencies into meaningful dictionary lemmas using the LLM."""
+        input_data = (
+            f"LANGUAGE: {language}\n"
+            f"RAW_FREQUENCIES: {json.dumps(raw_frequencies, ensure_ascii=False)}"
+        )
+        
+        logger.info(f"--- LLM REQUEST (Filter Words) ---\nInput Data:\n{input_data}")
+        result = self._filter_agent.run_sync(input_data)
         logger.info(f"--- LLM RESPONSE ---\nTokens: {result.usage()}\nOutput:\n{result.output.model_dump_json(indent=2)}\n------------------------------")
         
         return result.output

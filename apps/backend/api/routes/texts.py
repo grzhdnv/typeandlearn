@@ -12,6 +12,7 @@ from schemas.texts import (
     TitlesResponse,
     UploadResponse,
     ProgressUpdateRequest,
+    RegenerateWordsRequest,
 )
 
 
@@ -73,7 +74,8 @@ def upload_text(payload: TextUploadRequest, background_tasks: BackgroundTasks) -
             text=text,
             language=payload.language,
             title=payload.title,
-            difficulty_level=payload.difficulty_level
+            difficulty_level=payload.difficulty_level,
+            filtering_method=payload.filtering_method
         )
         if record.id is not None:
             background_tasks.add_task(text_service.process_pending_text, record.id)
@@ -145,3 +147,23 @@ def reset_progress(text_id: str):
         raise HTTPException(status_code=404, detail="Text not found")
     except Exception as error:
         raise HTTPException(status_code=500, detail=f"Error resetting progress: {error}")
+
+@router.post("/{text_id}/regenerate-words", response_model=TextResponse)
+def regenerate_words(text_id: str, background_tasks: BackgroundTasks, payload: RegenerateWordsRequest = None) -> TextResponse:
+    """Regenerate top words and trigger background practice sentence generation."""
+    try:
+        method = payload.filtering_method if payload else "spacy"
+        data = text_service.regenerate_words(text_id, filtering_method=method)
+        if data.id is not None:
+            background_tasks.add_task(text_service.process_pending_text, data.id)
+            
+        return TextResponse(
+            message="Regenerating words and practice sentences...",
+            data=data,
+        )
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error))
+    except IndexError:
+        raise HTTPException(status_code=404, detail="Text not found")
+    except Exception as error:
+        raise HTTPException(status_code=500, detail=f"Error regenerating words: {error}")

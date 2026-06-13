@@ -1,6 +1,6 @@
 import { Component, createResource, createSignal, createMemo, Show, createEffect, onMount, onCleanup } from 'solid-js';
 import { useParams } from '@solidjs/router';
-import { fetchStory, updateProgress, resetProgress } from '../../../features/texts/api/textsApi';
+import { fetchStory, updateProgress, resetProgress, regenerateTopWords } from '../../../features/texts/api/textsApi';
 import { TypingInterface } from '../../../features/typing/components/TypingInterface';
 import { HintGroup } from '../../../shared/types/contracts';
 
@@ -12,7 +12,9 @@ type UiSentence = {
 
 const PracticePage: Component = () => {
   const params = useParams();
-  const [storyData] = createResource(() => params.id, fetchStory);
+  const [storyData, { refetch: refetchStory }] = createResource(() => params.id, fetchStory);
+  const [isRegenerating, setIsRegenerating] = createSignal(false);
+  const [filteringMethod, setFilteringMethod] = createSignal<"spacy" | "llm">("spacy");
 
   const [activeTab, setActiveTab] = createSignal<"original" | "generated">("original");
   const [originalIndex, setOriginalIndex] = createSignal(0);
@@ -23,6 +25,20 @@ const PracticePage: Component = () => {
       setOriginalIndex(0);
       setGeneratedIndex(0);
     }
+  });
+
+  createEffect(() => {
+    let intervalId: number | undefined;
+    const story = storyData();
+    if (story?.status === "processing") {
+       intervalId = window.setInterval(() => {
+         refetchStory();
+       }, 2000);
+    }
+    
+    onCleanup(() => {
+      if (intervalId) window.clearInterval(intervalId);
+    });
   });
 
   const originalSentences = createMemo<UiSentence[]>(() => {
@@ -91,6 +107,22 @@ const PracticePage: Component = () => {
     } catch (error) {
       console.error("Failed to reset progress:", error);
       alert(error instanceof Error ? error.message : "Failed to reset progress.");
+    }
+  };
+
+  const handleRegenerateWords = async () => {
+    if (!params.id) return;
+    setIsRegenerating(true);
+    try {
+      await regenerateTopWords(params.id, filteringMethod());
+      refetchStory();
+      setOriginalIndex(0);
+      setGeneratedIndex(0);
+    } catch (error) {
+      console.error("Failed to regenerate words:", error);
+      alert(error instanceof Error ? error.message : "Failed to regenerate words.");
+    } finally {
+      setIsRegenerating(false);
     }
   };
 
@@ -184,8 +216,9 @@ const PracticePage: Component = () => {
         </div>
 
         <Show when={storyData()?.status === "processing"}>
-           <div class="p-6 mb-6 bg-tertiary-fixed border border-on-tertiary-fixed text-on-tertiary-fixed font-mono-label">
-             Translating text with AI... Please reload the page shortly.
+           <div class="p-6 mb-6 bg-tertiary-fixed border border-on-tertiary-fixed text-on-tertiary-fixed font-mono-label flex items-center gap-3">
+             <span class="material-symbols-outlined animate-spin text-[20px]">autorenew</span>
+             Translating text with AI... Please wait, the page will update automatically.
            </div>
         </Show>
 
@@ -206,6 +239,55 @@ const PracticePage: Component = () => {
               fullTranslation={originalSentences()[originalIndex()].translation}
               onComplete={handleOriginalComplete}
             />
+          </Show>
+
+          {/* Top Frequency Words Section */}
+          <Show when={storyData()}>
+            <div class="mt-16 flex flex-col gap-4">
+              <div class="flex flex-col sm:flex-row sm:items-center gap-4 justify-between">
+                <span class="text-mono-sm font-mono-sm text-on-surface-variant uppercase tracking-wider">Top Frequency Words</span>
+                <div class="flex items-center gap-4">
+                  <div class="flex items-center gap-2">
+                    <span class="text-mono-sm font-mono-sm text-on-surface-variant">Filter with:</span>
+                    <div class="flex bg-surface-container border border-outline-variant p-0.5">
+                      <button 
+                        onClick={handleMouseOnlyClick(() => setFilteringMethod("spacy"))}
+                        class={`px-3 py-1 text-[11px] font-mono-label uppercase tracking-wider transition-colors ${filteringMethod() === "spacy" ? "bg-primary text-on-primary" : "text-on-surface-variant hover:text-primary"}`}
+                      >
+                        spaCy
+                      </button>
+                      <button 
+                        onClick={handleMouseOnlyClick(() => setFilteringMethod("llm"))}
+                        class={`px-3 py-1 text-[11px] font-mono-label uppercase tracking-wider transition-colors ${filteringMethod() === "llm" ? "bg-primary text-on-primary" : "text-on-surface-variant hover:text-primary"}`}
+                      >
+                        AI
+                      </button>
+                    </div>
+                  </div>
+                  <button
+                    onClick={handleMouseOnlyClick(handleRegenerateWords)}
+                    disabled={isRegenerating()}
+                    class="text-outline-variant hover:text-primary transition-colors flex items-center justify-center disabled:opacity-50"
+                    title="Regenerate Words & Practice Sentences"
+                  >
+                    <span class={`material-symbols-outlined text-[18px] ${isRegenerating() ? 'animate-spin' : ''}`}>autorenew</span>
+                  </button>
+                </div>
+              </div>
+              <Show when={storyData()?.top_words && storyData()!.top_words.length > 0} fallback={
+                <div class="text-mono-sm font-mono-sm text-on-surface-variant italic mt-2">
+                  No frequency list available. Select a filter and regenerate to extract the top words.
+                </div>
+              }>
+                <div class="flex flex-wrap gap-2">
+                  {storyData()!.top_words.map(word => (
+                    <span class="bg-surface-container border border-outline-variant px-3 py-1 text-mono-label font-mono-label text-on-surface">
+                      {word}
+                    </span>
+                  ))}
+                </div>
+              </Show>
+            </div>
           </Show>
         </Show>
 

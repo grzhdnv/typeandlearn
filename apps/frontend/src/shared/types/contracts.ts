@@ -49,6 +49,7 @@ export type TextData = {
   estimated_time_minutes: number;
   original_paragraphs: Paragraph[];
   practice_sentences: PracticeSentence[];
+  top_words: string[];
 };
 
 /**

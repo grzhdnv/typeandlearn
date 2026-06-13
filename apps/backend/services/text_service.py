@@ -23,6 +23,7 @@ class TextService:
         record: TextRecord,
         sentence_records: list[SentenceRecord],
         practice_records: list[PracticeSentenceRecord],
+        top_words: list[str] | None = None,
     ) -> TextData:
         """Reconstruct the nested API response from flat database records."""
 
@@ -74,6 +75,7 @@ class TextService:
             estimated_time_minutes=record.estimated_time_minutes,
             original_paragraphs=paragraphs,
             practice_sentences=practice_sentences,
+            top_words=top_words or [],
         )
 
     def get_all(self) -> list[TextData]:
@@ -119,14 +121,20 @@ class TextService:
 
         s_records = self._repository.load_sentences(record.id)
         p_records = self._repository.load_practice_sentences(record.id)
+        frequencies = self._repository.load_word_frequencies(record.id)
+        top_words = [f.word for f in frequencies[:15]]
 
-        return self._build_text_data(record, s_records, p_records)
+        return self._build_text_data(record, s_records, p_records, top_words)
 
-    def upload(self, text: str, language: str, title: str | None = None, difficulty_level: str | None = None) -> TextRecord:
+    def upload(self, text: str, language: str, title: str | None = None, difficulty_level: str | None = None, filtering_method: str = "spacy") -> TextRecord:
         """Generate and persist a new text entry from raw input using local preprocessing."""
         
         # 1. Preprocess the text locally using spaCy
-        paragraphs_data, word_frequencies = self._preprocessing.process_text(text)
+        paragraphs_data, word_frequencies = self._preprocessing.process_text(text, language, filtering_method)
+        
+        if filtering_method == "llm":
+            filtered_response = self._llm.filter_meaningful_words(word_frequencies, language)
+            word_frequencies = [{"word": fw.word, "count": fw.count} for fw in filtered_response.words]
         
         # 2. Extract metadata if missing
         final_title = title
@@ -214,6 +222,46 @@ class TextService:
 
         self._repository.delete_text(tid)
         return data_to_return
+
+    def regenerate_words(self, text_id: str, filtering_method: str = "spacy") -> TextData:
+        """Regenerate word frequencies and trigger practice sentence regeneration."""
+        try:
+            tid = int(text_id)
+        except ValueError as error:
+            raise ValueError(f"Invalid text ID format: {text_id}") from error
+
+        record = self._repository.load_one_text(tid)
+        if record is None or record.id is None:
+            raise IndexError("Text not found")
+            
+        s_records = self._repository.load_sentences(record.id)
+        full_text = " ".join(s.original_text for s in s_records)
+        
+        # 1. Re-extract word frequencies using new logic
+        _, word_frequencies = self._preprocessing.process_text(full_text, record.language, filtering_method)
+        
+        if filtering_method == "llm":
+            filtered_response = self._llm.filter_meaningful_words(word_frequencies, record.language)
+            word_frequencies = [{"word": fw.word, "count": fw.count} for fw in filtered_response.words]
+        
+        # 2. Update WordFrequencyRecords
+        self._repository.delete_word_frequencies(record.id)
+        frequency_records = []
+        for wf in word_frequencies:
+            frequency_records.append(
+                WordFrequencyRecord(
+                    text_id=record.id,
+                    word=wf["word"],
+                    count=wf["count"]
+                )
+            )
+        self._repository.save_word_frequencies(frequency_records)
+        
+        # 3. Set status to processing to trigger background generation
+        record.status = "processing"
+        self._repository.update_text(record)
+        
+        return self.get_one(text_id)
 
     def update_progress(self, text_id: str, sentence_index: int) -> TextRecord:
         """Update the completed sentences count for a text by tracking unique completed indices."""
@@ -319,6 +367,9 @@ class TextService:
             print(f"Generating practice sentences using top {len(top_words)} words: {top_words}")
             try:
                 practice_result = self._llm.generate_practice_sentences(top_words)
+                
+                # Clear old practice sentences if any exist (e.g. during regeneration)
+                self._repository.delete_practice_sentences(text_id)
                 
                 practice_records = []
                 for idx, ps in enumerate(practice_result.sentences):

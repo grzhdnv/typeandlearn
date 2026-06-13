@@ -12,9 +12,11 @@
   - [ ] Store text in database
 
 - [ ] **Process text**
+  - [ ] **[TOP PRIORITY]** Sanitize and normalize the text before processing!
   - [ ] Analyze text for word frequency  
     - [ ] Lemma analysis with Python and NLTK
   - [ ] Send text to LLM (Gemini for now)
+    - [ ] **[TOP PRIORITY]** Add fallback models based on available tokens when close to end of the limit.
     - [ ] Produce practice sentences
       - [ ] Store practice sentences in database
     - [ ] Analyze text difficulty

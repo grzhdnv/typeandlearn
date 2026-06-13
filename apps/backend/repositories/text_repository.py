@@ -110,6 +110,24 @@ class TextRepository:
             session.add_all(frequencies)
             session.commit()
 
+    def delete_word_frequencies(self, text_id: int) -> None:
+        """Delete all word frequencies for a specific text."""
+        with Session(self._engine) as session:
+            statement = select(WordFrequencyRecord).where(WordFrequencyRecord.text_id == text_id)  # pyright: ignore
+            records = session.exec(statement).all()
+            for record in records:
+                session.delete(record)
+            session.commit()
+
+    def delete_practice_sentences(self, text_id: int) -> None:
+        """Delete all practice sentences for a specific text."""
+        with Session(self._engine) as session:
+            statement = select(PracticeSentenceRecord).where(PracticeSentenceRecord.text_id == text_id)  # pyright: ignore
+            records = session.exec(statement).all()
+            for record in records:
+                session.delete(record)
+            session.commit()
+
     def delete_text(self, text_id: int) -> Optional[TextRecord]:
         """Delete one text entry from the database by ID (SQL cascades sentences)."""
         with Session(self._engine) as session:

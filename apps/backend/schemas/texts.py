@@ -51,6 +51,7 @@ class TextData(BaseModel):
     estimated_time_minutes: int = 0
     original_paragraphs: List[Paragraph]
     practice_sentences: List[PracticeSentence]
+    top_words: List[str] = []
 
 
 class SentenceTranslation(BaseModel):
@@ -77,6 +78,16 @@ class GeneratedMetadata(BaseModel):
     difficulty_level: str
 
 
+class FilteredWordsResponse(BaseModel):
+    """LLM response schema for filtering meaningful words."""
+    
+    class FilteredWord(BaseModel):
+        word: str
+        count: int
+        
+    words: List[FilteredWord]
+
+
 
 class TextUploadRequest(BaseModel):
     """Request payload for submitting raw text content."""
@@ -85,6 +96,7 @@ class TextUploadRequest(BaseModel):
     language: str
     title: Optional[str] = None
     difficulty_level: Optional[str] = None
+    filtering_method: str = "spacy"
 
 
 class TextUpdateRequest(BaseModel):
@@ -92,6 +104,12 @@ class TextUpdateRequest(BaseModel):
 
     language: Optional[str] = None
     difficulty_level: Optional[str] = None
+
+
+class RegenerateWordsRequest(BaseModel):
+    """Request payload for regenerating word frequencies."""
+    
+    filtering_method: str = "spacy"
 
 
 class ProgressUpdateRequest(BaseModel):

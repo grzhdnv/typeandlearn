@@ -11,16 +11,30 @@ class PreprocessingService:
 
     def __init__(self) -> None:
         """Initialize the spaCy NLP pipeline."""
-        try:
-            self._nlp = spacy.load("en_core_web_sm")
-        except OSError as error:
-            raise RuntimeError(
-                "spaCy model 'en_core_web_sm' is not installed. "
-                "Run: python -m spacy download en_core_web_sm"
-            ) from error
+        self._models: Dict[str, Any] = {}
+
+    def _get_nlp(self, language: str):
+        lang_map = {
+            "german": "de_core_news_sm",
+            "italian": "it_core_news_sm",
+            "french": "fr_core_news_sm",
+            "spanish": "es_core_news_sm",
+            "english": "en_core_web_sm"
+        }
+        model_name = lang_map.get(language.lower(), "en_core_web_sm")
+        
+        if model_name not in self._models:
+            try:
+                self._models[model_name] = spacy.load(model_name)
+            except OSError:
+                print(f"Failed to load {model_name}, falling back to en_core_web_sm")
+                if "en_core_web_sm" not in self._models:
+                    self._models["en_core_web_sm"] = spacy.load("en_core_web_sm")
+                return self._models["en_core_web_sm"]
+        return self._models[model_name]
 
     def process_text(
-        self, text: str
+        self, text: str, language: str = "english", filtering_method: str = "spacy"
     ) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
         """
         Split text into paragraphs and sentences, and calculate word frequencies.
@@ -36,9 +50,11 @@ class PreprocessingService:
         # Split into paragraphs natively to preserve explicit line breaks
         raw_paragraphs = [p.strip() for p in text.split("\n\n") if p.strip()]
 
+        nlp = self._get_nlp(language)
+
         for p_idx, p_text in enumerate(raw_paragraphs):
             # Process the whole paragraph with spaCy
-            doc = self._nlp(p_text)
+            doc = nlp(p_text)
 
             sentences_data = []
             for s_idx, sent in enumerate(doc.sents):
@@ -56,20 +72,32 @@ class PreprocessingService:
                 }
             )
 
-            # Count word frequencies: lemmatize and exclude stop words/punctuation/spaces/numbers
+            # Count word frequencies
             for token in doc:
-                if (
-                    not token.is_stop
-                    and not token.is_punct
-                    and not token.is_space
-                    and token.is_alpha
-                ):
-                    lemma = token.lemma_.lower()
-                    word_counts[lemma] += 1
+                if filtering_method == "llm":
+                    # For LLM filtering, just collect raw alphabetic tokens
+                    if not token.is_punct and not token.is_space and token.is_alpha:
+                        word_counts[token.text.lower()] += 1
+                else:
+                    # For spacy filtering, do full POS and stop word filtering
+                    if (
+                        not token.is_stop
+                        and not token.is_punct
+                        and not token.is_space
+                        and token.is_alpha
+                        and token.pos_ in {"NOUN", "PROPN", "VERB", "ADJ", "ADV"}
+                    ):
+                        lemma = token.lemma_.lower()
+                        word_counts[lemma] += 1
 
-        # Convert counter to a list of dicts, sorted from most to least frequent
-        word_frequencies = [
-            {"word": word, "count": count} for word, count in word_counts.most_common()
-        ]
+        if filtering_method == "llm":
+            # Just return top 50 raw tokens for LLM to process further
+            word_frequencies = [
+                {"word": word, "count": count} for word, count in word_counts.most_common(50)
+            ]
+        else:
+            word_frequencies = [
+                {"word": word, "count": count} for word, count in word_counts.most_common()
+            ]
 
         return paragraphs_data, word_frequencies

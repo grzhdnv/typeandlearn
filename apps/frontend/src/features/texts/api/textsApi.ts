@@ -30,7 +30,7 @@ export const fetchStory = async (id: string): Promise<TextData> => {
  *
  * @param text Raw user input from the editor.
  */
-export const postText = async (text: string, language: string, title?: string, difficultyLevel?: string): Promise<UploadResponse> => {
+export const postText = async (text: string, language: string, title?: string, difficultyLevel?: string, filteringMethod: "spacy" | "llm" = "spacy"): Promise<UploadResponse> => {
   const trimmed = text.trim();
   if (!trimmed) {
     throw new Error("Text cannot be empty");
@@ -39,7 +39,8 @@ export const postText = async (text: string, language: string, title?: string, d
     text: trimmed,
     language,
     title: title?.trim() || undefined,
-    difficulty_level: difficultyLevel?.trim() || undefined
+    difficulty_level: difficultyLevel?.trim() || undefined,
+    filtering_method: filteringMethod,
   });
 };
 
@@ -49,6 +50,13 @@ export const updateProgress = async (id: string, sentenceIndex: number): Promise
 
 export const resetProgress = async (id: string): Promise<{completed_sentences: number}> => {
   return postJson<{completed_sentences: number}>(`/api/texts/${id}/reset`, {});
+};
+
+export const regenerateTopWords = async (id: string, filteringMethod: "spacy" | "llm" = "spacy"): Promise<TextData> => {
+  const response = await postJson<{ message: string; data: TextData }>(`/api/texts/${id}/regenerate-words`, {
+    filtering_method: filteringMethod
+  });
+  return response.data;
 };
 
 export const updateTextMetadata = async (id: string, language?: string, difficultyLevel?: string): Promise<TextResponse> => {
