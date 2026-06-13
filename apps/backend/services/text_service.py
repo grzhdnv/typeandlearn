@@ -1,5 +1,9 @@
 """Domain service for text retrieval, upload, and deletion workflows."""
 
+import concurrent.futures
+import time
+import random
+
 from itertools import groupby
 
 from models.texts import PracticeSentenceRecord, SentenceRecord, TextRecord, WordFrequencyRecord
@@ -137,25 +141,43 @@ class TextService:
         paragraphs_data, word_frequencies = self._preprocessing.process_text(text, language, filtering_method)
         
         if filtering_method == "llm":
-            filtered_response = self._llm.filter_meaningful_words(word_frequencies, language)
-            word_frequencies = [{"word": fw.word, "count": fw.count} for fw in filtered_response.words]
+            for attempt in range(4):
+                try:
+                    filtered_response = self._llm.filter_meaningful_words(word_frequencies, language)
+                    word_frequencies = [{"word": fw.word, "count": fw.count} for fw in filtered_response.words]
+                    break
+                except Exception as e:
+                    if "429" in str(e).lower() or "rate limit" in str(e).lower():
+                        if attempt < 3:
+                            time.sleep(2 ** attempt)
+                            continue
+                    print(f"Failed to filter words via LLM: {e}")
+                    # Fallback to spacy logic if LLM fails
+                    break
         
         # 2. Extract metadata if missing
         final_title = title
         final_difficulty = difficulty_level
         if not final_title or not final_difficulty:
-            try:
-                metadata = self._llm.extract_metadata(text)
-                if not final_title:
-                    final_title = f"[{metadata.title}]"
-                if not final_difficulty:
-                    final_difficulty = metadata.difficulty_level
-            except Exception as e:
-                print(f"Failed to extract metadata: {e}")
-                if not final_title:
-                    final_title = "[Untitled]"
-                if not final_difficulty:
-                    final_difficulty = "Unrated"
+            for attempt in range(4):
+                try:
+                    metadata = self._llm.extract_metadata(text)
+                    if not final_title:
+                        final_title = f"[{metadata.title}]"
+                    if not final_difficulty:
+                        final_difficulty = metadata.difficulty_level
+                    break
+                except Exception as e:
+                    if "429" in str(e).lower() or "rate limit" in str(e).lower():
+                        if attempt < 3:
+                            time.sleep(2 ** attempt)
+                            continue
+                    print(f"Failed to extract metadata: {e}")
+                    if not final_title:
+                        final_title = "[Untitled]"
+                    if not final_difficulty:
+                        final_difficulty = "Unrated"
+                    break
 
         # Calculate basic metrics
         word_count = sum(len(s["text"].split()) for p in paragraphs_data for s in p["sentences"])
@@ -247,8 +269,18 @@ class TextService:
         _, word_frequencies = self._preprocessing.process_text(full_text, record.language, filtering_method)
         
         if filtering_method == "llm":
-            filtered_response = self._llm.filter_meaningful_words(word_frequencies, record.language)
-            word_frequencies = [{"word": fw.word, "count": fw.count} for fw in filtered_response.words]
+            for attempt in range(4):
+                try:
+                    filtered_response = self._llm.filter_meaningful_words(word_frequencies, record.language)
+                    word_frequencies = [{"word": fw.word, "count": fw.count} for fw in filtered_response.words]
+                    break
+                except Exception as e:
+                    if "429" in str(e).lower() or "rate limit" in str(e).lower():
+                        if attempt < 3:
+                            time.sleep(2 ** attempt)
+                            continue
+                    print(f"Failed to filter words via LLM during regeneration: {e}")
+                    raise ValueError(f"LLM filtering failed: {e}")
         
         # 2. Update WordFrequencyRecords
         self._repository.delete_word_frequencies(record.id)
@@ -335,9 +367,16 @@ class TextService:
             
         s_records = self._repository.load_sentences(text_id)
         
-        # Helper to get full paragraph for context
-        def get_paragraph_context(p_idx: int) -> str:
-            return " ".join([s.original_text for s in s_records if s.paragraph_index == p_idx])
+        # Helper to get just the previous sentence for context (drastically reduces tokens)
+        def get_previous_sentence_context(current_s) -> str:
+            sorted_records = sorted(s_records, key=lambda x: (x.paragraph_index, x.sentence_index))
+            try:
+                curr_idx = sorted_records.index(current_s)
+                if curr_idx > 0:
+                    return sorted_records[curr_idx - 1].original_text
+                return ""
+            except ValueError:
+                return ""
 
         # 1. Translate sentences
         total_sentences = len(s_records)
@@ -345,28 +384,52 @@ class TextService:
         
         print(f"Starting background processing for text '{record.title}' (ID: {text_id}). {processed_count}/{total_sentences} sentences already processed.")
         
-        for idx, s in enumerate(s_records, start=1):
-            if s.status != "pending":
-                continue
+        import asyncio
+        
+        async def _translate_all():
+            sem = asyncio.Semaphore(15)
+            
+            async def _translate_and_update(s, idx):
+                if s.status != "pending":
+                    return
+                    
+                print(f"[{idx}/{total_sentences}] Translating sentence: '{s.original_text}'...")
+                context = get_previous_sentence_context(s)
                 
-            print(f"[{idx}/{total_sentences}] Translating sentence: '{s.original_text}'...")
-            context = get_paragraph_context(s.paragraph_index)
-            try:
-                result = self._llm.translate_sentence(
-                    title=record.title,
-                    context=context,
-                    target_sentence=s.original_text
-                )
+                max_retries = 5
+                base_delay = 2
                 
-                s.translation = result.translation
-                # Convert Pydantic HintGroup models to dicts for JSON storage
-                s.translation_hints = [hg.model_dump() for hg in result.translation_hints]
-                s.status = "processed"
-                self._repository.update_sentence(s)
-                print(f"  -> Translated: '{s.translation}'")
-            except Exception as e:
-                # Log error and potentially retry later, but for now we continue
-                print(f"  [ERROR] Failed to translate sentence {s.id}: {e}")
+                async with sem:
+                    for attempt in range(max_retries):
+                        try:
+                            result = await self._llm.translate_sentence_async(
+                                title=record.title,
+                                context=context,
+                                target_sentence=s.original_text
+                            )
+                            
+                            s.translation = result.translation
+                            s.translation_hints = [hg.model_dump() for hg in result.translation_hints]
+                            s.status = "processed"
+                            await asyncio.to_thread(self._repository.update_sentence, s)
+                            print(f"  -> Translated: '{s.translation}'")
+                            return # Success
+                        except Exception as e:
+                            error_msg = str(e).lower()
+                            if "429" in error_msg or "too many requests" in error_msg or "rate limit" in error_msg:
+                                delay = (base_delay ** attempt) + random.uniform(0, 1)
+                                print(f"  [WARN] Rate limit hit on sentence {s.id}. Retrying in {delay:.2f}s (Attempt {attempt + 1}/{max_retries})")
+                                await asyncio.sleep(delay)
+                            elif "validation" in error_msg or "unexpectedmodelbehavior" in error_msg:
+                                print(f"  [WARN] LLM validation error on sentence {s.id}. Retrying... (Attempt {attempt + 1}/{max_retries})")
+                                await asyncio.sleep(1)
+                            else:
+                                print(f"  [ERROR] Failed to translate sentence {s.id}: {e}")
+                                break
+                                
+            await asyncio.gather(*[_translate_and_update(s, idx) for idx, s in enumerate(s_records, start=1)])
+
+        asyncio.run(_translate_all())
 
         # 2. Generate Practice Sentences
         frequencies = self._repository.load_word_frequencies(text_id)
@@ -375,30 +438,42 @@ class TextService:
         
         if top_words:
             print(f"Generating practice sentences using top {len(top_words)} words: {top_words}")
-            try:
-                practice_result = self._llm.generate_practice_sentences(top_words)
-                
-                # Clear old practice sentences if any exist (e.g. during regeneration)
-                self._repository.delete_practice_sentences(text_id)
-                
-                practice_records = []
-                for idx, ps in enumerate(practice_result.sentences):
-                    practice_records.append(
-                        PracticeSentenceRecord(
-                            text_id=text_id,
-                            sentence_index=idx,
-                            sentence=ps.sentence,
-                            translation=ps.translation,
-                            translation_hints=[hg.model_dump() for hg in ps.translation_hints]
+            for attempt in range(3):
+                try:
+                    import asyncio
+                    practice_result = asyncio.run(self._llm.generate_practice_sentences_async(top_words))
+                    
+                    # Clear old practice sentences if any exist (e.g. during regeneration)
+                    self._repository.delete_practice_sentences(text_id)
+                    
+                    practice_records = []
+                    for idx, ps in enumerate(practice_result.sentences):
+                        practice_records.append(
+                            PracticeSentenceRecord(
+                                text_id=text_id,
+                                sentence_index=idx,
+                                sentence=ps.sentence,
+                                translation=ps.translation,
+                                translation_hints=[hg.model_dump() for hg in ps.translation_hints]
+                            )
                         )
-                    )
-                self._repository.save_practice_sentences(practice_records)
-            except Exception as e:
-                print(f"Failed to generate practice sentences for text {text_id}: {e}")
+                    self._repository.save_practice_sentences(practice_records)
+                    break # Success
+                except Exception as e:
+                    error_msg = str(e).lower()
+                    if "429" in error_msg or "too many requests" in error_msg or "rate limit" in error_msg:
+                        time.sleep(2 ** attempt)
+                    elif "validation" in error_msg or "unexpectedmodelbehavior" in error_msg:
+                        time.sleep(1)
+                    else:
+                        print(f"Failed to generate practice sentences for text {text_id}: {e}")
+                        break
+            else:
+                print(f"Failed to generate practice sentences for text {text_id}: Max retries exceeded")
                 
         # 3. Fetch Dictionary Translations for Top Words
         print("Fetching dictionary translations for top words...")
-        for freq in frequencies[:15]:
+        def _fetch_dict_translation(freq):
             if not freq.translation:
                 try:
                     translation = self._dictionary.translate_word(freq.word, record.language)
@@ -407,6 +482,10 @@ class TextService:
                         self._repository.update_word_frequency(freq)
                 except Exception as e:
                     print(f"Failed to fetch translation for '{freq.word}': {e}")
+
+        with concurrent.futures.ThreadPoolExecutor(max_workers=25) as executor:
+            futures = [executor.submit(_fetch_dict_translation, freq) for freq in frequencies[:15]]
+            concurrent.futures.wait(futures)
 
         # 4. Mark text as fully processed
         record.status = "processed"

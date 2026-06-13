@@ -26,11 +26,13 @@ class PreprocessingService:
         
         if model_name not in self._models:
             try:
-                self._models[model_name] = spacy.load(model_name)
+                self._models[model_name] = spacy.load(model_name, disable=["ner", "parser"])
+                self._models[model_name].add_pipe("sentencizer")
             except OSError:
                 print(f"Failed to load {model_name}, falling back to en_core_web_sm")
                 if "en_core_web_sm" not in self._models:
-                    self._models["en_core_web_sm"] = spacy.load("en_core_web_sm")
+                    self._models["en_core_web_sm"] = spacy.load("en_core_web_sm", disable=["ner", "parser"])
+                    self._models["en_core_web_sm"].add_pipe("sentencizer")
                 return self._models["en_core_web_sm"]
         return self._models[model_name]
 
@@ -55,9 +57,8 @@ class PreprocessingService:
 
         nlp = self._get_nlp(language)
 
-        for p_idx, p_text in enumerate(raw_paragraphs):
-            # Process the whole paragraph with spaCy
-            doc = nlp(p_text)
+        # Process the whole paragraph with spaCy in batches
+        for p_idx, doc in enumerate(nlp.pipe(raw_paragraphs, batch_size=50)):
 
             sentences_data = []
             current_sentence = ""
@@ -97,7 +98,11 @@ class PreprocessingService:
                 if filtering_method == "llm":
                     # For LLM filtering, just collect raw alphabetic tokens
                     if not token.is_punct and not token.is_space and token.is_alpha:
-                        word_counts[token.text.lower()] += 1
+                        text = token.text
+                        if language.lower() == "german" and text[0].isupper():
+                            word_counts[text] += 1
+                        else:
+                            word_counts[text.lower()] += 1
                 else:
                     # For spacy filtering, do full POS and stop word filtering
                     if (
@@ -107,7 +112,11 @@ class PreprocessingService:
                         and token.is_alpha
                         and token.pos_ in {"NOUN", "PROPN", "VERB", "ADJ", "ADV"}
                     ):
-                        lemma = token.lemma_.lower()
+                        lemma = token.lemma_
+                        if language.lower() == "german" and token.pos_ in {"NOUN", "PROPN"}:
+                            lemma = lemma.capitalize()
+                        else:
+                            lemma = lemma.lower()
                         word_counts[lemma] += 1
 
         if filtering_method == "llm":
