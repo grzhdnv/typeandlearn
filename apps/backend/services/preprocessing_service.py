@@ -4,6 +4,7 @@ from collections import Counter
 from typing import Any, Dict, List, Tuple
 
 import spacy
+from services.text_sanitizer import TextSanitizer
 
 
 class PreprocessingService:
@@ -47,6 +48,8 @@ class PreprocessingService:
         paragraphs_data = []
         word_counts = Counter()
 
+        text = TextSanitizer.sanitize(text)
+
         # Split into paragraphs natively to preserve explicit line breaks
         raw_paragraphs = [p.strip() for p in text.split("\n\n") if p.strip()]
 
@@ -57,13 +60,30 @@ class PreprocessingService:
             doc = nlp(p_text)
 
             sentences_data = []
-            for s_idx, sent in enumerate(doc.sents):
-                sentences_data.append(
-                    {
-                        "index": s_idx,
-                        "text": sent.text.strip(),
-                    }
-                )
+            current_sentence = ""
+            for sent in doc.sents:
+                s_text = sent.text.strip()
+                if not s_text:
+                    continue
+                    
+                if current_sentence:
+                    # Merge if starts with lowercase, is very short, or has no letters (e.g. `!«`)
+                    if s_text[0].islower() or len(s_text) <= 2 or not any(c.isalpha() for c in s_text):
+                        current_sentence += " " + s_text
+                    else:
+                        sentences_data.append({
+                            "index": len(sentences_data),
+                            "text": current_sentence,
+                        })
+                        current_sentence = s_text
+                else:
+                    current_sentence = s_text
+                    
+            if current_sentence:
+                sentences_data.append({
+                    "index": len(sentences_data),
+                    "text": current_sentence,
+                })
 
             paragraphs_data.append(
                 {
