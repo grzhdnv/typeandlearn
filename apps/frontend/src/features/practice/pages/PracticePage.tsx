@@ -20,7 +20,7 @@ const PracticePage: Component = () => {
   const [originalIndex, setOriginalIndex] = createSignal(0);
   const [generatedIndex, setGeneratedIndex] = createSignal(0);
 
-  let lastStoryId = "";
+  let lastStoryId: number | undefined | null = null;
   createEffect(() => {
     const story = storyData();
     if (story && story.id !== lastStoryId) {
