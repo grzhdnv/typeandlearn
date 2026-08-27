@@ -28,3 +28,13 @@
     - Login
     - Dashboard
     - Progress tracking
+
+## Monkeytype Benchmarking & Typing Core
+- **Engine Analysis**: Analyze Monkeytype codebase for caret rendering, input event handling, backspace edge cases, and standard WPM calculations.
+- **UX & Analytics**: Shortcuts (`Tab+Enter`, `Esc`), mechanical key sound effects, and post-test analytics graphs (WPM, accuracy, heatmaps).
+
+## Production & AI Reliability Roadmap
+- **AI Agent Reliability**: `pydantic-ai` schema enforcement, model fallback policies, retry handling, and evaluation datasets (evals).
+- **Testing & Quality**: Keep SolidJS type checking and builds green, expand pytest API tests, and add Vitest component tests and Playwright E2E coverage.
+- **Logging & Observability**: Structured JSON logs (`structlog`) with request correlation IDs and LLM token/latency telemetry.
+- **Deployment**: Docker containerization, Alembic/SQLModel migrations, GitHub Actions CI/CD pipeline.

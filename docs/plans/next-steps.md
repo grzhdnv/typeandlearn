@@ -65,5 +65,25 @@
 - Revise `README.md` to reflect the current vision of language learning through typing exercises.
 - Provide clear instructions for new users, including example workflows and setup steps.
 
+## 10. Monkeytype Benchmarking & Typing Core Analysis
+- **Engine Mechanics**: Study Monkeytype's open-source repository for typing engine algorithms (sub-millisecond input handling, caret positioning, backspace edge-case logic, standardized 5 char/word WPM & accuracy calculations).
+- **UX & Polish**: Incorporate UX patterns such as shortcut keybindings (`Tab + Enter` restart, `Esc` menu), audio/tactile feedback toggles, and smooth CSS animations.
+- **Analytics Visualizations**: Implement speed variance, WPM over time, error heatmap, and consistency charts post-session.
+
+## 11. Production Level Engineering & AI Agent Reliability
+- **Reliable AI Agent Workflows**:
+  - Enforce strict `pydantic-ai` schema validations with retry handlers, fallback models on token/rate limits, and deterministic parsing.
+  - Implement evaluation suites (evals) to continuously test text extraction, sentence segmentation, and contextual translation quality.
+- **Robust Testing Strategy**:
+  - Keep frontend type checking and builds green as the practice interface evolves.
+  - Expand pytest backend unit and API integration tests.
+  - Add Vitest for SolidJS component tests and Playwright for end-to-end typing session tests.
+- **Logging, Telemetry & Observability**:
+  - Add structured JSON logging (`structlog` / OpenTelemetry) with correlation IDs for tracking HTTP requests, LLM latencies, token consumption, and error stack traces.
+- **CI/CD & Deployment Pipeline**:
+  - Containerize frontend (Nginx SPA) and backend (FastAPI/Uvicorn) with Docker multi-stage builds.
+  - Establish automated GitHub Actions CI pipeline running `npm run check`, linter, tests, and build checks before deployment.
+  - Setup database migrations via Alembic/SQLModel.
+
 ---
-These steps aim to enhance the project’s functionality and align it with its vision of becoming an effective language-learning tool through typing exercises.
+These steps aim to enhance the project’s functionality and align it with its vision of becoming an effective language-learning tool through typing exercises, reaching production deployment readiness with high reliability.
