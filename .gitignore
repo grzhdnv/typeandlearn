@@ -1,8 +1,11 @@
 .env
+.env.*
+!.env.example
 .DS_Store
 .venv/
 venv/
 .vscode/
+.ruff_cache/
 __pycache__/
 apps/frontend/node_modules/
 apps/frontend/dist/

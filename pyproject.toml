@@ -1,7 +1,7 @@
 [project]
 name = "typeandlearn"
 version = "0.1.0"
-description = "Add your description here"
+description = "Turn source texts into guided language-learning typing practice."
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [

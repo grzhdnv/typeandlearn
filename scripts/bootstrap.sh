@@ -2,5 +2,5 @@
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
-uv sync
-npm --prefix apps/frontend install
+uv sync --locked
+npm --prefix apps/frontend ci
