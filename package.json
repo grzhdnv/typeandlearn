@@ -1,10 +1,16 @@
 {
   "name": "typeandlearn-workspace",
+  "version": "0.1.0",
+  "description": "Development workspace for the TypeAndLearn language-learning app.",
   "private": true,
+  "engines": {
+    "node": ">=22",
+    "npm": ">=10"
+  },
   "scripts": {
     "bootstrap": "bash scripts/bootstrap.sh",
     "check": "bash scripts/check.sh",
-    "check:python": "uv run python -m unittest discover -s tests/backend -p 'test_*.py' && uv run python -m compileall apps/backend",
+    "check:python": "uv run pyright && uv run python -m unittest discover -s tests/backend -p 'test_*.py' && uv run python -m compileall apps/backend",
     "check:frontend": "npm --prefix apps/frontend run check"
   }
 }

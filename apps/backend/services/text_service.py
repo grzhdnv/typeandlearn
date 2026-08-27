@@ -179,6 +179,9 @@ class TextService:
                         final_difficulty = "Unrated"
                     break
 
+        final_title = final_title or "[Untitled]"
+        final_difficulty = final_difficulty or "Unrated"
+
         # Calculate basic metrics
         word_count = sum(len(s["text"].split()) for p in paragraphs_data for s in p["sentences"])
         total_sentences = sum(len(p["sentences"]) for p in paragraphs_data)
