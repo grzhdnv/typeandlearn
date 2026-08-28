@@ -3,6 +3,7 @@
 from fastapi import APIRouter, BackgroundTasks, HTTPException
 
 from app_state import text_service
+from services import preprocessing_service
 from schemas.texts import (
     DeleteResponse,
     TextResponse,
@@ -83,6 +84,8 @@ def upload_text(payload: TextUploadRequest, background_tasks: BackgroundTasks) -
             background_tasks.add_task(text_service.process_pending_text, record.id)
             
         return UploadResponse(message="Text uploaded successfully", text=text)
+    except preprocessing_service.MissingLanguageModelError as error:
+        raise HTTPException(status_code=503, detail=str(error)) from error
     except HTTPException:
         raise
     except Exception as error:
@@ -163,6 +166,8 @@ def regenerate_words(text_id: str, background_tasks: BackgroundTasks, payload: R
             message="Regenerating words and practice sentences...",
             data=data,
         )
+    except preprocessing_service.MissingLanguageModelError as error:
+        raise HTTPException(status_code=503, detail=str(error)) from error
     except ValueError as error:
         raise HTTPException(status_code=400, detail=str(error))
     except IndexError:

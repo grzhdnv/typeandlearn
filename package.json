@@ -9,6 +9,9 @@
   },
   "scripts": {
     "bootstrap": "bash scripts/bootstrap.sh",
+    "dev": "bash scripts/dev.sh",
+    "dev:backend": "uv run --locked fastapi dev apps/backend/main.py --host 127.0.0.1",
+    "dev:frontend": "npm --prefix apps/frontend run dev -- --host 127.0.0.1 --strictPort",
     "check": "bash scripts/check.sh",
     "check:python": "uv run pyright && uv run python -m unittest discover -s tests/backend -p 'test_*.py' && uv run python -m compileall apps/backend",
     "check:frontend": "npm --prefix apps/frontend run check"
