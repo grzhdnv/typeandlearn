@@ -18,7 +18,8 @@ The v2 application currently provides:
 
 ## Next milestone: reliability and test coverage
 
-- [ ] Add backend API integration tests for upload, background processing, CRUD, progress, and regeneration.
+- [x] Add backend API integration tests for upload, background processing, CRUD, progress, and regeneration (external provider responses use fixtures).
+- [x] Pin and install all supported spaCy pipelines during bootstrap, with real-model regression checks.
 - [ ] Add frontend component tests for the library, practice page, and typing interface.
 - [ ] Add a Playwright end-to-end test covering text intake through a completed practice session.
 - [ ] Build deterministic evaluation fixtures for sanitization, sentence splitting, filtering, translation hints, and generated practice sentences.

@@ -7,6 +7,10 @@ import spacy
 from services.text_sanitizer import TextSanitizer
 
 
+class MissingLanguageModelError(RuntimeError):
+    """A required local spaCy pipeline is not installed."""
+
+
 class PreprocessingService:
     """Preprocess raw text using spaCy."""
 
@@ -28,12 +32,12 @@ class PreprocessingService:
             try:
                 self._models[model_name] = spacy.load(model_name, disable=["ner", "parser"])
                 self._models[model_name].add_pipe("sentencizer")
-            except OSError:
-                print(f"Failed to load {model_name}, falling back to en_core_web_sm")
-                if "en_core_web_sm" not in self._models:
-                    self._models["en_core_web_sm"] = spacy.load("en_core_web_sm", disable=["ner", "parser"])
-                    self._models["en_core_web_sm"].add_pipe("sentencizer")
-                return self._models["en_core_web_sm"]
+            except OSError as error:
+                raise MissingLanguageModelError(
+                    f"The {language} language model ({model_name}) is missing. "
+                    "Run `npm run bootstrap` from the project root, "
+                    "then restart the backend."
+                ) from error
         return self._models[model_name]
 
     def process_text(

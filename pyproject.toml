@@ -12,10 +12,22 @@ dependencies = [
     "fastapi[standard]>=0.135.2",
     "sqlmodel>=0.0.38",
     "psycopg[binary]>=3.3.4",
-    "spacy>=3.8.13",
+    "spacy>=3.8.13,<3.9",
+    "de-core-news-sm==3.8.0",
+    "en-core-web-sm==3.8.0",
+    "es-core-news-sm==3.8.0",
+    "fr-core-news-sm==3.8.0",
+    "it-core-news-sm==3.8.0",
     "pydantic-ai>=1.87.0",
     "beautifulsoup4>=4.15.0",
 ]
+
+[tool.uv.sources]
+de-core-news-sm = { url = "https://github.com/explosion/spacy-models/releases/download/de_core_news_sm-3.8.0/de_core_news_sm-3.8.0-py3-none-any.whl" }
+en-core-web-sm = { url = "https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl" }
+es-core-news-sm = { url = "https://github.com/explosion/spacy-models/releases/download/es_core_news_sm-3.8.0/es_core_news_sm-3.8.0-py3-none-any.whl" }
+fr-core-news-sm = { url = "https://github.com/explosion/spacy-models/releases/download/fr_core_news_sm-3.8.0/fr_core_news_sm-3.8.0-py3-none-any.whl" }
+it-core-news-sm = { url = "https://github.com/explosion/spacy-models/releases/download/it_core_news_sm-3.8.0/it_core_news_sm-3.8.0-py3-none-any.whl" }
 
 [tool.fastapi]
 entrypoint = "apps/backend/main.py"
