@@ -14,7 +14,7 @@ const App: Component<AppProps> = (props) => {
           <span class="font-headline-md text-headline-md font-bold text-primary tracking-tight">
             typeandlearn
           </span>
-          <div class="hidden md:flex gap-6">
+          <div class="hidden md:flex gap-6 items-center">
             <A
               class="font-body-md text-body-md"
               href="/"
@@ -32,18 +32,15 @@ const App: Component<AppProps> = (props) => {
             >
               Practice
             </A>
-            <A
-              class="font-body-md text-body-md"
-              href="/settings"
-              activeClass="border-primary text-primary font-bold border-b-2 pb-1"
-              inactiveClass="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200"
-            >
-              Settings
-            </A>
           </div>
         </div>
         <div class="flex items-center gap-4">
-          <button class="material-symbols-outlined text-primary p-2">
+          <button
+            class="material-symbols-outlined text-outline-variant p-2 cursor-default"
+            title="Local Single-User Mode (Auth planned for Milestone M4)"
+            aria-label="Local Single-User Mode"
+            disabled
+          >
             person
           </button>
         </div>
@@ -58,25 +55,8 @@ const App: Component<AppProps> = (props) => {
           <span class="font-mono-label text-mono-label uppercase tracking-widest text-primary">
             typeandlearn
           </span>
-          <div class="flex gap-8">
-            <a
-              class="font-mono-sm text-mono-sm text-on-surface-variant opacity-60 hover:opacity-100 transition-opacity"
-              href="#"
-            >
-              Privacy Policy
-            </a>
-            <a
-              class="font-mono-sm text-mono-sm text-on-surface-variant opacity-60 hover:opacity-100 transition-opacity"
-              href="#"
-            >
-              Terms of Service
-            </a>
-            <a
-              class="font-mono-sm text-mono-sm text-on-surface-variant opacity-60 hover:opacity-100 transition-opacity"
-              href="#"
-            >
-              Cookie Settings
-            </a>
+          <div class="flex gap-6 font-mono-sm text-mono-sm text-on-surface-variant opacity-60">
+            <span>Prototype v2 (Local Development)</span>
           </div>
           <span class="font-mono-sm text-mono-sm text-on-surface-variant opacity-60">
             © 2026 typeandlearn.

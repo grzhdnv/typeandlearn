@@ -96,6 +96,20 @@ export const TypingInterface: Component<TypingInterfaceProps> = (props) => {
     if (event.key === "Alt") setOptionPressed(true);
     if (event.key === "Meta") setCommandPressed(true);
 
+    // Intercept restart shortcuts (Ctrl+R, Cmd+R, Esc) so the browser page does not reload
+    if (
+      (event.key.toLowerCase() === "r" && (event.ctrlKey || event.metaKey)) ||
+      event.key === "Escape"
+    ) {
+      event.preventDefault();
+      setTyped("");
+      if (inputRef) {
+        inputRef.value = "";
+        inputRef.focus();
+      }
+      return;
+    }
+
     // Auto-focus the input if typing starts and focus is lost
     if (
       event.target instanceof HTMLElement && 
@@ -154,7 +168,7 @@ export const TypingInterface: Component<TypingInterfaceProps> = (props) => {
         <div class="bg-surface-container-lowest border border-outline-variant p-10 min-h-[320px] shadow-sm relative focus-within:border-primary transition-colors cursor-text" id="typing-canvas">
           <div class="mb-4 pb-2 border-b border-outline-variant/30 text-on-surface-variant font-mono-sm text-mono-sm opacity-60 flex justify-between items-center">
             <span>Type the text as it appears.</span>
-            <span class="uppercase tracking-tighter">CTRL + R to restart</span>
+            <span class="uppercase tracking-tighter">CTRL+R or ESC to restart</span>
           </div>
           
           {/* Text Container */}
