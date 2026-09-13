@@ -17,6 +17,10 @@
     "check:lint": "uv run ruff check apps/backend tests",
     "check:python": "uv run pyright && uv run python -m unittest discover -s tests/backend -p 'test_*.py' && uv run python -m compileall apps/backend",
     "check:frontend": "npm --prefix apps/frontend run check",
-    "test:frontend": "node --test 'tests/frontend/**/*.test.ts'"
+    "test:frontend": "node --test 'tests/frontend/**/*.test.ts'",
+    "test:e2e": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.63.0"
   }
 }

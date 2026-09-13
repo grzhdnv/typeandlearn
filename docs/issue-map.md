@@ -13,7 +13,7 @@ This issue map translates the production plan into discrete, reviewable engineer
 
 ---
 
-## Milestone M1 — Parity Foundation & Typing Engine
+## Milestone M1 — Parity Foundation & Typing Engine (Complete)
 
 - **[x] ISSUE-010**: **Container & Docker Compose Baseline**
   - *Acceptance*: Multi-stage Dockerfile for FastAPI/spaCy; `docker-compose.yml` orchestrating API and PostgreSQL services; reproducible local setup.
@@ -23,9 +23,9 @@ This issue map translates the production plan into discrete, reviewable engineer
   - *Acceptance*: Tests verifying German umlauts (`ä, ö, ü, ß`), French diacritics (`é, è, ç`), Spanish (`ñ, ¿`), and IME composition events.
 - **[x] ISSUE-013**: **Accurate WPM and Accuracy Metrics Calculation**
   - *Acceptance*: Standardized equations for Net WPM, Raw WPM, and accuracy implemented and verified against deterministic fixtures.
-- **[ ] ISSUE-014**: **Typing UI Integration & Post-Session Results View**
+- **[x] ISSUE-014**: **Typing UI Integration & Post-Session Results View**
   - *Acceptance*: Replace legacy typing component with new reducer; render detailed post-session results dialog (WPM, accuracy, mistake breakdown).
-- **[ ] ISSUE-015**: **Playwright End-to-End Intake & Practice Flow**
+- **[x] ISSUE-015**: **Playwright End-to-End Intake & Practice Flow**
   - *Acceptance*: Automated browser test verifying text upload, navigation to practice page, typing through a sentence, and asserting completion state.
 
 ---

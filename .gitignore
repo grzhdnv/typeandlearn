@@ -7,8 +7,11 @@ venv/
 .vscode/
 .ruff_cache/
 __pycache__/
+node_modules/
 apps/frontend/node_modules/
 apps/frontend/dist/
+test-results/
+playwright-report/
 apps/backend/data/
 apps/backend/logs/
 db.sqlite

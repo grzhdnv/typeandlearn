@@ -3,6 +3,7 @@ import { useParams } from '@solidjs/router';
 import { fetchStory, updateProgress, resetProgress, regenerateTopWords } from '../../../features/texts/api/textsApi';
 import { TypingInterface } from '../../../features/typing/components/TypingInterface';
 import { HintGroup } from '../../../shared/types/contracts';
+import type { TypingMetrics } from '../../../features/typing/core/types.ts';
 
 type UiSentence = {
   text: string;
@@ -19,6 +20,8 @@ const PracticePage: Component = () => {
   const [activeTab, setActiveTab] = createSignal<"original" | "generated">("original");
   const [originalIndex, setOriginalIndex] = createSignal(0);
   const [generatedIndex, setGeneratedIndex] = createSignal(0);
+  const [liveMetrics, setLiveMetrics] = createSignal<TypingMetrics | null>(null);
+  const [completedMetrics, setCompletedMetrics] = createSignal<TypingMetrics | null>(null);
 
   let lastStoryId: number | undefined | null = null;
   createEffect(() => {
@@ -75,6 +78,8 @@ const PracticePage: Component = () => {
       : generatedIndex() >= generatedSentences().length - 1;
 
   const goToPreviousSentence = () => {
+    setCompletedMetrics(null);
+    setLiveMetrics(null);
     if (activeTab() === "original" && originalIndex() > 0) {
       setOriginalIndex((i) => i - 1);
     } else if (activeTab() === "generated" && generatedIndex() > 0) {
@@ -83,6 +88,8 @@ const PracticePage: Component = () => {
   };
 
   const goToNextSentence = () => {
+    setCompletedMetrics(null);
+    setLiveMetrics(null);
     if (activeTab() === "original" && originalIndex() < originalSentences().length - 1) {
       setOriginalIndex((i) => i + 1);
     } else if (activeTab() === "generated" && generatedIndex() < generatedSentences().length - 1) {
@@ -90,14 +97,26 @@ const PracticePage: Component = () => {
     }
   };
 
-  const handleOriginalComplete = () => {
-    if (params.id) updateProgress(params.id, originalIndex()).catch(console.error);
-    if (originalIndex() < originalSentences().length - 1) setOriginalIndex((i) => i + 1);
+  const handleSentenceComplete = (metrics: TypingMetrics) => {
+    setCompletedMetrics(metrics);
+    if (params.id) {
+      const idx = activeTab() === "original" ? originalIndex() : generatedIndex();
+      updateProgress(params.id, idx).catch(console.error);
+    }
   };
-  
-  const handleGeneratedComplete = () => {
-    if (params.id) updateProgress(params.id, generatedIndex()).catch(console.error);
-    if (generatedIndex() < generatedSentences().length - 1) setGeneratedIndex((i) => i + 1);
+
+  const advanceAfterResults = () => {
+    setCompletedMetrics(null);
+    setLiveMetrics(null);
+    if (activeTab() === "original") {
+      if (originalIndex() < originalSentences().length - 1) {
+        setOriginalIndex((i) => i + 1);
+      }
+    } else {
+      if (generatedIndex() < generatedSentences().length - 1) {
+        setGeneratedIndex((i) => i + 1);
+      }
+    }
   };
 
   const handleResetProgress = async () => {
@@ -144,6 +163,18 @@ const PracticePage: Component = () => {
       // Ignore if user is using modifier keys
       if (e.metaKey || e.ctrlKey || e.altKey) return;
       
+      if (completedMetrics()) {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          advanceAfterResults();
+          return;
+        } else if (e.key === "Escape") {
+          e.preventDefault();
+          setCompletedMetrics(null);
+          return;
+        }
+      }
+
       if (e.key === "[") {
         e.preventDefault();
         if (!previousDisabled()) goToPreviousSentence();
@@ -195,19 +226,20 @@ const PracticePage: Component = () => {
             </Show>
           </div>
           
-          {/* Real-time Stats - Live calculation arrives in Milestone M1 */}
-          <div class="flex gap-8 border-l border-outline-variant pl-8 items-center" title="Real-time typing statistics arrive in Milestone M1">
+          {/* Real-time Stats - Live calculation from typing engine */}
+          <div class="flex gap-8 border-l border-outline-variant pl-8 items-center" title="Real-time typing statistics">
             <div class="flex flex-col">
               <span class="text-mono-sm font-mono-sm text-on-surface-variant uppercase tracking-wider">Accuracy</span>
-              <span class="font-mono-label text-headline-md text-outline">--%</span>
+              <span class="font-mono-label text-headline-md text-primary" id="metric-accuracy">
+                {liveMetrics() ? `${liveMetrics()!.accuracy}%` : "--%"}
+              </span>
             </div>
             <div class="flex flex-col">
               <span class="text-mono-sm font-mono-sm text-on-surface-variant uppercase tracking-wider">WPM</span>
-              <span class="font-mono-label text-headline-md text-outline">--</span>
+              <span class="font-mono-label text-headline-md text-primary" id="metric-wpm">
+                {liveMetrics() ? liveMetrics()!.netWpm : "--"}
+              </span>
             </div>
-            <span class="text-[10px] font-mono-label px-2 py-0.5 bg-surface-container border border-outline-variant text-on-surface-variant uppercase self-start">
-              Planned for M1
-            </span>
           </div>
         </div>
 
@@ -244,14 +276,16 @@ const PracticePage: Component = () => {
               targetText={generatedSentences()[generatedIndex()].text}
               hints={generatedSentences()[generatedIndex()].hints}
               fullTranslation={generatedSentences()[generatedIndex()].translation}
-              onComplete={handleGeneratedComplete}
+              onComplete={handleSentenceComplete}
+              onMetricsUpdate={setLiveMetrics}
             />
           }>
             <TypingInterface
               targetText={originalSentences()[originalIndex()].text}
               hints={originalSentences()[originalIndex()].hints}
               fullTranslation={originalSentences()[originalIndex()].translation}
-              onComplete={handleOriginalComplete}
+              onComplete={handleSentenceComplete}
+              onMetricsUpdate={setLiveMetrics}
             />
           </Show>
 
@@ -351,6 +385,58 @@ const PracticePage: Component = () => {
             <span class="material-symbols-outlined text-base">arrow_forward</span>
           </button>
         </div>
+      </Show>
+
+      {/* Post-Session Results Modal */}
+      <Show when={completedMetrics()}>
+        {(metrics) => (
+          <div class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4" id="results-modal">
+            <div class="bg-surface border-2 border-primary max-w-md w-full p-8 shadow-2xl space-y-6">
+              <div class="space-y-1">
+                <span class="font-mono-label text-mono-label text-primary uppercase tracking-widest">
+                  Drill Completed
+                </span>
+                <h2 class="font-headline-md text-headline-md">Session Performance</h2>
+              </div>
+
+              <div class="grid grid-cols-2 gap-4 py-4 border-y border-outline-variant">
+                <div class="space-y-1">
+                  <span class="font-mono-sm text-mono-sm text-on-surface-variant uppercase">Net WPM</span>
+                  <div class="font-headline-md text-3xl font-bold text-primary" id="results-net-wpm">{metrics().netWpm}</div>
+                </div>
+                <div class="space-y-1">
+                  <span class="font-mono-sm text-mono-sm text-on-surface-variant uppercase">Accuracy</span>
+                  <div class="font-headline-md text-3xl font-bold text-primary" id="results-accuracy">{metrics().accuracy}%</div>
+                </div>
+                <div class="space-y-1">
+                  <span class="font-mono-sm text-mono-sm text-on-surface-variant uppercase">Active Time</span>
+                  <div class="font-mono-label text-lg" id="results-active-time">{metrics().activeSeconds}s</div>
+                </div>
+                <div class="space-y-1">
+                  <span class="font-mono-sm text-mono-sm text-on-surface-variant uppercase">Mistakes</span>
+                  <div class="font-mono-label text-lg text-error" id="results-mistakes">{metrics().mistakeCount}</div>
+                </div>
+              </div>
+
+              <div class="flex gap-4">
+                <button
+                  onClick={() => setCompletedMetrics(null)}
+                  class="flex-1 py-3 border border-outline-variant hover:border-primary font-mono-label text-mono-label transition-colors uppercase tracking-wider"
+                  id="btn-results-review"
+                >
+                  Review (Esc)
+                </button>
+                <button
+                  onClick={advanceAfterResults}
+                  class="flex-1 py-3 bg-primary text-on-primary font-mono-label text-mono-label hover:bg-primary/90 transition-colors uppercase tracking-wider font-bold"
+                  id="btn-results-next"
+                >
+                  Next →
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </Show>
     </main>
   );
