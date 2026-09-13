@@ -5,3 +5,4 @@ cd "$(dirname "$0")/.."
 npm run check:lint
 npm run check:python
 npm run check:frontend
+npm run test:frontend
