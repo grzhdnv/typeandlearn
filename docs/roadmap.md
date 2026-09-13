@@ -3,6 +3,10 @@
 This is the authoritative project roadmap. Historical plans are retained under
 `archive/plans/` and should not be treated as current requirements.
 
+The detailed route from this prototype to private beta and production is maintained
+in [the production plan](production-plan.md). Its milestone order and acceptance
+gates take precedence when an item below spans multiple releases.
+
 ## Current baseline
 
 The v2 application currently provides:

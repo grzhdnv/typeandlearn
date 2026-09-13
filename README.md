@@ -97,7 +97,11 @@ before starting this one.
 ## Project documentation
 
 - [Roadmap](docs/roadmap.md) — authoritative current backlog and completed baseline
+- [Production plan](docs/production-plan.md) — production architecture, Monkeytype
+  lessons, LLM policy, quality gates, delivery sequence, and launch criteria
 - [Architecture](docs/architecture.md) — runtime services and code boundaries
+- [Data flow working map](docs/data-flow.md) — editable, layered current and target
+  application flows with annotation prompts
 - [Migration guide](docs/migration-guide.md) — v1-to-v2 path and command changes
 
 Historical planning documents remain available under `archive/plans/` for context;
