@@ -45,7 +45,7 @@ This issue map translates the production plan into discrete, reviewable engineer
 
 ## Milestone M3 — Budgeted Groq-First Enrichment
 
-- **[ ] ISSUE-030**: **Groq Provider Integration & Failover Circuit Breaker**
+- **[x] ISSUE-030**: **Groq Provider Integration & Failover Circuit Breaker**
   - *Acceptance*: Low-latency Groq client with backpressure; graceful failover to DeepSeek on HTTP 429 or 5xx.
 - **[ ] ISSUE-031**: **Token Budgeting, Spend Caps, and Caching**
   - *Acceptance*: Daily token spend limits; database translation caching by `(lang, sentence_hash, prompt_version)`.

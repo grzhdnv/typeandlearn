@@ -10,10 +10,11 @@ import os
 import httpx
 
 from pydantic_ai import Agent
+from pydantic_ai.exceptions import ModelAPIError
 from pydantic_ai.models import Model
 from pydantic_ai.models.fallback import FallbackModel
 from pydantic_ai.models.groq import GroqModel
-from pydantic_ai.models.openai import OpenAIModel
+from pydantic_ai.models.openai import OpenAIChatModel
 from pydantic_ai.profiles.openai import OpenAIModelProfile
 from pydantic_ai.providers.deepseek import DeepSeekProvider
 from pydantic_ai.providers.groq import GroqProvider
@@ -67,11 +68,64 @@ def _create_model(model_spec: str, client: httpx.AsyncClient) -> Model:
             profile = profile.update(
                 OpenAIModelProfile(openai_supports_tool_choice_required=False)
             )
-        return OpenAIModel(model_name, provider=provider, profile=profile)
+        return OpenAIChatModel(model_name, provider=provider, profile=profile)
 
     provider = GroqProvider(http_client=client)
     model_name = model_spec.removeprefix("groq:")
     return GroqModel(model_name, provider=provider)
+
+
+def _can_create_model(model_spec: str) -> bool:
+    """Check whether required environment variables exist for a given model spec."""
+    if model_spec.startswith("deepseek:"):
+        return bool(os.getenv("DEEPSEEK_API_KEY"))
+    if model_spec.startswith("groq:"):
+        return bool(os.getenv("GROQ_API_KEY"))
+    return True
+
+
+def _build_model_chain(
+    primary_spec: str,
+    fallback_specs: list[str] | None,
+    client: httpx.AsyncClient,
+) -> Model:
+    """Assemble primary and fallback models based on available provider credentials.
+
+    If both Groq and DeepSeek keys exist, Groq is the primary model and DeepSeek is
+    the fallback model. If only one exists, that provider is used.
+    """
+    candidates = [primary_spec] + (fallback_specs or [])
+    available_models: list[Model] = []
+    seen_specs: set[str] = set()
+
+    for spec in candidates:
+        if spec in seen_specs:
+            continue
+        seen_specs.add(spec)
+        if _can_create_model(spec):
+            try:
+                model = _create_model(spec, client)
+                available_models.append(model)
+                logger.info("Initialized provider model: %s", spec)
+            except Exception as err:
+                logger.warning("Failed to initialize model %s: %s", spec, err)
+
+    if not available_models:
+        raise LlmNotConfiguredError("No LLM provider credentials configured.")
+
+    if len(available_models) == 1:
+        return available_models[0]
+
+    logger.info(
+        "Configured primary model (%s) with %d fallback model(s)",
+        primary_spec,
+        len(available_models) - 1,
+    )
+    return FallbackModel(
+        available_models[0],
+        *available_models[1:],
+        fallback_on=(ModelAPIError, httpx.HTTPError),
+    )
 
 
 class LlmNotConfiguredError(RuntimeError):
@@ -100,28 +154,19 @@ class LlmService:
         self._practice_agent = None
         self._metadata_agent = None
         self._filter_agent = None
+        self._semaphore = asyncio.Semaphore(int(os.getenv("LLM_CONCURRENCY_LIMIT", "5")))
 
         try:
             client = httpx.AsyncClient(
                 transport=_HeaderCaptureTransport(httpx.AsyncHTTPTransport())
             )
 
-            primary_model = _create_model(model_name, client)
-            structured_model = _create_model(structured_model_name, client)
-
-            if fallback_models:
-                fallbacks = [
-                    _create_model(fallback_model, client)
-                    for fallback_model in fallback_models
-                ]
-                self._active_model = FallbackModel(primary_model, *fallbacks)
-                self._active_structured_model = FallbackModel(
-                    structured_model,
-                    *fallbacks,
-                )
-            else:
-                self._active_model = primary_model
-                self._active_structured_model = structured_model
+            self._active_model = _build_model_chain(
+                model_name, fallback_models, client
+            )
+            self._active_structured_model = _build_model_chain(
+                structured_model_name, fallback_models, client
+            )
 
             self._translation_agent = Agent(
                 self._active_model,
@@ -196,7 +241,8 @@ class LlmService:
             "Starting translation request; input_chars=%d",
             len(input_data),
         )
-        result = await self._translation_agent.run(input_data)
+        async with self._semaphore:
+            result = await self._translation_agent.run(input_data)
         logger.info("Translation completed; usage=%s", result.usage())
 
         return result.output
@@ -222,7 +268,8 @@ class LlmService:
             "Starting practice-sentence request; input_chars=%d",
             len(input_data),
         )
-        result = await self._practice_agent.run(input_data)
+        async with self._semaphore:
+            result = await self._practice_agent.run(input_data)
         logger.info(
             "Practice-sentence generation completed; usage=%s",
             result.usage(),
