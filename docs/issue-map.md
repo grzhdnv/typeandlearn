@@ -32,7 +32,7 @@ This issue map translates the production plan into discrete, reviewable engineer
 
 ## Milestone M2 — Owned Data & Durable Processing
 
-- **[ ] ISSUE-020**: **Schema Ownership Scoping & Alembic Migration Foundation**
+- **[x] ISSUE-020**: **Schema Ownership Scoping & Alembic Migration Foundation**
   - *Acceptance*: Add non-nullable `owner_id` to `Text`, `Sentence`, `BackgroundJob`; replace `SQLModel.metadata.create_all` with versioned Alembic migrations.
 - **[ ] ISSUE-021**: **Transactional PostgreSQL Job Queue**
   - *Acceptance*: `background_jobs` table with `FOR UPDATE SKIP LOCKED` claiming, lease expiration heartbeats, and exponential retry backoff.

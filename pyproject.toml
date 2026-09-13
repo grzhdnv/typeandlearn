@@ -20,6 +20,7 @@ dependencies = [
     "it-core-news-sm==3.8.0",
     "pydantic-ai>=1.87.0",
     "beautifulsoup4>=4.15.0",
+    "alembic>=1.14.0",
 ]
 
 [tool.uv.sources]
@@ -46,3 +47,5 @@ exclude = ["archive"]
 [tool.ruff.lint.per-file-ignores]
 "scripts/migrate.py" = ["E402"]
 "tests/backend/test_text_repository.py" = ["E402"]
+"tests/backend/test_owner_isolation.py" = ["E402"]
+"apps/backend/alembic/env.py" = ["E402"]
