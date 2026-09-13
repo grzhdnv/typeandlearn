@@ -99,6 +99,11 @@ before starting this one.
 - [Roadmap](docs/roadmap.md) — authoritative current backlog and completed baseline
 - [Production plan](docs/production-plan.md) — production architecture, Monkeytype
   lessons, LLM policy, quality gates, delivery sequence, and launch criteria
+- [Architecture Decision Records (ADRs)](docs/decisions/index.md) — foundational
+  engineering and design decisions (ADRs 0001–0009)
+- [Typing Behavior Specification](docs/behavior-spec.md) — authoritative input handling,
+  state machine, and metric calculation rules
+- [Milestone & Issue Map](docs/issue-map.md) — actionable issue tracking for M1–M6
 - [Architecture](docs/architecture.md) — runtime services and code boundaries
 - [Data flow working map](docs/data-flow.md) — editable, layered current and target
   application flows with annotation prompts

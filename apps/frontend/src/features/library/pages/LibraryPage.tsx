@@ -139,9 +139,9 @@ const LibraryPage: Component = () => {
           <section>
             <div class="flex justify-between items-end mb-6">
               <h2 class="font-headline-md text-headline-md text-primary">Recently Practiced</h2>
-              <a class="font-mono-label text-mono-label text-on-secondary-container flex items-center gap-2 hover:underline" href="#">
-                VIEW HISTORY <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
-              </a>
+              <span class="font-mono-sm text-mono-sm text-on-surface-variant opacity-60 uppercase">
+                History (Planned for M4)
+              </span>
             </div>
             <div class="bg-surface-container-lowest border border-outline-variant p-gutter flex flex-col md:flex-row gap-6 items-center">
               <div class="w-full md:w-32 h-32 bg-surface-container flex-shrink-0 flex items-center justify-center border border-outline-variant overflow-hidden">

@@ -195,16 +195,19 @@ const PracticePage: Component = () => {
             </Show>
           </div>
           
-          {/* Real-time Stats - Placeholder for now since API doesn't return these yet */}
-          <div class="flex gap-12 border-l border-outline-variant pl-8 space-y-4">
+          {/* Real-time Stats - Live calculation arrives in Milestone M1 */}
+          <div class="flex gap-8 border-l border-outline-variant pl-8 items-center" title="Real-time typing statistics arrive in Milestone M1">
             <div class="flex flex-col">
               <span class="text-mono-sm font-mono-sm text-on-surface-variant uppercase tracking-wider">Accuracy</span>
-              <span class="font-mono-label text-headline-md">--%</span>
+              <span class="font-mono-label text-headline-md text-outline">--%</span>
             </div>
             <div class="flex flex-col">
               <span class="text-mono-sm font-mono-sm text-on-surface-variant uppercase tracking-wider">WPM</span>
-              <span class="font-mono-label text-headline-md">--</span>
+              <span class="font-mono-label text-headline-md text-outline">--</span>
             </div>
+            <span class="text-[10px] font-mono-label px-2 py-0.5 bg-surface-container border border-outline-variant text-on-surface-variant uppercase self-start">
+              Planned for M1
+            </span>
           </div>
         </div>
 
