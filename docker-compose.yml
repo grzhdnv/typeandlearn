@@ -34,6 +34,21 @@ services:
       postgres:
         condition: service_healthy
 
+  worker:
+    build:
+      context: .
+      dockerfile: apps/backend/Dockerfile
+    container_name: typeandlearn-worker
+    restart: unless-stopped
+    command: ["python", "apps/backend/worker.py"]
+    environment:
+      DATABASE_URL: postgresql+psycopg://typeandlearn:typeandlearn@postgres:5432/typeandlearn_dev
+      DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY:-}
+      GROQ_API_KEY: ${GROQ_API_KEY:-}
+    depends_on:
+      postgres:
+        condition: service_healthy
+
   frontend:
     build:
       context: .
