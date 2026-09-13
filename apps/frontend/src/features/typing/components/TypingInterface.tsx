@@ -7,12 +7,23 @@ import {
   onCleanup,
   onMount,
 } from "solid-js";
+import {
+  createInitialTypingState,
+  typingReducer,
+} from "../core/reducer.ts";
+import { computeSessionMetrics } from "../core/statistics.ts";
+import type {
+  TypingAction,
+  TypingMetrics,
+  TypingState,
+} from "../core/types.ts";
 
 interface TypingInterfaceProps {
   targetText: string;
   hints?: { words: string[]; hint: string }[];
   fullTranslation?: string;
-  onComplete?: () => void;
+  onComplete?: (metrics: TypingMetrics) => void;
+  onMetricsUpdate?: (metrics: TypingMetrics) => void;
 }
 
 /**
@@ -47,21 +58,40 @@ const getCurrentWord = (target: string, cursor: number): string => {
 };
 
 /**
- * Keyboard-driven typing surface with per-word hint and translation reveal controls.
+ * Keyboard-driven typing surface powered by the pure typing state reducer.
  */
 export const TypingInterface: Component<TypingInterfaceProps> = (props) => {
-  const [typed, setTyped] = createSignal("");
+  const [typingState, setTypingState] = createSignal<TypingState>(
+    createInitialTypingState(props.targetText)
+  );
   const [optionPressed, setOptionPressed] = createSignal(false);
   const [commandPressed, setCommandPressed] = createSignal(false);
   let inputRef: HTMLInputElement | undefined;
 
+  const dispatch = (action: TypingAction) => {
+    setTypingState((prev) => {
+      const next = typingReducer(prev, action);
+      const metrics = computeSessionMetrics(next);
+      props.onMetricsUpdate?.(metrics);
+
+      if (next.status === "completed" && prev.status !== "completed") {
+        props.onComplete?.(metrics);
+      }
+      return next;
+    });
+  };
+
   createEffect(() => {
-    // Reset when target text changes
-    props.targetText;
-    setTyped("");
+    setTypingState(createInitialTypingState(props.targetText));
+    if (inputRef) {
+      inputRef.value = "";
+      inputRef.focus();
+    }
   });
 
-  const currentWord = () => getCurrentWord(props.targetText, typed().length);
+  const currentWord = () =>
+    getCurrentWord(props.targetText, typingState().cursorIndex);
+
   const currentHintGroup = () => {
     const word = currentWord();
     if (!word) return null;
@@ -90,7 +120,7 @@ export const TypingInterface: Component<TypingInterfaceProps> = (props) => {
   };
 
   /**
-   * Track modifier keys for hints
+   * Track modifier keys and global shortcuts
    */
   const handleKeyDown = (event: KeyboardEvent) => {
     if (event.key === "Alt") setOptionPressed(true);
@@ -102,7 +132,7 @@ export const TypingInterface: Component<TypingInterfaceProps> = (props) => {
       event.key === "Escape"
     ) {
       event.preventDefault();
-      setTyped("");
+      dispatch({ type: "RESTART", timestampMs: Date.now() });
       if (inputRef) {
         inputRef.value = "";
         inputRef.focus();
@@ -112,19 +142,17 @@ export const TypingInterface: Component<TypingInterfaceProps> = (props) => {
 
     // Auto-focus the input if typing starts and focus is lost
     if (
-      event.target instanceof HTMLElement && 
-      event.target.tagName !== "INPUT" && 
+      event.target instanceof HTMLElement &&
+      event.target.tagName !== "INPUT" &&
       event.target.tagName !== "TEXTAREA"
     ) {
-      // Don't steal focus if user is triggering a button with keyboard (Enter or Space)
       const isButton = event.target.tagName === "BUTTON" || event.target.tagName === "A";
       const isActionKey = event.key === "Enter" || event.key === " ";
-      
+
       if (isButton && isActionKey) {
         return;
       }
 
-      // If it's a standard typing key (single character or backspace)
       if (event.key.length === 1 || event.key === "Backspace") {
         inputRef?.focus();
       }
@@ -165,72 +193,104 @@ export const TypingInterface: Component<TypingInterfaceProps> = (props) => {
       <div class="relative group" onClick={handleCanvasClick}>
         <div class="absolute -inset-4 border-2 border-primary opacity-0 group-focus-within:opacity-10 transition-opacity pointer-events-none"></div>
         {/* The Typing Canvas */}
-        <div class="bg-surface-container-lowest border border-outline-variant p-10 min-h-[320px] shadow-sm relative focus-within:border-primary transition-colors cursor-text" id="typing-canvas">
+        <div
+          class="bg-surface-container-lowest border border-outline-variant p-10 min-h-[320px] shadow-sm relative focus-within:border-primary transition-colors cursor-text"
+          id="typing-canvas"
+        >
           <div class="mb-4 pb-2 border-b border-outline-variant/30 text-on-surface-variant font-mono-sm text-mono-sm opacity-60 flex justify-between items-center">
             <span>Type the text as it appears.</span>
             <span class="uppercase tracking-tighter">CTRL+R or ESC to restart</span>
           </div>
-          
-          {/* Text Container */}
+
+          {/* Target Text Container */}
           <div class="font-mono-input text-[24px] leading-[1.8] tracking-normal select-none relative z-10 whitespace-pre-wrap">
-            <For each={props.targetText.split("")}>
+            <For each={typingState().targetGraphemes}>
               {(char, index) => {
-                const isMistake = () => index() < typed().length && typed()[index()] !== char;
-                const isCurrent = () => index() === typed().length;
-                const isTyped = () => index() < typed().length;
-                
+                const isTyped = () => index() < typingState().cursorIndex;
+                const typedChar = () => typingState().typedGraphemes[index()];
+                const isMistake = () => isTyped() && typedChar() !== char;
+                const isCurrent = () => index() === typingState().cursorIndex;
+
                 return (
-                  <>
-                    <span
-                      class={
-                        "relative " + 
-                        (isMistake() 
-                          ? "text-error bg-error-container" 
-                          : isTyped() 
-                            ? "text-completed" 
-                            : "text-light")
-                      }
-                      style={{
-                        "background-color":
-                          isHighlighted(index()) && char !== " " && !isMistake()
-                            ? "rgba(59, 130, 246, 0.2)" // Tertiary-like highlight
-                            : undefined,
-                      }}
-                    >
-                      <Show when={isCurrent()}>
-                        <span class="caret-blink"></span>
-                      </Show>
-                      {char}
-                    </span>
-                  </>
+                  <span
+                    class={
+                      "relative " +
+                      (isMistake()
+                        ? "text-error bg-error-container"
+                        : isTyped()
+                          ? "text-completed"
+                          : "text-light")
+                    }
+                    style={{
+                      "background-color":
+                        isHighlighted(index()) && char !== " " && !isMistake()
+                          ? "rgba(59, 130, 246, 0.2)"
+                          : undefined,
+                    }}
+                  >
+                    <Show when={isCurrent()}>
+                      <span class="caret-blink"></span>
+                    </Show>
+                    {char}
+                  </span>
                 );
               }}
             </For>
-            <Show when={typed().length === props.targetText.length}>
-               <span class="relative"><span class="caret-blink"></span>&nbsp;</span>
+            <Show when={typingState().cursorIndex >= typingState().targetGraphemes.length}>
+              <span class="relative">
+                <span class="caret-blink"></span>&nbsp;
+              </span>
             </Show>
           </div>
-          
-          {/* Hidden Input to catch focus */}
-          <input 
+
+          {/* Hidden Input to capture keystrokes and IME composition */}
+          <input
             ref={inputRef}
-            value={typed()}
             onInput={(e) => {
               const val = e.currentTarget.value;
-              if (val.length <= props.targetText.length) {
-                setTyped(val);
-                if (val.length === props.targetText.length) {
-                  setTimeout(() => props.onComplete?.(), 1000);
-                }
-              } else {
-                e.currentTarget.value = typed();
+              if (val.length > 0 && !typingState().isComposing) {
+                dispatch({
+                  type: "KEY_DOWN",
+                  char: val,
+                  timestampMs: Date.now(),
+                });
+                e.currentTarget.value = "";
               }
             }}
-            autocomplete="off" 
-            autofocus 
-            class="absolute inset-0 opacity-0 cursor-default" 
-            spellcheck={false} 
-            type="text" 
+            onKeyDown={(e) => {
+              if (e.key === "Backspace") {
+                e.preventDefault();
+                dispatch({
+                  type: "BACKSPACE",
+                  mode: e.ctrlKey || e.altKey ? "word" : "char",
+                  timestampMs: Date.now(),
+                });
+              }
+            }}
+            onCompositionStart={() => {
+              dispatch({ type: "COMPOSITION_START", timestampMs: Date.now() });
+            }}
+            onCompositionUpdate={(e) => {
+              dispatch({
+                type: "COMPOSITION_UPDATE",
+                data: e.data,
+                timestampMs: Date.now(),
+              });
+            }}
+            onCompositionEnd={(e) => {
+              dispatch({
+                type: "COMPOSITION_END",
+                data: e.data,
+                timestampMs: Date.now(),
+              });
+              if (inputRef) inputRef.value = "";
+            }}
+            autocomplete="off"
+            autofocus
+            class="absolute inset-0 opacity-0 cursor-default"
+            spellcheck={false}
+            type="text"
+            id="typing-hidden-input"
           />
         </div>
       </div>
