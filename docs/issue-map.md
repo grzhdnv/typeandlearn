@@ -17,11 +17,11 @@ This issue map translates the production plan into discrete, reviewable engineer
 
 - **[x] ISSUE-010**: **Container & Docker Compose Baseline**
   - *Acceptance*: Multi-stage Dockerfile for FastAPI/spaCy; `docker-compose.yml` orchestrating API and PostgreSQL services; reproducible local setup.
-- **[ ] ISSUE-011**: **Pure Typing State Reducer & Event Log**
+- **[x] ISSUE-011**: **Pure Typing State Reducer & Event Log**
   - *Acceptance*: Implement pure `typingReducer` with immutable input event logging in `packages/typing-engine` or frontend shared library; unit tests covering corrections, deletions, word jumps, and pauses.
-- **[ ] ISSUE-012**: **Unicode NFC & Grapheme Cluster Adaptation**
+- **[x] ISSUE-012**: **Unicode NFC & Grapheme Cluster Adaptation**
   - *Acceptance*: Tests verifying German umlauts (`ä, ö, ü, ß`), French diacritics (`é, è, ç`), Spanish (`ñ, ¿`), and IME composition events.
-- **[ ] ISSUE-013**: **Accurate WPM and Accuracy Metrics Calculation**
+- **[x] ISSUE-013**: **Accurate WPM and Accuracy Metrics Calculation**
   - *Acceptance*: Standardized equations for Net WPM, Raw WPM, and accuracy implemented and verified against deterministic fixtures.
 - **[ ] ISSUE-014**: **Typing UI Integration & Post-Session Results View**
   - *Acceptance*: Replace legacy typing component with new reducer; render detailed post-session results dialog (WPM, accuracy, mistake breakdown).

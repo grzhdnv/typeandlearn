@@ -70,6 +70,9 @@ jobs:
       - name: Frontend Quality Check
         run: npm --prefix apps/frontend run check
 
+      - name: Run Frontend Unit Tests
+        run: npm run test:frontend
+
   docker:
     name: Docker Build Validation
     runs-on: ubuntu-latest
