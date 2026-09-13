@@ -38,7 +38,7 @@ This issue map translates the production plan into discrete, reviewable engineer
   - *Acceptance*: `background_jobs` table with `FOR UPDATE SKIP LOCKED` claiming, lease expiration heartbeats, and exponential retry backoff.
 - **[x] ISSUE-022**: **Decoupled Application Factory & Optional Providers**
   - *Acceptance*: App boots and serves library/practice without requiring `DEEPSEEK_API_KEY` or external network access.
-- **[ ] ISSUE-023**: **Worker Process & spaCy Isolation**
+- **[x] ISSUE-023**: **Worker Process & spaCy Isolation**
   - *Acceptance*: Dedicated worker daemon consuming background jobs; moves heavy tokenization and sentence splitting off the web API thread.
 
 ---
