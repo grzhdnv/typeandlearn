@@ -2,7 +2,7 @@
 
 from typing import Any, Dict, List, Optional
 
-from sqlalchemy import JSON, Column
+from sqlalchemy import JSON, Column, Index
 from sqlmodel import Field, SQLModel
 
 
@@ -10,8 +10,10 @@ class TextRecord(SQLModel, table=True):
     """Database record representation of a text unit."""
 
     __tablename__ = "texts"  # pyright: ignore[reportAssignmentType]
+    __table_args__ = (Index("ix_texts_owner_id_id", "owner_id", "id"),)
 
     id: Optional[int] = Field(default=None, primary_key=True)
+    owner_id: str = Field(default="owner_local_default", index=True)
     title: str = Field(index=True)
     status: str = Field(default="pending", index=True)
     language: str = Field(default="Unknown", index=True)
@@ -32,8 +34,12 @@ class SentenceRecord(SQLModel, table=True):
     """Database record representation of an individual sentence."""
 
     __tablename__ = "sentences"  # pyright: ignore[reportAssignmentType]
+    __table_args__ = (
+        Index("ix_sentences_owner_id_text_id", "owner_id", "text_id"),
+    )
 
     id: Optional[int] = Field(default=None, primary_key=True)
+    owner_id: str = Field(default="owner_local_default", index=True)
     text_id: int = Field(foreign_key="texts.id", index=True, ondelete="CASCADE")
     paragraph_index: int
     sentence_index: int
@@ -52,6 +58,7 @@ class WordFrequencyRecord(SQLModel, table=True):
     __tablename__ = "word_frequencies"  # pyright: ignore[reportAssignmentType]
 
     id: Optional[int] = Field(default=None, primary_key=True)
+    owner_id: str = Field(default="owner_local_default", index=True)
     text_id: int = Field(foreign_key="texts.id", index=True, ondelete="CASCADE")
     word: str = Field(index=True)
     count: int = Field(default=1)
@@ -64,6 +71,7 @@ class PracticeSentenceRecord(SQLModel, table=True):
     __tablename__ = "practice_sentences"  # pyright: ignore[reportAssignmentType]
 
     id: Optional[int] = Field(default=None, primary_key=True)
+    owner_id: str = Field(default="owner_local_default", index=True)
     text_id: int = Field(foreign_key="texts.id", index=True, ondelete="CASCADE")
     sentence_index: int
     sentence: str

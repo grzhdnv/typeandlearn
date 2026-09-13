@@ -44,6 +44,7 @@ class TextApiTests(unittest.TestCase):
             f"sqlite:///{directory}/test.sqlite",
             connect_args={"check_same_thread": False},
         )
+        sqlmodel.SQLModel.metadata.create_all(self.engine)
         self.addCleanup(self.engine.dispose)
         llm = mock.Mock(spec=llm_service.LlmService)
         llm.extract_metadata.return_value = schemas.GeneratedMetadata(

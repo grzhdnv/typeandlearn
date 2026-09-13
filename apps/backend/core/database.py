@@ -2,7 +2,10 @@
 
 import os
 from pathlib import Path
-from sqlmodel import SQLModel, create_engine, Session
+
+from alembic import command
+from alembic.config import Config
+from sqlmodel import Session, create_engine
 
 # Get database URL from env, or default to local SQLite database file
 database_url = os.getenv("DATABASE_URL")
@@ -27,9 +30,23 @@ if database_url.startswith("sqlite"):
 engine = create_engine(database_url, connect_args=connect_args, echo=False)
 
 
+
+def run_migrations() -> None:
+    """Execute Alembic migrations programmatically up to head."""
+    backend_dir = Path(__file__).resolve().parents[1]
+    root_dir = backend_dir.parent.parent
+    alembic_ini = root_dir / "alembic.ini"
+    if not alembic_ini.exists():
+        alembic_ini = backend_dir / "alembic.ini"
+
+    alembic_cfg = Config(str(alembic_ini))
+    alembic_cfg.set_main_option("script_location", str(backend_dir / "alembic"))
+    command.upgrade(alembic_cfg, "head")
+
+
 def init_db() -> None:
-    """Initialize database tables."""
-    SQLModel.metadata.create_all(engine)
+    """Initialize database tables using versioned Alembic migrations."""
+    run_migrations()
 
 
 def get_session():

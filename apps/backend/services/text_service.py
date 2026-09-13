@@ -86,21 +86,21 @@ class TextService:
             top_words=top_words or [],
         )
 
-    def get_all(self) -> list[TextData]:
-        """Return all stored text entries."""
-        records = self._repository.load_all_texts()
+    def get_all(self, owner_id: str) -> list[TextData]:
+        """Return all stored text entries for an owner."""
+        records = self._repository.load_all_texts(owner_id)
         results = []
         for record in records:
             if record.id is None:
                 continue
-            s_records = self._repository.load_sentences(record.id)
-            p_records = self._repository.load_practice_sentences(record.id)
+            s_records = self._repository.load_sentences(record.id, owner_id)
+            p_records = self._repository.load_practice_sentences(record.id, owner_id)
             results.append(self._build_text_data(record, s_records, p_records))
         return results
 
-    def get_titles(self) -> list[TextTitle]:
+    def get_titles(self, owner_id: str) -> list[TextTitle]:
         """Return database-backed title metadata for text selection."""
-        records = self._repository.load_titles()
+        records = self._repository.load_titles(owner_id)
         return [
             TextTitle(
                 id=str(record.id), 
@@ -116,25 +116,35 @@ class TextService:
             for record in records
         ]
 
-    def get_one(self, text_id: str) -> TextData:
-        """Return one text entry by its database ID."""
+    def get_one(self, text_id: str, owner_id: str) -> TextData:
+        """Return one text entry by its database ID and owner ID."""
         try:
             tid = int(text_id)
         except ValueError as error:
             raise ValueError(f"Invalid text ID format: {text_id}") from error
 
-        record = self._repository.load_one_text(tid)
+        record = self._repository.load_one_text(tid, owner_id)
         if record is None or record.id is None:
             raise IndexError("Text not found")
 
-        s_records = self._repository.load_sentences(record.id)
-        p_records = self._repository.load_practice_sentences(record.id)
-        frequencies = self._repository.load_word_frequencies(record.id)
+        s_records = self._repository.load_sentences(record.id, owner_id)
+        p_records = self._repository.load_practice_sentences(record.id, owner_id)
+        frequencies = self._repository.load_word_frequencies(record.id, owner_id)
         top_words = [TopWord(word=f.word, translation=f.translation) for f in frequencies[:15]]
 
         return self._build_text_data(record, s_records, p_records, top_words)
 
-    def upload(self, text: str, language: str, title: str | None = None, difficulty_level: str | None = None, author: str | None = None, category: str | None = None, filtering_method: str = "spacy") -> TextRecord:
+    def upload(
+        self,
+        text: str,
+        language: str,
+        owner_id: str,
+        title: str | None = None,
+        difficulty_level: str | None = None,
+        author: str | None = None,
+        category: str | None = None,
+        filtering_method: str = "spacy",
+    ) -> TextRecord:
         """Generate and persist a new text entry from raw input using local preprocessing."""
         
         # 1. Preprocess the text locally using spaCy
@@ -189,6 +199,7 @@ class TextService:
         
         # 3. Save the TextRecord
         record = TextRecord(
+            owner_id=owner_id,
             title=final_title, 
             status="processing",
             language=language,
@@ -210,6 +221,7 @@ class TextService:
             for s in p["sentences"]:
                 sentence_records.append(
                     SentenceRecord(
+                        owner_id=owner_id,
                         text_id=record.id,
                         paragraph_index=p["index"],
                         sentence_index=s["index"],
@@ -226,6 +238,7 @@ class TextService:
         for wf in word_frequencies:
             frequency_records.append(
                 WordFrequencyRecord(
+                    owner_id=owner_id,
                     text_id=record.id,
                     word=wf["word"],
                     count=wf["count"]
@@ -235,37 +248,37 @@ class TextService:
 
         return record
 
-    def delete(self, text_id: str) -> TextData:
-        """Delete and return one text entry by its database ID."""
+    def delete(self, text_id: str, owner_id: str) -> TextData:
+        """Delete and return one text entry by its database ID and owner ID."""
         try:
             tid = int(text_id)
         except ValueError as error:
             raise ValueError(f"Invalid text ID format: {text_id}") from error
 
         # Load it first so we can return the deleted data to the frontend
-        record = self._repository.load_one_text(tid)
+        record = self._repository.load_one_text(tid, owner_id)
         if record is None or record.id is None:
             raise IndexError("Text not found")
 
-        s_records = self._repository.load_sentences(record.id)
-        p_records = self._repository.load_practice_sentences(record.id)
+        s_records = self._repository.load_sentences(record.id, owner_id)
+        p_records = self._repository.load_practice_sentences(record.id, owner_id)
         data_to_return = self._build_text_data(record, s_records, p_records)
 
-        self._repository.delete_text(tid)
+        self._repository.delete_text(tid, owner_id)
         return data_to_return
 
-    def regenerate_words(self, text_id: str, filtering_method: str = "spacy") -> TextData:
+    def regenerate_words(self, text_id: str, owner_id: str, filtering_method: str = "spacy") -> TextData:
         """Regenerate word frequencies and trigger practice sentence regeneration."""
         try:
             tid = int(text_id)
         except ValueError as error:
             raise ValueError(f"Invalid text ID format: {text_id}") from error
 
-        record = self._repository.load_one_text(tid)
+        record = self._repository.load_one_text(tid, owner_id)
         if record is None or record.id is None:
             raise IndexError("Text not found")
             
-        s_records = self._repository.load_sentences(record.id)
+        s_records = self._repository.load_sentences(record.id, owner_id)
         full_text = " ".join(s.original_text for s in s_records)
         
         # 1. Re-extract word frequencies using new logic
@@ -286,11 +299,12 @@ class TextService:
                     raise ValueError(f"LLM filtering failed: {e}")
         
         # 2. Update WordFrequencyRecords
-        self._repository.delete_word_frequencies(record.id)
+        self._repository.delete_word_frequencies(record.id, owner_id)
         frequency_records = []
         for wf in word_frequencies:
             frequency_records.append(
                 WordFrequencyRecord(
+                    owner_id=owner_id,
                     text_id=record.id,
                     word=wf["word"],
                     count=wf["count"]
@@ -302,16 +316,16 @@ class TextService:
         record.status = "processing"
         self._repository.update_text(record)
         
-        return self.get_one(text_id)
+        return self.get_one(text_id, owner_id)
 
-    def update_progress(self, text_id: str, sentence_index: int) -> TextRecord:
+    def update_progress(self, text_id: str, sentence_index: int, owner_id: str) -> TextRecord:
         """Update the completed sentences count for a text by tracking unique completed indices."""
         try:
             tid = int(text_id)
         except ValueError as error:
             raise ValueError(f"Invalid text ID format: {text_id}") from error
 
-        record = self._repository.load_one_text(tid)
+        record = self._repository.load_one_text(tid, owner_id)
         if record is None or record.id is None:
             raise IndexError("Text not found")
             
@@ -324,14 +338,14 @@ class TextService:
             
         return record
 
-    def reset_progress(self, text_id: str) -> TextRecord:
+    def reset_progress(self, text_id: str, owner_id: str) -> TextRecord:
         """Reset the completed sentences count for a text."""
         try:
             tid = int(text_id)
         except ValueError as error:
             raise ValueError(f"Invalid text ID format: {text_id}") from error
 
-        record = self._repository.load_one_text(tid)
+        record = self._repository.load_one_text(tid, owner_id)
         if record is None or record.id is None:
             raise IndexError("Text not found")
             
@@ -339,14 +353,14 @@ class TextService:
         record.completed_sentence_indices = []
         return self._repository.update_text(record)
 
-    def update_metadata(self, text_id: str, payload: TextUpdateRequest) -> TextData:
+    def update_metadata(self, text_id: str, payload: TextUpdateRequest, owner_id: str) -> TextData:
         """Update language and/or difficulty level of a text."""
         try:
             tid = int(text_id)
         except ValueError as error:
             raise ValueError(f"Invalid text ID format: {text_id}") from error
 
-        record = self._repository.load_one_text(tid)
+        record = self._repository.load_one_text(tid, owner_id)
         if record is None or record.id is None:
             raise IndexError("Text not found")
             
@@ -360,15 +374,15 @@ class TextService:
             record.category = payload.category
             
         self._repository.update_text(record)
-        return self.get_one(text_id)
+        return self.get_one(text_id, owner_id)
 
-    def process_pending_text(self, text_id: int) -> None:
+    def process_pending_text(self, text_id: int, owner_id: str) -> None:
         """Background worker to translate sentences and generate practice sentences."""
-        record = self._repository.load_one_text(text_id)
+        record = self._repository.load_one_text(text_id, owner_id)
         if not record or record.status != "processing":
             return
             
-        s_records = self._repository.load_sentences(text_id)
+        s_records = self._repository.load_sentences(text_id, owner_id)
         
         # Helper to get just the previous sentence for context (drastically reduces tokens)
         def get_previous_sentence_context(current_s) -> str:
@@ -435,7 +449,7 @@ class TextService:
         asyncio.run(_translate_all())
 
         # 2. Generate Practice Sentences
-        frequencies = self._repository.load_word_frequencies(text_id)
+        frequencies = self._repository.load_word_frequencies(text_id, owner_id)
         # Take the top 15 words to seed the practice sentence generator
         top_words = [f.word for f in frequencies[:15]]
         
@@ -447,12 +461,13 @@ class TextService:
                     practice_result = asyncio.run(self._llm.generate_practice_sentences_async(top_words))
                     
                     # Clear old practice sentences if any exist (e.g. during regeneration)
-                    self._repository.delete_practice_sentences(text_id)
+                    self._repository.delete_practice_sentences(text_id, owner_id)
                     
                     practice_records = []
                     for idx, ps in enumerate(practice_result.sentences):
                         practice_records.append(
                             PracticeSentenceRecord(
+                                owner_id=owner_id,
                                 text_id=text_id,
                                 sentence_index=idx,
                                 sentence=ps.sentence,
