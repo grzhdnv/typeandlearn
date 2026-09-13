@@ -74,6 +74,12 @@ def _create_model(model_spec: str, client: httpx.AsyncClient) -> Model:
     return GroqModel(model_name, provider=provider)
 
 
+class LlmNotConfiguredError(RuntimeError):
+    """Raised when an LLM operation is invoked without configured provider credentials."""
+
+    pass
+
+
 class LlmService:
     """Generate translations and practice sentences using Pydantic AI."""
 
@@ -85,60 +91,74 @@ class LlmService:
         structured_model_name: str,
         fallback_models: list[str] | None = None,
     ) -> None:
-        """Configure prompt sources and initialize Pydantic AI agents."""
+        """Configure prompt sources and initialize Pydantic AI agents if keys exist."""
         self._model_name = model_name
         self._translation_prompt = self._read_prompt(translation_prompt_path)
         self._practice_prompt = self._read_prompt(practice_prompt_path)
-        client = httpx.AsyncClient(
-            transport=_HeaderCaptureTransport(httpx.AsyncHTTPTransport())
-        )
+        self.is_configured = False
+        self._translation_agent = None
+        self._practice_agent = None
+        self._metadata_agent = None
+        self._filter_agent = None
 
-        primary_model = _create_model(model_name, client)
-        structured_model = _create_model(structured_model_name, client)
-
-        if fallback_models:
-            fallbacks = [
-                _create_model(fallback_model, client)
-                for fallback_model in fallback_models
-            ]
-            self._active_model = FallbackModel(primary_model, *fallbacks)
-            self._active_structured_model = FallbackModel(
-                structured_model,
-                *fallbacks,
+        try:
+            client = httpx.AsyncClient(
+                transport=_HeaderCaptureTransport(httpx.AsyncHTTPTransport())
             )
-        else:
-            self._active_model = primary_model
-            self._active_structured_model = structured_model
 
-        self._translation_agent = Agent(
-            self._active_model,
-            output_type=SentenceTranslation,
-            system_prompt=self._translation_prompt,
-            retries=3,
-        )
+            primary_model = _create_model(model_name, client)
+            structured_model = _create_model(structured_model_name, client)
 
-        self._practice_agent = Agent(
-            self._active_structured_model,
-            output_type=PracticeSentencesResponse,
-            system_prompt=self._practice_prompt,
-            retries=3,
-        )
+            if fallback_models:
+                fallbacks = [
+                    _create_model(fallback_model, client)
+                    for fallback_model in fallback_models
+                ]
+                self._active_model = FallbackModel(primary_model, *fallbacks)
+                self._active_structured_model = FallbackModel(
+                    structured_model,
+                    *fallbacks,
+                )
+            else:
+                self._active_model = primary_model
+                self._active_structured_model = structured_model
 
-        metadata_prompt_path = "apps/backend/prompts/metadata_prompt.txt"
-        self._metadata_agent = Agent(
-            self._active_structured_model,
-            output_type=GeneratedMetadata,
-            system_prompt=self._read_prompt(metadata_prompt_path),
-            retries=3,
-        )
+            self._translation_agent = Agent(
+                self._active_model,
+                output_type=SentenceTranslation,
+                system_prompt=self._translation_prompt,
+                retries=3,
+            )
 
-        filter_prompt_path = "apps/backend/prompts/filter_words_prompt.txt"
-        self._filter_agent = Agent(
-            self._active_structured_model,
-            output_type=FilteredWordsResponse,
-            system_prompt=self._read_prompt(filter_prompt_path),
-            retries=3,
-        )
+            self._practice_agent = Agent(
+                self._active_structured_model,
+                output_type=PracticeSentencesResponse,
+                system_prompt=self._practice_prompt,
+                retries=3,
+            )
+
+            metadata_prompt_path = "apps/backend/prompts/metadata_prompt.txt"
+            self._metadata_agent = Agent(
+                self._active_structured_model,
+                output_type=GeneratedMetadata,
+                system_prompt=self._read_prompt(metadata_prompt_path),
+                retries=3,
+            )
+
+            filter_prompt_path = "apps/backend/prompts/filter_words_prompt.txt"
+            self._filter_agent = Agent(
+                self._active_structured_model,
+                output_type=FilteredWordsResponse,
+                system_prompt=self._read_prompt(filter_prompt_path),
+                retries=3,
+            )
+            self.is_configured = True
+        except Exception as error:
+            logger.warning(
+                "LLM provider initialization skipped (%s). Running in offline mode without AI enrichment.",
+                error,
+            )
+            self.is_configured = False
 
     def _read_prompt(self, path: str) -> str:
         """Read a prompt template from disk."""
@@ -163,6 +183,9 @@ class LlmService:
         target_sentence: str,
     ) -> SentenceTranslation:
         """Generate translation and hints asynchronously."""
+        if not self.is_configured or self._translation_agent is None:
+            raise LlmNotConfiguredError("LLM provider credentials are not configured.")
+
         input_data = (
             f"TITLE: {title}\n"
             f"CONTEXT: {context}\n"
@@ -190,6 +213,9 @@ class LlmService:
         words: list[str],
     ) -> PracticeSentencesResponse:
         """Generate practice sentences asynchronously."""
+        if not self.is_configured or self._practice_agent is None:
+            raise LlmNotConfiguredError("LLM provider credentials are not configured.")
+
         input_data = f"WORDS: {json.dumps(words, ensure_ascii=False)}"
 
         logger.info(
@@ -206,6 +232,9 @@ class LlmService:
 
     def extract_metadata(self, text: str) -> GeneratedMetadata:
         """Extract title and difficulty level from text."""
+        if not self.is_configured or self._metadata_agent is None:
+            raise LlmNotConfiguredError("LLM provider credentials are not configured.")
+
         input_data = f"TEXT:\n{text[:2000]}"
 
         logger.info(
@@ -223,6 +252,9 @@ class LlmService:
         language: str,
     ) -> FilteredWordsResponse:
         """Filter raw word frequencies into meaningful dictionary lemmas."""
+        if not self.is_configured or self._filter_agent is None:
+            raise LlmNotConfiguredError("LLM provider credentials are not configured.")
+
         input_data = (
             f"LANGUAGE: {language}\n"
             "RAW_FREQUENCIES: "

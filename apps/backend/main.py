@@ -5,4 +5,4 @@ from pathlib import Path
 
 sys.path.append(str(Path(__file__).resolve().parent))
 
-from app import app  # noqa: F401
+from app import app, create_app  # noqa: F401

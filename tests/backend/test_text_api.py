@@ -27,7 +27,7 @@ with mock.patch.dict(os.environ, {
     import app_state
     from api.routes import texts
     from core import database
-    from repositories import text_repository
+    from repositories import job_repository, text_repository
     from schemas import texts as schemas
     from services import dictionary_service
     from services import llm_service
@@ -70,11 +70,13 @@ class TextApiTests(unittest.TestCase):
         dictionary = mock.Mock(spec=dictionary_service.DictionaryService)
         dictionary.translate_word.return_value = "A test definition."
         self.preprocessing = preprocessing_service.PreprocessingService()
+        self.job_repo = job_repository.JobRepository(self.engine)
         service = text_service.TextService(
             text_repository.TextRepository(self.engine),
             llm,
             self.preprocessing,
             dictionary,
+            job_repository=self.job_repo,
         )
         self.enterContext(mock.patch.object(database, "engine", self.engine))
         self.enterContext(mock.patch.object(app_state, "text_service", service))
@@ -98,6 +100,12 @@ class TextApiTests(unittest.TestCase):
         data = self.client.get(path).json()["data"]
         self.assertEqual(data["status"], "processed")
         self.assertEqual(data["total_sentences"], 2)
+
+        # Verify durable background job was created and marked completed
+        jobs = self.job_repo.load_jobs_by_text(int(text_id), "owner_local_default")
+        self.assertEqual(len(jobs), 1)
+        self.assertEqual(jobs[0].task_type, "process_text")
+        self.assertEqual(jobs[0].status, "completed")
         self.assertTrue(data["original_paragraphs"][0]["sentences"][0][
             "translation"
         ])
