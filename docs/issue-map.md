@@ -34,9 +34,9 @@ This issue map translates the production plan into discrete, reviewable engineer
 
 - **[x] ISSUE-020**: **Schema Ownership Scoping & Alembic Migration Foundation**
   - *Acceptance*: Add non-nullable `owner_id` to `Text`, `Sentence`, `BackgroundJob`; replace `SQLModel.metadata.create_all` with versioned Alembic migrations.
-- **[ ] ISSUE-021**: **Transactional PostgreSQL Job Queue**
+- **[x] ISSUE-021**: **Transactional PostgreSQL Job Queue**
   - *Acceptance*: `background_jobs` table with `FOR UPDATE SKIP LOCKED` claiming, lease expiration heartbeats, and exponential retry backoff.
-- **[ ] ISSUE-022**: **Decoupled Application Factory & Optional Providers**
+- **[x] ISSUE-022**: **Decoupled Application Factory & Optional Providers**
   - *Acceptance*: App boots and serves library/practice without requiring `DEEPSEEK_API_KEY` or external network access.
 - **[ ] ISSUE-023**: **Worker Process & spaCy Isolation**
   - *Acceptance*: Dedicated worker daemon consuming background jobs; moves heavy tokenization and sentence splitting off the web API thread.

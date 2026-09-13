@@ -1,7 +1,8 @@
 """Database-backed repository for text records."""
 
-from typing import List, Optional
+from typing import Any, Dict, List, Optional
 
+from models.jobs import BackgroundJobRecord, utc_now
 from models.texts import (
     PracticeSentenceRecord,
     SentenceRecord,
@@ -94,6 +95,45 @@ class TextRepository:
             session.commit()
             session.refresh(record)
             return record
+
+    def save_text_with_job(
+        self,
+        record: TextRecord,
+        task_type: str,
+        payload: Dict[str, Any],
+        sentences: List[SentenceRecord],
+        frequencies: List[WordFrequencyRecord],
+    ) -> tuple[TextRecord, BackgroundJobRecord]:
+        """Atomically persist a text record, its initial sentences, frequencies, and a background job in a single transaction."""
+        with Session(self._engine) as session:
+            session.add(record)
+            session.flush()
+            assert record.id is not None
+
+            for s in sentences:
+                s.text_id = record.id
+                session.add(s)
+
+            for f in frequencies:
+                f.text_id = record.id
+                session.add(f)
+
+            job = BackgroundJobRecord(
+                owner_id=record.owner_id,
+                text_id=record.id,
+                task_type=task_type,
+                payload=payload,
+                status="pending",
+                attempt_count=0,
+                max_retries=3,
+                created_at=utc_now(),
+                updated_at=utc_now(),
+            )
+            session.add(job)
+            session.commit()
+            session.refresh(record)
+            session.refresh(job)
+            return record, job
 
     def update_text(self, record: TextRecord) -> TextRecord:
         """Update an existing text record in the database."""

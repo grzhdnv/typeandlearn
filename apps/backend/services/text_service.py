@@ -1,28 +1,39 @@
 """Domain service for text retrieval, upload, and deletion workflows."""
 
 import concurrent.futures
-import time
 import random
-
+import time
 from itertools import groupby
+from typing import Optional
+
+from sqlmodel import Session
 
 from models.texts import PracticeSentenceRecord, SentenceRecord, TextRecord, WordFrequencyRecord
+from repositories.job_repository import JobRepository
 from repositories.text_repository import TextRepository
 from schemas.texts import HintGroup, Paragraph, PracticeSentence, Sentence, TextData, TextTitle, TextUpdateRequest, TopWord
+from services.dictionary_service import DictionaryService
 from services.llm_service import LlmService
 from services.preprocessing_service import PreprocessingService
-from services.dictionary_service import DictionaryService
 
 
 class TextService:
     """Coordinate repository persistence with NLP-backed preprocessing and generation."""
 
-    def __init__(self, repository: TextRepository, llm: LlmService, preprocessing: PreprocessingService, dictionary: DictionaryService) -> None:
-        """Bind storage and generation dependencies."""
+    def __init__(
+        self,
+        repository: TextRepository,
+        llm: LlmService,
+        preprocessing: PreprocessingService,
+        dictionary: DictionaryService,
+        job_repository: Optional[JobRepository] = None,
+    ) -> None:
+        """Bind storage, generation, and background job dependencies."""
         self._repository = repository
         self._llm = llm
         self._preprocessing = preprocessing
         self._dictionary = dictionary
+        self._job_repository = job_repository
 
     def _build_text_data(
         self,
@@ -210,41 +221,59 @@ class TextService:
             total_sentences=total_sentences,
             estimated_time_minutes=estimated_time
         )
-        record = self._repository.save_text(record)
-        
-        if record.id is None:
-            raise RuntimeError("Failed to generate database ID for text.")
-            
         # 3. Save the blank sentences (translations will be generated later)
         sentence_records = []
         for p in paragraphs_data:
             for s in p["sentences"]:
                 sentence_records.append(
                     SentenceRecord(
+                        text_id=0,
                         owner_id=owner_id,
-                        text_id=record.id,
                         paragraph_index=p["index"],
                         sentence_index=s["index"],
                         original_text=s["text"],
                         translation="",
                         translation_hints=[],
-                        status="pending"
+                        status="pending",
                     )
                 )
-        self._repository.save_sentences(sentence_records)
-        
+
         # 4. Save the word frequencies for later use in generating practice sentences
         frequency_records = []
         for wf in word_frequencies:
             frequency_records.append(
                 WordFrequencyRecord(
+                    text_id=0,
                     owner_id=owner_id,
-                    text_id=record.id,
                     word=wf["word"],
-                    count=wf["count"]
+                    count=wf["count"],
                 )
             )
-        self._repository.save_word_frequencies(frequency_records)
+
+        job_payload = {
+            "owner_id": owner_id,
+            "filtering_method": filtering_method,
+            "language": language,
+        }
+
+        if hasattr(self._repository, "save_text_with_job"):
+            record, _ = self._repository.save_text_with_job(
+                record=record,
+                task_type="process_text",
+                payload=job_payload,
+                sentences=sentence_records,
+                frequencies=frequency_records,
+            )
+        else:
+            record = self._repository.save_text(record)
+            if record.id is None:
+                raise RuntimeError("Failed to generate database ID for text.")
+            for s in sentence_records:
+                s.text_id = record.id
+            self._repository.save_sentences(sentence_records)
+            for f in frequency_records:
+                f.text_id = record.id
+            self._repository.save_word_frequencies(frequency_records)
 
         return record
 
@@ -315,6 +344,17 @@ class TextService:
         # 3. Set status to processing to trigger background generation
         record.status = "processing"
         self._repository.update_text(record)
+
+        if self._job_repository and record.id is not None:
+            with Session(self._repository._engine) as session:
+                self._job_repository.enqueue(
+                    session=session,
+                    owner_id=owner_id,
+                    task_type="process_text",
+                    payload={"text_id": record.id, "owner_id": owner_id, "filtering_method": filtering_method},
+                    text_id=record.id,
+                )
+                session.commit()
         
         return self.get_one(text_id, owner_id)
 
@@ -508,4 +548,9 @@ class TextService:
         # 4. Mark text as fully processed
         record.status = "processed"
         self._repository.update_text(record)
+        if self._job_repository:
+            jobs = self._job_repository.load_jobs_by_text(text_id, owner_id)
+            for j in jobs:
+                if j.id is not None and j.status in ("pending", "leased"):
+                    self._job_repository.complete(j.id, j.worker_id or "local_worker")
         print(f"Successfully finished processing text '{record.title}' (ID: {text_id})!")
