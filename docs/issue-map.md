@@ -15,7 +15,7 @@ This issue map translates the production plan into discrete, reviewable engineer
 
 ## Milestone M1 — Parity Foundation & Typing Engine
 
-- **[ ] ISSUE-010**: **Container & Docker Compose Baseline**
+- **[x] ISSUE-010**: **Container & Docker Compose Baseline**
   - *Acceptance*: Multi-stage Dockerfile for FastAPI/spaCy; `docker-compose.yml` orchestrating API and PostgreSQL services; reproducible local setup.
 - **[ ] ISSUE-011**: **Pure Typing State Reducer & Event Log**
   - *Acceptance*: Implement pure `typingReducer` with immutable input event logging in `packages/typing-engine` or frontend shared library; unit tests covering corrections, deletions, word jumps, and pauses.

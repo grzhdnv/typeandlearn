@@ -5,8 +5,26 @@ on:
     branches: [main]
   pull_request:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  checks:
+  lint:
+    name: Lint & Formatting
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v10.0.1
+
+      - name: Run Ruff Lint
+        run: uv run ruff check apps/backend tests
+
+  backend:
+    name: Backend Checks & Tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -20,6 +38,25 @@ jobs:
       - name: Setup uv
         uses: astral-sh/setup-uv@v10.0.1
 
+      - name: Install dependencies
+        run: uv sync --locked
+
+      - name: Pyright Static Analysis
+        run: uv run pyright
+
+      - name: Run Backend Integration Tests
+        run: uv run python -m unittest discover -s tests/backend -p 'test_*.py'
+
+      - name: Compile Python
+        run: uv run python -m compileall apps/backend
+
+  frontend:
+    name: Frontend Typecheck & Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
       - name: Setup Node
         uses: actions/setup-node@v7
         with:
@@ -27,8 +64,32 @@ jobs:
           cache: "npm"
           cache-dependency-path: apps/frontend/package-lock.json
 
-      - name: Install workspace deps
-        run: npm run bootstrap
+      - name: Install dependencies
+        run: npm --prefix apps/frontend ci
 
-      - name: Run checks
-        run: npm run check
+      - name: Frontend Quality Check
+        run: npm --prefix apps/frontend run check
+
+  docker:
+    name: Docker Build Validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Backend Container
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: apps/backend/Dockerfile
+          push: false
+
+      - name: Build Frontend Container
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: apps/frontend/Dockerfile
+          push: false
