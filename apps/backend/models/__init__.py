@@ -1,5 +1,4 @@
-"""Model exports for SQLModel metadata discovery."""
-
+from models.cache import TokenUsageRecord, TranslationCacheRecord, compute_sentence_hash
 from models.jobs import BackgroundJobRecord
 from models.texts import (
     PracticeSentenceRecord,
@@ -14,4 +13,7 @@ __all__ = [
     "SentenceRecord",
     "WordFrequencyRecord",
     "PracticeSentenceRecord",
+    "TranslationCacheRecord",
+    "TokenUsageRecord",
+    "compute_sentence_hash",
 ]

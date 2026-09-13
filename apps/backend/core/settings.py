@@ -35,6 +35,12 @@ class Settings(BaseModel):
         )
     )
     fallback_models: list[str] = Field(default_factory=_get_fallback_models)
+    daily_token_limit: int = Field(
+        default_factory=lambda: int(os.getenv("DAILY_TOKEN_LIMIT", "50000"))
+    )
+    prompt_version: str = Field(
+        default_factory=lambda: os.getenv("PROMPT_VERSION", "v1")
+    )
 
 
 settings = Settings()

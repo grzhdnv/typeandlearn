@@ -6,6 +6,7 @@ import asyncio
 import json
 import logging
 import os
+from typing import Any
 
 import httpx
 
@@ -147,6 +148,7 @@ class LlmService:
     ) -> None:
         """Configure prompt sources and initialize Pydantic AI agents if keys exist."""
         self._model_name = model_name
+        self._structured_model_name = structured_model_name
         self._translation_prompt = self._read_prompt(translation_prompt_path)
         self._practice_prompt = self._read_prompt(practice_prompt_path)
         self.is_configured = False
@@ -210,6 +212,16 @@ class LlmService:
         with open(path, "r", encoding="utf-8") as file:
             return file.read()
 
+    @property
+    def model_name(self) -> str:
+        """Return the primary configured model spec."""
+        return self._model_name
+
+    @property
+    def structured_model_name(self) -> str:
+        """Return the structured model spec."""
+        return self._structured_model_name
+
     def translate_sentence(
         self,
         title: str,
@@ -221,13 +233,13 @@ class LlmService:
             self.translate_sentence_async(title, context, target_sentence)
         )
 
-    async def translate_sentence_async(
+    async def translate_sentence_with_usage_async(
         self,
         title: str,
         context: str,
         target_sentence: str,
-    ) -> SentenceTranslation:
-        """Generate translation and hints asynchronously."""
+    ) -> tuple[SentenceTranslation, Any]:
+        """Generate translation and hints asynchronously, returning both output and usage."""
         if not self.is_configured or self._translation_agent is None:
             raise LlmNotConfiguredError("LLM provider credentials are not configured.")
 
@@ -243,9 +255,25 @@ class LlmService:
         )
         async with self._semaphore:
             result = await self._translation_agent.run(input_data)
-        logger.info("Translation completed; usage=%s", result.usage())
+        usage = result.usage()
+        logger.info("Translation completed; usage=%s", usage)
 
-        return result.output
+        return result.output, usage
+
+    async def translate_sentence_async(
+        self,
+        title: str,
+        context: str,
+        target_sentence: str,
+    ) -> SentenceTranslation:
+        """Generate translation and hints asynchronously."""
+        output, usage = await self.translate_sentence_with_usage_async(
+            title=title,
+            context=context,
+            target_sentence=target_sentence,
+        )
+        setattr(output, "usage", usage)
+        return output
 
     def generate_practice_sentences(
         self,
@@ -254,11 +282,11 @@ class LlmService:
         """Generate practice sentences for a vocabulary list."""
         return asyncio.run(self.generate_practice_sentences_async(words))
 
-    async def generate_practice_sentences_async(
+    async def generate_practice_sentences_with_usage_async(
         self,
         words: list[str],
-    ) -> PracticeSentencesResponse:
-        """Generate practice sentences asynchronously."""
+    ) -> tuple[PracticeSentencesResponse, Any]:
+        """Generate practice sentences asynchronously, returning both output and usage."""
         if not self.is_configured or self._practice_agent is None:
             raise LlmNotConfiguredError("LLM provider credentials are not configured.")
 
@@ -270,12 +298,22 @@ class LlmService:
         )
         async with self._semaphore:
             result = await self._practice_agent.run(input_data)
+        usage = result.usage()
         logger.info(
             "Practice-sentence generation completed; usage=%s",
-            result.usage(),
+            usage,
         )
 
-        return result.output
+        return result.output, usage
+
+    async def generate_practice_sentences_async(
+        self,
+        words: list[str],
+    ) -> PracticeSentencesResponse:
+        """Generate practice sentences asynchronously."""
+        output, usage = await self.generate_practice_sentences_with_usage_async(words)
+        setattr(output, "usage", usage)
+        return output
 
     def extract_metadata(self, text: str) -> GeneratedMetadata:
         """Extract title and difficulty level from text."""
