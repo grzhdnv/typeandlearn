@@ -1,0 +1,16 @@
+.git
+.github
+.venv
+node_modules
+dist
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.ruff_cache
+apps/backend/data/*.sqlite*
+apps/backend/data/db.json
+apps/backend/logs/*
+archive
+.env
+.DS_Store
