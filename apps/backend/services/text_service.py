@@ -8,7 +8,9 @@ from typing import Optional
 
 from sqlmodel import Session
 
+from models.cache import compute_sentence_hash
 from models.texts import PracticeSentenceRecord, SentenceRecord, TextRecord, WordFrequencyRecord
+from repositories.cache_repository import CacheRepository, DailyBudgetExceededError
 from repositories.job_repository import JobRepository
 from repositories.text_repository import TextRepository
 from schemas.texts import HintGroup, Paragraph, PracticeSentence, Sentence, TextData, TextTitle, TextUpdateRequest, TopWord
@@ -27,13 +29,19 @@ class TextService:
         preprocessing: PreprocessingService,
         dictionary: DictionaryService,
         job_repository: Optional[JobRepository] = None,
+        cache_repository: Optional[CacheRepository] = None,
+        daily_token_limit: int = 50_000,
+        prompt_version: str = "v1",
     ) -> None:
-        """Bind storage, generation, and background job dependencies."""
+        """Bind storage, generation, caching, and background job dependencies."""
         self._repository = repository
         self._llm = llm
         self._preprocessing = preprocessing
         self._dictionary = dictionary
         self._job_repository = job_repository
+        self._cache_repository = cache_repository
+        self._daily_token_limit = daily_token_limit
+        self._prompt_version = prompt_version
 
     def _build_text_data(
         self,
@@ -449,6 +457,44 @@ class TextService:
             async def _translate_and_update(s, idx):
                 if s.status != "pending":
                     return
+
+                sentence_hash = compute_sentence_hash(s.original_text)
+
+                # Check translation cache before invoking LLM
+                if self._cache_repository:
+                    cached = await asyncio.to_thread(
+                        self._cache_repository.get_translation,
+                        source_language=record.language,
+                        target_language="English",
+                        sentence_hash=sentence_hash,
+                        prompt_version=self._prompt_version,
+                    )
+                    if cached:
+                        s.translation = cached.translation
+                        hints = cached.translation_hints
+                        if isinstance(hints, dict) and "hints" in hints:
+                            s.translation_hints = hints["hints"]
+                        elif isinstance(hints, list):
+                            s.translation_hints = hints
+                        else:
+                            s.translation_hints = []
+                        s.status = "processed"
+                        await asyncio.to_thread(self._repository.update_sentence, s)
+                        print(f"  -> Cache hit for sentence {idx}: '{s.translation}'")
+                        return
+
+                # Check daily budget before invoking LLM on cache miss
+                if self._cache_repository:
+                    has_budget = await asyncio.to_thread(
+                        self._cache_repository.check_daily_budget,
+                        owner_id=owner_id,
+                        daily_limit=self._daily_token_limit,
+                    )
+                    if not has_budget:
+                        print(f"  [ERROR] Daily token budget of {self._daily_token_limit} exceeded for owner {owner_id}")
+                        raise DailyBudgetExceededError(
+                            f"Daily token budget of {self._daily_token_limit} exceeded for owner {owner_id}"
+                        )
                     
                 print(f"[{idx}/{total_sentences}] Translating sentence: '{s.original_text}'...")
                 context = get_previous_sentence_context(s)
@@ -462,15 +508,55 @@ class TextService:
                             result = await self._llm.translate_sentence_async(
                                 title=record.title,
                                 context=context,
-                                target_sentence=s.original_text
+                                target_sentence=s.original_text,
                             )
+                            usage = getattr(result, "usage", None)
                             
                             s.translation = result.translation
                             s.translation_hints = [hg.model_dump() for hg in result.translation_hints]
                             s.status = "processed"
                             await asyncio.to_thread(self._repository.update_sentence, s)
                             print(f"  -> Translated: '{s.translation}'")
+
+                            # Store translation in cache
+                            if self._cache_repository:
+                                await asyncio.to_thread(
+                                    self._cache_repository.store_translation,
+                                    source_language=record.language,
+                                    target_language="English",
+                                    sentence_hash=sentence_hash,
+                                    translation=result.translation,
+                                    translation_hints=s.translation_hints,
+                                    prompt_version=self._prompt_version,
+                                )
+
+                            # Record token usage
+                            if self._cache_repository and usage is not None:
+                                prompt_tokens = getattr(usage, "input_tokens", None)
+                                if prompt_tokens is None:
+                                    prompt_tokens = getattr(usage, "request_tokens", 0) or 0
+                                completion_tokens = getattr(usage, "output_tokens", None)
+                                if completion_tokens is None:
+                                    completion_tokens = getattr(usage, "response_tokens", 0) or 0
+                                total_tokens = getattr(usage, "total_tokens", 0) or (prompt_tokens + completion_tokens)
+
+                                if total_tokens > 0:
+                                    spec = getattr(self._llm, "model_name", getattr(self._llm, "_model_name", "unknown"))
+                                    provider, model = spec.split(":", 1) if ":" in spec else ("unknown", spec)
+                                    est_cost = (prompt_tokens * 0.59 + completion_tokens * 0.79) / 1_000_000.0
+                                    await asyncio.to_thread(
+                                        self._cache_repository.record_usage,
+                                        owner_id=owner_id,
+                                        provider=provider,
+                                        model=model,
+                                        prompt_tokens=prompt_tokens,
+                                        completion_tokens=completion_tokens,
+                                        total_tokens=total_tokens,
+                                        estimated_cost_usd=est_cost,
+                                    )
                             return # Success
+                        except DailyBudgetExceededError:
+                            raise
                         except Exception as e:
                             error_msg = str(e).lower()
                             if "429" in error_msg or "too many requests" in error_msg or "rate limit" in error_msg:
@@ -494,11 +580,17 @@ class TextService:
         top_words = [f.word for f in frequencies[:15]]
         
         if top_words:
+            if self._cache_repository and not self._cache_repository.check_daily_budget(owner_id, self._daily_token_limit):
+                raise DailyBudgetExceededError(
+                    f"Daily token budget of {self._daily_token_limit} exceeded for owner {owner_id}"
+                )
+
             print(f"Generating practice sentences using top {len(top_words)} words: {top_words}")
             for attempt in range(3):
                 try:
                     import asyncio
                     practice_result = asyncio.run(self._llm.generate_practice_sentences_async(top_words))
+                    practice_usage = getattr(practice_result, "usage", None)
                     
                     # Clear old practice sentences if any exist (e.g. during regeneration)
                     self._repository.delete_practice_sentences(text_id, owner_id)
@@ -516,7 +608,31 @@ class TextService:
                             )
                         )
                     self._repository.save_practice_sentences(practice_records)
+
+                    if self._cache_repository and practice_usage is not None:
+                        p_tokens = getattr(practice_usage, "input_tokens", None)
+                        if p_tokens is None:
+                            p_tokens = getattr(practice_usage, "request_tokens", 0) or 0
+                        c_tokens = getattr(practice_usage, "output_tokens", None)
+                        if c_tokens is None:
+                            c_tokens = getattr(practice_usage, "response_tokens", 0) or 0
+                        tot_tokens = getattr(practice_usage, "total_tokens", 0) or (p_tokens + c_tokens)
+                        if tot_tokens > 0:
+                            spec = getattr(self._llm, "structured_model_name", getattr(self._llm, "_structured_model_name", "unknown"))
+                            provider, model = spec.split(":", 1) if ":" in spec else ("unknown", spec)
+                            est_cost = (p_tokens * 0.59 + c_tokens * 0.79) / 1_000_000.0
+                            self._cache_repository.record_usage(
+                                owner_id=owner_id,
+                                provider=provider,
+                                model=model,
+                                prompt_tokens=p_tokens,
+                                completion_tokens=c_tokens,
+                                total_tokens=tot_tokens,
+                                estimated_cost_usd=est_cost,
+                            )
                     break # Success
+                except DailyBudgetExceededError:
+                    raise
                 except Exception as e:
                     error_msg = str(e).lower()
                     if "429" in error_msg or "too many requests" in error_msg or "rate limit" in error_msg:

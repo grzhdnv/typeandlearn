@@ -2,7 +2,7 @@
 
 from typing import List, Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 class HintGroup(BaseModel):
@@ -65,6 +65,8 @@ class TextData(BaseModel):
 
 class SentenceTranslation(BaseModel):
     """LLM response schema for a single sentence translation."""
+
+    model_config = ConfigDict(extra="allow")
     
     translation: str
     translation_hints: List[HintGroup]
@@ -72,6 +74,8 @@ class SentenceTranslation(BaseModel):
 
 class PracticeSentencesResponse(BaseModel):
     """LLM response schema for generating practice sentences."""
+
+    model_config = ConfigDict(extra="allow")
     
     class GeneratedSentence(BaseModel):
         sentence: str
