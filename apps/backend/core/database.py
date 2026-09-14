@@ -5,7 +5,7 @@ from pathlib import Path
 
 from alembic import command
 from alembic.config import Config
-from sqlmodel import Session, create_engine
+from sqlmodel import create_engine
 
 # Get database URL from env, or default to local SQLite database file
 database_url = os.getenv("DATABASE_URL")
@@ -47,9 +47,3 @@ def run_migrations() -> None:
 def init_db() -> None:
     """Initialize database tables using versioned Alembic migrations."""
     run_migrations()
-
-
-def get_session():
-    """FastAPI dependency for obtaining a database session."""
-    with Session(engine) as session:
-        yield session

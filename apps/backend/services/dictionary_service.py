@@ -3,8 +3,9 @@
 import logging
 from typing import Optional
 from html.parser import HTMLParser
+from urllib.parse import quote
 
-import requests
+import httpx
 
 logger = logging.getLogger(__name__)
 
@@ -69,11 +70,10 @@ class DictionaryService:
             "User-Agent": "TypeAndLearnApp/1.0 (https://github.com/mgrzhdnv/typeandlearn; hello@typeandlearn.com)"
         }
         
-        import urllib.parse
         for w in words_to_try:
-            url = f"{self.base_url}/{urllib.parse.quote(w)}"
+            url = f"{self.base_url}/{quote(w)}"
             try:
-                response = requests.get(url, headers=headers, timeout=5.0)
+                response = httpx.get(url, headers=headers, timeout=5.0, follow_redirects=True)
                 if response.status_code == 404:
                     continue # Try next capitalization
                 response.raise_for_status()

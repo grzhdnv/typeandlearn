@@ -6,6 +6,7 @@ from sqlalchemy import Engine, func
 from sqlmodel import Session, col, select
 
 from models.analytics import PracticeSessionRecord, WeakWordRecord, utc_now
+from models.texts import TextRecord
 from schemas.analytics import (
     AnalyticsSummaryResponse,
     PracticeSessionCreate,
@@ -23,10 +24,17 @@ class AnalyticsRepository:
         self,
         owner_id: str,
         create_data: PracticeSessionCreate,
-        language: str = "Unknown",
     ) -> PracticeSessionRecord:
         """Atomically persist a drill completion session and update weak words."""
         with Session(self._engine) as session:
+            text_record = session.exec(
+                select(TextRecord).where(
+                    TextRecord.id == create_data.text_id,
+                    TextRecord.owner_id == owner_id,
+                )
+            ).first()
+            language = text_record.language if text_record else "Unknown"
+
             record = PracticeSessionRecord(
                 owner_id=owner_id,
                 text_id=create_data.text_id,

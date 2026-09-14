@@ -3,7 +3,7 @@
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class PracticeSessionCreate(BaseModel):
@@ -25,6 +25,8 @@ class PracticeSessionCreate(BaseModel):
 class PracticeSessionResponse(BaseModel):
     """Full database representation of a recorded practice session."""
 
+    model_config = ConfigDict(from_attributes=True)
+
     id: int
     owner_id: str
     text_id: int
@@ -42,6 +44,8 @@ class PracticeSessionResponse(BaseModel):
 
 class WeakWordResponse(BaseModel):
     """Aggregate mistake frequency statistics for a specific vocabulary item."""
+
+    model_config = ConfigDict(from_attributes=True)
 
     id: int
     owner_id: str
