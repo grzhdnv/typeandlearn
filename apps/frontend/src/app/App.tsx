@@ -11,8 +11,27 @@ const App: Component<AppProps> = (props) => {
 
   return (
     <div class="bg-surface text-on-surface min-h-screen font-body-md flex flex-col selection:bg-secondary-container selection:text-on-secondary-container">
+      {/* Skip to main content link for keyboard accessibility */}
+      <a
+        href="#main-content"
+        onClick={(e) => {
+          e.preventDefault();
+          const target = document.getElementById("main-content");
+          if (target) {
+            target.focus();
+            target.scrollIntoView();
+          }
+        }}
+        class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:px-4 focus:py-2 bg-primary text-on-primary font-bold border-2 border-outline shadow-xl"
+      >
+        Skip to main content
+      </a>
+
       {/* TopNavBar */}
-      <nav class="w-full h-16 bg-surface border-b border-outline-variant flex justify-between items-center px-margin-mobile md:px-margin-desktop max-w-max-width-content mx-auto sticky top-0 z-50">
+      <nav
+        class="w-full h-16 bg-surface border-b border-outline-variant flex justify-between items-center px-margin-mobile md:px-margin-desktop max-w-max-width-content mx-auto sticky top-0 z-40"
+        aria-label="Main Navigation"
+      >
         <div class="flex items-center gap-8">
           <span class="font-headline-md text-headline-md font-bold text-primary tracking-tight">
             typeandlearn
@@ -64,7 +83,9 @@ const App: Component<AppProps> = (props) => {
       />
 
       {/* Main Content Canvas */}
-      {props.children}
+      <main id="main-content" class="flex-1 flex flex-col focus:outline-none" tabindex="-1">
+        {props.children}
+      </main>
 
       {/* Footer */}
       <footer class="w-full py-base bg-surface border-t border-outline-variant mt-auto">

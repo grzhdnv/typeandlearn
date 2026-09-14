@@ -25,6 +25,7 @@ const PracticePage: Component = () => {
   const [generatedIndex, setGeneratedIndex] = createSignal(0);
   const [liveMetrics, setLiveMetrics] = createSignal<TypingMetrics | null>(null);
   const [completedMetrics, setCompletedMetrics] = createSignal<TypingMetrics | null>(null);
+  const [srAnnouncement, setSrAnnouncement] = createSignal("");
 
   let lastStoryId: number | undefined | null = null;
   createEffect(() => {
@@ -91,9 +92,17 @@ const PracticePage: Component = () => {
     setCompletedMetrics(null);
     setLiveMetrics(null);
     if (activeTab() === "original" && originalIndex() > 0) {
-      setOriginalIndex((i) => i - 1);
+      setOriginalIndex((i) => {
+        const next = i - 1;
+        setSrAnnouncement(`Navigated to sentence ${next + 1} of ${originalSentences().length}`);
+        return next;
+      });
     } else if (activeTab() === "generated" && generatedIndex() > 0) {
-      setGeneratedIndex((i) => i - 1);
+      setGeneratedIndex((i) => {
+        const next = i - 1;
+        setSrAnnouncement(`Navigated to sentence ${next + 1} of ${generatedSentences().length}`);
+        return next;
+      });
     }
   };
 
@@ -101,14 +110,25 @@ const PracticePage: Component = () => {
     setCompletedMetrics(null);
     setLiveMetrics(null);
     if (activeTab() === "original" && originalIndex() < originalSentences().length - 1) {
-      setOriginalIndex((i) => i + 1);
+      setOriginalIndex((i) => {
+        const next = i + 1;
+        setSrAnnouncement(`Navigated to sentence ${next + 1} of ${originalSentences().length}`);
+        return next;
+      });
     } else if (activeTab() === "generated" && generatedIndex() < generatedSentences().length - 1) {
-      setGeneratedIndex((i) => i + 1);
+      setGeneratedIndex((i) => {
+        const next = i + 1;
+        setSrAnnouncement(`Navigated to sentence ${next + 1} of ${generatedSentences().length}`);
+        return next;
+      });
     }
   };
 
   const handleSentenceComplete = (metrics: TypingMetrics) => {
     setCompletedMetrics(metrics);
+    setSrAnnouncement(
+      `Drill completed. Speed: ${metrics.netWpm} words per minute. Accuracy: ${metrics.accuracy} percent.`
+    );
     if (params.id) {
       const idx = activeTab() === "original" ? originalIndex() : generatedIndex();
       updateProgress(params.id, idx).catch(console.error);
@@ -234,7 +254,21 @@ const PracticePage: Component = () => {
   const progressPercent = () => totalSentences() === 0 ? 0 : ((currentIndex() + 1) / totalSentences()) * 100;
 
   return (
-    <main class="flex-grow pt-32 pb-16 px-margin-desktop max-w-max-width-content mx-auto w-full flex flex-col">
+    <section
+      aria-label="Typing Practice Canvas"
+      class="flex-grow pt-32 pb-16 px-margin-desktop max-w-max-width-content mx-auto w-full flex flex-col"
+    >
+      {/* Screen Reader Live Announcements (WCAG 2.1 AA) */}
+      <div
+        class="sr-only"
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+        id="sr-practice-status"
+      >
+        {srAnnouncement()}
+      </div>
+
       <Show when={!storyData.loading && !storyData.error} fallback={
         <div class="flex items-center justify-center h-64 font-mono-label text-on-surface-variant">
           {storyData.error ? "Failed to load text." : "Loading..."}
@@ -479,13 +513,19 @@ const PracticePage: Component = () => {
       {/* Post-Session Results Modal */}
       <Show when={completedMetrics()}>
         {(metrics) => (
-          <div class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4" id="results-modal">
+          <div
+            class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4"
+            id="results-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="results-modal-title"
+          >
             <div class="bg-surface border-2 border-primary max-w-md w-full p-8 shadow-2xl space-y-6">
               <div class="space-y-1">
                 <span class="font-mono-label text-mono-label text-primary uppercase tracking-widest">
                   Drill Completed
                 </span>
-                <h2 class="font-headline-md text-headline-md">Session Performance</h2>
+                <h2 id="results-modal-title" class="font-headline-md text-headline-md">Session Performance</h2>
               </div>
 
               <div class="grid grid-cols-2 gap-4 py-4 border-y border-outline-variant">
@@ -527,7 +567,7 @@ const PracticePage: Component = () => {
           </div>
         )}
       </Show>
-    </main>
+    </section>
   );
 };
 
