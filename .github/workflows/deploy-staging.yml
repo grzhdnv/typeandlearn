@@ -46,15 +46,20 @@ jobs:
 
       - name: Smoke Test Backend Image Liveness & Readiness
         run: |
-          docker run --rm -d --name smoke-test-backend -p 8000:8000 \
+          docker run -d --name smoke-test-backend -p 8000:8000 \
             -e DATABASE_URL="sqlite:///apps/backend/data/smoke.db" \
             -e AUTH_MODE="local" \
             typeandlearn-backend:${{ github.sha }}
-          
-          # Wait for container startup and verify /healthz and /readyz
-          sleep 5
-          curl -f http://127.0.0.1:8000/healthz || (docker logs smoke-test-backend && exit 1)
-          curl -f http://127.0.0.1:8000/readyz || (docker logs smoke-test-backend && exit 1)
-          curl -f http://127.0.0.1:8000/metrics || (docker logs smoke-test-backend && exit 1)
-          
-          docker stop smoke-test-backend
+
+          trap 'docker logs smoke-test-backend || true; docker rm -f smoke-test-backend || true' EXIT
+
+          for _ in $(seq 1 15); do
+            if curl -fsS http://127.0.0.1:8000/healthz > /dev/null; then
+              break
+            fi
+            sleep 2
+          done
+
+          curl -fsS http://127.0.0.1:8000/healthz
+          curl -fsS http://127.0.0.1:8000/readyz
+          curl -fsS http://127.0.0.1:8000/metrics
