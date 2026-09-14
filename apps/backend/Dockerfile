@@ -27,6 +27,7 @@ WORKDIR /app
 COPY --from=builder /app/.venv /app/.venv
 COPY --from=builder /app/apps/backend /app/apps/backend
 COPY --from=builder /app/pyproject.toml /app/pyproject.toml
+COPY alembic.ini /app/alembic.ini
 
 ENV PATH="/app/.venv/bin:$PATH" \
     PYTHONUNBUFFERED=1 \
