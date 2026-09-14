@@ -269,7 +269,7 @@ const PracticePage: Component = () => {
         {srAnnouncement()}
       </div>
 
-      <Show when={!storyData.loading && !storyData.error} fallback={
+      <Show when={Boolean(storyData()) && !storyData.error} fallback={
         <div class="flex items-center justify-center h-64 font-mono-label text-on-surface-variant">
           {storyData.error ? "Failed to load text." : "Loading..."}
         </div>
