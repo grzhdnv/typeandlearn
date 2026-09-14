@@ -10,6 +10,7 @@ from sqlmodel import Session
 from api.routes.analytics import router as analytics_router
 from api.routes.auth import router as auth_router
 from api.routes.texts import router as texts_router
+from api.routes.user import router as user_router
 from core.database import engine, init_db
 
 
@@ -84,6 +85,7 @@ def create_app(custom_settings: Optional[Any] = None) -> FastAPI:
     application.include_router(texts_router)
     application.include_router(auth_router)
     application.include_router(analytics_router)
+    application.include_router(user_router)
     return application
 
 
