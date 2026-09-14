@@ -4,7 +4,6 @@
 import argparse
 from datetime import datetime, timezone
 import gzip
-import hashlib
 import json
 import os
 from pathlib import Path
@@ -13,14 +12,7 @@ import sqlite3
 import subprocess
 import sys
 
-
-def compute_sha256(file_path: Path) -> str:
-    """Compute SHA-256 hexadecimal digest of a file."""
-    hasher = hashlib.sha256()
-    with open(file_path, "rb") as f:
-        while chunk := f.read(65536):
-            hasher.update(chunk)
-    return hasher.hexdigest()
+from backup import compute_sha256
 
 
 def verify_checksum(backup_path: Path) -> bool:
