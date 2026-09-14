@@ -3,6 +3,7 @@ import { useParams } from '@solidjs/router';
 import { fetchStory, updateProgress, resetProgress, regenerateTopWords, retryEnrichment } from '../../../features/texts/api/textsApi';
 import { recordPracticeSession } from '../../../features/analytics/api/analyticsApi';
 import { StatusBadge } from '../../../features/texts/components/StatusBadge';
+import { isEnrichmentActive } from '../../texts/utils/status';
 import { TypingInterface } from '../../../features/typing/components/TypingInterface';
 import { HintGroup } from '../../../shared/types/contracts';
 import type { TypingMetrics } from '../../../features/typing/core/types.ts';
@@ -37,17 +38,15 @@ const PracticePage: Component = () => {
     }
   });
 
+  const isEnrichmentRunning = () => {
+    const story = storyData();
+    return story ? isEnrichmentActive(story) : false;
+  };
+
   createEffect(() => {
     let intervalId: number | undefined;
-    const story = storyData();
-    const isJobActive =
-      story?.status === "processing" ||
-      story?.status === "pending" ||
-      story?.enrichment_stage === "queued" ||
-      story?.enrichment_stage === "translating" ||
-      story?.enrichment_stage === "generating_practice";
 
-    if (isJobActive) {
+    if (isEnrichmentRunning()) {
       intervalId = window.setInterval(() => {
         refetchStory();
       }, 2000);
@@ -80,49 +79,35 @@ const PracticePage: Component = () => {
     }));
   });
 
-  const previousDisabled = () =>
-    activeTab() === "original" ? originalIndex() === 0 : generatedIndex() === 0;
-  
-  const nextDisabled = () =>
-    activeTab() === "original"
-      ? originalIndex() >= originalSentences().length - 1
-      : generatedIndex() >= generatedSentences().length - 1;
+  const sentencesFor = (tab: "original" | "generated") =>
+    tab === "original" ? originalSentences() : generatedSentences();
 
-  const goToPreviousSentence = () => {
-    setCompletedMetrics(null);
-    setLiveMetrics(null);
-    if (activeTab() === "original" && originalIndex() > 0) {
-      setOriginalIndex((i) => {
-        const next = i - 1;
-        setSrAnnouncement(`Navigated to sentence ${next + 1} of ${originalSentences().length}`);
-        return next;
-      });
-    } else if (activeTab() === "generated" && generatedIndex() > 0) {
-      setGeneratedIndex((i) => {
-        const next = i - 1;
-        setSrAnnouncement(`Navigated to sentence ${next + 1} of ${generatedSentences().length}`);
-        return next;
-      });
-    }
+  const indexFor = (tab: "original" | "generated") =>
+    tab === "original" ? originalIndex() : generatedIndex();
+
+  const setIndexFor = (tab: "original" | "generated", index: number) => {
+    if (tab === "original") setOriginalIndex(index);
+    else setGeneratedIndex(index);
   };
 
-  const goToNextSentence = () => {
+  const previousDisabled = () => indexFor(activeTab()) === 0;
+
+  const nextDisabled = () => indexFor(activeTab()) >= sentencesFor(activeTab()).length - 1;
+
+  const moveToSentence = (delta: number) => {
     setCompletedMetrics(null);
     setLiveMetrics(null);
-    if (activeTab() === "original" && originalIndex() < originalSentences().length - 1) {
-      setOriginalIndex((i) => {
-        const next = i + 1;
-        setSrAnnouncement(`Navigated to sentence ${next + 1} of ${originalSentences().length}`);
-        return next;
-      });
-    } else if (activeTab() === "generated" && generatedIndex() < generatedSentences().length - 1) {
-      setGeneratedIndex((i) => {
-        const next = i + 1;
-        setSrAnnouncement(`Navigated to sentence ${next + 1} of ${generatedSentences().length}`);
-        return next;
-      });
-    }
+    const tab = activeTab();
+    const index = indexFor(tab) + delta;
+    const total = sentencesFor(tab).length;
+    if (index < 0 || index >= total) return;
+    setIndexFor(tab, index);
+    setSrAnnouncement(`Navigated to sentence ${index + 1} of ${total}`);
   };
+
+  const goToPreviousSentence = () => moveToSentence(-1);
+
+  const goToNextSentence = () => moveToSentence(1);
 
   const handleSentenceComplete = (metrics: TypingMetrics) => {
     setCompletedMetrics(metrics);
@@ -130,11 +115,10 @@ const PracticePage: Component = () => {
       `Drill completed. Speed: ${metrics.netWpm} words per minute. Accuracy: ${metrics.accuracy} percent.`
     );
     if (params.id) {
-      const idx = activeTab() === "original" ? originalIndex() : generatedIndex();
+      const idx = currentIndex();
       updateProgress(params.id, idx).catch(console.error);
 
-      const sentences = activeTab() === "original" ? originalSentences() : generatedSentences();
-      const sentenceText = sentences[idx]?.text || "";
+      const sentenceText = sentencesFor(activeTab())[idx]?.text || "";
 
       recordPracticeSession({
         text_id: Number.parseInt(params.id, 10),
@@ -153,14 +137,9 @@ const PracticePage: Component = () => {
   const advanceAfterResults = () => {
     setCompletedMetrics(null);
     setLiveMetrics(null);
-    if (activeTab() === "original") {
-      if (originalIndex() < originalSentences().length - 1) {
-        setOriginalIndex((i) => i + 1);
-      }
-    } else {
-      if (generatedIndex() < generatedSentences().length - 1) {
-        setGeneratedIndex((i) => i + 1);
-      }
+    const tab = activeTab();
+    if (indexFor(tab) < sentencesFor(tab).length - 1) {
+      setIndexFor(tab, indexFor(tab) + 1);
     }
   };
 
@@ -249,8 +228,8 @@ const PracticePage: Component = () => {
     });
   });
 
-  const currentIndex = () => activeTab() === "original" ? originalIndex() : generatedIndex();
-  const totalSentences = () => activeTab() === "original" ? originalSentences().length : generatedSentences().length;
+  const currentIndex = () => indexFor(activeTab());
+  const totalSentences = () => sentencesFor(activeTab()).length;
   const progressPercent = () => totalSentences() === 0 ? 0 : ((currentIndex() + 1) / totalSentences()) * 100;
 
   return (
@@ -343,13 +322,7 @@ const PracticePage: Component = () => {
           </div>
         </div>
 
-        <Show when={
-          storyData()?.status === "processing" ||
-          storyData()?.status === "pending" ||
-          storyData()?.enrichment_stage === "queued" ||
-          storyData()?.enrichment_stage === "translating" ||
-          storyData()?.enrichment_stage === "generating_practice"
-        }>
+        <Show when={isEnrichmentRunning()}>
           <div class="p-4 mb-6 bg-amber-50 border border-amber-300 dark:bg-amber-950/30 dark:border-amber-800 text-amber-900 dark:text-amber-200 font-mono-label flex items-center gap-3">
             <span class="material-symbols-outlined animate-spin text-[20px]">autorenew</span>
             <span>
