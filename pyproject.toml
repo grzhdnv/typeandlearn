@@ -40,7 +40,7 @@ dev = [
 ]
 
 [tool.pyright]
-extraPaths = ["apps/backend"]
+extraPaths = ["apps/backend", "scripts"]
 
 [tool.ruff]
 exclude = ["archive"]
@@ -53,4 +53,5 @@ exclude = ["archive"]
 "tests/backend/test_analytics.py" = ["E402"]
 "tests/backend/test_user_privacy.py" = ["E402"]
 "tests/backend/test_logging_telemetry.py" = ["E402"]
+"tests/backend/test_disaster_recovery.py" = ["E402"]
 "apps/backend/alembic/env.py" = ["E402"]
