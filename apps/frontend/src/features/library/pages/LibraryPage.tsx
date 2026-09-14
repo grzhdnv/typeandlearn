@@ -1,11 +1,36 @@
-import { Component, createResource, createSignal, createMemo, Show, For } from 'solid-js';
-import { fetchTextTitles, postText, updateTextMetadata, deleteText, resetProgress } from '../../../features/texts/api/textsApi';
+import { Component, createResource, createSignal, createMemo, Show, For, createEffect, onCleanup } from 'solid-js';
+import { fetchTextTitles, postText, updateTextMetadata, deleteText, resetProgress, retryEnrichment } from '../../../features/texts/api/textsApi';
+import { StatusBadge } from '../../../features/texts/components/StatusBadge';
 
 const LANGUAGES = ["German", "French", "Italian", "Spanish"];
 const LEVELS = ["A1", "A2", "B1", "B2", "C1", "C2", "Unrated"];
 
 const LibraryPage: Component = () => {
   const [availableTexts, { refetch }] = createResource(fetchTextTitles);
+  const [retryingId, setRetryingId] = createSignal<string | null>(null);
+
+  createEffect(() => {
+    let intervalId: number | undefined;
+    const texts = availableTexts();
+    const hasActiveJob = texts?.some(
+      (t) =>
+        t.status === "processing" ||
+        t.status === "pending" ||
+        t.enrichment_stage === "queued" ||
+        t.enrichment_stage === "translating" ||
+        t.enrichment_stage === "generating_practice"
+    );
+
+    if (hasActiveJob) {
+      intervalId = window.setInterval(() => {
+        refetch();
+      }, 2000);
+    }
+
+    onCleanup(() => {
+      if (intervalId) window.clearInterval(intervalId);
+    });
+  });
   
   const [customText, setCustomText] = createSignal("");
   const [customTitle, setCustomTitle] = createSignal("");
@@ -128,6 +153,20 @@ const LibraryPage: Component = () => {
     } catch (error) {
       console.error("Failed to reset progress:", error);
       alert(error instanceof Error ? error.message : "Failed to reset progress.");
+    }
+  };
+
+  const handleRetry = async (textId: string) => {
+    if (retryingId()) return;
+    try {
+      setRetryingId(textId);
+      await retryEnrichment(textId);
+      refetch();
+    } catch (error) {
+      console.error("Failed to retry enrichment:", error);
+      alert(error instanceof Error ? error.message : "Failed to retry enrichment.");
+    } finally {
+      setRetryingId(null);
     }
   };
 
@@ -335,11 +374,15 @@ const LibraryPage: Component = () => {
                         </select>
                       </div>
                       <div class="flex gap-2 items-center">
-                        <Show when={text.status === "pending" || text.status === "processing"}>
-                          <span class="font-mono-label text-mono-label text-on-surface-variant uppercase">
-                            PROCESSING
-                          </span>
-                        </Show>
+                        <StatusBadge
+                          status={text.status}
+                          stage={text.enrichment_stage}
+                          completedCount={text.completed_sentences}
+                          totalCount={text.total_sentences}
+                          errorMessage={text.error_message}
+                          onRetry={() => handleRetry(text.id)}
+                          isRetrying={retryingId() === text.id}
+                        />
                         <Show when={text.completed_sentences > 0}>
                           <button 
                             class="text-outline-variant hover:text-primary transition-colors flex items-center justify-center" 

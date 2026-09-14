@@ -1,6 +1,7 @@
 import { Component, createResource, createSignal, createMemo, Show, createEffect, onMount, onCleanup } from 'solid-js';
 import { useParams } from '@solidjs/router';
-import { fetchStory, updateProgress, resetProgress, regenerateTopWords } from '../../../features/texts/api/textsApi';
+import { fetchStory, updateProgress, resetProgress, regenerateTopWords, retryEnrichment } from '../../../features/texts/api/textsApi';
+import { StatusBadge } from '../../../features/texts/components/StatusBadge';
 import { TypingInterface } from '../../../features/typing/components/TypingInterface';
 import { HintGroup } from '../../../shared/types/contracts';
 import type { TypingMetrics } from '../../../features/typing/core/types.ts';
@@ -15,6 +16,7 @@ const PracticePage: Component = () => {
   const params = useParams();
   const [storyData, { refetch: refetchStory }] = createResource(() => params.id, fetchStory);
   const [isRegenerating, setIsRegenerating] = createSignal(false);
+  const [isRetrying, setIsRetrying] = createSignal(false);
   const [filteringMethod, setFilteringMethod] = createSignal<"spacy" | "llm">("spacy");
 
   const [activeTab, setActiveTab] = createSignal<"original" | "generated">("original");
@@ -36,10 +38,17 @@ const PracticePage: Component = () => {
   createEffect(() => {
     let intervalId: number | undefined;
     const story = storyData();
-    if (story?.status === "processing") {
-       intervalId = window.setInterval(() => {
-         refetchStory();
-       }, 2000);
+    const isJobActive =
+      story?.status === "processing" ||
+      story?.status === "pending" ||
+      story?.enrichment_stage === "queued" ||
+      story?.enrichment_stage === "translating" ||
+      story?.enrichment_stage === "generating_practice";
+
+    if (isJobActive) {
+      intervalId = window.setInterval(() => {
+        refetchStory();
+      }, 2000);
     }
     
     onCleanup(() => {
@@ -148,6 +157,20 @@ const PracticePage: Component = () => {
     }
   };
 
+  const handleRetry = async () => {
+    if (!params.id) return;
+    setIsRetrying(true);
+    try {
+      await retryEnrichment(params.id);
+      refetchStory();
+    } catch (error) {
+      console.error("Failed to retry enrichment:", error);
+      alert(error instanceof Error ? error.message : "Failed to retry enrichment.");
+    } finally {
+      setIsRetrying(false);
+    }
+  };
+
   // Prevent synthetic clicks on buttons from stealing focus during typing
   const handleMouseOnlyClick = (action: () => void) => (event: MouseEvent) => {
     if (event.detail === 0) {
@@ -219,6 +242,15 @@ const PracticePage: Component = () => {
                 </span>
               </Show>
               <span class="text-on-surface-variant text-mono-sm font-mono-sm opacity-60">ID: {params.id}</span>
+              <Show when={storyData()}>
+                <StatusBadge
+                  status={storyData()!.status}
+                  stage={storyData()!.enrichment_stage}
+                  errorMessage={storyData()!.error_message}
+                  onRetry={handleRetry}
+                  isRetrying={isRetrying()}
+                />
+              </Show>
             </div>
             <h1 class="font-headline-md text-headline-md leading-tight">{storyData()?.title || "Untitled"}</h1>
             <Show when={storyData()?.author}>
@@ -261,15 +293,56 @@ const PracticePage: Component = () => {
           </div>
         </div>
 
-        <Show when={storyData()?.status === "processing"}>
-           <div class="p-6 mb-6 bg-tertiary-fixed border border-on-tertiary-fixed text-on-tertiary-fixed font-mono-label flex items-center gap-3">
-             <span class="material-symbols-outlined animate-spin text-[20px]">autorenew</span>
-             Translating text with AI... Please wait, the page will update automatically.
-           </div>
+        <Show when={
+          storyData()?.status === "processing" ||
+          storyData()?.status === "pending" ||
+          storyData()?.enrichment_stage === "queued" ||
+          storyData()?.enrichment_stage === "translating" ||
+          storyData()?.enrichment_stage === "generating_practice"
+        }>
+          <div class="p-4 mb-6 bg-amber-50 border border-amber-300 dark:bg-amber-950/30 dark:border-amber-800 text-amber-900 dark:text-amber-200 font-mono-label flex items-center gap-3">
+            <span class="material-symbols-outlined animate-spin text-[20px]">autorenew</span>
+            <span>
+              {storyData()?.enrichment_stage === "translating"
+                ? "Translating sentences and hints with AI... "
+                : storyData()?.enrichment_stage === "generating_practice"
+                ? "Extracting vocabulary and generating practice drills... "
+                : "AI enrichment in progress... "}
+              You can start typing the original text now while enrichment completes.
+            </span>
+          </div>
         </Show>
 
-        <Show when={storyData()?.status !== "processing" && totalSentences() > 0} fallback={
-          <div class="p-10 text-center font-mono-label text-outline">No sentences available for this text yet.</div>
+        <Show when={storyData()?.status === "failed" || storyData()?.enrichment_stage === "failed"}>
+          <div class="p-4 mb-6 bg-red-50 border border-red-300 dark:bg-red-950/30 dark:border-red-800 text-red-900 dark:text-red-200 font-mono-label flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+              <span class="material-symbols-outlined text-red-600 dark:text-red-400 text-[20px]">warning</span>
+              <div>
+                <div class="font-bold">AI Enrichment Failed</div>
+                <div class="text-xs text-red-700 dark:text-red-300">
+                  {storyData()?.error_message || "An error occurred during AI enrichment. You can still practice typing the original text."}
+                </div>
+              </div>
+            </div>
+            <button
+              onClick={handleRetry}
+              disabled={isRetrying()}
+              class="px-4 py-2 bg-primary text-on-primary font-mono-label text-mono-label hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center gap-2 self-start sm:self-auto"
+            >
+              <span class={`material-symbols-outlined text-[16px] ${isRetrying() ? "animate-spin" : ""}`}>
+                {isRetrying() ? "autorenew" : "refresh"}
+              </span>
+              {isRetrying() ? "Retrying..." : "Retry Enrichment"}
+            </button>
+          </div>
+        </Show>
+
+        <Show when={totalSentences() > 0} fallback={
+          <div class="p-10 text-center font-mono-label text-outline">
+            {activeTab() === "generated" && (storyData()?.status === "processing" || storyData()?.status === "pending")
+              ? "Practice sentences are being generated by AI. They will appear here once enrichment completes."
+              : "No sentences available for this text yet."}
+          </div>
         }>
           <Show when={activeTab() === "original"} fallback={
             <TypingInterface

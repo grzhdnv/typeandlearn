@@ -49,7 +49,7 @@ This issue map translates the production plan into discrete, reviewable engineer
   - *Acceptance*: Low-latency Groq client with backpressure; graceful failover to DeepSeek on HTTP 429 or 5xx.
 - **[x] ISSUE-031**: **Token Budgeting, Spend Caps, and Caching**
   - *Acceptance*: Daily token spend limits; database translation caching by `(lang, sentence_hash, prompt_version)`.
-- **[ ] ISSUE-032**: **Truthful Job Progress & Error Feedback UI**
+- **[x] ISSUE-032**: **Truthful Job Progress & Error Feedback UI**
   - *Acceptance*: Frontend clearly displays queue status, step-by-step progress, and honest error states if enrichment fails.
 
 ---

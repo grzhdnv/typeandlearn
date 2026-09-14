@@ -28,6 +28,8 @@ class TextRecord(SQLModel, table=True):
     )
     total_sentences: int = Field(default=0)
     estimated_time_minutes: int = Field(default=0)
+    enrichment_stage: Optional[str] = Field(default="queued", index=True)
+    error_message: Optional[str] = Field(default=None)
 
 
 class SentenceRecord(SQLModel, table=True):

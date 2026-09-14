@@ -237,3 +237,30 @@ def regenerate_words(
         raise HTTPException(
             status_code=500, detail=f"Error regenerating words: {error}"
         )
+
+
+@router.post("/{text_id}/retry", response_model=TextResponse)
+def retry_enrichment(
+    text_id: str,
+    background_tasks: BackgroundTasks,
+    owner_id: str = Depends(get_current_owner_id),
+) -> TextResponse:
+    """Retry enrichment processing for a failed or stalled text."""
+    try:
+        data = text_service.retry_enrichment(text_id, owner_id)
+        if data.id is not None:
+            background_tasks.add_task(
+                text_service.process_pending_text, data.id, owner_id
+            )
+        return TextResponse(
+            message="Retrying enrichment...",
+            data=data,
+        )
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error))
+    except IndexError:
+        raise HTTPException(status_code=404, detail="Text not found")
+    except Exception as error:
+        raise HTTPException(
+            status_code=500, detail=f"Error retrying enrichment: {error}"
+        )
