@@ -21,6 +21,7 @@ dependencies = [
     "pydantic-ai>=1.87.0",
     "beautifulsoup4>=4.15.0",
     "alembic>=1.14.0",
+    "pyjwt>=2.8.0",
 ]
 
 [tool.uv.sources]
@@ -48,4 +49,5 @@ exclude = ["archive"]
 "scripts/migrate.py" = ["E402"]
 "tests/backend/test_text_repository.py" = ["E402"]
 "tests/backend/test_owner_isolation.py" = ["E402"]
+"tests/backend/test_auth.py" = ["E402"]
 "apps/backend/alembic/env.py" = ["E402"]

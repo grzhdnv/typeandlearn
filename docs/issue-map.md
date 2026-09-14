@@ -56,7 +56,7 @@ This issue map translates the production plan into discrete, reviewable engineer
 
 ## Milestone M4 — Authentication & Learning History
 
-- **[ ] ISSUE-040**: **Managed Authentication Integration**
+- **[x] ISSUE-040**: **Managed Authentication Integration**
   - *Acceptance*: JWT/session validation on API routes; links authenticated user IDs to `owner_id`.
 - **[ ] ISSUE-041**: **Durable Learning Analytics & History**
   - *Acceptance*: Store completed practice sessions; compute historical accuracy trends, speed progression, and persistent weak words.
