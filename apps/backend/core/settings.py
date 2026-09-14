@@ -58,6 +58,19 @@ class Settings(BaseModel):
     jwt_issuer: str | None = Field(
         default_factory=lambda: os.getenv("JWT_ISSUER")
     )
+    log_format: str = Field(
+        default_factory=lambda: os.getenv("LOG_FORMAT", "json").lower()
+    )
+    log_level: str = Field(
+        default_factory=lambda: os.getenv("LOG_LEVEL", "INFO").upper()
+    )
+    environment: str = Field(
+        default_factory=lambda: os.getenv("ENVIRONMENT", "development").lower()
+    )
+    service_name: str = Field(
+        default_factory=lambda: os.getenv("SERVICE_NAME", "typeandlearn-api")
+    )
+
 
 
 settings = Settings()

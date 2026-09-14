@@ -9,9 +9,12 @@ from sqlmodel import Session
 
 from api.routes.analytics import router as analytics_router
 from api.routes.auth import router as auth_router
+from api.routes.metrics import router as metrics_router
 from api.routes.texts import router as texts_router
 from api.routes.user import router as user_router
 from core.database import engine, init_db
+from core.logging import setup_logging
+from core.middleware import CorrelationIdMiddleware
 
 
 @asynccontextmanager
@@ -53,7 +56,9 @@ async def lifespan(app: FastAPI):
 
 def create_app(custom_settings: Optional[Any] = None) -> FastAPI:
     """Instantiate and configure the FastAPI application."""
+    setup_logging()
     application = FastAPI(title="TypeAndLearn API", lifespan=lifespan)
+    application.add_middleware(CorrelationIdMiddleware)
 
     @application.get("/healthz", tags=["health"])
     def healthz() -> Dict[str, str]:
@@ -86,6 +91,7 @@ def create_app(custom_settings: Optional[Any] = None) -> FastAPI:
     application.include_router(auth_router)
     application.include_router(analytics_router)
     application.include_router(user_router)
+    application.include_router(metrics_router)
     return application
 
 
