@@ -69,7 +69,7 @@ This issue map translates the production plan into discrete, reviewable engineer
 
 - **[x] ISSUE-050**: **Structured Logging & Telemetry with Content Redaction**
   - *Acceptance*: Standardized JSON stdout logger; correlation IDs; automated redaction preventing user learning text from entering logs.
-- **[ ] ISSUE-051**: **CI/CD Pipeline & Staging Environment Deployment**
+- **[x] ISSUE-051**: **CI/CD Pipeline & Staging Environment Deployment**
   - *Acceptance*: GitHub Actions running parallel lint, unit, migration, and Playwright tests; immutable image build and staging deploy.
 
 ---
