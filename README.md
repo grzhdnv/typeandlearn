@@ -7,23 +7,29 @@ translations, and practice-sentence generation.
 
 ## Status
 
-Active v2 prototype, runnable locally. On 28 August 2026, verified browser text
-intake, live DeepSeek metadata and translations, five generated practice sentences,
-dictionary definitions, and a completed original-text session with saved progress.
-Automated checks cover all five local NLP pipelines and the backend text lifecycle.
+Active v2 application, runnable locally. The M0–M6 milestone plan in
+[docs/issue-map.md](docs/issue-map.md) is implemented and verified in-repo: a pure
+typing engine with Unicode/grapheme and IME handling, owner-scoped schema with
+Alembic migrations, a durable background job queue, Groq-first enrichment with
+failover, token spend caps and translation caching, managed-authentication hooks,
+durable learning analytics, GDPR/CCPA export and erasure, structured JSON logging
+with redaction, hardened CI and staging image builds, WCAG 2.1 AA accessibility,
+and automated backup/restore tooling.
 
-Next: expand frontend and end-to-end automation, and harden provider failure handling.
-This is a local development app; authentication and production deployment are not
-implemented.
+`npm run check` passes locally (Ruff, Pyright, 57 backend tests, frontend type
+check and production build, 27 frontend tests), alongside Playwright end-to-end,
+accessibility, and privacy suites. Enrichment-independent paths run offline without
+provider credentials; a `DEEPSEEK_API_KEY` enables live LLM features.
+
+Production promotion is not live yet. The staging workflow builds and smoke-tests
+immutable images but does not deploy them to a provisioned environment.
 
 ## Repository layout
 
 - `apps/backend` — FastAPI API with routes, schemas, services, repositories, and core configuration
 - `apps/frontend` — SolidJS UI organized by feature
-- `packages/shared/contracts` — shared API contract artifacts
 - `tests` — repository-level tests and fixtures
 - `docs` — current architecture, migration, and roadmap documentation
-- `archive` — historical plans, prototypes, v1 code, and migration data
 
 ## Requirements
 
@@ -39,7 +45,8 @@ Create the local environment file if it does not already exist:
 cp .env.example .env
 ```
 
-Set `DEEPSEEK_API_KEY` in `.env`, then install the locked dependencies:
+Set `DEEPSEEK_API_KEY` in `.env` to enable live LLM features, then install the
+locked dependencies:
 
 ```bash
 npm run bootstrap
@@ -47,10 +54,9 @@ npm run bootstrap
 
 `DATABASE_URL` is optional. When it is unset, the backend uses the ignored local
 SQLite database at `apps/backend/data/db.sqlite`. `GROQ_API_KEY` is needed only when
-a Groq fallback model is configured.
-
-The current backend initializes its LLM provider at startup, so a DeepSeek key is
-required even to browse the library. Do not commit `.env`.
+a Groq fallback model is configured. The backend starts without any provider
+credentials and serves library, practice, and history in offline mode; only AI
+enrichment is disabled. Do not commit `.env`.
 
 Bootstrap installs the pinned spaCy 3.8.0 small pipelines for German, French,
 Italian, Spanish, and English from the official
@@ -60,20 +66,21 @@ Keep spaCy on the compatible 3.8 series until upgrading the models together.
 
 ## Run locally
 
-From the repository root, start both services:
+From the repository root, start the backend, background worker, and frontend:
 
 ```bash
 npm run dev
 ```
 
 Open [TypeAndLearn](http://127.0.0.1:3000). The backend API docs are at
-[localhost:8000/docs](http://127.0.0.1:8000/docs). Both services bind to localhost,
+[localhost:8000/docs](http://localhost:8000/docs). All processes bind to localhost,
 reload during development, and stop together on Ctrl+C.
 
 To run them in separate terminals instead:
 
 ```bash
 npm run dev:backend
+.venv/bin/python apps/backend/worker.py
 # In another terminal, also from the repository root:
 npm run dev:frontend
 ```
@@ -109,8 +116,7 @@ before starting this one.
   application flows with annotation prompts
 - [Migration guide](docs/migration-guide.md) — v1-to-v2 path and command changes
 
-Historical planning documents remain available under `archive/plans/` for context;
-they are not the current backlog.
+Historical planning documents and v1 code live in git history.
 
 ## Legacy v1
 
