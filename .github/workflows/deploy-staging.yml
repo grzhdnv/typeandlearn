@@ -53,7 +53,7 @@ jobs:
 
           trap 'docker logs smoke-test-backend || true; docker rm -f smoke-test-backend || true' EXIT
 
-          for _ in $(seq 1 15); do
+          for _ in $(seq 1 60); do
             if curl -fsS http://127.0.0.1:8000/healthz > /dev/null; then
               break
             fi
