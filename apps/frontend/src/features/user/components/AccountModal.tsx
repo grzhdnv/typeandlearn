@@ -1,4 +1,4 @@
-import { Component, Show, createSignal, onMount } from "solid-js";
+import { Component, Show, createEffect, createSignal, onCleanup, onMount } from "solid-js";
 import { deleteUserAccount, exportUserData, fetchUserProfile } from "../api/userApi";
 import type { UserProfile } from "../../../shared/types/contracts";
 
@@ -18,6 +18,20 @@ export const AccountModal: Component<AccountModalProps> = (props) => {
   const [deleting, setDeleting] = createSignal(false);
   const [deleteSuccess, setDeleteSuccess] = createSignal(false);
   const [deleteError, setDeleteError] = createSignal<string | null>(null);
+
+  createEffect(() => {
+    if (!props.isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        props.onClose();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    onCleanup(() => {
+      window.removeEventListener("keydown", handleKeyDown);
+    });
+  });
 
   onMount(async () => {
     try {

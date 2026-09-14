@@ -171,7 +171,7 @@ const LibraryPage: Component = () => {
   };
 
   return (
-    <main class="w-full max-w-max-width-content mx-auto px-margin-mobile md:px-0 py-margin-desktop space-y-12">
+    <section aria-label="Library Overview" class="w-full max-w-max-width-content mx-auto px-margin-mobile md:px-0 py-margin-desktop space-y-12">
       {/* Recently Practiced Section */}
       <Show when={recentlyPracticed()}>
         {(recent) => (
@@ -215,7 +215,7 @@ const LibraryPage: Component = () => {
       </Show>
 
       {/* Search & Filters & Add */}
-      <section class="space-y-6">
+      <section class="space-y-6" aria-label="Library Controls">
         <div class="flex justify-between gap-4">
           <div class="relative group flex-grow">
             <span class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-on-surface-variant">search</span>
@@ -223,15 +223,19 @@ const LibraryPage: Component = () => {
               class="w-full pl-12 pr-4 py-4 bg-surface border border-outline-variant font-mono-input text-[18px] focus:ring-0 focus:border-primary focus:border-2 outline-none transition-all placeholder:text-outline-variant" 
               placeholder="SEARCH LIBRARY..." 
               type="text"
+              aria-label="Search library texts"
               value={searchQuery()}
               onInput={(e) => setSearchQuery(e.currentTarget.value)}
             />
           </div>
           <button 
+            id="btn-add-text"
             onClick={() => setIsAdding(!isAdding())}
-            class="px-6 py-4 bg-primary text-on-primary font-mono-label hover:bg-on-surface-variant transition-colors whitespace-nowrap flex items-center gap-2"
+            aria-expanded={isAdding() ? "true" : "false"}
+            aria-label="Add Text"
+            class="px-6 py-4 bg-primary text-on-primary font-mono-label hover:bg-on-surface-variant transition-colors whitespace-nowrap flex items-center gap-2 cursor-pointer"
           >
-            <span class="material-symbols-outlined text-[18px]">add</span> ADD TEXT
+            <span aria-hidden="true" class="material-symbols-outlined text-[18px]">add</span> ADD TEXT
           </button>
         </div>
 
@@ -241,6 +245,7 @@ const LibraryPage: Component = () => {
               <select
                 class="w-full p-3 bg-surface border border-outline-variant focus:border-primary focus:ring-0 font-mono-input outline-none cursor-pointer"
                 value={customLanguage()}
+                aria-label="Target language"
                 onChange={(e) => setCustomLanguage(e.currentTarget.value)}
               >
                 <option value="" disabled>Select Language</option>
@@ -252,12 +257,14 @@ const LibraryPage: Component = () => {
               <input
                 class="w-full p-3 bg-surface border border-outline-variant focus:border-primary focus:ring-0 font-mono-input outline-none"
                 placeholder="Title (Optional)"
+                aria-label="Text title (Optional)"
                 value={customTitle()}
                 onInput={(e) => setCustomTitle(e.currentTarget.value)}
               />
               <select
                 class="w-full p-3 bg-surface border border-outline-variant focus:border-primary focus:ring-0 font-mono-input outline-none cursor-pointer"
                 value={customDifficulty()}
+                aria-label="Difficulty level (Optional)"
                 onChange={(e) => setCustomDifficulty(e.currentTarget.value)}
               >
                 <option value="">Difficulty (Optional)</option>
@@ -388,6 +395,7 @@ const LibraryPage: Component = () => {
                             class="text-outline-variant hover:text-primary transition-colors flex items-center justify-center" 
                             onClick={() => handleResetProgress(text.id)}
                             title="Reset Progress"
+                            aria-label={`Reset progress for ${text.title}`}
                           >
                             <span class="material-symbols-outlined text-[20px]">restart_alt</span>
                           </button>
@@ -396,6 +404,7 @@ const LibraryPage: Component = () => {
                           class="text-outline-variant hover:text-error transition-colors flex items-center justify-center" 
                           onClick={() => handleDeleteText(text.id)}
                           title="Delete Text"
+                          aria-label={`Delete text: ${text.title}`}
                         >
                           <span class="material-symbols-outlined text-[20px]">delete</span>
                         </button>
@@ -428,7 +437,11 @@ const LibraryPage: Component = () => {
                       <span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">description</span> {text.word_count} WORDS</span>
                     </div>
                   </div>
-                  <a href={`/practice/${text.id}`} class="mt-6 w-full py-2 bg-transparent border border-primary text-primary font-mono-label text-mono-label hover:bg-primary hover:text-on-primary transition-all text-center block">
+                  <a
+                    href={`/practice/${text.id}`}
+                    aria-label={`Practice text: ${text.title}`}
+                    class="mt-6 w-full py-2 bg-transparent border border-primary text-primary font-mono-label text-mono-label hover:bg-primary hover:text-on-primary transition-all text-center block"
+                  >
                     PRACTICE
                   </a>
                 </div>
@@ -437,7 +450,7 @@ const LibraryPage: Component = () => {
           </Show>
         </Show>
       </section>
-    </main>
+    </section>
   );
 };
 

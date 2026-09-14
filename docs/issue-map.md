@@ -76,7 +76,7 @@ This issue map translates the production plan into discrete, reviewable engineer
 
 ## Milestone M6 — Private Beta & Production Readiness
 
-- **[ ] ISSUE-060**: **Accessibility (WCAG 2.1 AA) & Cross-Browser Audit**
+- **[x] ISSUE-060**: **Accessibility (WCAG 2.1 AA) & Cross-Browser Audit**
   - *Acceptance*: Keyboard-only navigation; screen reader announcements; high-contrast checks via Axe.
 - **[ ] ISSUE-061**: **Disaster Recovery & Backup Rehearsal**
   - *Acceptance*: Documented automated backup script and verified database recovery runbook.
