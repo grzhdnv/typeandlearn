@@ -22,6 +22,13 @@ else:
     elif database_url.startswith("postgresql://"):
         database_url = database_url.replace("postgresql://", "postgresql+psycopg://", 1)
 
+    # Ensure the parent directory of a file-backed SQLite database exists
+    sqlite_prefix = "sqlite:///"
+    if database_url.startswith(sqlite_prefix):
+        sqlite_path = Path(database_url.removeprefix(sqlite_prefix))
+        if sqlite_path.parent != Path("."):
+            sqlite_path.parent.mkdir(parents=True, exist_ok=True)
+
 # SQLite-specific configuration for FastAPI's multithreaded requests
 connect_args = {}
 if database_url.startswith("sqlite"):
