@@ -8,6 +8,7 @@ import App from './app/App';
 import LibraryPage from './features/library/pages/LibraryPage';
 import PracticePage from './features/practice/pages/PracticePage';
 import PracticeRedirect from './features/practice/pages/PracticeRedirect';
+import AnalyticsPage from './features/analytics/pages/AnalyticsPage';
 
 const root = document.getElementById('root');
 
@@ -22,5 +23,6 @@ render(() => (
     <Route path="/" component={LibraryPage} />
     <Route path="/practice" component={PracticeRedirect} />
     <Route path="/practice/:id" component={PracticePage} />
+    <Route path="/analytics" component={AnalyticsPage} />
   </Router>
 ), root!);

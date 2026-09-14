@@ -76,7 +76,13 @@ test.describe("Intake and Practice Flow", () => {
     await reviewBtn.click();
     await expect(resultsModal).not.toBeVisible();
 
-    // 11. Cleanup: Return to library and delete the test text
+    // 11. Navigate to Analytics page and verify drill is recorded
+    await page.getByRole("link", { name: "Analytics" }).click();
+    await expect(page).toHaveURL("/analytics");
+    await expect(page.locator("h1")).toContainText("Performance & History");
+    await expect(page.locator("#kpi-total-drills")).not.toHaveText("0");
+
+    // 12. Cleanup: Return to library and delete the test text
     await page.goto("/");
     const cardToDelete = page.locator("div.text-card-hover", {
       hasText: uniqueTitle,

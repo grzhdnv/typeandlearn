@@ -32,6 +32,14 @@ const App: Component<AppProps> = (props) => {
             >
               Practice
             </A>
+            <A
+              class="font-body-md text-body-md"
+              href="/analytics"
+              activeClass="border-primary text-primary font-bold border-b-2 pb-1"
+              inactiveClass="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200"
+            >
+              Analytics
+            </A>
           </div>
         </div>
         <div class="flex items-center gap-4">

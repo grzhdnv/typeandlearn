@@ -58,7 +58,7 @@ This issue map translates the production plan into discrete, reviewable engineer
 
 - **[x] ISSUE-040**: **Managed Authentication Integration**
   - *Acceptance*: JWT/session validation on API routes; links authenticated user IDs to `owner_id`.
-- **[ ] ISSUE-041**: **Durable Learning Analytics & History**
+- **[x] ISSUE-041**: **Durable Learning Analytics & History**
   - *Acceptance*: Store completed practice sessions; compute historical accuracy trends, speed progression, and persistent weak words.
 - **[ ] ISSUE-042**: **User Data Export & Right to Erasure (GDPR/CCPA)**
   - *Acceptance*: `GET /api/user/export` returns complete JSON archive; `DELETE /api/user/account` purges all owned records via database cascades.
