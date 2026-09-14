@@ -2,16 +2,20 @@
 
 from core.database import engine
 from core.settings import settings
+from repositories.analytics_repository import AnalyticsRepository
 from repositories.cache_repository import CacheRepository
 from repositories.job_repository import JobRepository
 from repositories.text_repository import TextRepository
+from services.analytics_service import AnalyticsService
 from services.dictionary_service import DictionaryService
 from services.llm_service import LlmService
 from services.preprocessing_service import PreprocessingService
 from services.text_service import TextService
 
+text_repository = TextRepository(engine)
 cache_repository = CacheRepository(engine)
 job_repository = JobRepository(engine)
+analytics_repository = AnalyticsRepository(engine)
 
 llm_service = LlmService(
     str(settings.translation_prompt_file),
@@ -22,7 +26,7 @@ llm_service = LlmService(
 )
 
 text_service = TextService(
-    repository=TextRepository(engine),
+    repository=text_repository,
     llm=llm_service,
     preprocessing=PreprocessingService(),
     dictionary=DictionaryService(),
@@ -30,4 +34,9 @@ text_service = TextService(
     cache_repository=cache_repository,
     daily_token_limit=settings.daily_token_limit,
     prompt_version=settings.prompt_version,
+)
+
+analytics_service = AnalyticsService(
+    analytics_repo=analytics_repository,
+    text_repo=text_repository,
 )

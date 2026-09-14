@@ -114,3 +114,84 @@ export type UploadResponse = {
   message: string;
   text: string;
 };
+
+/**
+ * Persisted typing practice session drill record.
+ */
+export type PracticeSession = {
+  id: number;
+  owner_id: string;
+  text_id: number;
+  sentence_index: number;
+  sentence_text: string;
+  target_type: string;
+  net_wpm: number;
+  raw_wpm: number;
+  accuracy: number;
+  active_seconds: number;
+  mistake_count: number;
+  mistakes_detail?: Array<Record<string, unknown>>;
+  completed_at: string;
+};
+
+/**
+ * Creation payload sent upon completing a typing drill.
+ */
+export type PracticeSessionCreatePayload = {
+  text_id: number;
+  sentence_index: number;
+  sentence_text: string;
+  target_type?: string;
+  net_wpm: number;
+  raw_wpm: number;
+  accuracy: number;
+  active_seconds: number;
+  mistake_count: number;
+  mistakes_detail?: Array<Record<string, unknown>>;
+  mistaken_words?: string[];
+};
+
+/**
+ * Frequently missed vocabulary item with mistake counts.
+ */
+export type WeakWord = {
+  id: number;
+  owner_id: string;
+  language: string;
+  word: string;
+  mistake_count: number;
+  practice_count: number;
+  last_mistake_at: string;
+};
+
+/**
+ * Progression data point tracking WPM and accuracy over time.
+ */
+export type SessionTrendPoint = {
+  session_id: number;
+  completed_at: string;
+  net_wpm: number;
+  accuracy: number;
+};
+
+/**
+ * Aggregate lifetime KPIs and recent progression metrics.
+ */
+export type AnalyticsSummary = {
+  total_drills: number;
+  total_practice_seconds: number;
+  avg_net_wpm: number;
+  peak_net_wpm: number;
+  avg_accuracy: number;
+  total_mistakes: number;
+  recent_trend: SessionTrendPoint[];
+};
+
+/**
+ * Current user profile and identity introspection.
+ */
+export type UserProfile = {
+  owner_id: string;
+  auth_mode: string;
+  authenticated: boolean;
+};

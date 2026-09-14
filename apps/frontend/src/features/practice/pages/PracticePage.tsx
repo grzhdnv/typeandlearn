@@ -1,6 +1,7 @@
 import { Component, createResource, createSignal, createMemo, Show, createEffect, onMount, onCleanup } from 'solid-js';
 import { useParams } from '@solidjs/router';
 import { fetchStory, updateProgress, resetProgress, regenerateTopWords, retryEnrichment } from '../../../features/texts/api/textsApi';
+import { recordPracticeSession } from '../../../features/analytics/api/analyticsApi';
 import { StatusBadge } from '../../../features/texts/components/StatusBadge';
 import { TypingInterface } from '../../../features/typing/components/TypingInterface';
 import { HintGroup } from '../../../shared/types/contracts';
@@ -111,6 +112,21 @@ const PracticePage: Component = () => {
     if (params.id) {
       const idx = activeTab() === "original" ? originalIndex() : generatedIndex();
       updateProgress(params.id, idx).catch(console.error);
+
+      const sentences = activeTab() === "original" ? originalSentences() : generatedSentences();
+      const sentenceText = sentences[idx]?.text || "";
+
+      recordPracticeSession({
+        text_id: Number.parseInt(params.id, 10),
+        sentence_index: idx,
+        sentence_text: sentenceText,
+        target_type: activeTab(),
+        net_wpm: metrics.netWpm,
+        raw_wpm: metrics.rawWpm,
+        accuracy: metrics.accuracy,
+        active_seconds: metrics.activeSeconds,
+        mistake_count: metrics.mistakeCount,
+      }).catch(console.error);
     }
   };
 
