@@ -61,6 +61,8 @@ class TextData(BaseModel):
     original_paragraphs: List[Paragraph]
     practice_sentences: List[PracticeSentence]
     top_words: List[TopWord] = []
+    enrichment_stage: Optional[str] = "queued"
+    error_message: Optional[str] = None
 
 
 class SentenceTranslation(BaseModel):
@@ -149,6 +151,8 @@ class TextTitle(BaseModel):
     completed_sentences: int = 0
     total_sentences: int = 0
     estimated_time_minutes: int = 0
+    enrichment_stage: Optional[str] = "queued"
+    error_message: Optional[str] = None
 
 
 class TextsResponse(BaseModel):

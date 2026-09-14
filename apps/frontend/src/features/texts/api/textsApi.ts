@@ -74,3 +74,8 @@ export const updateTextMetadata = async (id: string, language?: string, difficul
 export const deleteText = async (id: string): Promise<void> => {
   await deleteJson(`/api/texts/${id}`);
 };
+
+export const retryEnrichment = async (id: string): Promise<TextData> => {
+  const response = await postJson<{ message: string; data: TextData }>(`/api/texts/${id}/retry`, {});
+  return response.data;
+};

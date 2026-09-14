@@ -60,6 +60,8 @@ export type TextData = {
   original_paragraphs: Paragraph[];
   practice_sentences: PracticeSentence[];
   top_words: TopWord[];
+  enrichment_stage?: string;
+  error_message?: string;
 };
 
 /**
@@ -77,6 +79,8 @@ export type TextTitle = {
   completed_sentences: number;
   total_sentences: number;
   estimated_time_minutes: number;
+  enrichment_stage?: string;
+  error_message?: string;
 };
 
 /**
