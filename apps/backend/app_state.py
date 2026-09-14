@@ -6,7 +6,6 @@ from repositories.analytics_repository import AnalyticsRepository
 from repositories.cache_repository import CacheRepository
 from repositories.job_repository import JobRepository
 from repositories.text_repository import TextRepository
-from services.analytics_service import AnalyticsService
 from services.dictionary_service import DictionaryService
 from services.llm_service import LlmService
 from services.preprocessing_service import PreprocessingService
@@ -34,9 +33,4 @@ text_service = TextService(
     cache_repository=cache_repository,
     daily_token_limit=settings.daily_token_limit,
     prompt_version=settings.prompt_version,
-)
-
-analytics_service = AnalyticsService(
-    analytics_repo=analytics_repository,
-    text_repo=text_repository,
 )

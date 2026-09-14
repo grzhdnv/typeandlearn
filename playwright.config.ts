@@ -28,6 +28,12 @@ export default defineConfig({
       timeout: 120 * 1000,
     },
     {
+      command: "uv run --locked python apps/backend/worker.py",
+      url: "http://127.0.0.1:8000/readyz",
+      reuseExistingServer: !process.env.CI,
+      timeout: 120 * 1000,
+    },
+    {
       command: "npm --prefix apps/frontend run dev -- --port 3000 --host 127.0.0.1",
       url: "http://127.0.0.1:3000",
       reuseExistingServer: !process.env.CI,

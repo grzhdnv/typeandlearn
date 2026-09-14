@@ -1,15 +1,12 @@
 """Database models for practice sessions and learning analytics."""
 
-from datetime import datetime, timezone
+from datetime import datetime
 from typing import Any, Dict, List, Optional
 
 from sqlalchemy import JSON, Column, DateTime, Index, UniqueConstraint
 from sqlmodel import Field, SQLModel
 
-
-def utc_now() -> datetime:
-    """Return timezone-aware current UTC time."""
-    return datetime.now(timezone.utc)
+from models.cache import utc_now
 
 
 class PracticeSessionRecord(SQLModel, table=True):

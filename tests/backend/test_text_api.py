@@ -27,12 +27,13 @@ with mock.patch.dict(os.environ, {
     import app_state
     from api.routes import texts
     from core import database
-    from repositories import job_repository, text_repository
+    from repositories import cache_repository, job_repository, text_repository
     from schemas import texts as schemas
     from services import dictionary_service
     from services import llm_service
     from services import preprocessing_service
     from services import text_service
+    from worker import Worker
 
 
 class TextApiTests(unittest.TestCase):
@@ -51,40 +52,50 @@ class TextApiTests(unittest.TestCase):
             title="Test garden", difficulty_level="A1"
         )
         llm.translate_sentence_async = mock.AsyncMock(
-            return_value=schemas.SentenceTranslation(
-                translation="A test translation.",
-                translation_hints=[schemas.HintGroup(
-                    words=["Hund"], hint="dog"
-                )],
+            return_value=(
+                schemas.SentenceTranslation(
+                    translation="A test translation.",
+                    translation_hints=[schemas.HintGroup(
+                        words=["Hund"], hint="dog"
+                    )],
+                ),
+                None,
             )
         )
         llm.generate_practice_sentences_async = mock.AsyncMock(
-            return_value=schemas.PracticeSentencesResponse.model_validate({
-                "sentences": [{
-                    "sentence": "Der Hund spielt.",
-                    "translation": "The dog plays.",
-                    "translation_hints": [],
-                }],
-            })
+            return_value=(
+                schemas.PracticeSentencesResponse.model_validate({
+                    "sentences": [{
+                        "sentence": "Der Hund spielt.",
+                        "translation": "The dog plays.",
+                        "translation_hints": [],
+                    }],
+                }),
+                None,
+            )
         )
         dictionary = mock.Mock(spec=dictionary_service.DictionaryService)
         dictionary.translate_word.return_value = "A test definition."
         self.preprocessing = preprocessing_service.PreprocessingService()
         self.job_repo = job_repository.JobRepository(self.engine)
-        service = text_service.TextService(
+        self.service = text_service.TextService(
             text_repository.TextRepository(self.engine),
             llm,
             self.preprocessing,
             dictionary,
             job_repository=self.job_repo,
+            cache_repository=cache_repository.CacheRepository(self.engine),
         )
         self.enterContext(mock.patch.object(database, "engine", self.engine))
-        self.enterContext(mock.patch.object(app_state, "text_service", service))
-        self.enterContext(mock.patch.object(texts, "text_service", service))
+        self.enterContext(mock.patch.object(app_state, "text_service", self.service))
+        self.enterContext(mock.patch.object(texts, "text_service", self.service))
         self.enterContext(mock.patch.object(
             ai_models, "ALLOW_MODEL_REQUESTS", False
         ))
         self.client = self.enterContext(testclient.TestClient(app.app))
+
+    def _run_worker(self) -> None:
+        Worker(self.job_repo, self.service).run(single_run=True)
 
     def _upload(self) -> str:
         response = self.client.post("/texts", json={
@@ -92,6 +103,7 @@ class TextApiTests(unittest.TestCase):
             "language": "German",
         })
         self.assertEqual(response.status_code, 200, response.text)
+        self._run_worker()
         return self.client.get("/texts/titles").json()["titles"][0]["id"]
 
     def test_upload_processing_practice_progress_and_crud(self) -> None:
@@ -127,6 +139,7 @@ class TextApiTests(unittest.TestCase):
         self.assertEqual(response.json()["completed_sentences"], 0)
         response = self.client.post(f"{path}/regenerate-words")
         self.assertEqual(response.status_code, 200, response.text)
+        self._run_worker()
         self.assertEqual(self.client.get(path).json()["data"]["status"],
                          "processed")
 
