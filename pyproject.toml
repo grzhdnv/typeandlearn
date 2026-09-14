@@ -41,6 +41,9 @@ extraPaths = ["apps/backend", "scripts"]
 
 [tool.ruff]
 
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F"]
+
 [tool.ruff.lint.per-file-ignores]
 "tests/backend/test_text_repository.py" = ["E402"]
 "tests/backend/test_owner_isolation.py" = ["E402"]
