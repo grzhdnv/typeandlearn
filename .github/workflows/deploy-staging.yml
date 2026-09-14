@@ -1,0 +1,58 @@
+name: Deploy Staging
+
+on:
+  push:
+    branches: [main]
+
+concurrency:
+  group: staging-deployment
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-stage:
+    name: Build Immutable Images & Stage
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@b5ca514318bd6ebac0fb2aedd5d36ec1b5c232a2 # v3.10.0
+
+      - name: Build Backend Image (${{ github.sha }})
+        uses: docker/build-push-action@471d1dc4e07e5cdedd4c2171150001c434f0b7a4 # v6.15.0
+        with:
+          context: .
+          file: apps/backend/Dockerfile
+          push: false
+          tags: |
+            typeandlearn-backend:${{ github.sha }}
+            typeandlearn-backend:staging-latest
+
+      - name: Build Frontend Image (${{ github.sha }})
+        uses: docker/build-push-action@471d1dc4e07e5cdedd4c2171150001c434f0b7a4 # v6.15.0
+        with:
+          context: .
+          file: apps/frontend/Dockerfile
+          push: false
+          tags: |
+            typeandlearn-frontend:${{ github.sha }}
+            typeandlearn-frontend:staging-latest
+
+      - name: Smoke Test Backend Image Liveness & Readiness
+        run: |
+          docker run --rm -d --name smoke-test-backend -p 8000:8000 \
+            -e DATABASE_URL="sqlite:///apps/backend/data/smoke.db" \
+            -e AUTH_MODE="local" \
+            typeandlearn-backend:${{ github.sha }}
+          
+          # Wait for container startup and verify /healthz and /readyz
+          sleep 5
+          curl -f http://127.0.0.1:8000/healthz || (docker logs smoke-test-backend && exit 1)
+          curl -f http://127.0.0.1:8000/readyz || (docker logs smoke-test-backend && exit 1)
+          curl -f http://127.0.0.1:8000/metrics || (docker logs smoke-test-backend && exit 1)
+          
+          docker stop smoke-test-backend
