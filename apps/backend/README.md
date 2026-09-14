@@ -20,4 +20,4 @@ fastapi dev apps/backend/main.py
 ## Data and prompt files
 
 - `apps/backend/data/db.sqlite`
-- `apps/backend/prompts/`
+- `apps/backend/prompts/text_to_db.md`

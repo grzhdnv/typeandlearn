@@ -1,7 +1,7 @@
 """Database models for translation caching and token usage tracking."""
 
 import hashlib
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from typing import Any, Dict, Optional
 
 from sqlalchemy import JSON, Column, DateTime, UniqueConstraint
@@ -10,7 +10,7 @@ from sqlmodel import Field, SQLModel
 
 def utc_now() -> datetime:
     """Return timezone-aware current UTC time."""
-    return datetime.now(UTC)
+    return datetime.now(timezone.utc)
 
 
 def compute_sentence_hash(sentence: str) -> str:

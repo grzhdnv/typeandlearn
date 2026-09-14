@@ -1,0 +1,187 @@
+{
+  "title": "Die sechs Schwäne",
+  "original_paragraphs": [
+    {
+      "index": 0,
+      "sentences": [
+        {
+          "index": 0,
+          "text": "Es jagte einmal ein König in einem großen Wald und jagte einem Wild so eifrig nach daß ihm niemand von seinen Leuten folgen konnte.",
+          "translation": "Once a king was hunting in a large forest and pursued a game so eagerly that none of his people could follow him.",
+          "translation_hints": {
+            "Es": "It",
+            "jagte": "hunted",
+            "einmal": "once",
+            "ein": "a",
+            "König": "king",
+            "in": "in",
+            "einem": "a",
+            "großen": "large",
+            "Wald": "forest",
+            "Wild": "game",
+            "so": "so",
+            "eifrig": "eagerly",
+            "nach": "after",
+            "daß": "that",
+            "ihm": "him",
+            "niemand": "no one",
+            "von": "of",
+            "seinen": "his",
+            "Leuten": "people",
+            "folgen": "follow",
+            "konnte": "could"
+          }
+        },
+        {
+          "index": 1,
+          "text": "Als der Abend heran kam, hielt er still und blickte um sich, da sah er daß er sich verirrt hatte.",
+          "translation": "When evening approached, he stopped and looked around, then he saw that he had lost his way.",
+          "translation_hints": {
+            "Als": "When",
+            "der": "the",
+            "Abend": "evening",
+            "heran": "near",
+            "kam": "came",
+            "hielt": "stopped",
+            "er": "he",
+            "still": "still",
+            "blickte": "looked",
+            "um": "around",
+            "sich": "himself",
+            "da": "then",
+            "sah": "saw",
+            "verirrt": "lost",
+            "hatte": "had"
+          }
+        },
+        {
+          "index": 2,
+          "text": "Er suchte einen Ausgang, konnte aber keinen finden.",
+          "translation": "He looked for an exit but could not find one.",
+          "translation_hints": {
+            "Er": "He",
+            "suchte": "searched",
+            "einen": "an",
+            "Ausgang": "exit",
+            "konnte": "could",
+            "aber": "but",
+            "keinen": "none",
+            "finden": "find"
+          }
+        }
+      ]
+    },
+    {
+      "index": 1,
+      "sentences": [
+        {
+          "index": 0,
+          "text": "Da sah er eine alte Frau mit wackelndem Kopfe, die auf ihn zu kam; das war aber eine Hexe.",
+          "translation": "Then he saw an old woman with a nodding head coming towards him; but she was a witch.",
+          "translation_hints": {
+            "Da": "Then",
+            "sah": "saw",
+            "eine": "an",
+            "alte": "old",
+            "Frau": "woman",
+            "mit": "with",
+            "wackelndem": "nodding",
+            "Kopfe": "head",
+            "die": "who",
+            "auf": "towards",
+            "ihn": "him",
+            "kam": "came",
+            "das": "that",
+            "war": "was",
+            "Hexe": "witch"
+          }
+        },
+        {
+          "index": 1,
+          "text": "Liebe Frau, sprach er zu ihr, könnt ihr mir nicht den Weg durch den Wald zeigen?",
+          "translation": "Dear woman, he said to her, can you not show me the way through the forest?",
+          "translation_hints": {
+            "Liebe": "Dear",
+            "Frau": "woman",
+            "sprach": "said",
+            "zu": "to",
+            "ihr": "her",
+            "könnt": "can",
+            "mir": "me",
+            "nicht": "not",
+            "den": "the",
+            "Weg": "way",
+            "durch": "through",
+            "zeigen": "show"
+          }
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "sentences": [
+        {
+          "index": 0,
+          "text": "Der König war schon einmal verheirathet gewesen, und hatte von seiner ersten Gemahlin sieben Kinder, sechs Knaben und ein Mädchen, die er über alles auf der Welt liebte.",
+          "translation": "The king had been married once before, and had seven children by his first wife, six boys and a girl, whom he loved more than anything in the world.",
+          "translation_hints": {
+            "verheirathet": "married",
+            "gewesen": "been",
+            "sieben": "seven",
+            "Kinder": "children",
+            "sechs": "six",
+            "Knaben": "boys",
+            "Mädchen": "girl",
+            "alles": "anything",
+            "Welt": "world",
+            "liebte": "loved"
+          }
+        }
+      ]
+    }
+  ],
+  "practice_sentences": [
+    {
+      "index": 0,
+      "sentence": "Der Jäger sucht seinen Weg durch den dunklen Wald.",
+      "translation": "The hunter searches for his way through the dark forest.",
+      "translation_hints": {
+        "Der": "The",
+        "Jäger": "hunter",
+        "sucht": "searches",
+        "Weg": "way",
+        "durch": "through",
+        "dunklen": "dark",
+        "Wald": "forest"
+      }
+    },
+    {
+      "index": 1,
+      "sentence": "Die Kinder spielen mit dem kleinen Hund im Garten.",
+      "translation": "The children are playing with the little dog in the garden.",
+      "translation_hints": {
+        "Die": "The",
+        "Kinder": "children",
+        "spielen": "are playing",
+        "kleinen": "little",
+        "Hund": "dog",
+        "Garten": "garden"
+      }
+    },
+    {
+      "index": 2,
+      "sentence": "Sie konnte die alte Frau im Haus sehen.",
+      "translation": "She could see the old woman in the house.",
+      "translation_hints": {
+        "Sie": "She",
+        "konnte": "could",
+        "die": "the",
+        "alte": "old",
+        "Frau": "woman",
+        "im": "in the",
+        "Haus": "house",
+        "sehen": "see"
+      }
+    }
+  ]
+}

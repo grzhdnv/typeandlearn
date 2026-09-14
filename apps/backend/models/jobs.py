@@ -1,12 +1,15 @@
 """Database model for background job tracking and transactional leasing."""
 
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any, Dict, Optional
 
 from sqlalchemy import JSON, Column, DateTime
 from sqlmodel import Field, SQLModel
 
-from models.cache import utc_now
+
+def utc_now() -> datetime:
+    """Return timezone-aware current UTC time."""
+    return datetime.now(timezone.utc)
 
 
 class BackgroundJobRecord(SQLModel, table=True):

@@ -4,8 +4,9 @@
 
 - `backend/*` -> `apps/backend/*`
 - `frontend/*` -> `apps/frontend/*`
-- `typeandlearn/*` (v1 CLI) and old plan files -> git history
-- `plan/*` -> `docs/`
+- `test_files/*` -> `tests/fixtures/raw/*`
+- `typeandlearn/*` -> `archive/legacy/typeandlearn-cli/*`
+- `plan/*` -> `docs/plans/*`
 
 ## Command changes
 

@@ -10,12 +10,13 @@ export type TypingAction =
   | { type: "COMPOSITION_START"; timestampMs: number }
   | { type: "COMPOSITION_UPDATE"; data: string; timestampMs: number }
   | { type: "COMPOSITION_END"; data: string; timestampMs: number }
+  | { type: "PASTE"; text: string; timestampMs: number }
   | { type: "RESTART"; timestampMs: number }
   | { type: "PAUSE"; timestampMs: number }
   | { type: "RESUME"; timestampMs: number };
 
 export interface InputEventRecord {
-  type: "insert" | "delete_char" | "delete_word" | "restart";
+  type: "insert" | "delete_char" | "delete_word" | "composition" | "paste" | "restart";
   data?: string;
   timestampMs: number;
   cursorIndex: number;

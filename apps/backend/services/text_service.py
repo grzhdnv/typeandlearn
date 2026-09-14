@@ -1,11 +1,10 @@
 """Domain service for text retrieval, upload, and deletion workflows."""
 
-import asyncio
 import concurrent.futures
 import random
 import time
 from itertools import groupby
-from typing import Any
+from typing import Optional
 
 from sqlmodel import Session
 
@@ -20,38 +19,6 @@ from services.llm_service import LlmService
 from services.preprocessing_service import PreprocessingService
 
 
-def _hint_groups(hints: list[dict] | None) -> list[HintGroup]:
-    """Convert stored hint dictionaries into HintGroup models."""
-    return [HintGroup(**h) for h in hints] if hints else []
-
-
-def _token_counts(usage: Any) -> tuple[int, int, int]:
-    """Normalize provider-specific usage fields into prompt/completion/total tokens."""
-    prompt_tokens = getattr(usage, "input_tokens", None)
-    if prompt_tokens is None:
-        prompt_tokens = getattr(usage, "request_tokens", 0) or 0
-    completion_tokens = getattr(usage, "output_tokens", None)
-    if completion_tokens is None:
-        completion_tokens = getattr(usage, "response_tokens", 0) or 0
-    total_tokens = getattr(usage, "total_tokens", 0) or (prompt_tokens + completion_tokens)
-    return prompt_tokens, completion_tokens, total_tokens
-
-
-def _call_with_rate_limit_retry(call: Any, attempts: int = 4) -> Any:
-    """Run a synchronous LLM call, retrying only on rate-limit errors."""
-    for attempt in range(attempts):
-        try:
-            return call()
-        except Exception as error:
-            message = str(error).lower()
-            is_rate_limit = "429" in message or "rate limit" in message
-            if is_rate_limit and attempt < attempts - 1:
-                time.sleep(2 ** attempt)
-                continue
-            raise
-    raise RuntimeError("unreachable")
-
-
 class TextService:
     """Coordinate repository persistence with NLP-backed preprocessing and generation."""
 
@@ -61,8 +28,8 @@ class TextService:
         llm: LlmService,
         preprocessing: PreprocessingService,
         dictionary: DictionaryService,
-        job_repository: JobRepository,
-        cache_repository: CacheRepository,
+        job_repository: Optional[JobRepository] = None,
+        cache_repository: Optional[CacheRepository] = None,
         daily_token_limit: int = 50_000,
         prompt_version: str = "v1",
     ) -> None:
@@ -75,40 +42,6 @@ class TextService:
         self._cache_repository = cache_repository
         self._daily_token_limit = daily_token_limit
         self._prompt_version = prompt_version
-
-    def _enqueue_process(self, text_id: int, owner_id: str, filtering_method: str | None = None) -> None:
-        """Enqueue durable processing for a text within its own transaction."""
-        payload: dict[str, Any] = {"text_id": text_id, "owner_id": owner_id}
-        if filtering_method is not None:
-            payload["filtering_method"] = filtering_method
-        with Session(self._repository._engine) as session:
-            self._job_repository.enqueue(
-                session=session,
-                owner_id=owner_id,
-                task_type="process_text",
-                payload=payload,
-                text_id=text_id,
-            )
-            session.commit()
-
-    def _record_usage(self, owner_id: str, usage: Any, model_spec: str) -> None:
-        """Record provider token usage and estimated cost when available."""
-        if usage is None:
-            return
-        prompt_tokens, completion_tokens, total_tokens = _token_counts(usage)
-        if total_tokens <= 0:
-            return
-        provider, model = model_spec.split(":", 1) if ":" in model_spec else ("unknown", model_spec)
-        est_cost = (prompt_tokens * 0.59 + completion_tokens * 0.79) / 1_000_000.0
-        self._cache_repository.record_usage(
-            owner_id=owner_id,
-            provider=provider,
-            model=model,
-            prompt_tokens=prompt_tokens,
-            completion_tokens=completion_tokens,
-            total_tokens=total_tokens,
-            estimated_cost_usd=est_cost,
-        )
 
     def _build_text_data(
         self,
@@ -126,24 +59,32 @@ class TextService:
         ):
             sentences = []
             for s in s_group:
+                hints = s.translation_hints or []
+                if isinstance(hints, dict):
+                    hints = [{"words": [k], "hint": v} for k, v in hints.items()]
+
                 sentences.append(
                     Sentence(
                         index=s.sentence_index,
                         text=s.original_text,
                         translation=s.translation or "",
-                        translation_hints=_hint_groups(s.translation_hints),
+                        translation_hints=[HintGroup(**h) for h in hints] if hints else [],
                     )
                 )
             paragraphs.append(Paragraph(index=p_idx, sentences=sentences))
 
         practice_sentences = []
         for p in practice_records:
+            hints = p.translation_hints or []
+            if isinstance(hints, dict):
+                hints = [{"words": [k], "hint": v} for k, v in hints.items()]
+                
             practice_sentences.append(
                 PracticeSentence(
                     index=p.sentence_index,
                     sentence=p.sentence,
                     translation=p.translation,
-                    translation_hints=_hint_groups(p.translation_hints),
+                    translation_hints=[HintGroup(**h) for h in hints] if hints else [],
                 )
             )
 
@@ -237,31 +178,43 @@ class TextService:
         paragraphs_data, word_frequencies = self._preprocessing.process_text(text, language, filtering_method)
         
         if filtering_method == "llm":
-            try:
-                filtered_response = _call_with_rate_limit_retry(
-                    lambda: self._llm.filter_meaningful_words(word_frequencies, language)
-                )
-                word_frequencies = [{"word": fw.word, "count": fw.count} for fw in filtered_response.words]
-            except Exception as e:
-                print(f"Failed to filter words via LLM: {e}")
-                # Fallback to spacy logic if LLM fails
+            for attempt in range(4):
+                try:
+                    filtered_response = self._llm.filter_meaningful_words(word_frequencies, language)
+                    word_frequencies = [{"word": fw.word, "count": fw.count} for fw in filtered_response.words]
+                    break
+                except Exception as e:
+                    if "429" in str(e).lower() or "rate limit" in str(e).lower():
+                        if attempt < 3:
+                            time.sleep(2 ** attempt)
+                            continue
+                    print(f"Failed to filter words via LLM: {e}")
+                    # Fallback to spacy logic if LLM fails
+                    break
         
         # 2. Extract metadata if missing
         final_title = title
         final_difficulty = difficulty_level
         if not final_title or not final_difficulty:
-            try:
-                metadata = _call_with_rate_limit_retry(lambda: self._llm.extract_metadata(text))
-                if not final_title:
-                    final_title = f"[{metadata.title}]"
-                if not final_difficulty:
-                    final_difficulty = metadata.difficulty_level
-            except Exception as e:
-                print(f"Failed to extract metadata: {e}")
-                if not final_title:
-                    final_title = "[Untitled]"
-                if not final_difficulty:
-                    final_difficulty = "Unrated"
+            for attempt in range(4):
+                try:
+                    metadata = self._llm.extract_metadata(text)
+                    if not final_title:
+                        final_title = f"[{metadata.title}]"
+                    if not final_difficulty:
+                        final_difficulty = metadata.difficulty_level
+                    break
+                except Exception as e:
+                    if "429" in str(e).lower() or "rate limit" in str(e).lower():
+                        if attempt < 3:
+                            time.sleep(2 ** attempt)
+                            continue
+                    print(f"Failed to extract metadata: {e}")
+                    if not final_title:
+                        final_title = "[Untitled]"
+                    if not final_difficulty:
+                        final_difficulty = "Unrated"
+                    break
 
         final_title = final_title or "[Untitled]"
         final_difficulty = final_difficulty or "Unrated"
@@ -321,13 +274,24 @@ class TextService:
             "language": language,
         }
 
-        record, _ = self._repository.save_text_with_job(
-            record=record,
-            task_type="process_text",
-            payload=job_payload,
-            sentences=sentence_records,
-            frequencies=frequency_records,
-        )
+        if hasattr(self._repository, "save_text_with_job"):
+            record, _ = self._repository.save_text_with_job(
+                record=record,
+                task_type="process_text",
+                payload=job_payload,
+                sentences=sentence_records,
+                frequencies=frequency_records,
+            )
+        else:
+            record = self._repository.save_text(record)
+            if record.id is None:
+                raise RuntimeError("Failed to generate database ID for text.")
+            for s in sentence_records:
+                s.text_id = record.id
+            self._repository.save_sentences(sentence_records)
+            for f in frequency_records:
+                f.text_id = record.id
+            self._repository.save_word_frequencies(frequency_records)
 
         return record
 
@@ -368,14 +332,18 @@ class TextService:
         _, word_frequencies = self._preprocessing.process_text(full_text, record.language, filtering_method)
         
         if filtering_method == "llm":
-            try:
-                filtered_response = _call_with_rate_limit_retry(
-                    lambda: self._llm.filter_meaningful_words(word_frequencies, record.language)
-                )
-                word_frequencies = [{"word": fw.word, "count": fw.count} for fw in filtered_response.words]
-            except Exception as e:
-                print(f"Failed to filter words via LLM during regeneration: {e}")
-                raise ValueError(f"LLM filtering failed: {e}")
+            for attempt in range(4):
+                try:
+                    filtered_response = self._llm.filter_meaningful_words(word_frequencies, record.language)
+                    word_frequencies = [{"word": fw.word, "count": fw.count} for fw in filtered_response.words]
+                    break
+                except Exception as e:
+                    if "429" in str(e).lower() or "rate limit" in str(e).lower():
+                        if attempt < 3:
+                            time.sleep(2 ** attempt)
+                            continue
+                    print(f"Failed to filter words via LLM during regeneration: {e}")
+                    raise ValueError(f"LLM filtering failed: {e}")
         
         # 2. Update WordFrequencyRecords
         self._repository.delete_word_frequencies(record.id, owner_id)
@@ -395,8 +363,17 @@ class TextService:
         record.status = "processing"
         self._repository.update_text(record)
 
-        self._enqueue_process(record.id, owner_id, filtering_method)
-
+        if self._job_repository and record.id is not None:
+            with Session(self._repository._engine) as session:
+                self._job_repository.enqueue(
+                    session=session,
+                    owner_id=owner_id,
+                    task_type="process_text",
+                    payload={"text_id": record.id, "owner_id": owner_id, "filtering_method": filtering_method},
+                    text_id=record.id,
+                )
+                session.commit()
+        
         return self.get_one(text_id, owner_id)
 
     def update_progress(self, text_id: str, sentence_index: int, owner_id: str) -> TextRecord:
@@ -487,6 +464,8 @@ class TextService:
             
             print(f"Starting background processing for text '{record.title}' (ID: {text_id}). {processed_count}/{total_sentences} sentences already processed.")
             
+            import asyncio
+            
             async def _translate_all():
                 sem = asyncio.Semaphore(15)
                 
@@ -497,38 +476,40 @@ class TextService:
                     sentence_hash = compute_sentence_hash(s.original_text)
 
                     # Check translation cache before invoking LLM
-                    cached = await asyncio.to_thread(
-                        self._cache_repository.get_translation,
-                        source_language=record.language,
-                        target_language="English",
-                        sentence_hash=sentence_hash,
-                        prompt_version=self._prompt_version,
-                    )
-                    if cached:
-                        s.translation = cached.translation
-                        hints = cached.translation_hints
-                        if isinstance(hints, dict) and "hints" in hints:
-                            s.translation_hints = hints["hints"]
-                        elif isinstance(hints, list):
-                            s.translation_hints = hints
-                        else:
-                            s.translation_hints = []
-                        s.status = "processed"
-                        await asyncio.to_thread(self._repository.update_sentence, s)
-                        print(f"  -> Cache hit for sentence {idx}: '{s.translation}'")
-                        return
+                    if self._cache_repository:
+                        cached = await asyncio.to_thread(
+                            self._cache_repository.get_translation,
+                            source_language=record.language,
+                            target_language="English",
+                            sentence_hash=sentence_hash,
+                            prompt_version=self._prompt_version,
+                        )
+                        if cached:
+                            s.translation = cached.translation
+                            hints = cached.translation_hints
+                            if isinstance(hints, dict) and "hints" in hints:
+                                s.translation_hints = hints["hints"]
+                            elif isinstance(hints, list):
+                                s.translation_hints = hints
+                            else:
+                                s.translation_hints = []
+                            s.status = "processed"
+                            await asyncio.to_thread(self._repository.update_sentence, s)
+                            print(f"  -> Cache hit for sentence {idx}: '{s.translation}'")
+                            return
 
                     # Check daily budget before invoking LLM on cache miss
-                    has_budget = await asyncio.to_thread(
-                        self._cache_repository.check_daily_budget,
-                        owner_id=owner_id,
-                        daily_limit=self._daily_token_limit,
-                    )
-                    if not has_budget:
-                        print(f"  [ERROR] Daily token budget of {self._daily_token_limit} exceeded for owner {owner_id}")
-                        raise DailyBudgetExceededError(
-                            f"Daily token budget of {self._daily_token_limit} exceeded for owner {owner_id}"
+                    if self._cache_repository:
+                        has_budget = await asyncio.to_thread(
+                            self._cache_repository.check_daily_budget,
+                            owner_id=owner_id,
+                            daily_limit=self._daily_token_limit,
                         )
+                        if not has_budget:
+                            print(f"  [ERROR] Daily token budget of {self._daily_token_limit} exceeded for owner {owner_id}")
+                            raise DailyBudgetExceededError(
+                                f"Daily token budget of {self._daily_token_limit} exceeded for owner {owner_id}"
+                            )
                         
                     print(f"[{idx}/{total_sentences}] Translating sentence: '{s.original_text}'...")
                     context = get_previous_sentence_context(s)
@@ -539,11 +520,12 @@ class TextService:
                     async with sem:
                         for attempt in range(max_retries):
                             try:
-                                result, usage = await self._llm.translate_sentence_async(
+                                result = await self._llm.translate_sentence_async(
                                     title=record.title,
                                     context=context,
                                     target_sentence=s.original_text,
                                 )
+                                usage = getattr(result, "usage", None)
                                 
                                 s.translation = result.translation
                                 s.translation_hints = [hg.model_dump() for hg in result.translation_hints]
@@ -552,19 +534,41 @@ class TextService:
                                 print(f"  -> Translated: '{s.translation}'")
 
                                 # Store translation in cache
-                                await asyncio.to_thread(
-                                    self._cache_repository.store_translation,
-                                    source_language=record.language,
-                                    target_language="English",
-                                    sentence_hash=sentence_hash,
-                                    translation=result.translation,
-                                    translation_hints=s.translation_hints,
-                                    prompt_version=self._prompt_version,
-                                )
+                                if self._cache_repository:
+                                    await asyncio.to_thread(
+                                        self._cache_repository.store_translation,
+                                        source_language=record.language,
+                                        target_language="English",
+                                        sentence_hash=sentence_hash,
+                                        translation=result.translation,
+                                        translation_hints=s.translation_hints,
+                                        prompt_version=self._prompt_version,
+                                    )
 
-                                await asyncio.to_thread(
-                                    self._record_usage, owner_id, usage, self._llm.model_name
-                                )
+                                # Record token usage
+                                if self._cache_repository and usage is not None:
+                                    prompt_tokens = getattr(usage, "input_tokens", None)
+                                    if prompt_tokens is None:
+                                        prompt_tokens = getattr(usage, "request_tokens", 0) or 0
+                                    completion_tokens = getattr(usage, "output_tokens", None)
+                                    if completion_tokens is None:
+                                        completion_tokens = getattr(usage, "response_tokens", 0) or 0
+                                    total_tokens = getattr(usage, "total_tokens", 0) or (prompt_tokens + completion_tokens)
+
+                                    if total_tokens > 0:
+                                        spec = getattr(self._llm, "model_name", getattr(self._llm, "_model_name", "unknown"))
+                                        provider, model = spec.split(":", 1) if ":" in spec else ("unknown", spec)
+                                        est_cost = (prompt_tokens * 0.59 + completion_tokens * 0.79) / 1_000_000.0
+                                        await asyncio.to_thread(
+                                            self._cache_repository.record_usage,
+                                            owner_id=owner_id,
+                                            provider=provider,
+                                            model=model,
+                                            prompt_tokens=prompt_tokens,
+                                            completion_tokens=completion_tokens,
+                                            total_tokens=total_tokens,
+                                            estimated_cost_usd=est_cost,
+                                        )
                                 return # Success
                             except DailyBudgetExceededError:
                                 raise
@@ -594,7 +598,7 @@ class TextService:
             top_words = [f.word for f in frequencies[:15]]
             
             if top_words:
-                if not self._cache_repository.check_daily_budget(owner_id, self._daily_token_limit):
+                if self._cache_repository and not self._cache_repository.check_daily_budget(owner_id, self._daily_token_limit):
                     raise DailyBudgetExceededError(
                         f"Daily token budget of {self._daily_token_limit} exceeded for owner {owner_id}"
                     )
@@ -602,9 +606,9 @@ class TextService:
                 print(f"Generating practice sentences using top {len(top_words)} words: {top_words}")
                 for attempt in range(3):
                     try:
-                        practice_result, practice_usage = asyncio.run(
-                            self._llm.generate_practice_sentences_async(top_words)
-                        )
+                        import asyncio
+                        practice_result = asyncio.run(self._llm.generate_practice_sentences_async(top_words))
+                        practice_usage = getattr(practice_result, "usage", None)
                         
                         # Clear old practice sentences if any exist (e.g. during regeneration)
                         self._repository.delete_practice_sentences(text_id, owner_id)
@@ -623,7 +627,27 @@ class TextService:
                             )
                         self._repository.save_practice_sentences(practice_records)
 
-                        self._record_usage(owner_id, practice_usage, self._llm.structured_model_name)
+                        if self._cache_repository and practice_usage is not None:
+                            p_tokens = getattr(practice_usage, "input_tokens", None)
+                            if p_tokens is None:
+                                p_tokens = getattr(practice_usage, "request_tokens", 0) or 0
+                            c_tokens = getattr(practice_usage, "output_tokens", None)
+                            if c_tokens is None:
+                                c_tokens = getattr(practice_usage, "response_tokens", 0) or 0
+                            tot_tokens = getattr(practice_usage, "total_tokens", 0) or (p_tokens + c_tokens)
+                            if tot_tokens > 0:
+                                spec = getattr(self._llm, "structured_model_name", getattr(self._llm, "_structured_model_name", "unknown"))
+                                provider, model = spec.split(":", 1) if ":" in spec else ("unknown", spec)
+                                est_cost = (p_tokens * 0.59 + c_tokens * 0.79) / 1_000_000.0
+                                self._cache_repository.record_usage(
+                                    owner_id=owner_id,
+                                    provider=provider,
+                                    model=model,
+                                    prompt_tokens=p_tokens,
+                                    completion_tokens=c_tokens,
+                                    total_tokens=tot_tokens,
+                                    estimated_cost_usd=est_cost,
+                                )
                         break # Success
                     except DailyBudgetExceededError:
                         raise
@@ -660,20 +684,22 @@ class TextService:
             record.enrichment_stage = "completed"
             record.error_message = None
             self._repository.update_text(record)
-            jobs = self._job_repository.load_jobs_by_text(text_id, owner_id)
-            for j in jobs:
-                if j.id is not None and j.status in ("pending", "leased"):
-                    self._job_repository.complete(j.id, j.worker_id or "local_worker")
+            if self._job_repository:
+                jobs = self._job_repository.load_jobs_by_text(text_id, owner_id)
+                for j in jobs:
+                    if j.id is not None and j.status in ("pending", "leased"):
+                        self._job_repository.complete(j.id, j.worker_id or "local_worker")
             print(f"Successfully finished processing text '{record.title}' (ID: {text_id})!")
         except Exception as err:
             record.status = "failed"
             record.enrichment_stage = "failed"
             record.error_message = str(err)
             self._repository.update_text(record)
-            jobs = self._job_repository.load_jobs_by_text(text_id, owner_id)
-            for j in jobs:
-                if j.id is not None and j.status in ("pending", "leased"):
-                    self._job_repository.fail(j.id, j.worker_id or "local_worker", str(err))
+            if self._job_repository:
+                jobs = self._job_repository.load_jobs_by_text(text_id, owner_id)
+                for j in jobs:
+                    if j.id is not None and j.status in ("pending", "leased"):
+                        self._job_repository.fail(j.id, j.worker_id or "local_worker", str(err))
             raise
 
     def retry_enrichment(self, text_id: str, owner_id: str) -> TextData:
@@ -692,6 +718,15 @@ class TextService:
         record.error_message = None
         self._repository.update_text(record)
 
-        self._enqueue_process(record.id, owner_id)
+        if self._job_repository:
+            with Session(self._repository._engine) as session:
+                self._job_repository.enqueue(
+                    session=session,
+                    owner_id=owner_id,
+                    task_type="process_text",
+                    payload={"text_id": record.id, "owner_id": owner_id},
+                    text_id=record.id,
+                )
+                session.commit()
 
         return self.get_one(text_id, owner_id)

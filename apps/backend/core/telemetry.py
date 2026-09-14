@@ -37,6 +37,31 @@ def record_http_request(method: str, path: str, status_code: int, duration_secon
         _http_request_duration_count[(method, grouped)] += 1
 
 
+def get_telemetry_snapshot() -> Dict[str, Any]:
+    """Retrieve raw metrics snapshot for structured health endpoints."""
+    with _lock:
+        requests = [
+            {"method": m, "path": p, "status": s, "count": c}
+            for (m, p, s), c in _http_requests_total.items()
+        ]
+        latencies = [
+            {
+                "method": m,
+                "path": p,
+                "total_seconds": round(s, 4),
+                "count": c,
+                "avg_seconds": round(s / c, 4) if c > 0 else 0.0,
+            }
+            for (m, p), s in _http_request_duration_sum.items()
+            for (m2, p2), c in _http_request_duration_count.items()
+            if m == m2 and p == p2
+        ]
+    return {
+        "requests_total": requests,
+        "latencies": latencies,
+    }
+
+
 def format_prometheus_metrics(extra_metrics: Dict[str, Any] | None = None) -> str:
     """Format recorded telemetry in standard Prometheus text representation."""
     lines = [

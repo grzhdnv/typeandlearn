@@ -1,0 +1,1 @@
+I am learning English. Give me practice sentences based of the following words frequency table. Exclude any fluff, just give me the sentences.

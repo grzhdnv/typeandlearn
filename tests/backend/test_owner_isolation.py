@@ -26,7 +26,7 @@ with mock.patch.dict(os.environ, {
     import app_state
     from api.routes import texts
     from core import database
-    from repositories import cache_repository, job_repository, text_repository
+    from repositories import text_repository
     from schemas import texts as schemas
     from services import dictionary_service, llm_service, preprocessing_service, text_service
 
@@ -48,20 +48,14 @@ class OwnerIsolationTests(unittest.TestCase):
             title="Isolated Story", difficulty_level="A1"
         )
         llm.translate_sentence_async = mock.AsyncMock(
-            return_value=(
-                schemas.SentenceTranslation(
-                    translation="A mock translation.",
-                    translation_hints=[],
-                ),
-                None,
+            return_value=schemas.SentenceTranslation(
+                translation="A mock translation.",
+                translation_hints=[],
             )
         )
         llm.generate_practice_sentences_async = mock.AsyncMock(
-            return_value=(
-                schemas.PracticeSentencesResponse(
-                    sentences=[],
-                ),
-                None,
+            return_value=schemas.PracticeSentencesResponse(
+                sentences=[],
             )
         )
         dictionary = mock.Mock(spec=dictionary_service.DictionaryService)
@@ -73,8 +67,6 @@ class OwnerIsolationTests(unittest.TestCase):
             llm,
             preprocessing,
             dictionary,
-            job_repository=job_repository.JobRepository(self.engine),
-            cache_repository=cache_repository.CacheRepository(self.engine),
         )
 
         self.enterContext(mock.patch.object(database, "engine", self.engine))

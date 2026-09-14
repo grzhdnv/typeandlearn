@@ -211,8 +211,12 @@ export function typingReducer(state: TypingState, action: TypingAction): TypingS
       return state;
     }
 
+    case "PASTE": {
+      // Direct pasting is restricted in typing drills to protect measurement accuracy
+      return state;
+    }
+
     default:
       return state;
   }
 }
-

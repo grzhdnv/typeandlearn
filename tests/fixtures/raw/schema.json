@@ -1,0 +1,11 @@
+{
+  "id": 101,
+  "foreign_sentence": "J'aime les pommes rouges.",
+  "native_sentence": "I like the red apples.",
+  "alignment": [
+    { "f": [0], "n": [0, 1] },
+    { "f": [1], "n": [2] },
+    { "f": [2], "n": [4] },
+    { "f": [3], "n": [3] }
+  ]
+}
