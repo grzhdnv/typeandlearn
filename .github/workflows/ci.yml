@@ -127,6 +127,18 @@ jobs:
           file: apps/frontend/Dockerfile
           push: false
 
+  checks:
+    name: checks
+    if: always()
+    needs: [lint, backend, migration, frontend, docker, e2e]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fail if any required job failed
+        if: ${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') }}
+        run: exit 1
+      - name: All required jobs passed
+        run: echo "All required jobs passed."
+
   e2e:
     name: Playwright End-to-End Tests
     runs-on: ubuntu-latest
