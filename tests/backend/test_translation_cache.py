@@ -63,14 +63,12 @@ class TranslationCacheTests(unittest.TestCase):
             translation="The dog runs quickly.",
             translation_hints=[HintGroup(words=["Hund"], hint="dog")],
         )
-        self.mock_llm.translate_sentence_async = mock.AsyncMock(
-            return_value=(trans_res, FakeUsage(input_tokens=100, output_tokens=25))
-        )
+        setattr(trans_res, "usage", FakeUsage(input_tokens=100, output_tokens=25))
+        self.mock_llm.translate_sentence_async = mock.AsyncMock(return_value=trans_res)
 
         practice_res = PracticeSentencesResponse(sentences=[])
-        self.mock_llm.generate_practice_sentences_async = mock.AsyncMock(
-            return_value=(practice_res, FakeUsage(input_tokens=80, output_tokens=20))
-        )
+        setattr(practice_res, "usage", FakeUsage(input_tokens=80, output_tokens=20))
+        self.mock_llm.generate_practice_sentences_async = mock.AsyncMock(return_value=practice_res)
 
         self.mock_dict = mock.Mock(spec=DictionaryService)
         self.mock_dict.translate_word.return_value = "dog"
@@ -210,10 +208,7 @@ class TranslationCacheTests(unittest.TestCase):
         assert text_record.id is not None
 
         # Isolate translation caching: disable practice generation usage in this test
-        self.mock_llm.generate_practice_sentences_async.return_value = (
-            PracticeSentencesResponse(sentences=[]),
-            None,
-        )
+        self.mock_llm.generate_practice_sentences_async.return_value = PracticeSentencesResponse(sentences=[])
 
         # Process text
         self.text_service.process_pending_text(text_record.id, owner_id)

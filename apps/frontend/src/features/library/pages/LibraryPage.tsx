@@ -1,7 +1,6 @@
 import { Component, createResource, createSignal, createMemo, Show, For, createEffect, onCleanup } from 'solid-js';
 import { fetchTextTitles, postText, updateTextMetadata, deleteText, resetProgress, retryEnrichment } from '../../../features/texts/api/textsApi';
 import { StatusBadge } from '../../../features/texts/components/StatusBadge';
-import { isEnrichmentActive } from '../../texts/utils/status';
 
 const LANGUAGES = ["German", "French", "Italian", "Spanish"];
 const LEVELS = ["A1", "A2", "B1", "B2", "C1", "C2", "Unrated"];
@@ -13,7 +12,14 @@ const LibraryPage: Component = () => {
   createEffect(() => {
     let intervalId: number | undefined;
     const texts = availableTexts();
-    const hasActiveJob = texts?.some(isEnrichmentActive);
+    const hasActiveJob = texts?.some(
+      (t) =>
+        t.status === "processing" ||
+        t.status === "pending" ||
+        t.enrichment_stage === "queued" ||
+        t.enrichment_stage === "translating" ||
+        t.enrichment_stage === "generating_practice"
+    );
 
     if (hasActiveJob) {
       intervalId = window.setInterval(() => {

@@ -63,6 +63,7 @@ class TestUserPrivacy(unittest.TestCase):
                 mistake_count=1,
                 mistaken_words=["Tag"],
             ),
+            language="German",
         )
 
         # Token usage for owner_a

@@ -25,17 +25,38 @@ from schemas.texts import GeneratedMetadata
 from schemas.texts import PracticeSentencesResponse
 from schemas.texts import SentenceTranslation
 
+# Create logs directory if it doesn't exist
+os.makedirs("apps/backend/logs", exist_ok=True)
+
 logger = logging.getLogger("typeandlearn.llm")
+logger.setLevel(logging.INFO)
+
+if not logger.handlers:
+    fh = logging.FileHandler("apps/backend/logs/llm.log", encoding="utf-8")
+    fh.setLevel(logging.INFO)
+    formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
+    fh.setFormatter(formatter)
+    logger.addHandler(fh)
 
 
-def _log_rate_limit(response: httpx.Response) -> None:
+class _HeaderCaptureTransport(httpx.AsyncBaseTransport):
     """Capture provider rate-limit metadata without logging payloads."""
-    remaining_tokens = response.headers.get("x-ratelimit-remaining-tokens")
-    if remaining_tokens:
-        logger.info(
-            "Provider rate-limit tokens remaining: %s",
-            remaining_tokens,
-        )
+
+    def __init__(self, transport: httpx.AsyncBaseTransport):
+        self._transport = transport
+
+    async def handle_async_request(
+        self,
+        request: httpx.Request,
+    ) -> httpx.Response:
+        response = await self._transport.handle_async_request(request)
+        remaining_tokens = response.headers.get("x-ratelimit-remaining-tokens")
+        if remaining_tokens:
+            logger.info(
+                "Provider rate-limit tokens remaining: %s",
+                remaining_tokens,
+            )
+        return response
 
 
 def _create_model(model_spec: str, client: httpx.AsyncClient) -> Model:
@@ -138,7 +159,9 @@ class LlmService:
         self._semaphore = asyncio.Semaphore(int(os.getenv("LLM_CONCURRENCY_LIMIT", "5")))
 
         try:
-            client = httpx.AsyncClient(event_hooks={"response": [_log_rate_limit]})
+            client = httpx.AsyncClient(
+                transport=_HeaderCaptureTransport(httpx.AsyncHTTPTransport())
+            )
 
             self._active_model = _build_model_chain(
                 model_name, fallback_models, client
@@ -199,7 +222,18 @@ class LlmService:
         """Return the structured model spec."""
         return self._structured_model_name
 
-    async def translate_sentence_async(
+    def translate_sentence(
+        self,
+        title: str,
+        context: str,
+        target_sentence: str,
+    ) -> SentenceTranslation:
+        """Generate translation and hints for a single sentence."""
+        return asyncio.run(
+            self.translate_sentence_async(title, context, target_sentence)
+        )
+
+    async def translate_sentence_with_usage_async(
         self,
         title: str,
         context: str,
@@ -226,7 +260,29 @@ class LlmService:
 
         return result.output, usage
 
-    async def generate_practice_sentences_async(
+    async def translate_sentence_async(
+        self,
+        title: str,
+        context: str,
+        target_sentence: str,
+    ) -> SentenceTranslation:
+        """Generate translation and hints asynchronously."""
+        output, usage = await self.translate_sentence_with_usage_async(
+            title=title,
+            context=context,
+            target_sentence=target_sentence,
+        )
+        setattr(output, "usage", usage)
+        return output
+
+    def generate_practice_sentences(
+        self,
+        words: list[str],
+    ) -> PracticeSentencesResponse:
+        """Generate practice sentences for a vocabulary list."""
+        return asyncio.run(self.generate_practice_sentences_async(words))
+
+    async def generate_practice_sentences_with_usage_async(
         self,
         words: list[str],
     ) -> tuple[PracticeSentencesResponse, Any]:
@@ -249,6 +305,15 @@ class LlmService:
         )
 
         return result.output, usage
+
+    async def generate_practice_sentences_async(
+        self,
+        words: list[str],
+    ) -> PracticeSentencesResponse:
+        """Generate practice sentences asynchronously."""
+        output, usage = await self.generate_practice_sentences_with_usage_async(words)
+        setattr(output, "usage", usage)
+        return output
 
     def extract_metadata(self, text: str) -> GeneratedMetadata:
         """Extract title and difficulty level from text."""

@@ -11,5 +11,6 @@ __pycache__
 apps/backend/data/*.sqlite*
 apps/backend/data/db.json
 apps/backend/logs/*
+archive
 .env
 .DS_Store

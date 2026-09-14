@@ -12,22 +12,6 @@ export interface StatusBadgeInfo {
   description: string;
 }
 
-/**
- * Returns true while a text still has enrichment work queued or running.
- */
-export function isEnrichmentActive(text: {
-  status: string;
-  enrichment_stage?: string | null;
-}): boolean {
-  return (
-    text.status === "processing" ||
-    text.status === "pending" ||
-    text.enrichment_stage === "queued" ||
-    text.enrichment_stage === "translating" ||
-    text.enrichment_stage === "generating_practice"
-  );
-}
-
 export function getStatusBadgeInfo(
   status: string,
   stage?: string | null,

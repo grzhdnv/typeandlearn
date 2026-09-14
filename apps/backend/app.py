@@ -1,10 +1,9 @@
 """FastAPI application assembly and router registration."""
 
 from contextlib import asynccontextmanager
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
-from fastapi import FastAPI, Request, Response, status
-from fastapi.responses import JSONResponse
+from fastapi import FastAPI, Response, status
 from sqlalchemy import text
 from sqlmodel import Session
 
@@ -16,7 +15,6 @@ from api.routes.user import router as user_router
 from core.database import engine, init_db
 from core.logging import setup_logging
 from core.middleware import CorrelationIdMiddleware
-from services.preprocessing_service import MissingLanguageModelError
 
 
 @asynccontextmanager
@@ -56,30 +54,11 @@ async def lifespan(app: FastAPI):
     yield
 
 
-def create_app() -> FastAPI:
+def create_app(custom_settings: Optional[Any] = None) -> FastAPI:
     """Instantiate and configure the FastAPI application."""
     setup_logging()
     application = FastAPI(title="TypeAndLearn API", lifespan=lifespan)
     application.add_middleware(CorrelationIdMiddleware)
-
-    @application.exception_handler(ValueError)
-    async def invalid_request_handler(request: Request, exc: ValueError) -> JSONResponse:
-        """Map domain validation failures to HTTP 400."""
-        return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content={"detail": str(exc)})
-
-    @application.exception_handler(IndexError)
-    async def not_found_handler(request: Request, exc: IndexError) -> JSONResponse:
-        """Map missing records to HTTP 404."""
-        return JSONResponse(status_code=status.HTTP_404_NOT_FOUND, content={"detail": str(exc)})
-
-    @application.exception_handler(MissingLanguageModelError)
-    async def missing_model_handler(
-        request: Request, exc: MissingLanguageModelError
-    ) -> JSONResponse:
-        """Map missing local NLP models to HTTP 503."""
-        return JSONResponse(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE, content={"detail": str(exc)}
-        )
 
     @application.get("/healthz", tags=["health"])
     def healthz() -> Dict[str, str]:
