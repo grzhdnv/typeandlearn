@@ -78,5 +78,5 @@ This issue map translates the production plan into discrete, reviewable engineer
 
 - **[x] ISSUE-060**: **Accessibility (WCAG 2.1 AA) & Cross-Browser Audit**
   - *Acceptance*: Keyboard-only navigation; screen reader announcements; high-contrast checks via Axe.
-- **[ ] ISSUE-061**: **Disaster Recovery & Backup Rehearsal**
+- **[x] ISSUE-061**: **Disaster Recovery & Backup Rehearsal**
   - *Acceptance*: Documented automated backup script and verified database recovery runbook.
