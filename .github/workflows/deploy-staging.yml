@@ -28,6 +28,7 @@ jobs:
           context: .
           file: apps/backend/Dockerfile
           push: false
+          load: true
           tags: |
             typeandlearn-backend:${{ github.sha }}
             typeandlearn-backend:staging-latest
@@ -38,6 +39,7 @@ jobs:
           context: .
           file: apps/frontend/Dockerfile
           push: false
+          load: true
           tags: |
             typeandlearn-frontend:${{ github.sha }}
             typeandlearn-frontend:staging-latest
