@@ -18,7 +18,7 @@ class TestAnalytics(unittest.TestCase):
     """Test suite for analytics recording, summary computation, and weak word tracking."""
 
     def setUp(self):
-        self.client = TestClient(create_app())
+        self.client = self.enterContext(TestClient(create_app()))
         self.owner_a = f"owner_a_{uuid.uuid4().hex[:8]}"
         self.owner_b = f"owner_b_{uuid.uuid4().hex[:8]}"
 

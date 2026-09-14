@@ -23,7 +23,7 @@ class TestUserPrivacy(unittest.TestCase):
     """Test suite for GDPR Article 20 data export and Article 17 right to erasure."""
 
     def setUp(self):
-        self.client = TestClient(create_app())
+        self.client = self.enterContext(TestClient(create_app()))
         self.owner_a = f"privacy_a_{uuid.uuid4().hex[:8]}"
         self.owner_b = f"privacy_b_{uuid.uuid4().hex[:8]}"
 

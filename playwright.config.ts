@@ -22,14 +22,8 @@ export default defineConfig({
   ],
   webServer: [
     {
-      command: "uv run --locked fastapi dev apps/backend/main.py --port 8000 --host 127.0.0.1",
+      command: "bash scripts/e2e.sh",
       url: "http://127.0.0.1:8000/docs",
-      reuseExistingServer: !process.env.CI,
-      timeout: 120 * 1000,
-    },
-    {
-      command: "uv run --locked python apps/backend/worker.py",
-      url: "http://127.0.0.1:8000/readyz",
       reuseExistingServer: !process.env.CI,
       timeout: 120 * 1000,
     },

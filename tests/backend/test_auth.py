@@ -20,7 +20,7 @@ class TestAuthentication(unittest.TestCase):
     def setUp(self):
         self.original_auth_mode = settings.auth_mode
         self.original_secret = settings.jwt_secret
-        self.client = TestClient(create_app())
+        self.client = self.enterContext(TestClient(create_app()))
 
     def tearDown(self):
         settings.auth_mode = self.original_auth_mode

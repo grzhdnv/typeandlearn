@@ -24,7 +24,7 @@ class TestLoggingTelemetry(unittest.TestCase):
     """Test suite for structured logging, telemetry, and automated redaction policy."""
 
     def setUp(self):
-        self.client = TestClient(create_app())
+        self.client = self.enterContext(TestClient(create_app()))
         self.formatter = JSONFormatter()
         self.redaction_filter = RedactionFilter()
 
