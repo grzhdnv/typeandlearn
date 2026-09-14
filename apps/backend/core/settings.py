@@ -41,6 +41,23 @@ class Settings(BaseModel):
     prompt_version: str = Field(
         default_factory=lambda: os.getenv("PROMPT_VERSION", "v1")
     )
+    auth_mode: str = Field(
+        default_factory=lambda: os.getenv("AUTH_MODE", "local").lower()
+    )
+    jwt_secret: str = Field(
+        default_factory=lambda: os.getenv(
+            "JWT_SECRET", "typeandlearn-default-jwt-secret-dev"
+        )
+    )
+    jwt_algorithm: str = Field(
+        default_factory=lambda: os.getenv("JWT_ALGORITHM", "HS256")
+    )
+    jwt_audience: str | None = Field(
+        default_factory=lambda: os.getenv("JWT_AUDIENCE")
+    )
+    jwt_issuer: str | None = Field(
+        default_factory=lambda: os.getenv("JWT_ISSUER")
+    )
 
 
 settings = Settings()
