@@ -23,7 +23,12 @@ trap 'exit 130' INT
 trap 'exit 143' TERM
 
 .venv/bin/python -m uvicorn apps.backend.main:app \
-  --host 127.0.0.1 --port 8000 --reload --reload-dir apps/backend &
+  --host 127.0.0.1 --port 8000 --reload --reload-dir apps/backend \
+  --reload-exclude "apps/backend/data/*" \
+  --reload-exclude "apps/backend/logs/*" \
+  --reload-exclude "*.sqlite" \
+  --reload-exclude "*.db" \
+  --reload-exclude "*.log" &
 backend_pid=$!
 
 (

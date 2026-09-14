@@ -351,7 +351,7 @@ const LibraryPage: Component = () => {
 
       {/* Text Cards Grid */}
       <section class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
-        <Show when={!availableTexts.loading} fallback={<p class="font-mono-label text-on-surface-variant">Loading library...</p>}>
+        <Show when={Boolean(availableTexts())} fallback={<p class="font-mono-label text-on-surface-variant">Loading library...</p>}>
           <Show when={filteredTexts().length} fallback={
             <div class="col-span-1 md:col-span-2 p-12 text-center border border-outline-variant bg-surface-container-lowest">
               <span class="material-symbols-outlined text-4xl text-outline-variant mb-4">library_books</span>
