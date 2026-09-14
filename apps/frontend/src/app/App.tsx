@@ -1,11 +1,14 @@
-import { type Component, JSX } from "solid-js";
+import { type Component, JSX, createSignal } from "solid-js";
 import { A } from "@solidjs/router";
+import { AccountModal } from "../features/user/components/AccountModal";
 
 type AppProps = {
   children?: JSX.Element;
 };
 
 const App: Component<AppProps> = (props) => {
+  const [isAccountModalOpen, setIsAccountModalOpen] = createSignal(false);
+
   return (
     <div class="bg-surface text-on-surface min-h-screen font-body-md flex flex-col selection:bg-secondary-container selection:text-on-secondary-container">
       {/* TopNavBar */}
@@ -44,15 +47,21 @@ const App: Component<AppProps> = (props) => {
         </div>
         <div class="flex items-center gap-4">
           <button
-            class="material-symbols-outlined text-outline-variant p-2 cursor-default"
-            title="Local Single-User Mode (Auth planned for Milestone M4)"
-            aria-label="Local Single-User Mode"
-            disabled
+            class="material-symbols-outlined text-on-surface-variant hover:text-primary p-2 transition-colors cursor-pointer"
+            title="Account & Privacy"
+            aria-label="Account and Privacy Settings"
+            id="btn-account-nav"
+            onClick={() => setIsAccountModalOpen(true)}
           >
             person
           </button>
         </div>
       </nav>
+
+      <AccountModal
+        isOpen={isAccountModalOpen()}
+        onClose={() => setIsAccountModalOpen(false)}
+      />
 
       {/* Main Content Canvas */}
       {props.children}
