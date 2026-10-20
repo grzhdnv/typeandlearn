@@ -82,6 +82,22 @@ npm run test:e2e
 Browser configuration supplies temporary services/databases and blank keys itself.
 Never run general checks against the personal development database or active keys.
 
+## Open UI bug reported after handoff
+
+The user supplied a screenshot of the first German/A1 library practice card,
+"Hallo Welt. Das ist ein Test.", showing a gray `null` badge below its title.
+The badge at `apps/frontend/src/features/library/pages/LibraryPage.tsx` is the
+category (`<Show when={text.category}>`). An actual null value would be hidden;
+the screenshot therefore suggests the stored/API category is the literal string
+`"null"`. The underlying record has not been inspected, so confirm before fixing.
+
+Normalize absent metadata consistently at the API/storage boundary and hide
+placeholder category values in card rendering as appropriate. Check author and
+other optional metadata for the same issue. Verify new inference and existing
+records, preserving valid labels and user edits; add a focused browser regression.
+No fix or personal-record cleanup has been applied. The user explicitly requested
+adding this bug to the handoff for the next session.
+
 ## Next work, in order
 
 1. Verify live PostgreSQL migrations, queue concurrency, and recovery using an
