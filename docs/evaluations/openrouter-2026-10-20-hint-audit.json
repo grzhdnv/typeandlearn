@@ -1,0 +1,187 @@
+[
+  {
+    "model": "openrouter:nvidia/nemotron-3-ultra-550b-a55b:free",
+    "task": "translation",
+    "language": "German",
+    "sentence_index": 0,
+    "words": 11,
+    "unavailable_ui_hints": []
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-ultra-550b-a55b:free",
+    "task": "translation",
+    "language": "French",
+    "sentence_index": 0,
+    "words": 8,
+    "unavailable_ui_hints": [
+      "j'avais",
+      "tôt."
+    ]
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-ultra-550b-a55b:free",
+    "task": "translation",
+    "language": "Italian",
+    "sentence_index": 0,
+    "words": 5,
+    "unavailable_ui_hints": [
+      "l'ora"
+    ]
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-ultra-550b-a55b:free",
+    "task": "translation",
+    "language": "Spanish",
+    "sentence_index": 0,
+    "words": 7,
+    "unavailable_ui_hints": []
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-ultra-550b-a55b:free",
+    "task": "translation",
+    "language": "English",
+    "sentence_index": 0,
+    "words": 12,
+    "unavailable_ui_hints": []
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-ultra-550b-a55b:free",
+    "task": "practice",
+    "language": "Spanish",
+    "sentence_index": 0,
+    "words": 7,
+    "unavailable_ui_hints": []
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-ultra-550b-a55b:free",
+    "task": "practice",
+    "language": "Spanish",
+    "sentence_index": 1,
+    "words": 8,
+    "unavailable_ui_hints": []
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-ultra-550b-a55b:free",
+    "task": "practice",
+    "language": "Spanish",
+    "sentence_index": 2,
+    "words": 7,
+    "unavailable_ui_hints": []
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-ultra-550b-a55b:free",
+    "task": "practice",
+    "language": "Spanish",
+    "sentence_index": 3,
+    "words": 7,
+    "unavailable_ui_hints": []
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-ultra-550b-a55b:free",
+    "task": "practice",
+    "language": "Spanish",
+    "sentence_index": 4,
+    "words": 10,
+    "unavailable_ui_hints": []
+  },
+  {
+    "model": "openrouter:dots-studio/dots-3-note-preview:free",
+    "task": "translation",
+    "language": "German",
+    "sentence_index": 0,
+    "words": 11,
+    "unavailable_ui_hints": []
+  },
+  {
+    "model": "openrouter:dots-studio/dots-3-note-preview:free",
+    "task": "translation",
+    "language": "French",
+    "sentence_index": 0,
+    "words": 8,
+    "unavailable_ui_hints": []
+  },
+  {
+    "model": "openrouter:dots-studio/dots-3-note-preview:free",
+    "task": "translation",
+    "language": "Italian",
+    "sentence_index": 0,
+    "words": 5,
+    "unavailable_ui_hints": []
+  },
+  {
+    "model": "openrouter:dots-studio/dots-3-note-preview:free",
+    "task": "translation",
+    "language": "Spanish",
+    "sentence_index": 0,
+    "words": 7,
+    "unavailable_ui_hints": [
+      "me"
+    ]
+  },
+  {
+    "model": "openrouter:dots-studio/dots-3-note-preview:free",
+    "task": "translation",
+    "language": "English",
+    "sentence_index": 0,
+    "words": 12,
+    "unavailable_ui_hints": []
+  },
+  {
+    "model": "openrouter:dots-studio/dots-3-note-preview:free",
+    "task": "practice",
+    "language": "Spanish",
+    "sentence_index": 0,
+    "words": 8,
+    "unavailable_ui_hints": [
+      "de",
+      "la"
+    ]
+  },
+  {
+    "model": "openrouter:dots-studio/dots-3-note-preview:free",
+    "task": "practice",
+    "language": "Spanish",
+    "sentence_index": 1,
+    "words": 9,
+    "unavailable_ui_hints": [
+      "de",
+      "la",
+      "bajo",
+      "la"
+    ]
+  },
+  {
+    "model": "openrouter:dots-studio/dots-3-note-preview:free",
+    "task": "practice",
+    "language": "Spanish",
+    "sentence_index": 2,
+    "words": 10,
+    "unavailable_ui_hints": [
+      "no",
+      "podrás",
+      "a"
+    ]
+  },
+  {
+    "model": "openrouter:dots-studio/dots-3-note-preview:free",
+    "task": "practice",
+    "language": "Spanish",
+    "sentence_index": 3,
+    "words": 9,
+    "unavailable_ui_hints": [
+      "en",
+      "la"
+    ]
+  },
+  {
+    "model": "openrouter:dots-studio/dots-3-note-preview:free",
+    "task": "practice",
+    "language": "Spanish",
+    "sentence_index": 4,
+    "words": 10,
+    "unavailable_ui_hints": [
+      "puerta",
+      "de"
+    ]
+  }
+]

@@ -171,3 +171,89 @@ class LlmProviderFallbackTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             _can_create_model("typo:some-model")
         self.assertFalse(should_fallback(ValueError("bad schema")))
+
+    def openrouter_service(self, handler, model="nvidia/nemotron-3-super-120b-a12b:free", pricing=None):
+        os.environ["OPENROUTER_API_KEY"] = "fake"
+        def wrapped(request):
+            if request.method == "GET":
+                self.assertEqual(str(request.url), "https://openrouter.ai/api/v1/models")
+                self.assertNotIn("authorization", request.headers)
+                return httpx.Response(200, json={"data": [{"id": model,
+                    "pricing": pricing if pricing is not None else {"prompt": "0", "completion": "0"},
+                    "supported_parameters": ["structured_outputs", "response_format", "tools", "tool_choice", "reasoning"]}]})
+            self.requests.append(request)
+            return handler(request)
+        service = LlmService("apps/backend/prompts/translate_sentence.md", "apps/backend/prompts/generate_practice.md",
+                             f"openrouter:{model}", f"openrouter:{model}", [], governor=self.governor,
+                             transport=httpx.MockTransport(wrapped))
+        self.addCleanup(lambda: asyncio.run(service.aclose()))
+        return service
+
+    def test_openrouter_free_serialization_all_tasks_and_actual_model(self):
+        def handler(request):
+            body = json.loads(request.content)
+            self.assertEqual(request.url.host, "openrouter.ai")
+            self.assertEqual(body["provider"], {"allow_fallbacks": False, "require_parameters": True,
+                                              "max_price": {"prompt": 0, "completion": 0, "request": 0}})
+            self.assertNotIn("models", body)
+            self.assertEqual(body["reasoning"], {"enabled": False})
+            self.assertTrue(body["response_format"]["json_schema"]["strict"])
+            response = self.success(request)
+            data = response.json()
+            data["model"] = "actual-model-version"
+            data["usage"]["cost"] = 0
+            return httpx.Response(200, json=data)
+        self.cfg.deepseek_daily_usd = self.cfg.deepseek_monthly_usd = 0
+        service = self.openrouter_service(handler)
+        service.extract_metadata("Der Hund läuft.")
+        service.filter_meaningful_words([{"word": "Hund", "count": 2}], "German")
+        asyncio.run(service.translate_sentence_async("Test", "", "Der Hund läuft."))
+        asyncio.run(service.generate_practice_sentences_async(["Hund"]))
+        with Session(self.engine) as session:
+            calls = session.exec(select(ProviderCallRecord)).all()
+            self.assertEqual(len(calls), 4)
+            self.assertTrue(all(c.provider == "openrouter" and c.cost_microusd == 0 and c.response_model == "actual-model-version" for c in calls))
+
+    def test_openrouter_ultra_uses_typed_tool_output(self):
+        def handler(request):
+            body = json.loads(request.content)
+            self.assertIn("tools", body)
+            self.assertNotIn("response_format", body)
+            return self.success(request)
+        service = self.openrouter_service(handler, "nvidia/nemotron-3-ultra-550b-a55b:free")
+        service.extract_metadata("Test")
+
+    def test_openrouter_catalog_price_blocks_before_inference(self):
+        for pricing in ({"prompt": "0.001", "completion": "0"}, {"prompt": "0"},
+                        {"prompt": "0", "completion": "0", "request": "1"}):
+            service = self.openrouter_service(lambda request: self.fail("Paid inference attempted"), pricing=pricing)
+            with self.assertRaises(ModelHTTPError) as error:
+                service.extract_metadata("Test")
+            self.assertEqual(error.exception.status_code, 400)
+        with self.assertRaises(ValueError):
+            _can_create_model("openrouter:nvidia/paid-model")
+        with Session(self.engine) as session:
+            self.assertEqual(len(session.exec(select(ProviderCallRecord)).all()), 0)
+
+    def test_openrouter_permanent_errors_no_retry_or_fallback(self):
+        for code in (400, 401, 402, 403, 404, 422):
+            self.requests.clear()
+            service = self.openrouter_service(lambda request: httpx.Response(code, json={"error": {"message": "blocked"}}))
+            with self.assertRaises(ModelHTTPError):
+                service.extract_metadata("Test")
+            self.assertEqual(len(self.requests), 1)
+
+    def test_openrouter_repair_attempt_is_reserved_separately(self):
+        service = self.openrouter_service(lambda request: self.success(request, invalid=len(self.requests) == 1))
+        asyncio.run(service.translate_sentence_async("Test", "", "Der Hund läuft."))
+        self.assertEqual(len(self.requests), 2)
+        with Session(self.engine) as session:
+            self.assertEqual(len(session.exec(select(ProviderCallRecord)).all()), 2)
+
+    def test_openrouter_429_blocks_following_dispatch(self):
+        self.cfg.openrouter_max_wait_seconds = 0
+        service = self.openrouter_service(lambda request: httpx.Response(429, headers={"retry-after": "60"}, json={"error": {"message": "quota"}}))
+        for _ in range(2):
+            with self.assertRaises(ModelHTTPError):
+                service.extract_metadata("Test")
+        self.assertEqual(len(self.requests), 1)

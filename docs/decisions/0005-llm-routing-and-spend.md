@@ -72,3 +72,14 @@ job dispatch, and production PostgreSQL acceptance remain follow-up work.
 - [Groq rate limits and headers](https://console.groq.com/docs/rate-limits)
 - [DeepSeek prices](https://api-docs.deepseek.com/quick_start/pricing/)
 - [DeepSeek thinking controls](https://api-docs.deepseek.com/guides/thinking_mode/)
+
+## Experimental OpenRouter adapter — 20 October 2026
+
+OpenRouter is opt-in, restricted to explicit `:free` model IDs with zero catalog
+prices and zero request price caps. Provider fallback is disabled. Native schema
+and the Ultra typed-tool path use the same transport and ledger, with independent
+16 RPM / 40 RPD application defaults and shared cooldowns. This does not change
+Groq/DeepSeek defaults. With reasoning disabled, Ultra 550B and Dots 280B passed 7/7 final synthetic tasks;
+Super 120B returned upstream 404s. Ultra is the stronger optional free challenger,
+but hint normalization and endpoint data policies need review before automatic
+routing. See the [evaluation report](../openrouter-evaluation-2026-10-20.md).

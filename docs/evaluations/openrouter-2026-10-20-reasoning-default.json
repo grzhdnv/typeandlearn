@@ -1,0 +1,1221 @@
+[
+  {
+    "model": "openrouter:nvidia/nemotron-3-ultra-550b-a55b:free",
+    "task": "translation",
+    "language": "German",
+    "source": "Ich stehe früh auf, weil der Zug um sieben Uhr abfährt.",
+    "output": {
+      "translation": "I get up early because the train departs at seven o'clock.",
+      "translation_hints": [
+        {
+          "words": [
+            "Ich"
+          ],
+          "hint": "I"
+        },
+        {
+          "words": [
+            "stehe",
+            "auf"
+          ],
+          "hint": "get up"
+        },
+        {
+          "words": [
+            "früh"
+          ],
+          "hint": "early"
+        },
+        {
+          "words": [
+            "weil"
+          ],
+          "hint": "because"
+        },
+        {
+          "words": [
+            "der"
+          ],
+          "hint": "the"
+        },
+        {
+          "words": [
+            "Zug"
+          ],
+          "hint": "train"
+        },
+        {
+          "words": [
+            "um"
+          ],
+          "hint": "at"
+        },
+        {
+          "words": [
+            "sieben"
+          ],
+          "hint": "seven"
+        },
+        {
+          "words": [
+            "Uhr"
+          ],
+          "hint": "o'clock"
+        },
+        {
+          "words": [
+            "abfährt"
+          ],
+          "hint": "departs"
+        }
+      ]
+    },
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "returned_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 2418,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.46
+      }
+    ],
+    "seconds": 21.48
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-ultra-550b-a55b:free",
+    "task": "translation",
+    "language": "French",
+    "source": "Si j'avais su, je serais venu plus tôt.",
+    "output": {
+      "translation": "If I had known, I would have come earlier.",
+      "translation_hints": [
+        {
+          "words": [
+            "Si"
+          ],
+          "hint": "If"
+        },
+        {
+          "words": [
+            "j'avais",
+            "su"
+          ],
+          "hint": "had known"
+        },
+        {
+          "words": [
+            "je",
+            "serais",
+            "venu"
+          ],
+          "hint": "would have come"
+        },
+        {
+          "words": [
+            "plus",
+            "tôt"
+          ],
+          "hint": "earlier"
+        }
+      ]
+    },
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "returned_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 1650,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.09
+      }
+    ],
+    "seconds": 7.91
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-ultra-550b-a55b:free",
+    "task": "translation",
+    "language": "Italian",
+    "source": "Non vedo l'ora di rivederti.",
+    "error": "UnexpectedModelBehavior: Exceeded maximum retries (1) for output validation",
+    "responses": [
+      {
+        "status_code": 200,
+        "model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "provider": "Nvidia",
+        "usage": {
+          "prompt_tokens": 1146,
+          "completion_tokens": 708,
+          "total_tokens": 1854,
+          "cost": 0,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0,
+            "upstream_inference_prompt_cost": 0,
+            "upstream_inference_completions_cost": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 507,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "content": "[\n[{\"name\": \"final_result\", \"parameters\": {\"translation\": \"I can't wait to see you again.\", \"translation_hints\": [{\"words\": [\"Non\", \"vedo\", \"l'ora\"], \"hint\": \"can't wait\"}, {\"words\": [\"di\"], \"hint\": \"to\"}, {\"words\": [\"rivederti\"], \"hint\": \"see you again\"}]}}\n]",
+            "tool_calls": null
+          }
+        ],
+        "error": null
+      },
+      {
+        "status_code": 200,
+        "model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "provider": "Nvidia",
+        "usage": {
+          "prompt_tokens": 1302,
+          "completion_tokens": 153,
+          "total_tokens": 1455,
+          "cost": 0,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0,
+            "upstream_inference_prompt_cost": 0,
+            "upstream_inference_completions_cost": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 74,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "content": "[\n[{\"name\": \"final_result\", \"parameters\": {\"translation\": \"I can't wait to see you again.\", \"translation_hints\": [{\"words\": [\"Non\", \"vedo\", \"l'ora\"], \"hint\": \"can't wait\"}, {\"words\": [\"di\"], \"hint\": \"to\"}, {\"words\": [\"rivederti\"], \"hint\": \"see you again\"}]}}\n]",
+            "tool_calls": null
+          }
+        ],
+        "error": null
+      }
+    ],
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "returned_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 1854,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.4
+      },
+      {
+        "provider": "openrouter",
+        "requested_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "returned_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 1455,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 16.35
+      }
+    ],
+    "seconds": 18.4,
+    "previous_attempts": [
+      {
+        "model": "openrouter:nvidia/nemotron-3-ultra-550b-a55b:free",
+        "task": "translation",
+        "language": "Italian",
+        "source": "Non vedo l'ora di rivederti.",
+        "error": "UnexpectedModelBehavior: Exceeded maximum retries (1) for output validation",
+        "calls": [
+          {
+            "provider": "openrouter",
+            "requested_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+            "returned_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+            "status": "succeeded",
+            "status_code": 200,
+            "tokens": 1879,
+            "cost_usd": 0.0,
+            "dispatch_delay_seconds": 0.09
+          },
+          {
+            "provider": "openrouter",
+            "requested_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+            "returned_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+            "status": "succeeded",
+            "status_code": 200,
+            "tokens": 1469,
+            "cost_usd": 0.0,
+            "dispatch_delay_seconds": 15.4
+          }
+        ],
+        "seconds": 28.24
+      }
+    ]
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-ultra-550b-a55b:free",
+    "task": "translation",
+    "language": "Spanish",
+    "source": "Se me olvidaron las llaves en casa.",
+    "output": {
+      "translation": "I forgot the keys at home.",
+      "translation_hints": [
+        {
+          "words": [
+            "Se",
+            "me",
+            "olvidaron"
+          ],
+          "hint": "I forgot"
+        },
+        {
+          "words": [
+            "las",
+            "llaves"
+          ],
+          "hint": "the keys"
+        },
+        {
+          "words": [
+            "en",
+            "casa"
+          ],
+          "hint": "at home"
+        }
+      ]
+    },
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "returned_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 1654,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.08
+      }
+    ],
+    "seconds": 12.78
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-ultra-550b-a55b:free",
+    "task": "translation",
+    "language": "English",
+    "source": "She had been waiting for an hour when the train finally arrived.",
+    "error": "UnexpectedModelBehavior: Exceeded maximum retries (1) for output validation",
+    "responses": [
+      {
+        "status_code": 200,
+        "model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "provider": "Nvidia",
+        "usage": {
+          "prompt_tokens": 1148,
+          "completion_tokens": 917,
+          "total_tokens": 2065,
+          "cost": 0,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0,
+            "upstream_inference_prompt_cost": 0,
+            "upstream_inference_completions_cost": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 845,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "content": "[[{\"name\": \"final_result\", \"parameters\": {\"translation\": \"She had been waiting for an hour when the train finally arrived.\", \"translation_hints\": [{\"words\": [\"She\"], \"hint\": \"She\"}, {\"words\": [\"had\", \"been\", \"waiting\"], \"hint\": \"had been waiting\"}, {\"words\": [\"for\", \"an\", \"hour\"], \"hint\": \"for an hour\"}, {\"words\": [\"when\"], \"hint\": \"when\"}, {\"words\": [\"the\", \"train\"], \"hint\": \"the train\"}, {\"words\": [\"finally\"], \"hint\": \"finally\"}, {\"words\": [\"arrived\"], \"hint\": \"arrived\"}]}}\n]",
+            "tool_calls": null
+          }
+        ],
+        "error": null
+      },
+      {
+        "status_code": 200,
+        "model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "provider": "Nvidia",
+        "usage": {
+          "prompt_tokens": 1368,
+          "completion_tokens": 231,
+          "total_tokens": 1599,
+          "cost": 0,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0,
+            "upstream_inference_prompt_cost": 0,
+            "upstream_inference_completions_cost": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 58,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "content": "[[\n  {\n    \"name\": \"final_result\",\n    \"parameters\": {\n      \"translation\": \"She had been waiting for an hour when the train finally arrived.\",\n      \"translation_hints\": [\n        { \"words\": [\"She\"], \"hint\": \"She\" },\n        { \"words\": [\"had\", \"been\", \"waiting\"], \"hint\": \"had been waiting\" },\n        { \"words\": [\"for\", \"an\", \"hour\"], \"hint\": \"for an hour\" },\n        { \"words\": [\"when\"], \"hint\": \"when\" },\n        { \"words\": [\"the\", \"train\"], \"hint\": \"the train\" },\n        { \"words\": [\"finally\"], \"hint\": \"finally\" },\n        { \"words\": [\"arrived\"], \"hint\": \"arrived\" }\n      ]\n    }\n  }\n]",
+            "tool_calls": null
+          }
+        ],
+        "error": null
+      }
+    ],
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "returned_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 2065,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.1
+      },
+      {
+        "provider": "openrouter",
+        "requested_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "returned_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 1599,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 16.8
+      }
+    ],
+    "seconds": 20.72,
+    "previous_attempts": [
+      {
+        "model": "openrouter:nvidia/nemotron-3-ultra-550b-a55b:free",
+        "task": "translation",
+        "language": "English",
+        "source": "She had been waiting for an hour when the train finally arrived.",
+        "error": "ModelHTTPError: status_code: 402, model_name: nvidia/nemotron-3-ultra-550b-a55b:free, body: {'message': 'Daily application token budget exhausted'}",
+        "calls": [
+          {
+            "provider": "openrouter",
+            "requested_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+            "returned_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+            "status": "succeeded",
+            "status_code": 200,
+            "tokens": 1821,
+            "cost_usd": 0.0,
+            "dispatch_delay_seconds": 0.17
+          }
+        ],
+        "seconds": 10.31
+      }
+    ]
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-ultra-550b-a55b:free",
+    "task": "metadata",
+    "language": "French",
+    "source": "Si j'avais su, je serais venu plus tôt.",
+    "output": {
+      "title": "Si j'avais su, je serais venu plus tôt",
+      "difficulty_level": "B1",
+      "language": "French",
+      "author": null,
+      "category": "Grammar Example"
+    },
+    "responses": [
+      {
+        "status_code": 200,
+        "model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "provider": "Nvidia",
+        "usage": {
+          "prompt_tokens": 637,
+          "completion_tokens": 295,
+          "total_tokens": 932,
+          "cost": 0,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0,
+            "upstream_inference_prompt_cost": 0,
+            "upstream_inference_completions_cost": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 245,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "choices": [
+          {
+            "finish_reason": "tool_calls",
+            "content": null,
+            "tool_calls": [
+              {
+                "type": "function",
+                "index": 0,
+                "id": "call-6df26c07-99d4-48c6-991f-95d66d4c37b6",
+                "function": {
+                  "name": "final_result",
+                  "arguments": "{\"title\": \"Si j'avais su, je serais venu plus tôt\", \"difficulty_level\": \"B1\", \"language\": \"French\", \"author\": null, \"category\": \"Grammar Example\"}"
+                }
+              }
+            ]
+          }
+        ],
+        "error": null
+      }
+    ],
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "returned_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 932,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.1
+      }
+    ],
+    "seconds": 9.16,
+    "previous_attempts": [
+      {
+        "model": "openrouter:nvidia/nemotron-3-ultra-550b-a55b:free",
+        "task": "metadata",
+        "language": "French",
+        "source": "Si j'avais su, je serais venu plus tôt.",
+        "error": "UnexpectedModelBehavior: Exceeded maximum retries (1) for output validation",
+        "calls": [
+          {
+            "provider": "openrouter",
+            "requested_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+            "returned_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+            "status": "succeeded",
+            "status_code": 200,
+            "tokens": 816,
+            "cost_usd": 0.0,
+            "dispatch_delay_seconds": 0.09
+          },
+          {
+            "provider": "openrouter",
+            "requested_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+            "returned_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+            "status": "succeeded",
+            "status_code": 200,
+            "tokens": 1014,
+            "cost_usd": 0.0,
+            "dispatch_delay_seconds": 4.9
+          }
+        ],
+        "seconds": 8.33
+      }
+    ]
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-ultra-550b-a55b:free",
+    "task": "practice",
+    "language": "Spanish",
+    "source": [
+      "llave",
+      "casa",
+      "olvidar"
+    ],
+    "output": {
+      "sentences": [
+        {
+          "sentence": "Olvidé la llave en la casa.",
+          "translation": "I forgot the key in the house.",
+          "translation_hints": [
+            {
+              "words": [
+                "Olvidé"
+              ],
+              "hint": "I forgot"
+            },
+            {
+              "words": [
+                "la"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "llave"
+              ],
+              "hint": "key"
+            },
+            {
+              "words": [
+                "en"
+              ],
+              "hint": "in"
+            },
+            {
+              "words": [
+                "la"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "casa"
+              ],
+              "hint": "house"
+            }
+          ]
+        },
+        {
+          "sentence": "No puedo entrar a la casa sin la llave.",
+          "translation": "I cannot enter the house without the key.",
+          "translation_hints": [
+            {
+              "words": [
+                "No"
+              ],
+              "hint": "not"
+            },
+            {
+              "words": [
+                "puedo"
+              ],
+              "hint": "I can"
+            },
+            {
+              "words": [
+                "entrar"
+              ],
+              "hint": "enter"
+            },
+            {
+              "words": [
+                "a"
+              ],
+              "hint": "to"
+            },
+            {
+              "words": [
+                "la"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "casa"
+              ],
+              "hint": "house"
+            },
+            {
+              "words": [
+                "sin"
+              ],
+              "hint": "without"
+            },
+            {
+              "words": [
+                "la"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "llave"
+              ],
+              "hint": "key"
+            }
+          ]
+        },
+        {
+          "sentence": "Siempre olvido dónde puse la llave de la casa.",
+          "translation": "I always forget where I put the house key.",
+          "translation_hints": [
+            {
+              "words": [
+                "Siempre"
+              ],
+              "hint": "always"
+            },
+            {
+              "words": [
+                "olvido"
+              ],
+              "hint": "I forget"
+            },
+            {
+              "words": [
+                "dónde"
+              ],
+              "hint": "where"
+            },
+            {
+              "words": [
+                "puse"
+              ],
+              "hint": "I put"
+            },
+            {
+              "words": [
+                "la"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "llave"
+              ],
+              "hint": "key"
+            },
+            {
+              "words": [
+                "de"
+              ],
+              "hint": "of"
+            },
+            {
+              "words": [
+                "la"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "casa"
+              ],
+              "hint": "house"
+            }
+          ]
+        },
+        {
+          "sentence": "La llave de la casa está perdida.",
+          "translation": "The house key is lost.",
+          "translation_hints": [
+            {
+              "words": [
+                "La"
+              ],
+              "hint": "The"
+            },
+            {
+              "words": [
+                "llave"
+              ],
+              "hint": "key"
+            },
+            {
+              "words": [
+                "de"
+              ],
+              "hint": "of"
+            },
+            {
+              "words": [
+                "la"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "casa"
+              ],
+              "hint": "house"
+            },
+            {
+              "words": [
+                "está"
+              ],
+              "hint": "is"
+            },
+            {
+              "words": [
+                "perdida"
+              ],
+              "hint": "lost"
+            }
+          ]
+        },
+        {
+          "sentence": "Me olvidé de cerrar la casa con llave.",
+          "translation": "I forgot to lock the house.",
+          "translation_hints": [
+            {
+              "words": [
+                "Me"
+              ],
+              "hint": "myself"
+            },
+            {
+              "words": [
+                "olvidé"
+              ],
+              "hint": "forgot"
+            },
+            {
+              "words": [
+                "de"
+              ],
+              "hint": "to"
+            },
+            {
+              "words": [
+                "cerrar"
+              ],
+              "hint": "close"
+            },
+            {
+              "words": [
+                "la"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "casa"
+              ],
+              "hint": "house"
+            },
+            {
+              "words": [
+                "con"
+              ],
+              "hint": "with"
+            },
+            {
+              "words": [
+                "llave"
+              ],
+              "hint": "key"
+            }
+          ]
+        }
+      ]
+    },
+    "responses": [
+      {
+        "status_code": 200,
+        "model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "provider": "Nvidia",
+        "usage": {
+          "prompt_tokens": 1011,
+          "completion_tokens": 1016,
+          "total_tokens": 2027,
+          "cost": 0,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0,
+            "upstream_inference_prompt_cost": 0,
+            "upstream_inference_completions_cost": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 270,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "choices": [
+          {
+            "finish_reason": "tool_calls",
+            "content": null,
+            "tool_calls": [
+              {
+                "type": "function",
+                "index": 0,
+                "id": "call-cfe7eafd-93d6-4da6-b462-3bd1731274ea",
+                "function": {
+                  "name": "final_result",
+                  "arguments": "{\"sentences\": [{\"sentence\": \"Olvidé la llave en la casa.\", \"translation\": \"I forgot the key in the house.\", \"translation_hints\": [{\"words\": [\"Olvidé\"], \"hint\": \"I forgot\"}, {\"words\": [\"la\"], \"hint\": \"the\"}, {\"words\": [\"llave\"], \"hint\": \"key\"}, {\"words\": [\"en\"], \"hint\": \"in\"}, {\"words\": [\"la\"], \"hint\": \"the\"}, {\"words\": [\"casa\"], \"hint\": \"house\"}]}, {\"sentence\": \"No puedo entrar a la casa sin la llave.\", \"translation\": \"I cannot enter the house without the key.\", \"translation_hints\": [{\"words\": [\"No\"], \"hint\": \"not\"}, {\"words\": [\"puedo\"], \"hint\": \"I can\"}, {\"words\": [\"entrar\"], \"hint\": \"enter\"}, {\"words\": [\"a\"], \"hint\": \"to\"}, {\"words\": [\"la\"], \"hint\": \"the\"}, {\"words\": [\"casa\"], \"hint\": \"house\"}, {\"words\": [\"sin\"], \"hint\": \"without\"}, {\"words\": [\"la\"], \"hint\": \"the\"}, {\"words\": [\"llave\"], \"hint\": \"key\"}]}, {\"sentence\": \"Siempre olvido dónde puse la llave de la casa.\", \"translation\": \"I always forget where I put the house key.\", \"translation_hints\": [{\"words\": [\"Siempre\"], \"hint\": \"always\"}, {\"words\": [\"olvido\"], \"hint\": \"I forget\"}, {\"words\": [\"dónde\"], \"hint\": \"where\"}, {\"words\": [\"puse\"], \"hint\": \"I put\"}, {\"words\": [\"la\"], \"hint\": \"the\"}, {\"words\": [\"llave\"], \"hint\": \"key\"}, {\"words\": [\"de\"], \"hint\": \"of\"}, {\"words\": [\"la\"], \"hint\": \"the\"}, {\"words\": [\"casa\"], \"hint\": \"house\"}]}, {\"sentence\": \"La llave de la casa está perdida.\", \"translation\": \"The house key is lost.\", \"translation_hints\": [{\"words\": [\"La\"], \"hint\": \"The\"}, {\"words\": [\"llave\"], \"hint\": \"key\"}, {\"words\": [\"de\"], \"hint\": \"of\"}, {\"words\": [\"la\"], \"hint\": \"the\"}, {\"words\": [\"casa\"], \"hint\": \"house\"}, {\"words\": [\"está\"], \"hint\": \"is\"}, {\"words\": [\"perdida\"], \"hint\": \"lost\"}]}, {\"sentence\": \"Me olvidé de cerrar la casa con llave.\", \"translation\": \"I forgot to lock the house.\", \"translation_hints\": [{\"words\": [\"Me\"], \"hint\": \"myself\"}, {\"words\": [\"olvidé\"], \"hint\": \"forgot\"}, {\"words\": [\"de\"], \"hint\": \"to\"}, {\"words\": [\"cerrar\"], \"hint\": \"close\"}, {\"words\": [\"la\"], \"hint\": \"the\"}, {\"words\": [\"casa\"], \"hint\": \"house\"}, {\"words\": [\"con\"], \"hint\": \"with\"}, {\"words\": [\"llave\"], \"hint\": \"key\"}]}]}"
+                }
+              }
+            ]
+          }
+        ],
+        "error": null
+      }
+    ],
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "returned_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 2027,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.09
+      }
+    ],
+    "seconds": 18.12,
+    "previous_attempts": [
+      {
+        "model": "openrouter:nvidia/nemotron-3-ultra-550b-a55b:free",
+        "task": "practice",
+        "language": "Spanish",
+        "source": [
+          "llave",
+          "casa",
+          "olvidar"
+        ],
+        "error": "ModelHTTPError: status_code: 402, model_name: nvidia/nemotron-3-ultra-550b-a55b:free, body: {'message': 'Daily application token budget exhausted'}",
+        "calls": [],
+        "seconds": 0.09
+      }
+    ]
+  },
+  {
+    "model": "openrouter:dots-studio/dots-3-note-preview:free",
+    "task": "translation",
+    "language": "German",
+    "source": "Ich stehe früh auf, weil der Zug um sieben Uhr abfährt.",
+    "error": "UnexpectedModelBehavior: Model token limit (2048) exceeded before any response was generated. Increase the `max_tokens` model setting, or simplify the prompt to result in a shorter response that will fit within the limit.",
+    "responses": [
+      {
+        "status_code": 200,
+        "model": "dots-studio/dots-3-note-preview:free",
+        "provider": "AtlasCloud",
+        "usage": {
+          "prompt_tokens": 727,
+          "completion_tokens": 2048,
+          "total_tokens": 2775,
+          "cost": 0,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0,
+            "upstream_inference_prompt_cost": 0,
+            "upstream_inference_completions_cost": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 2011,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "choices": [
+          {
+            "finish_reason": "length",
+            "content": null,
+            "tool_calls": null
+          }
+        ],
+        "error": null
+      }
+    ],
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "dots-studio/dots-3-note-preview:free",
+        "returned_model": "dots-studio/dots-3-note-preview:free",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 2775,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.28
+      }
+    ],
+    "seconds": 23.5,
+    "previous_attempts": [
+      {
+        "model": "openrouter:dots-studio/dots-3-note-preview:free",
+        "task": "translation",
+        "language": "German",
+        "source": "Ich stehe früh auf, weil der Zug um sieben Uhr abfährt.",
+        "error": "ModelHTTPError: status_code: 402, model_name: dots-studio/dots-3-note-preview:free, body: {'message': 'Daily application token budget exhausted'}",
+        "calls": [],
+        "seconds": 0.18
+      }
+    ]
+  },
+  {
+    "model": "openrouter:dots-studio/dots-3-note-preview:free",
+    "task": "translation",
+    "language": "French",
+    "source": "Si j'avais su, je serais venu plus tôt.",
+    "error": "UnexpectedModelBehavior: Model token limit (2048) exceeded before any response was generated. Increase the `max_tokens` model setting, or simplify the prompt to result in a shorter response that will fit within the limit.",
+    "responses": [
+      {
+        "status_code": 200,
+        "model": "dots-studio/dots-3-note-preview:free",
+        "provider": "AtlasCloud",
+        "usage": {
+          "prompt_tokens": 725,
+          "completion_tokens": 2048,
+          "total_tokens": 2773,
+          "cost": 0,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 512,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0,
+            "upstream_inference_prompt_cost": 0,
+            "upstream_inference_completions_cost": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 1898,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "choices": [
+          {
+            "finish_reason": "length",
+            "content": null,
+            "tool_calls": null
+          }
+        ],
+        "error": null
+      }
+    ],
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "dots-studio/dots-3-note-preview:free",
+        "returned_model": "dots-studio/dots-3-note-preview:free",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 2773,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.09
+      }
+    ],
+    "seconds": 24.22,
+    "previous_attempts": [
+      {
+        "model": "openrouter:dots-studio/dots-3-note-preview:free",
+        "task": "translation",
+        "language": "French",
+        "source": "Si j'avais su, je serais venu plus tôt.",
+        "error": "ModelHTTPError: status_code: 402, model_name: dots-studio/dots-3-note-preview:free, body: {'message': 'Daily application token budget exhausted'}",
+        "calls": [],
+        "seconds": 0.15
+      }
+    ]
+  },
+  {
+    "model": "openrouter:dots-studio/dots-3-note-preview:free",
+    "task": "translation",
+    "language": "Italian",
+    "source": "Non vedo l'ora di rivederti.",
+    "error": "UnexpectedModelBehavior: Model token limit (2048) exceeded before any response was generated. Increase the `max_tokens` model setting, or simplify the prompt to result in a shorter response that will fit within the limit.",
+    "responses": [
+      {
+        "status_code": 200,
+        "model": "dots-studio/dots-3-note-preview:free",
+        "provider": "AtlasCloud",
+        "usage": {
+          "prompt_tokens": 721,
+          "completion_tokens": 2048,
+          "total_tokens": 2769,
+          "cost": 0,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0,
+            "upstream_inference_prompt_cost": 0,
+            "upstream_inference_completions_cost": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 1847,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "choices": [
+          {
+            "finish_reason": "length",
+            "content": null,
+            "tool_calls": null
+          }
+        ],
+        "error": null
+      }
+    ],
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "dots-studio/dots-3-note-preview:free",
+        "returned_model": "dots-studio/dots-3-note-preview:free",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 2769,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.15
+      }
+    ],
+    "seconds": 23.59,
+    "previous_attempts": [
+      {
+        "model": "openrouter:dots-studio/dots-3-note-preview:free",
+        "task": "translation",
+        "language": "Italian",
+        "source": "Non vedo l'ora di rivederti.",
+        "error": "ModelHTTPError: status_code: 402, model_name: dots-studio/dots-3-note-preview:free, body: {'message': 'Daily application token budget exhausted'}",
+        "calls": [],
+        "seconds": 0.11
+      }
+    ]
+  },
+  {
+    "model": "openrouter:dots-studio/dots-3-note-preview:free",
+    "task": "translation",
+    "language": "Spanish",
+    "source": "Se me olvidaron las llaves en casa.",
+    "error": "ModelHTTPError: status_code: 402, model_name: dots-studio/dots-3-note-preview:free, body: {'message': 'Daily application token budget exhausted'}",
+    "calls": [],
+    "seconds": 0.12
+  },
+  {
+    "model": "openrouter:dots-studio/dots-3-note-preview:free",
+    "task": "translation",
+    "language": "English",
+    "source": "She had been waiting for an hour when the train finally arrived.",
+    "error": "ModelHTTPError: status_code: 402, model_name: dots-studio/dots-3-note-preview:free, body: {'message': 'Daily application token budget exhausted'}",
+    "calls": [],
+    "seconds": 0.1
+  },
+  {
+    "model": "openrouter:dots-studio/dots-3-note-preview:free",
+    "task": "metadata",
+    "language": "French",
+    "source": "Si j'avais su, je serais venu plus tôt.",
+    "error": "ModelHTTPError: status_code: 402, model_name: dots-studio/dots-3-note-preview:free, body: {'message': 'Daily application token budget exhausted'}",
+    "calls": [],
+    "seconds": 0.17
+  },
+  {
+    "model": "openrouter:dots-studio/dots-3-note-preview:free",
+    "task": "practice",
+    "language": "Spanish",
+    "source": [
+      "llave",
+      "casa",
+      "olvidar"
+    ],
+    "error": "ModelHTTPError: status_code: 402, model_name: dots-studio/dots-3-note-preview:free, body: {'message': 'Daily application token budget exhausted'}",
+    "calls": [],
+    "seconds": 0.11
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-super-120b-a12b:free",
+    "task": "translation",
+    "language": "German",
+    "source": "Ich stehe früh auf, weil der Zug um sieben Uhr abfährt.",
+    "error": "ModelHTTPError: status_code: 402, model_name: nvidia/nemotron-3-super-120b-a12b:free, body: {'message': 'Daily application token budget exhausted'}",
+    "calls": [],
+    "seconds": 0.2
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-super-120b-a12b:free",
+    "task": "translation",
+    "language": "French",
+    "source": "Si j'avais su, je serais venu plus tôt.",
+    "error": "ModelHTTPError: status_code: 402, model_name: nvidia/nemotron-3-super-120b-a12b:free, body: {'message': 'Daily application token budget exhausted'}",
+    "calls": [],
+    "seconds": 0.1
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-super-120b-a12b:free",
+    "task": "translation",
+    "language": "Italian",
+    "source": "Non vedo l'ora di rivederti.",
+    "error": "ModelHTTPError: status_code: 402, model_name: nvidia/nemotron-3-super-120b-a12b:free, body: {'message': 'Daily application token budget exhausted'}",
+    "calls": [],
+    "seconds": 0.18
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-super-120b-a12b:free",
+    "task": "translation",
+    "language": "Spanish",
+    "source": "Se me olvidaron las llaves en casa.",
+    "error": "ModelHTTPError: status_code: 402, model_name: nvidia/nemotron-3-super-120b-a12b:free, body: {'message': 'Daily application token budget exhausted'}",
+    "calls": [],
+    "seconds": 0.11
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-super-120b-a12b:free",
+    "task": "translation",
+    "language": "English",
+    "source": "She had been waiting for an hour when the train finally arrived.",
+    "error": "ModelHTTPError: status_code: 402, model_name: nvidia/nemotron-3-super-120b-a12b:free, body: {'message': 'Daily application token budget exhausted'}",
+    "calls": [],
+    "seconds": 0.11
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-super-120b-a12b:free",
+    "task": "metadata",
+    "language": "French",
+    "source": "Si j'avais su, je serais venu plus tôt.",
+    "error": "ModelHTTPError: status_code: 402, model_name: nvidia/nemotron-3-super-120b-a12b:free, body: {'message': 'Daily application token budget exhausted'}",
+    "calls": [],
+    "seconds": 0.11
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-super-120b-a12b:free",
+    "task": "practice",
+    "language": "Spanish",
+    "source": [
+      "llave",
+      "casa",
+      "olvidar"
+    ],
+    "error": "ModelHTTPError: status_code: 402, model_name: nvidia/nemotron-3-super-120b-a12b:free, body: {'message': 'Daily application token budget exhausted'}",
+    "calls": [],
+    "seconds": 0.13
+  }
+]

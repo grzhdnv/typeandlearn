@@ -60,7 +60,7 @@ class ProviderGovernor:
 
     def _cost(self, provider: str, inputs: int, outputs: int, cached: int = 0) -> int:
         if provider != "deepseek":
-            return 0  # This application's Groq account uses its free allowance.
+            return 0  # Groq free allowance and the guarded free-only OpenRouter adapter.
         cfg = self.settings
         cached = min(max(cached, 0), inputs)
         return math.ceil((inputs - cached) * cfg.deepseek_input_usd_per_mtok
@@ -69,6 +69,10 @@ class ProviderGovernor:
 
     def reserve(self, provider: str, model: str, owner: str, task: str,
                 input_bound: int, token_estimate: int, max_output: int) -> str:
+        if provider not in ("groq", "deepseek", "openrouter"):
+            raise ValueError("Unsupported quota provider")
+        if provider == "openrouter" and not model.endswith(":free"):
+            raise ValueError("OpenRouter quota policy permits only :free models")
         now = self.clock()
         today = datetime.fromtimestamp(now, timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0)
         day_start = today.timestamp()
@@ -101,7 +105,12 @@ class ProviderGovernor:
                     gate.tokens_remaining -= reservation_tokens
                 if gate.requests_remaining is not None:
                     gate.requests_remaining -= 1
-            else:
+            elif provider == "openrouter":
+                if self._totals(session, provider, day_start)[0] >= self.settings.openrouter_rpd:
+                    raise QuotaUnavailable(day_start + 86400 - now)
+                if self._totals(session, provider, now - 60)[0] >= self.settings.openrouter_rpm:
+                    raise QuotaUnavailable(1)
+            elif provider == "deepseek":
                 daily_cost = self._totals(session, provider, day_start)[2]
                 monthly_cost = self._totals(session, provider, month_start)[2]
                 if (daily_cost + cost_bound > round(self.settings.deepseek_daily_usd * 1_000_000)
@@ -146,6 +155,8 @@ class ProviderGovernor:
                 cached = int(usage.get("prompt_cache_hit_tokens") or details.get("cached_tokens") or 0)
                 call.tokens = max(0, inputs + outputs - (cached if call.provider == "groq" else 0))
                 call.cost_microusd = self._cost(call.provider, inputs, outputs, cached)
+                if call.provider == "openrouter" and usage.get("cost") is not None:
+                    call.cost_microusd = max(0, math.ceil(float(usage["cost"]) * 1_000_000))
                 call.response_model = str(body.get("model") or call.model)
                 call.status = "succeeded" if status_code is not None and status_code < 400 else "failed"
                 session.add(TokenUsageRecord(
@@ -176,6 +187,15 @@ class ProviderGovernor:
                             continue  # A malformed optional header must not lose usage accounting.
                         setattr(gate, f"{kind}_remaining", min(current, value) if current is not None and now < reset_at else value)
                         setattr(gate, f"{kind}_reset_at", now + duration_seconds(reset))
+            if status_code == 429 and call.provider == "openrouter":
+                # Accept epoch reset timestamps in milliseconds or seconds.
+                try:
+                    reset = float(headers.get("x-ratelimit-reset", "0"))
+                    if reset > 100_000_000_000:
+                        reset /= 1000
+                    gate.cooldown_until = max(gate.cooldown_until, reset)
+                except ValueError:
+                    pass
             if status_code == 429:
                 retry = headers.get("retry-after", "1")
                 try:

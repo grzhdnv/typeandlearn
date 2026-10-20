@@ -129,3 +129,32 @@ class ProviderGovernorTests(unittest.TestCase):
                         {"x-ratelimit-remaining-tokens": "invalid", "x-ratelimit-reset-tokens": "1m"})
         with Session(self.engine) as session:
             self.assertEqual(session.exec(select(TokenUsageRecord)).one().total_tokens, 15)
+
+    def test_openrouter_separate_daily_and_minute_quota_and_reset(self):
+        self.cfg.openrouter_rpm = 1
+        self.cfg.openrouter_rpd = 2
+        self.cfg.deepseek_daily_usd = self.cfg.deepseek_monthly_usd = 0
+        def reserve():
+            return self.gov.reserve("openrouter", "test/model:free", "reader", "translation", 100, 100, 100)
+        call = reserve()
+        with self.assertRaises(QuotaUnavailable):
+            reserve()
+        self.gov.finish(call, 429, {}, {"x-ratelimit-reset": str((self.now + 90) * 1000)})
+        self.now += 61
+        with self.assertRaises(QuotaUnavailable) as error:
+            reserve()
+        self.assertEqual(error.exception.wait_seconds, 29)
+        self.now += 30
+        reserve()
+        self.now += 61
+        with self.assertRaises(QuotaUnavailable):
+            reserve()
+        self.now += 86400
+        reserve()
+        self.reserve("groq")
+
+    def test_unknown_provider_cannot_bypass_policy(self):
+        with self.assertRaises(ValueError):
+            self.reserve("unknown")
+        with self.assertRaises(ValueError):
+            self.reserve("openrouter")

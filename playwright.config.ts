@@ -33,6 +33,7 @@ export default defineConfig({
         DATABASE_URL: `sqlite:///${join(testDirectory, "test.sqlite")}`,
         DEEPSEEK_API_KEY: "",
         GROQ_API_KEY: "",
+        OPENROUTER_API_KEY: "",
         AUTH_MODE: "local",
       },
       url: "http://127.0.0.1:18000/docs",

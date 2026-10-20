@@ -1,6 +1,6 @@
 # TypeAndLearn Roadmap
 
-Updated: 19 October 2026
+Updated: 20 October 2026
 
 This is the current backlog. The production plan records the target architecture;
 checkmarks in the historical issue map do not establish production readiness.
@@ -14,16 +14,19 @@ checkmarks in the historical issue map do not establish production readiness.
   controls, saved original-text completion progress, results, and practice history.
 - Provider routing, owner scoping, backend JWT validation, analytics, and export/delete
   implementations with automated backend coverage.
-- Ruff, Python type checking, frontend type checking and build, 81 backend tests,
+- Ruff, Python type checking, frontend type checking and build, 91 backend tests,
   27 frontend unit tests, and 21 isolated Chromium browser regressions.
 - Live synthetic comparison across five languages, metadata, exercises, and a real
   DeepSeek fallback flow; shared quotas and approved $0.50/day and $5/month limits.
 
-## Immediate next session: OpenRouter free models
+## Completed: OpenRouter free-model comparison
 
-- [ ] Follow `../HANDOFF.md`: verify current free models and account limits, add an
-  explicit adapter, and compare a small shortlist on the synthetic fixtures with
-  paid OpenRouter routing disabled. Preserve working defaults until evaluated.
+- [x] Verify current models/limits and implement an offline-tested free-only adapter.
+- [x] Compare Ultra 550B, Dots 280B, and Super 120B on synthetic fixtures. Ultra and
+  Dots passed 7/7 with reasoning off; Super returned upstream 404s. See
+  `openrouter-evaluation-2026-10-20.md`. Groq/DeepSeek defaults remain unchanged.
+- [ ] Validate hint coverage/normalization and provider data handling before
+  promoting Ultra to automatic fallback.
 
 ## Next: reliable processing and realistic practice
 

@@ -9,7 +9,7 @@ translations, and practice-sentence generation.
 
 Active local v2 prototype. Local repairs verified on 19 October 2026: text intake,
 metadata editing, original and generated practice navigation, reset, saved progress,
-results, and history. The current checks cover 81 backend tests, 27 frontend unit
+results, and history. The current checks cover 91 backend tests, 27 frontend unit
 tests, and 21 Chromium browser regressions. A live synthetic comparison verified
 five languages, metadata, generated exercises, and real DeepSeek fallback.
 
@@ -25,10 +25,13 @@ builds and smoke-tests containers without deploying a hosted service. Private-be
 security, cross-browser/accessibility, recovery, and deployment acceptance remain
 unfinished. See [the roadmap](docs/roadmap.md).
 
-Next session: test OpenRouter free models and compare them with the working
-Groq/DeepSeek baseline. Read [the session handoff](HANDOFF.md) first. Then reconcile
-API/worker job dispatch, expand realistic multilingual browser coverage, and verify
-staging and recovery before considering private beta.
+The OpenRouter free-only comparison completed on 20 October: Ultra 550B and Dots
+280B completed all seven final tasks with reasoning disabled; Super 120B returned
+upstream 404s. Ultra is the stronger free challenger in this sample, but hint
+quality needs work. Groq/DeepSeek defaults remain unchanged. See the
+[evaluation report](docs/openrouter-evaluation-2026-10-20.md) and
+[session handoff](HANDOFF.md). Next, unify API/worker job dispatch, expand realistic
+multilingual browser coverage, and verify staging and recovery before private beta.
 
 ## Repository layout
 

@@ -24,6 +24,9 @@ from pydantic_ai.models.openai import OpenAIChatModel
 from pydantic_ai.profiles.openai import OpenAIJsonSchemaTransformer, OpenAIModelProfile
 from pydantic_ai.providers.deepseek import DeepSeekProvider
 from pydantic_ai.providers.groq import GroqProvider
+from pydantic_ai.providers.openrouter import OpenRouterProvider
+
+from services.openrouter_policy import FREE_ROUTING, validate_free_model
 
 from core.settings import Settings
 from schemas.texts import FilteredWordsResponse, GeneratedMetadata, PracticeSentencesResponse, SentenceTranslation
@@ -58,17 +61,32 @@ class _GovernedTransport(httpx.AsyncBaseTransport):
     async def handle_async_request(self, request: httpx.Request) -> httpx.Response:
         body_bytes = await request.aread()
         body = json.loads(body_bytes)
-        hosts = {"api.groq.com": "groq", "api.deepseek.com": "deepseek"}
+        hosts = {"api.groq.com": "groq", "api.deepseek.com": "deepseek", "openrouter.ai": "openrouter"}
         provider = hosts[request.url.host]
         model = str(body["model"])
         if len(body_bytes) > self.settings.llm_max_request_bytes:
             return httpx.Response(400, request=request, json={"error": {"message": "LLM request exceeds the configured input size limit"}})
+        if provider == "openrouter":
+            # Public catalog preflight contains no key or learning content. Fail closed.
+            catalog_request = httpx.Request("GET", "https://openrouter.ai/api/v1/models")
+            catalog_response = await self.transport.handle_async_request(catalog_request)
+            try:
+                await catalog_response.aread()
+                if catalog_response.status_code != 200:
+                    raise ValueError(f"catalog HTTP {catalog_response.status_code}")
+                validate_free_model(model, catalog_response.json(), native="response_format" in body)
+            except (ValueError, httpx.HTTPError) as error:
+                return httpx.Response(400, request=request, json={"error": {"message": f"OpenRouter free preflight failed: {error}"}})
+            finally:
+                await catalog_response.aclose()
+            if body.get("provider") != FREE_ROUTING or any(key in body for key in ("models", "plugins", "route")):
+                return httpx.Response(400, request=request, json={"error": {"message": "OpenRouter requires free-only routing"}})
         max_output = int(body.get("max_completion_tokens") or body.get("max_tokens") or self.settings.llm_max_output_tokens)
         input_bound = len(body_bytes) + 512 + 64 * len(body.get("messages", []))
         estimate = math.ceil(len(body_bytes) / 3) + 128
         call_id = None
         if self.governor:
-            deadline = time.monotonic() + (self.settings.groq_max_wait_seconds if provider == "groq" else 0)
+            deadline = time.monotonic() + (self.settings.groq_max_wait_seconds if provider == "groq" else self.settings.openrouter_max_wait_seconds if provider == "openrouter" else 0)
             while True:
                 try:
                     call_id = await asyncio.to_thread(self.governor.reserve, provider, model, _owner.get(), _task.get(), input_bound, estimate, max_output)
@@ -106,6 +124,11 @@ def _create_model(model_spec: str, client: httpx.AsyncClient, max_tokens: int = 
         profile = (DeepSeekProvider.model_profile(model_name) or OpenAIModelProfile()).update(OpenAIModelProfile(openai_supports_tool_choice_required=False))
         return OpenAIChatModel(model_name, provider=provider, profile=profile,
                                settings={"max_tokens": max_tokens, "extra_body": {"thinking": {"type": "disabled"}}})
+    if provider_name == "openrouter":
+        sdk = AsyncOpenAI(api_key=os.getenv("OPENROUTER_API_KEY"), base_url="https://openrouter.ai/api/v1", http_client=client, max_retries=0)
+        profile = OpenAIModelProfile(supports_json_schema_output=model_name != "nvidia/nemotron-3-ultra-550b-a55b:free", json_schema_transformer=OpenAIJsonSchemaTransformer)
+        return OpenAIChatModel(model_name, provider=OpenRouterProvider(openai_client=sdk), profile=profile,
+                               settings={"max_tokens": max_tokens, "extra_body": {"provider": FREE_ROUTING, "reasoning": {"enabled": False}}})
     if provider_name == "groq":
         sdk = AsyncGroq(api_key=os.getenv("GROQ_API_KEY"), http_client=client, max_retries=0)
         # The pinned SDK predates Groq native schemas for Qwen 3.8.
@@ -119,9 +142,11 @@ def _create_model(model_spec: str, client: httpx.AsyncClient, max_tokens: int = 
 
 def _can_create_model(model_spec: str) -> bool:
     provider, _, model = model_spec.partition(":")
-    if not model or provider not in ("groq", "deepseek"):
-        raise ValueError("LLM models must use a groq: or deepseek: prefix")
-    return bool(os.getenv("GROQ_API_KEY" if provider == "groq" else "DEEPSEEK_API_KEY"))
+    if not model or provider not in ("groq", "deepseek", "openrouter"):
+        raise ValueError("LLM models must use a groq:, deepseek:, or openrouter: prefix")
+    if provider == "openrouter" and (not model.endswith(":free") or "/" not in model):
+        raise ValueError("OpenRouter requires an explicit :free model ID")
+    return bool(os.getenv({"groq": "GROQ_API_KEY", "deepseek": "DEEPSEEK_API_KEY", "openrouter": "OPENROUTER_API_KEY"}[provider]))
 
 
 class LlmNotConfiguredError(RuntimeError):
@@ -198,7 +223,7 @@ class LlmService:
         specs = [spec for spec in dict.fromkeys([primary, *self._fallbacks]) if spec in self._models]
         try:
             for index, spec in enumerate(specs):
-                output = NativeOutput(output_type, strict=True) if spec.startswith("groq:") and self._models[spec].profile.supports_json_schema_output else output_type
+                output = NativeOutput(output_type, strict=True) if spec.startswith(("groq:", "openrouter:")) and self._models[spec].profile.supports_json_schema_output else output_type
                 agent = Agent(self._models[spec], output_type=output, system_prompt=self._prompts[task], retries=1)
                 try:
                     result = await agent.run(prompt)

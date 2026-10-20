@@ -1,0 +1,412 @@
+[
+  {
+    "model": "openrouter:nvidia/nemotron-3-ultra-550b-a55b:free",
+    "task": "translation",
+    "language": "German",
+    "source": "Ich stehe früh auf, weil der Zug um sieben Uhr abfährt.",
+    "output": {
+      "translation": "I get up early because the train departs at seven o'clock.",
+      "translation_hints": [
+        {
+          "words": [
+            "Ich"
+          ],
+          "hint": "I"
+        },
+        {
+          "words": [
+            "stehe",
+            "auf"
+          ],
+          "hint": "get up"
+        },
+        {
+          "words": [
+            "früh"
+          ],
+          "hint": "early"
+        },
+        {
+          "words": [
+            "weil"
+          ],
+          "hint": "because"
+        },
+        {
+          "words": [
+            "der"
+          ],
+          "hint": "the"
+        },
+        {
+          "words": [
+            "Zug"
+          ],
+          "hint": "train"
+        },
+        {
+          "words": [
+            "um"
+          ],
+          "hint": "at"
+        },
+        {
+          "words": [
+            "sieben"
+          ],
+          "hint": "seven"
+        },
+        {
+          "words": [
+            "Uhr"
+          ],
+          "hint": "o'clock"
+        },
+        {
+          "words": [
+            "abfährt"
+          ],
+          "hint": "departs"
+        }
+      ]
+    },
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "returned_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 2418,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.46
+      }
+    ],
+    "seconds": 21.48
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-ultra-550b-a55b:free",
+    "task": "translation",
+    "language": "French",
+    "source": "Si j'avais su, je serais venu plus tôt.",
+    "output": {
+      "translation": "If I had known, I would have come earlier.",
+      "translation_hints": [
+        {
+          "words": [
+            "Si"
+          ],
+          "hint": "If"
+        },
+        {
+          "words": [
+            "j'avais",
+            "su"
+          ],
+          "hint": "had known"
+        },
+        {
+          "words": [
+            "je",
+            "serais",
+            "venu"
+          ],
+          "hint": "would have come"
+        },
+        {
+          "words": [
+            "plus",
+            "tôt"
+          ],
+          "hint": "earlier"
+        }
+      ]
+    },
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "returned_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 1650,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.09
+      }
+    ],
+    "seconds": 7.91
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-ultra-550b-a55b:free",
+    "task": "translation",
+    "language": "Italian",
+    "source": "Non vedo l'ora di rivederti.",
+    "error": "UnexpectedModelBehavior: Exceeded maximum retries (1) for output validation",
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "returned_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 1879,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.09
+      },
+      {
+        "provider": "openrouter",
+        "requested_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "returned_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 1469,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 15.4
+      }
+    ],
+    "seconds": 28.24
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-ultra-550b-a55b:free",
+    "task": "translation",
+    "language": "Spanish",
+    "source": "Se me olvidaron las llaves en casa.",
+    "output": {
+      "translation": "I forgot the keys at home.",
+      "translation_hints": [
+        {
+          "words": [
+            "Se",
+            "me",
+            "olvidaron"
+          ],
+          "hint": "I forgot"
+        },
+        {
+          "words": [
+            "las",
+            "llaves"
+          ],
+          "hint": "the keys"
+        },
+        {
+          "words": [
+            "en",
+            "casa"
+          ],
+          "hint": "at home"
+        }
+      ]
+    },
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "returned_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 1654,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.08
+      }
+    ],
+    "seconds": 12.78
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-ultra-550b-a55b:free",
+    "task": "translation",
+    "language": "English",
+    "source": "She had been waiting for an hour when the train finally arrived.",
+    "error": "ModelHTTPError: status_code: 402, model_name: nvidia/nemotron-3-ultra-550b-a55b:free, body: {'message': 'Daily application token budget exhausted'}",
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "returned_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 1821,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.17
+      }
+    ],
+    "seconds": 10.31
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-ultra-550b-a55b:free",
+    "task": "metadata",
+    "language": "French",
+    "source": "Si j'avais su, je serais venu plus tôt.",
+    "error": "UnexpectedModelBehavior: Exceeded maximum retries (1) for output validation",
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "returned_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 816,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.09
+      },
+      {
+        "provider": "openrouter",
+        "requested_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "returned_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 1014,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 4.9
+      }
+    ],
+    "seconds": 8.33
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-ultra-550b-a55b:free",
+    "task": "practice",
+    "language": "Spanish",
+    "source": [
+      "llave",
+      "casa",
+      "olvidar"
+    ],
+    "error": "ModelHTTPError: status_code: 402, model_name: nvidia/nemotron-3-ultra-550b-a55b:free, body: {'message': 'Daily application token budget exhausted'}",
+    "calls": [],
+    "seconds": 0.09
+  },
+  {
+    "model": "openrouter:dots-studio/dots-3-note-preview:free",
+    "task": "translation",
+    "language": "German",
+    "source": "Ich stehe früh auf, weil der Zug um sieben Uhr abfährt.",
+    "error": "ModelHTTPError: status_code: 402, model_name: dots-studio/dots-3-note-preview:free, body: {'message': 'Daily application token budget exhausted'}",
+    "calls": [],
+    "seconds": 0.18
+  },
+  {
+    "model": "openrouter:dots-studio/dots-3-note-preview:free",
+    "task": "translation",
+    "language": "French",
+    "source": "Si j'avais su, je serais venu plus tôt.",
+    "error": "ModelHTTPError: status_code: 402, model_name: dots-studio/dots-3-note-preview:free, body: {'message': 'Daily application token budget exhausted'}",
+    "calls": [],
+    "seconds": 0.15
+  },
+  {
+    "model": "openrouter:dots-studio/dots-3-note-preview:free",
+    "task": "translation",
+    "language": "Italian",
+    "source": "Non vedo l'ora di rivederti.",
+    "error": "ModelHTTPError: status_code: 402, model_name: dots-studio/dots-3-note-preview:free, body: {'message': 'Daily application token budget exhausted'}",
+    "calls": [],
+    "seconds": 0.11
+  },
+  {
+    "model": "openrouter:dots-studio/dots-3-note-preview:free",
+    "task": "translation",
+    "language": "Spanish",
+    "source": "Se me olvidaron las llaves en casa.",
+    "error": "ModelHTTPError: status_code: 402, model_name: dots-studio/dots-3-note-preview:free, body: {'message': 'Daily application token budget exhausted'}",
+    "calls": [],
+    "seconds": 0.12
+  },
+  {
+    "model": "openrouter:dots-studio/dots-3-note-preview:free",
+    "task": "translation",
+    "language": "English",
+    "source": "She had been waiting for an hour when the train finally arrived.",
+    "error": "ModelHTTPError: status_code: 402, model_name: dots-studio/dots-3-note-preview:free, body: {'message': 'Daily application token budget exhausted'}",
+    "calls": [],
+    "seconds": 0.1
+  },
+  {
+    "model": "openrouter:dots-studio/dots-3-note-preview:free",
+    "task": "metadata",
+    "language": "French",
+    "source": "Si j'avais su, je serais venu plus tôt.",
+    "error": "ModelHTTPError: status_code: 402, model_name: dots-studio/dots-3-note-preview:free, body: {'message': 'Daily application token budget exhausted'}",
+    "calls": [],
+    "seconds": 0.17
+  },
+  {
+    "model": "openrouter:dots-studio/dots-3-note-preview:free",
+    "task": "practice",
+    "language": "Spanish",
+    "source": [
+      "llave",
+      "casa",
+      "olvidar"
+    ],
+    "error": "ModelHTTPError: status_code: 402, model_name: dots-studio/dots-3-note-preview:free, body: {'message': 'Daily application token budget exhausted'}",
+    "calls": [],
+    "seconds": 0.11
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-super-120b-a12b:free",
+    "task": "translation",
+    "language": "German",
+    "source": "Ich stehe früh auf, weil der Zug um sieben Uhr abfährt.",
+    "error": "ModelHTTPError: status_code: 402, model_name: nvidia/nemotron-3-super-120b-a12b:free, body: {'message': 'Daily application token budget exhausted'}",
+    "calls": [],
+    "seconds": 0.2
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-super-120b-a12b:free",
+    "task": "translation",
+    "language": "French",
+    "source": "Si j'avais su, je serais venu plus tôt.",
+    "error": "ModelHTTPError: status_code: 402, model_name: nvidia/nemotron-3-super-120b-a12b:free, body: {'message': 'Daily application token budget exhausted'}",
+    "calls": [],
+    "seconds": 0.1
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-super-120b-a12b:free",
+    "task": "translation",
+    "language": "Italian",
+    "source": "Non vedo l'ora di rivederti.",
+    "error": "ModelHTTPError: status_code: 402, model_name: nvidia/nemotron-3-super-120b-a12b:free, body: {'message': 'Daily application token budget exhausted'}",
+    "calls": [],
+    "seconds": 0.18
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-super-120b-a12b:free",
+    "task": "translation",
+    "language": "Spanish",
+    "source": "Se me olvidaron las llaves en casa.",
+    "error": "ModelHTTPError: status_code: 402, model_name: nvidia/nemotron-3-super-120b-a12b:free, body: {'message': 'Daily application token budget exhausted'}",
+    "calls": [],
+    "seconds": 0.11
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-super-120b-a12b:free",
+    "task": "translation",
+    "language": "English",
+    "source": "She had been waiting for an hour when the train finally arrived.",
+    "error": "ModelHTTPError: status_code: 402, model_name: nvidia/nemotron-3-super-120b-a12b:free, body: {'message': 'Daily application token budget exhausted'}",
+    "calls": [],
+    "seconds": 0.11
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-super-120b-a12b:free",
+    "task": "metadata",
+    "language": "French",
+    "source": "Si j'avais su, je serais venu plus tôt.",
+    "error": "ModelHTTPError: status_code: 402, model_name: nvidia/nemotron-3-super-120b-a12b:free, body: {'message': 'Daily application token budget exhausted'}",
+    "calls": [],
+    "seconds": 0.11
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-super-120b-a12b:free",
+    "task": "practice",
+    "language": "Spanish",
+    "source": [
+      "llave",
+      "casa",
+      "olvidar"
+    ],
+    "error": "ModelHTTPError: status_code: 402, model_name: nvidia/nemotron-3-super-120b-a12b:free, body: {'message': 'Daily application token budget exhausted'}",
+    "calls": [],
+    "seconds": 0.13
+  }
+]

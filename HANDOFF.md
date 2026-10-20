@@ -1,3 +1,36 @@
+# Current handoff — 20 October 2026
+
+OpenRouter free-model comparison is complete. Read
+[the evaluation report](docs/openrouter-evaluation-2026-10-20.md) and its frozen
+results before changing routing. The user replaced the management key with an
+inference key; authentication is no longer blocked. Preserve unrelated `opencode.json`.
+
+- Ultra 550B and Dots 280B: 7/7 final typed tasks each, first attempts, reasoning off.
+- Ultra is the better free challenger in this sample; Dots made more hint errors.
+- Super 120B: 7 upstream 404s; its current free endpoint is unavailable.
+- Final costs: $0, 15,010 reported tokens. All probes together: $0, 45,980 returned
+  tokens plus one interrupted call retaining a 3,477-token reservation.
+- Groq/DeepSeek defaults remain unchanged. Review endpoint data handling and enforce
+  hint coverage/normalization before promoting Ultra to automatic fallback.
+- Regular app defaults stay 16 RPM / 40 RPD for OpenRouter. Final evaluation only
+  used 100 RPD / 150,000 owner tokens to include earlier shared benchmark history;
+  final account preflight reported a 1,000/day free allowance. No paid routing.
+
+Verified: `npm run check` (91 backend tests, 27 frontend tests, lint/types/build).
+21 Chromium tests also passed earlier in this implementation session. Existing
+SQLite ResourceWarnings remain. Offline checks must blank all three provider keys;
+Playwright already does this. No dependencies were installed.
+
+Next engineering work: unify API/worker job dispatch and claim semantics to avoid
+duplicate processing, then broaden multilingual browser coverage and verify
+staging/recovery. See `docs/roadmap.md`. Keep the user's practice behavior decisions
+at the end of this historical handoff. Use isolated learning databases for probes.
+
+The original 19 October handoff below is historical background. Its OpenRouter
+starting-state instructions are superseded by the completed report above.
+
+---
+
 # Session handoff — 19 October 2026
 
 Resume on 20 October 2026. **First task: test OpenRouter free models.**
