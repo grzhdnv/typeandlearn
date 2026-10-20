@@ -116,6 +116,7 @@ with a fresh attempt and typing focus. Results appear after the final sentence. 
 marking skipped sentences complete. Held bracket keys do not repeat navigation;
 shortcuts do not intercept other editable fields or IME composition.
 
-New practice visits and page reloads always start at the first sentence, regardless
-of saved completion progress. Background enrichment refetches preserve the current
-sentence and typed attempt during the same visit.
+New practice visits and page reloads resume at the first unfinished original
+sentence. If every original sentence is complete (100% progress), they start at
+sentence one for another pass. Saved completion progress is retained. Background
+enrichment refetches preserve the current sentence and typed attempt during the same visit.

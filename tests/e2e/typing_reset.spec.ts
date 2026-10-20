@@ -127,8 +127,10 @@ test("generated drills do not mark original sentences completed", async ({ page 
 });
 
 
-test("opening practice always starts at sentence one regardless of saved progress", async ({ page }) => {
-  for (const completed of [[0], [0, 1]]) {
+test("practice resumes incomplete texts and restarts fully completed texts", async ({ page }) => {
+  for (const completed of [[], [0], [1], [0, 1]]) {
+    const startingIndex = completed.length < 2 && completed.includes(0) ? 1 : 0;
+    const startingSentence = startingIndex === 0 ? "First." : "Second.";
     await page.route(/\/api\/texts\/1$/, route => route.fulfill({ json: { data: {
       ...inProgressStory,
       status: "processed", enrichment_stage: "completed", total_sentences: 2,
@@ -139,14 +141,14 @@ test("opening practice always starts at sentence one regardless of saved progres
       ] }],
     } } }));
     await page.goto("/practice/1");
-    await expect(page.locator("#typing-canvas")).toContainText("First.");
-    await expect(page.getByText("Sentence 1 of 2", { exact: true })).toBeVisible();
+    await expect(page.locator("#typing-canvas")).toContainText(startingSentence);
+    await expect(page.getByText(`Sentence ${startingIndex + 1} of 2`, { exact: true })).toBeVisible();
     await page.locator("#typing-hidden-input").focus();
-    await page.keyboard.press("]");
-    await expect(page.locator("#typing-canvas")).toContainText("Second.");
+    await page.keyboard.press(startingIndex === 0 ? "]" : "[");
+    await expect(page.locator("#typing-canvas")).toContainText(startingIndex === 0 ? "Second." : "First.");
     await page.reload();
-    await expect(page.locator("#typing-canvas")).toContainText("First.");
-    await expect(page.getByText("Sentence 1 of 2", { exact: true })).toBeVisible();
+    await expect(page.locator("#typing-canvas")).toContainText(startingSentence);
+    await expect(page.getByText(`Sentence ${startingIndex + 1} of 2`, { exact: true })).toBeVisible();
   }
 });
 
