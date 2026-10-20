@@ -2,9 +2,10 @@
 
 import json
 from typing import Annotated, Any, Dict
+from uuid import uuid4
 
 from fastapi import APIRouter, Depends, Response, status
-from sqlalchemy import delete
+from sqlalchemy import delete, update
 from sqlmodel import Session, col, select
 
 from core.auth import get_current_owner_id
@@ -12,6 +13,7 @@ from core.database import engine
 from models.analytics import PracticeSessionRecord, WeakWordRecord, utc_now
 from models.cache import TokenUsageRecord
 from models.jobs import BackgroundJobRecord
+from models.providers import ProviderCallRecord
 from models.texts import (
     PracticeSentenceRecord,
     SentenceRecord,
@@ -34,6 +36,7 @@ def export_user_data(
         word_frequencies = list(session.exec(select(WordFrequencyRecord).where(col(WordFrequencyRecord.owner_id) == owner_id)).all())
         practice_sessions = list(session.exec(select(PracticeSessionRecord).where(col(PracticeSessionRecord.owner_id) == owner_id)).all())
         weak_words = list(session.exec(select(WeakWordRecord).where(col(WeakWordRecord.owner_id) == owner_id)).all())
+        provider_calls = list(session.exec(select(ProviderCallRecord).where(col(ProviderCallRecord.owner_id) == owner_id)).all())
         token_usage = list(session.exec(select(TokenUsageRecord).where(col(TokenUsageRecord.owner_id) == owner_id)).all())
 
     export_payload: Dict[str, Any] = {
@@ -49,6 +52,7 @@ def export_user_data(
                 "practice_sessions": len(practice_sessions),
                 "weak_words": len(weak_words),
                 "token_usage_records": len(token_usage),
+                "provider_calls": len(provider_calls),
             },
         },
         "texts": [t.model_dump() for t in texts],
@@ -63,6 +67,7 @@ def export_user_data(
             {**w.model_dump(), "last_mistake_at": w.last_mistake_at.isoformat()}
             for w in weak_words
         ],
+        "provider_calls": [call.model_dump() for call in provider_calls],
         "token_usage_records": [
             {**tu.model_dump(), "created_at": tu.created_at.isoformat()}
             for tu in token_usage
@@ -87,6 +92,8 @@ def delete_user_account(
 ) -> Dict[str, Any]:
     """Permanently purge all user data, texts, and learning analytics (GDPR Article 17 / CCPA)."""
     with Session(engine) as session:
+        # Preserve account-wide quota/spend reservations without retaining the owner's ID.
+        session.exec(update(ProviderCallRecord).where(col(ProviderCallRecord.owner_id) == owner_id).values(owner_id=f"erased:{uuid4().hex}"))
         # Cascade-delete all records belonging to owner
         session.exec(delete(WeakWordRecord).where(col(WeakWordRecord.owner_id) == owner_id))  # pyright: ignore[reportCallIssue]
         session.exec(delete(PracticeSessionRecord).where(col(PracticeSessionRecord.owner_id) == owner_id))  # pyright: ignore[reportCallIssue]

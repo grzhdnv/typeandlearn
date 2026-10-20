@@ -1,129 +1,173 @@
-"""Tests for Groq-first provider routing, fallback chaining, and offline handling."""
+"""Exercise real SDK serialization against fake HTTP, without provider credentials."""
 
 import asyncio
+import json
 import os
 import pathlib
 import sys
+import tempfile
 import unittest
 from unittest import mock
 
 import httpx
-from pydantic_ai.models.fallback import FallbackModel
-from pydantic_ai.models.groq import GroqModel
-from pydantic_ai.models.openai import OpenAIChatModel
+import sqlmodel
+from pydantic_ai.exceptions import ModelHTTPError
+from sqlmodel import Session, select
 
 sys.path.append(str(pathlib.Path(__file__).resolve().parents[2] / "apps/backend"))
 
-from services.llm_service import (
-    LlmNotConfiguredError,
-    LlmService,
-    _build_model_chain,
-    _can_create_model,
-)
+from core.settings import Settings
+from models.cache import TokenUsageRecord
+from models.providers import ProviderCallRecord
+from services.llm_service import LlmNotConfiguredError, LlmService, _can_create_model, should_fallback
+from services.provider_governor import ProviderGovernor
 
 
 class LlmProviderFallbackTests(unittest.TestCase):
-    """Verify Groq-first routing, DeepSeek failover, and offline mode."""
+    def setUp(self):
+        self.enterContext(mock.patch.dict(os.environ, {"GROQ_API_KEY": "fake", "DEEPSEEK_API_KEY": "fake"}, clear=True))
+        directory = self.enterContext(tempfile.TemporaryDirectory())
+        self.engine = sqlmodel.create_engine(f"sqlite:///{directory}/llm.sqlite", connect_args={"check_same_thread": False})
+        sqlmodel.SQLModel.metadata.create_all(self.engine)
+        self.addCleanup(self.engine.dispose)
+        self.cfg = Settings(groq_max_wait_seconds=0, daily_token_limit=1_000_000)
+        self.governor = ProviderGovernor(self.engine, self.cfg)
+        self.requests = []
 
-    def setUp(self) -> None:
-        self.client = httpx.AsyncClient()
-        self.addCleanup(lambda: asyncio.run(self.client.aclose()))
+    def service(self, handler):
+        service = LlmService("apps/backend/prompts/translate_sentence.md", "apps/backend/prompts/generate_practice.md",
+                             "groq:openai/gpt-oss-120b", "groq:openai/gpt-oss-120b", ["deepseek:deepseek-flash"],
+                             governor=self.governor, transport=httpx.MockTransport(handler))
+        self.addCleanup(lambda: asyncio.run(service.aclose()))
+        return service
 
-    def test_can_create_model_env_checks(self) -> None:
-        """_can_create_model correctly checks provider-specific API keys."""
+    @staticmethod
+    def success(request, invalid=False):
+        body = json.loads(request.content)
+        schema = body.get("response_format", {}).get("json_schema", {}).get("schema")
+        tool = (body.get("tools") or [{}])[0].get("function", {})
+        properties = (schema or tool.get("parameters", {})).get("properties", {})
+        if "title" in properties:
+            output = {"title": "Garden", "difficulty_level": "A1", "language": "German", "author": None, "category": None}
+        elif "words" in properties:
+            output = {"words": [{"word": "Hund", "count": 2}]}
+        elif "sentences" in properties:
+            output = {"sentences": [{"sentence": "Der Hund läuft.", "translation": "The dog runs.", "translation_hints": []}] * 5}
+        else:
+            output = {"translation": 42 if invalid else "The dog runs.", "translation_hints": []}
+        message = {"role": "assistant", "content": json.dumps(output)}
+        if tool:
+            message = {"role": "assistant", "content": None, "tool_calls": [{"id": "call_test", "type": "function", "function": {"name": tool["name"], "arguments": json.dumps(output)}}]}
+        model = "deepseek-flash-actual" if request.url.host == "api.deepseek.com" else body["model"]
+        return httpx.Response(200, json={"id": "test", "object": "chat.completion", "created": 1, "model": model,
+                                       "choices": [{"index": 0, "message": message, "finish_reason": "tool_calls" if tool else "stop"}],
+                                       "usage": {"prompt_tokens": 100, "completion_tokens": 20, "total_tokens": 120}})
+
+    def test_transient_failover_records_actual_provider_and_shared_cooldown(self):
+        def handler(request):
+            self.requests.append(request)
+            if request.url.host == "api.groq.com":
+                return httpx.Response(429, headers={"retry-after": "60"}, json={"error": {"message": "quota"}})
+            self.assertEqual(json.loads(request.content)["thinking"], {"type": "disabled"})
+            return self.success(request)
+        service = self.service(handler)
+        for _ in range(2):
+            result = asyncio.run(service.translate_sentence_async("Test", "", "Der Hund läuft.", owner_id="reader"))
+            self.assertEqual(getattr(result, "provider"), "deepseek")
+        self.assertEqual([request.url.host for request in self.requests], ["api.groq.com", "api.deepseek.com", "api.deepseek.com"])
+        with Session(self.engine) as session:
+            usage = session.exec(select(TokenUsageRecord)).all()
+            self.assertEqual(len(usage), 2)
+            self.assertTrue(all(row.provider == "deepseek" and row.model == "deepseek-flash-actual" and row.owner_id == "reader" for row in usage))
+            self.assertTrue(all(row.estimated_cost_usd > 0 for row in usage))
+
+    def test_permanent_errors_do_not_call_paid_fallback_or_retry(self):
+        for status in (400, 401, 403, 404, 422):
+            with self.subTest(status=status):
+                self.requests.clear()
+                def handler(request):
+                    self.requests.append(request)
+                    return httpx.Response(status, json={"error": {"message": "invalid configuration"}})
+                service = self.service(handler)
+                with self.assertRaises(ModelHTTPError) as error:
+                    service.extract_metadata("Der Hund läuft.")
+                self.assertEqual(error.exception.status_code, status)
+                self.assertEqual(len(self.requests), 1)
+                self.assertEqual(self.requests[0].url.host, "api.groq.com")
+
+    def test_all_task_types_are_accounted_and_groq_uses_strict_schema(self):
+        def handler(request):
+            self.requests.append(request)
+            body = json.loads(request.content)
+            self.assertTrue(body["response_format"]["json_schema"]["strict"])
+            self.assertEqual(body["reasoning_effort"], "low")
+            return self.success(request)
+        service = self.service(handler)
+        service.extract_metadata("Der Hund läuft.", owner_id="reader")
+        service.filter_meaningful_words([{"word": "Hund", "count": 2}], "German", owner_id="reader")
+        asyncio.run(service.translate_sentence_async("Test", "", "Der Hund läuft.", owner_id="reader"))
+        asyncio.run(service.generate_practice_sentences_async(["Hund"], owner_id="reader"))
+        with Session(self.engine) as session:
+            calls = session.exec(select(ProviderCallRecord)).all()
+            self.assertEqual({row.task for row in calls}, {"metadata", "filter", "translation", "practice"})
+            self.assertEqual(len(session.exec(select(TokenUsageRecord)).all()), 4)
+            self.assertTrue(all(row.owner_id == "reader" and row.status == "succeeded" for row in calls))
+
+    def test_qwen_native_schema_profile_and_reasoning_setting(self):
+        self.cfg.model_name = self.cfg.structured_model_name = "groq:qwen/qwen3.8-27b"
+        def handler(request):
+            body = json.loads(request.content)
+            self.assertTrue(body["response_format"]["json_schema"]["strict"])
+            self.assertEqual(body["reasoning_effort"], "none")
+            schema = body["response_format"]["json_schema"]["schema"]
+            self.assertIs(schema["additionalProperties"], False)
+            self.assertIs(schema["$defs"]["HintGroup"]["additionalProperties"], False)
+            return self.success(request)
+        service = LlmService("apps/backend/prompts/translate_sentence.md", "apps/backend/prompts/generate_practice.md",
+                             self.cfg.model_name, self.cfg.structured_model_name, [], governor=self.governor,
+                             transport=httpx.MockTransport(handler))
+        self.addCleanup(lambda: asyncio.run(service.aclose()))
+        asyncio.run(service.translate_sentence_async("Test", "", "Bonjour.", source_language="French"))
+
+    def test_validation_repair_is_bounded_and_each_response_accounted(self):
+        def handler(request):
+            self.requests.append(request)
+            return self.success(request, invalid=len(self.requests) == 1)
+        service = self.service(handler)
+        result = asyncio.run(service.translate_sentence_async("Test", "", "Der Hund läuft."))
+        self.assertEqual(result.translation, "The dog runs.")
+        self.assertEqual(len(self.requests), 2)
+        with Session(self.engine) as session:
+            self.assertEqual(len(session.exec(select(TokenUsageRecord)).all()), 2)
+
+    def test_exhausted_fallback_budget_blocks_network_request(self):
+        self.cfg.deepseek_daily_usd = 0
+        def handler(request):
+            self.requests.append(request)
+            return httpx.Response(503, json={"error": {"message": "unavailable"}})
+        service = self.service(handler)
+        with self.assertRaises(ModelHTTPError) as error:
+            asyncio.run(service.translate_sentence_async("Test", "", "Der Hund läuft."))
+        self.assertEqual(error.exception.status_code, 402)
+        self.assertEqual(len(self.requests), 1)
+
+    def test_timeout_falls_back_once(self):
+        def handler(request):
+            self.requests.append(request)
+            if request.url.host == "api.groq.com":
+                raise httpx.ReadTimeout("timeout", request=request)
+            return self.success(request)
+        service = self.service(handler)
+        asyncio.run(service.translate_sentence_async("Test", "", "Der Hund läuft."))
+        self.assertEqual(len(self.requests), 2)
+
+    def test_offline_and_configuration_checks(self):
         with mock.patch.dict(os.environ, {}, clear=True):
-            self.assertFalse(_can_create_model("groq:llama-3.3-70b-versatile"))
-            self.assertFalse(_can_create_model("deepseek:deepseek-chat"))
-
-        with mock.patch.dict(os.environ, {"GROQ_API_KEY": "gsk_test"}, clear=True):
-            self.assertTrue(_can_create_model("groq:llama-3.3-70b-versatile"))
-            self.assertFalse(_can_create_model("deepseek:deepseek-chat"))
-
-        with mock.patch.dict(os.environ, {"DEEPSEEK_API_KEY": "dsk_test"}, clear=True):
-            self.assertFalse(_can_create_model("groq:llama-3.3-70b-versatile"))
-            self.assertTrue(_can_create_model("deepseek:deepseek-chat"))
-
-    def test_both_keys_build_fallback_model(self) -> None:
-        """When both keys are set, FallbackModel is returned with Groq primary and DeepSeek fallback."""
-        env = {
-            "GROQ_API_KEY": "gsk_test_key",
-            "DEEPSEEK_API_KEY": "dsk_test_key",
-        }
-        with mock.patch.dict(os.environ, env, clear=True):
-            model = _build_model_chain(
-                "groq:llama-3.3-70b-versatile",
-                ["deepseek:deepseek-chat"],
-                self.client,
-            )
-            self.assertIsInstance(model, FallbackModel)
-            assert isinstance(model, FallbackModel)
-            self.assertIsInstance(model.models[0], GroqModel)
-            self.assertIsInstance(model.models[1], OpenAIChatModel)
-
-    def test_only_groq_key_builds_single_groq_model(self) -> None:
-        """When only GROQ_API_KEY is present, single GroqModel is returned."""
-        with mock.patch.dict(os.environ, {"GROQ_API_KEY": "gsk_test_key"}, clear=True):
-            model = _build_model_chain(
-                "groq:llama-3.3-70b-versatile",
-                ["deepseek:deepseek-chat"],
-                self.client,
-            )
-            self.assertIsInstance(model, GroqModel)
-
-    def test_only_deepseek_key_promotes_deepseek(self) -> None:
-        """When only DEEPSEEK_API_KEY is present, DeepSeek is promoted to primary."""
-        with mock.patch.dict(os.environ, {"DEEPSEEK_API_KEY": "dsk_test_key"}, clear=True):
-            model = _build_model_chain(
-                "groq:llama-3.3-70b-versatile",
-                ["deepseek:deepseek-chat"],
-                self.client,
-            )
-            self.assertIsInstance(model, OpenAIChatModel)
-
-    def test_neither_key_raises_not_configured(self) -> None:
-        """When neither key is set, _build_model_chain raises LlmNotConfiguredError."""
-        with mock.patch.dict(os.environ, {}, clear=True):
-            with self.assertRaises(LlmNotConfiguredError):
-                _build_model_chain(
-                    "groq:llama-3.3-70b-versatile",
-                    ["deepseek:deepseek-chat"],
-                    self.client,
-                )
-
-    def test_llm_service_offline_boot(self) -> None:
-        """LlmService initializes cleanly with is_configured=False when uncredentialed."""
-        with mock.patch.dict(os.environ, {}, clear=True):
-            service = LlmService(
-                translation_prompt_path="apps/backend/prompts/translate_sentence.md",
-                practice_prompt_path="apps/backend/prompts/generate_practice.md",
-                model_name="groq:llama-3.3-70b-versatile",
-                structured_model_name="groq:llama-3.3-70b-versatile",
-                fallback_models=["deepseek:deepseek-chat"],
-            )
+            self.assertFalse(_can_create_model("groq:openai/gpt-oss-120b"))
+            service = self.service(lambda request: self.fail("offline service sent HTTP"))
             self.assertFalse(service.is_configured)
             with self.assertRaises(LlmNotConfiguredError):
-                service.extract_metadata("Sample text")
-
-    def test_fallback_model_delegation_on_error(self) -> None:
-        """FallbackModel delegates to secondary provider when primary encounters 429/error."""
-        from pydantic_ai import Agent
-        from pydantic_ai.exceptions import ModelAPIError
-        from pydantic_ai.models.test import TestModel
-
-        call_log = []
-
-        class FailingModel(TestModel):
-            async def request(self, *args, **kwargs):
-                call_log.append("groq_primary")
-                raise ModelAPIError("groq", "HTTP 429 Rate Limit Exceeded")
-
-        class BackupModel(TestModel):
-            async def request(self, *args, **kwargs):
-                call_log.append("deepseek_fallback")
-                return await super().request(*args, **kwargs)
-
-        fallback_model = FallbackModel(FailingModel(), BackupModel())
-        agent = Agent(fallback_model)
-        result = asyncio.run(agent.run("Test prompt"))
-        self.assertEqual(call_log, ["groq_primary", "deepseek_fallback"])
-        self.assertIsNotNone(result.output)
+                service.extract_metadata("Test")
+        with self.assertRaises(ValueError):
+            _can_create_model("typo:some-model")
+        self.assertFalse(should_fallback(ValueError("bad schema")))

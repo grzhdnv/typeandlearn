@@ -9,7 +9,7 @@ translations, and practice-sentence generation.
 
 Active local v2 prototype. Local repairs verified on 19 October 2026: text intake,
 metadata editing, original and generated practice navigation, reset, saved progress,
-results, and history. The current checks cover 67 backend tests, 27 frontend unit
+results, and history. The current checks cover 81 backend tests, 27 frontend unit
 tests, and 21 Chromium browser regressions. A bounded live check also verified metadata
 and two translations through the configured providers.
 
@@ -59,7 +59,13 @@ npm run bootstrap
 ```
 
 `DATABASE_URL` is optional. When it is unset, the backend uses the ignored local
-SQLite database at `apps/backend/data/db.sqlite`. The default provider order is Groq first, then DeepSeek when its key is available.
+SQLite database at `apps/backend/data/db.sqlite`. The default provider order is Groq `openai/gpt-oss-120b`, then DeepSeek
+`deepseek-flash` with thinking disabled when its key is available. DeepSeek is capped
+at the approved $0.50/day and $5/month across processes sharing this database.
+Quota reservations, reset headers, bounded repair, and actual-model usage accounting
+apply to every enrichment task. See [provider policy](docs/decisions/0005-llm-routing-and-spend.md)
+and [the live synthetic comparison](docs/provider-evaluation-2026-10-19.md).
+All limits and price estimates are documented in `.env.example`.
 
 Provider credentials are optional for library access and original-text practice.
 Select German, French, Italian, Spanish, or English when adding text without AI.

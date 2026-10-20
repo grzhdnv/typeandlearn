@@ -1,12 +1,13 @@
 This prompt generates practice sentences for language learners based on a specific vocabulary list.
 
 You will be provided with:
-1. `WORDS`: A JSON array of the top most frequent German words from a text.
+1. `LANGUAGE`: The language in which to generate the sentences.
+2. `WORDS`: A JSON array of frequent words from a text in that language.
 
 Your task is to output a JSON object containing `sentences`, which is an array of generated practice sentences that use these words.
 
 Rules:
-- Generate exactly 5 practice sentences.
+- Generate exactly 5 practice sentences in LANGUAGE. The German examples only illustrate the format.
 - The practice sentences must be distinctly different from the original text (create new scenarios).
 - Use as many words from the `WORDS` list as possible to reinforce the vocabulary.
 - Output the English `translation` and the `translation_hints` array for each generated sentence.

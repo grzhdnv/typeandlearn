@@ -5,6 +5,8 @@ import sys
 import unittest
 import uuid
 
+from sqlmodel import Session
+
 sys.path.append(str(pathlib.Path(__file__).resolve().parents[2] / "apps/backend"))
 
 from fastapi.testclient import TestClient
@@ -16,6 +18,8 @@ from app_state import (
     text_repository,
 )
 from models.texts import SentenceRecord, TextRecord
+from models.providers import ProviderCallRecord
+from api.routes.user import engine
 from schemas.analytics import PracticeSessionCreate
 
 
@@ -85,6 +89,26 @@ class TestUserPrivacy(unittest.TestCase):
                 owner_id=self.owner_b,
             )
         )
+
+    def test_provider_ledger_export_and_erasure_preserve_global_spend(self):
+        call_id = uuid.uuid4().hex
+        with Session(engine) as session:
+            session.add(ProviderCallRecord(id=call_id, provider="deepseek", model="test",
+                        owner_id=self.owner_a, task="translation", created_at=1, tokens=100,
+                        cost_microusd=123))
+            session.commit()
+        payload = self.client.get("/user/export", headers={"X-Owner-Id": self.owner_a}).json()
+        self.assertEqual(payload["provider_calls"][0]["cost_microusd"], 123)
+        other = self.client.get("/user/export", headers={"X-Owner-Id": self.owner_b}).json()
+        self.assertEqual(other["provider_calls"], [])
+        self.client.delete("/user/account", headers={"X-Owner-Id": self.owner_a})
+        with Session(engine) as session:
+            record = session.get(ProviderCallRecord, call_id)
+            assert record is not None
+            self.assertTrue(record.owner_id.startswith("erased:"))
+            self.assertEqual(record.cost_microusd, 123)
+        payload = self.client.get("/user/export", headers={"X-Owner-Id": self.owner_a}).json()
+        self.assertEqual(payload["provider_calls"], [])
 
     def test_export_user_data_contains_all_entities(self):
         """GET /user/export returns machine-readable JSON archive of all owned data."""

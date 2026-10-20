@@ -1,8 +1,6 @@
 """Domain service for text retrieval, upload, and deletion workflows."""
 
 import concurrent.futures
-import random
-import time
 from itertools import groupby
 from typing import Optional
 
@@ -191,22 +189,15 @@ class TextService:
         final_author = author
         final_category = category
         if not all((final_language, final_title, final_difficulty, final_author, final_category)):
-            for attempt in range(4):
-                try:
-                    metadata = self._llm.extract_metadata(text)
-                    final_language = final_language or metadata.language
-                    final_title = final_title or metadata.title
-                    final_difficulty = final_difficulty or metadata.difficulty_level
-                    final_author = final_author or metadata.author
-                    final_category = final_category or metadata.category
-                    break
-                except Exception as e:
-                    if "429" in str(e).lower() or "rate limit" in str(e).lower():
-                        if attempt < 3:
-                            time.sleep(2 ** attempt)
-                            continue
-                    print(f"Failed to extract metadata: {e}")
-                    break
+            try:
+                metadata = self._llm.extract_metadata(text, owner_id=owner_id)
+                final_language = final_language or metadata.language
+                final_title = final_title or metadata.title
+                final_difficulty = final_difficulty or metadata.difficulty_level
+                final_author = final_author or metadata.author
+                final_category = final_category or metadata.category
+            except Exception:
+                print("Metadata unavailable; retaining explicit values and local defaults.")
 
         languages = {name.lower(): name for name in ("German", "French", "Italian", "Spanish", "English")}
         final_language = languages.get((final_language or "").strip().lower())
@@ -222,19 +213,11 @@ class TextService:
             raise ValueError("Text must contain at least one practiceable sentence")
 
         if filtering_method == "llm":
-            for attempt in range(4):
-                try:
-                    filtered_response = self._llm.filter_meaningful_words(word_frequencies, final_language)
-                    word_frequencies = [{"word": fw.word, "count": fw.count} for fw in filtered_response.words]
-                    break
-                except Exception as e:
-                    if "429" in str(e).lower() or "rate limit" in str(e).lower():
-                        if attempt < 3:
-                            time.sleep(2 ** attempt)
-                            continue
-                    print(f"Failed to filter words via LLM: {e}")
-                    # Fallback to spacy logic if LLM fails
-                    break
+            try:
+                filtered_response = self._llm.filter_meaningful_words(word_frequencies, final_language, owner_id=owner_id)
+                word_frequencies = [{"word": fw.word, "count": fw.count} for fw in filtered_response.words]
+            except Exception:
+                _, word_frequencies = self._preprocessing.process_text(text, final_language, "spacy")
 
         # Calculate basic metrics
         word_count = sum(len(s["text"].split()) for p in paragraphs_data for s in p["sentences"])
@@ -349,19 +332,12 @@ class TextService:
         _, word_frequencies = self._preprocessing.process_text(full_text, record.language, filtering_method)
         
         if filtering_method == "llm":
-            for attempt in range(4):
-                try:
-                    filtered_response = self._llm.filter_meaningful_words(word_frequencies, record.language)
-                    word_frequencies = [{"word": fw.word, "count": fw.count} for fw in filtered_response.words]
-                    break
-                except Exception as e:
-                    if "429" in str(e).lower() or "rate limit" in str(e).lower():
-                        if attempt < 3:
-                            time.sleep(2 ** attempt)
-                            continue
-                    print(f"Failed to filter words via LLM during regeneration: {e}")
-                    raise ValueError(f"LLM filtering failed: {e}")
-        
+            try:
+                filtered_response = self._llm.filter_meaningful_words(word_frequencies, record.language, owner_id=owner_id)
+                word_frequencies = [{"word": fw.word, "count": fw.count} for fw in filtered_response.words]
+            except Exception as error:
+                raise ValueError("AI word filtering is unavailable; retry later or use spaCy") from error
+
         # 2. Update WordFrequencyRecords
         self._repository.delete_word_frequencies(record.id, owner_id)
         frequency_records = []
@@ -537,77 +513,66 @@ class TextService:
                     print(f"[{idx}/{total_sentences}] Translating sentence: '{s.original_text}'...")
                     context = get_previous_sentence_context(s)
                     
-                    max_retries = 5
-                    base_delay = 2
-                    
                     async with sem:
-                        for attempt in range(max_retries):
-                            try:
-                                result = await self._llm.translate_sentence_async(
-                                    title=record.title,
-                                    context=context,
-                                    target_sentence=s.original_text,
+                        try:
+                            result = await self._llm.translate_sentence_async(
+                                title=record.title,
+                                context=context,
+                                target_sentence=s.original_text,
+                                owner_id=owner_id,
+                                source_language=record.language,
+                            )
+                            usage = getattr(result, "usage", None)
+
+                            s.translation = result.translation
+                            s.translation_hints = [hg.model_dump() for hg in result.translation_hints]
+                            s.status = "processed"
+                            await asyncio.to_thread(self._repository.update_sentence, s)
+                            print(f"  -> Translated: '{s.translation}'")
+
+                            # Store translation in cache
+                            if self._cache_repository:
+                                await asyncio.to_thread(
+                                    self._cache_repository.store_translation,
+                                    source_language=record.language,
+                                    target_language="English",
+                                    sentence_hash=sentence_hash,
+                                    translation=result.translation,
+                                    translation_hints=s.translation_hints,
+                                    prompt_version=self._prompt_version,
                                 )
-                                usage = getattr(result, "usage", None)
-                                
-                                s.translation = result.translation
-                                s.translation_hints = [hg.model_dump() for hg in result.translation_hints]
-                                s.status = "processed"
-                                await asyncio.to_thread(self._repository.update_sentence, s)
-                                print(f"  -> Translated: '{s.translation}'")
 
-                                # Store translation in cache
-                                if self._cache_repository:
+                            # Record token usage
+                            if self._cache_repository and usage is not None and getattr(self._llm, "usage_recorded_at_transport", False) is not True:
+                                prompt_tokens = getattr(usage, "input_tokens", None)
+                                if prompt_tokens is None:
+                                    prompt_tokens = getattr(usage, "request_tokens", 0) or 0
+                                completion_tokens = getattr(usage, "output_tokens", None)
+                                if completion_tokens is None:
+                                    completion_tokens = getattr(usage, "response_tokens", 0) or 0
+                                total_tokens = getattr(usage, "total_tokens", 0) or (prompt_tokens + completion_tokens)
+
+                                if total_tokens > 0:
+                                    spec = getattr(self._llm, "model_name", getattr(self._llm, "_model_name", "unknown"))
+                                    provider, model = spec.split(":", 1) if ":" in spec else ("unknown", spec)
+                                    provider = getattr(result, "provider", provider)
+                                    model = getattr(result, "model", model)
+                                    est_cost = getattr(result, "estimated_cost_usd", 0.0)
                                     await asyncio.to_thread(
-                                        self._cache_repository.store_translation,
-                                        source_language=record.language,
-                                        target_language="English",
-                                        sentence_hash=sentence_hash,
-                                        translation=result.translation,
-                                        translation_hints=s.translation_hints,
-                                        prompt_version=self._prompt_version,
+                                        self._cache_repository.record_usage,
+                                        owner_id=owner_id,
+                                        provider=provider,
+                                        model=model,
+                                        prompt_tokens=prompt_tokens,
+                                        completion_tokens=completion_tokens,
+                                        total_tokens=total_tokens,
+                                        estimated_cost_usd=est_cost,
                                     )
+                        except DailyBudgetExceededError:
+                            raise
+                        except Exception:
+                            print(f"Translation attempt failed for sentence {s.id}; use retry enrichment to try again.")
 
-                                # Record token usage
-                                if self._cache_repository and usage is not None:
-                                    prompt_tokens = getattr(usage, "input_tokens", None)
-                                    if prompt_tokens is None:
-                                        prompt_tokens = getattr(usage, "request_tokens", 0) or 0
-                                    completion_tokens = getattr(usage, "output_tokens", None)
-                                    if completion_tokens is None:
-                                        completion_tokens = getattr(usage, "response_tokens", 0) or 0
-                                    total_tokens = getattr(usage, "total_tokens", 0) or (prompt_tokens + completion_tokens)
-
-                                    if total_tokens > 0:
-                                        spec = getattr(self._llm, "model_name", getattr(self._llm, "_model_name", "unknown"))
-                                        provider, model = spec.split(":", 1) if ":" in spec else ("unknown", spec)
-                                        est_cost = (prompt_tokens * 0.59 + completion_tokens * 0.79) / 1_000_000.0
-                                        await asyncio.to_thread(
-                                            self._cache_repository.record_usage,
-                                            owner_id=owner_id,
-                                            provider=provider,
-                                            model=model,
-                                            prompt_tokens=prompt_tokens,
-                                            completion_tokens=completion_tokens,
-                                            total_tokens=total_tokens,
-                                            estimated_cost_usd=est_cost,
-                                        )
-                                return # Success
-                            except DailyBudgetExceededError:
-                                raise
-                            except Exception as e:
-                                error_msg = str(e).lower()
-                                if "429" in error_msg or "too many requests" in error_msg or "rate limit" in error_msg:
-                                    delay = (base_delay ** attempt) + random.uniform(0, 1)
-                                    print(f"  [WARN] Rate limit hit on sentence {s.id}. Retrying in {delay:.2f}s (Attempt {attempt + 1}/{max_retries})")
-                                    await asyncio.sleep(delay)
-                                elif "validation" in error_msg or "unexpectedmodelbehavior" in error_msg:
-                                    print(f"  [WARN] LLM validation error on sentence {s.id}. Retrying... (Attempt {attempt + 1}/{max_retries})")
-                                    await asyncio.sleep(1)
-                                else:
-                                    print(f"  [ERROR] Failed to translate sentence {s.id}: {e}")
-                                    break
-                                    
                 await asyncio.gather(*[_translate_and_update(s, idx) for idx, s in enumerate(s_records, start=1)])
 
             asyncio.run(_translate_all())
@@ -629,69 +594,55 @@ class TextService:
                     )
 
                 print(f"Generating practice sentences using top {len(top_words)} words: {top_words}")
-                practice_generated = False
-                for attempt in range(3):
-                    try:
-                        import asyncio
-                        practice_result = asyncio.run(self._llm.generate_practice_sentences_async(top_words))
-                        practice_usage = getattr(practice_result, "usage", None)
-                        
-                        # Clear old practice sentences if any exist (e.g. during regeneration)
-                        self._repository.delete_practice_sentences(text_id, owner_id)
-                        
-                        practice_records = []
-                        for idx, ps in enumerate(practice_result.sentences):
-                            practice_records.append(
-                                PracticeSentenceRecord(
-                                    owner_id=owner_id,
-                                    text_id=text_id,
-                                    sentence_index=idx,
-                                    sentence=ps.sentence,
-                                    translation=ps.translation,
-                                    translation_hints=[hg.model_dump() for hg in ps.translation_hints]
-                                )
-                            )
-                        self._repository.save_practice_sentences(practice_records)
+                try:
+                    import asyncio
+                    practice_result = asyncio.run(self._llm.generate_practice_sentences_async(top_words, owner_id=owner_id, source_language=record.language))
+                    practice_usage = getattr(practice_result, "usage", None)
 
-                        if self._cache_repository and practice_usage is not None:
-                            p_tokens = getattr(practice_usage, "input_tokens", None)
-                            if p_tokens is None:
-                                p_tokens = getattr(practice_usage, "request_tokens", 0) or 0
-                            c_tokens = getattr(practice_usage, "output_tokens", None)
-                            if c_tokens is None:
-                                c_tokens = getattr(practice_usage, "response_tokens", 0) or 0
-                            tot_tokens = getattr(practice_usage, "total_tokens", 0) or (p_tokens + c_tokens)
-                            if tot_tokens > 0:
-                                spec = getattr(self._llm, "structured_model_name", getattr(self._llm, "_structured_model_name", "unknown"))
-                                provider, model = spec.split(":", 1) if ":" in spec else ("unknown", spec)
-                                est_cost = (p_tokens * 0.59 + c_tokens * 0.79) / 1_000_000.0
-                                self._cache_repository.record_usage(
-                                    owner_id=owner_id,
-                                    provider=provider,
-                                    model=model,
-                                    prompt_tokens=p_tokens,
-                                    completion_tokens=c_tokens,
-                                    total_tokens=tot_tokens,
-                                    estimated_cost_usd=est_cost,
-                                )
-                        practice_generated = True
-                        break # Success
-                    except DailyBudgetExceededError:
-                        raise
-                    except Exception as e:
-                        error_msg = str(e).lower()
-                        if "429" in error_msg or "too many requests" in error_msg or "rate limit" in error_msg:
-                            time.sleep(2 ** attempt)
-                        elif "validation" in error_msg or "unexpectedmodelbehavior" in error_msg:
-                            time.sleep(1)
-                        else:
-                            print(f"Failed to generate practice sentences for text {text_id}: {e}")
-                            break
-                else:
-                    print(f"Failed to generate practice sentences for text {text_id}: Max retries exceeded")
+                    # Clear old practice sentences if any exist (e.g. during regeneration)
+                    self._repository.delete_practice_sentences(text_id, owner_id)
                     
-                if not practice_generated:
-                    raise RuntimeError("Practice drills could not be generated. You can retry enrichment; completed translations have been saved.")
+                    practice_records = []
+                    for idx, ps in enumerate(practice_result.sentences):
+                        practice_records.append(
+                            PracticeSentenceRecord(
+                                owner_id=owner_id,
+                                text_id=text_id,
+                                sentence_index=idx,
+                                sentence=ps.sentence,
+                                translation=ps.translation,
+                                translation_hints=[hg.model_dump() for hg in ps.translation_hints]
+                            )
+                        )
+                    self._repository.save_practice_sentences(practice_records)
+
+                    if self._cache_repository and practice_usage is not None and getattr(self._llm, "usage_recorded_at_transport", False) is not True:
+                        p_tokens = getattr(practice_usage, "input_tokens", None)
+                        if p_tokens is None:
+                            p_tokens = getattr(practice_usage, "request_tokens", 0) or 0
+                        c_tokens = getattr(practice_usage, "output_tokens", None)
+                        if c_tokens is None:
+                            c_tokens = getattr(practice_usage, "response_tokens", 0) or 0
+                        tot_tokens = getattr(practice_usage, "total_tokens", 0) or (p_tokens + c_tokens)
+                        if tot_tokens > 0:
+                            spec = getattr(self._llm, "structured_model_name", getattr(self._llm, "_structured_model_name", "unknown"))
+                            provider, model = spec.split(":", 1) if ":" in spec else ("unknown", spec)
+                            provider = getattr(practice_result, "provider", provider)
+                            model = getattr(practice_result, "model", model)
+                            est_cost = getattr(practice_result, "estimated_cost_usd", 0.0)
+                            self._cache_repository.record_usage(
+                                owner_id=owner_id,
+                                provider=provider,
+                                model=model,
+                                prompt_tokens=p_tokens,
+                                completion_tokens=c_tokens,
+                                total_tokens=tot_tokens,
+                                estimated_cost_usd=est_cost,
+                            )
+                except DailyBudgetExceededError:
+                    raise
+                except Exception as error:
+                    raise RuntimeError("Practice drills could not be generated. You can retry enrichment; completed translations have been saved.") from error
 
             # 3. Fetch Dictionary Translations for Top Words
             print("Fetching dictionary translations for top words...")
