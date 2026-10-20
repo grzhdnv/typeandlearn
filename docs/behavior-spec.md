@@ -104,12 +104,14 @@ Computed as the coefficient of variation ($100\% - \sigma / \mu$) of rolling 1-s
 | `Esc` | Anywhere | Restarts current typing drill |
 | `Alt` / `Option` (Hold) | Inside Typing Canvas | Highlights current word and reveals contextual hint |
 | `Alt+Cmd` / `Option+Meta` (Hold) | Inside Typing Canvas | Reveals full sentence translation |
+| `Enter` | Completed sentence review | Loads the next sentence; finishes practice after the final results have been reviewed |
 | `[` and `]` | Typing Canvas or Practice Header | Navigates to previous / next sentence; when the bracket matches the next target character, types it literally |
 
 ### Sentence transitions
 
-Completing an original or generated sentence saves its result and immediately
-loads the next sentence with a fresh attempt and typing focus. Results appear after
-the final sentence. Navigation shortcuts reset the newly selected attempt without
+Completing an original or generated sentence saves its result and keeps the
+completed text, mistakes, and hints visible for review. A “Sentence complete —
+Enter to continue” prompt appears. There is no timer; Enter loads the next sentence
+with a fresh attempt and typing focus. Results appear after the final sentence. Navigation shortcuts reset the newly selected attempt without
 marking skipped sentences complete. Held bracket keys do not repeat navigation;
 shortcuts do not intercept other editable fields or IME composition.

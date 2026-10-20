@@ -178,7 +178,7 @@ test("results respect button activation and finish the final sentence", async ({
 });
 
 
-test("completion automatically advances identical sentences and saves each result once", async ({ page }) => {
+test("completed sentences wait for Enter and save each result once", async ({ page }) => {
   await openStory(page);
   const sessions: { sentence_index: number; accuracy: number }[] = [];
   const progress: number[] = [];
@@ -191,6 +191,14 @@ test("completion automatically advances identical sentences and saves each resul
     return route.fulfill({ json: { completed_sentences: progress.length } });
   });
   await page.keyboard.type("Hallo Welt.");
+  await expect(page.getByText("Sentence 1 of 2", { exact: true })).toBeVisible();
+  await expect(page.locator("#sentence-review")).toBeVisible();
+  await expect(page.locator("span.text-completed")).toHaveCount(11);
+  await page.keyboard.type("ignored");
+  await page.waitForTimeout(1500);
+  await expect(page.getByText("Sentence 1 of 2", { exact: true })).toBeVisible();
+  await expect(page.locator("span.text-completed")).toHaveCount(11);
+  await page.keyboard.press("Enter");
   await expect(page.getByText("Sentence 2 of 2", { exact: true })).toBeVisible();
   await expect(page.locator("#results-modal")).not.toBeVisible();
   await expect(page.locator("span.text-completed")).toHaveCount(0);
@@ -227,15 +235,39 @@ test("bracket shortcuts navigate while typing without inserting errors", async (
   await expect(page.locator("span.text-error")).toHaveCount(0);
 });
 
-test("generated sentences also advance automatically", async ({ page }) => {
+test("generated sentences also wait for Enter after review", async ({ page }) => {
   await openStory(page, ["Original."], ["One.", "Two."]);
   await page.getByRole("button", { name: "Generated", exact: true }).click();
   await page.locator("#typing-hidden-input").focus();
   await page.keyboard.type("One.");
+  await expect(page.locator("#sentence-review")).toBeVisible();
+  await expect(page.locator("#typing-canvas")).toContainText("One.");
+  await page.keyboard.press("Enter");
   await expect(page.locator("#typing-canvas")).toContainText("Two.");
   await expect(page.getByText("Sentence 2 of 2", { exact: true })).toBeVisible();
   await expect(page.locator("#results-modal")).not.toBeVisible();
   await expect(page.locator("#typing-hidden-input")).toBeFocused();
   await page.keyboard.type("Two.");
   await expect(page.locator("#results-modal")).toBeVisible();
+});
+
+
+test("review allows bracket navigation and restarting without duplicate completion", async ({ page }) => {
+  await openStory(page, ["One.", "Two."]);
+  await page.keyboard.type("One.");
+  await expect(page.locator("#sentence-review")).toBeVisible();
+  await page.keyboard.press("Alt");
+  await expect(page.locator("#sentence-review")).toBeVisible();
+  await page.keyboard.press("]");
+  await expect(page.getByText("Sentence 2 of 2", { exact: true })).toBeVisible();
+  await expect(page.locator("#sentence-review")).not.toBeVisible();
+  await page.keyboard.press("[");
+  await page.keyboard.type("One.");
+  await expect(page.locator("#sentence-review")).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(page.locator("#sentence-review")).not.toBeVisible();
+  await expect(page.locator("span.text-completed")).toHaveCount(0);
+  await page.keyboard.type("One.");
+  await page.getByRole("button", { name: "Enter to continue", exact: true }).click();
+  await expect(page.locator("#typing-canvas")).toContainText("Two.");
 });

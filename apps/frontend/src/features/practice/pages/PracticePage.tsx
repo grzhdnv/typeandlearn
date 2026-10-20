@@ -157,7 +157,7 @@ const PracticePage: Component = () => {
     if (nextDisabled()) {
       setCompletedMetrics(metrics);
     } else {
-      goToNextSentence();
+      setSrAnnouncement("Sentence complete. Press Enter to continue.");
     }
   };
 
@@ -166,7 +166,7 @@ const PracticePage: Component = () => {
     if (direction === "next" && !nextDisabled()) goToNextSentence();
   };
 
-  const advanceAfterResults = () => {
+  const continuePractice = () => {
     if (nextDisabled()) {
       navigate("/");
       return;
@@ -254,7 +254,7 @@ const PracticePage: Component = () => {
         if (e.key === "Enter" && e.target instanceof HTMLButtonElement) return;
         if (e.key === "Enter") {
           e.preventDefault();
-          advanceAfterResults();
+          continuePractice();
           return;
         } else if (e.key === "Escape") {
           e.preventDefault();
@@ -434,6 +434,8 @@ const PracticePage: Component = () => {
               targetText={generatedSentences()[generatedIndex()].text}
               hints={generatedSentences()[generatedIndex()].hints}
               fullTranslation={generatedSentences()[generatedIndex()].translation}
+              onContinue={continuePractice}
+              continueLabel={nextDisabled() ? "Enter to finish" : "Enter to continue"}
               onNavigate={navigateSentence}
               onComplete={handleSentenceComplete}
               onMetricsUpdate={setLiveMetrics}
@@ -445,6 +447,8 @@ const PracticePage: Component = () => {
               targetText={originalSentences()[originalIndex()].text}
               hints={originalSentences()[originalIndex()].hints}
               fullTranslation={originalSentences()[originalIndex()].translation}
+              onContinue={continuePractice}
+              continueLabel={nextDisabled() ? "Enter to finish" : "Enter to continue"}
               onNavigate={navigateSentence}
               onComplete={handleSentenceComplete}
               onMetricsUpdate={setLiveMetrics}
@@ -597,7 +601,7 @@ const PracticePage: Component = () => {
                   Review (Esc)
                 </button>
                 <button
-                  onClick={advanceAfterResults}
+                  onClick={continuePractice}
                   class="flex-1 py-3 bg-primary text-on-primary font-mono-label text-mono-label hover:bg-primary/90 transition-colors uppercase tracking-wider font-bold"
                   id="btn-results-next"
                 >

@@ -62,7 +62,10 @@ test.describe("Intake and Practice Flow", () => {
     // Type the first sentence
     await page.keyboard.type("Hallo Welt.", { delay: 40 });
 
-    // Completion advances directly and preserves focus for continuous typing.
+    // Review the completed sentence, then continue without a mouse.
+    await expect(page.locator("#sentence-review")).toBeVisible();
+    await expect(page.getByText("Sentence 1 of 2", { exact: true })).toBeVisible();
+    await page.keyboard.press("Enter");
     await expect(page.getByText("Sentence 2 of 2", { exact: true })).toBeVisible();
     await expect(typingCanvas).toContainText("Das ist ein Test.");
     await expect(hiddenInput).toBeFocused();

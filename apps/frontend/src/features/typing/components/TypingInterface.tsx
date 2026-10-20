@@ -24,6 +24,8 @@ interface TypingInterfaceProps {
   disabled?: boolean;
   hints?: { words: string[]; hint: string }[];
   fullTranslation?: string;
+  onContinue?: () => void;
+  continueLabel?: string;
   onNavigate?: (direction: "previous" | "next") => void;
   onComplete?: (metrics: TypingMetrics) => void;
   onMetricsUpdate?: (metrics: TypingMetrics | null) => void;
@@ -75,6 +77,7 @@ export const TypingInterface: Component<TypingInterfaceProps> = (props) => {
     if (props.disabled) return;
     const previous = typingState();
     const next = typingReducer(previous, action);
+    if (next === previous) return;
     setTypingState(next);
     const metrics = computeSessionMetrics(next);
     props.onMetricsUpdate?.(action.type === "RESTART" ? null : metrics);
@@ -293,6 +296,11 @@ export const TypingInterface: Component<TypingInterfaceProps> = (props) => {
               }
               if (e.key === "Enter" && !e.isComposing) {
                 e.preventDefault();
+                if (typingState().status === "completed" && props.onContinue) {
+                  e.stopPropagation();
+                  if (!e.repeat) props.onContinue();
+                  return;
+                }
                 dispatch({ type: "KEY_DOWN", char: "\n", timestampMs: Date.now() });
               }
               if (e.key === "Backspace") {
@@ -331,6 +339,15 @@ export const TypingInterface: Component<TypingInterfaceProps> = (props) => {
           />
         </div>
       </div>
+
+      <Show when={typingState().status === "completed" && !props.disabled && props.onContinue}>
+        <div class="mt-4 flex flex-wrap items-center gap-3 font-mono-label" id="sentence-review">
+          <span>Sentence complete —</span>
+          <button onClick={() => props.onContinue?.()} class="px-3 py-2 border border-primary text-primary hover:bg-primary hover:text-on-primary">
+            {props.continueLabel ?? "Enter to continue"}
+          </button>
+        </div>
+      </Show>
 
       {/* Contextual Hints */}
       <div class="mt-6 flex flex-col md:flex-row justify-between items-center gap-4">
