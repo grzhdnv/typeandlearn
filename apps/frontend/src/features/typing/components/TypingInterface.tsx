@@ -218,9 +218,20 @@ export const TypingInterface: Component<TypingInterfaceProps> = (props) => {
           class="bg-surface-container-lowest border border-outline-variant p-4 sm:p-10 min-h-[240px] sm:min-h-[320px] shadow-sm relative focus-within:border-primary transition-colors cursor-text"
           id="typing-canvas"
         >
-          <div class="mb-4 pb-2 border-b border-outline-variant/30 text-on-surface-variant font-mono-sm text-mono-sm opacity-60 flex justify-between items-center">
-            <span>Type the text as it appears.</span>
-            <span class="uppercase tracking-tighter">CTRL+R or ESC to restart</span>
+          <div class="mb-4 pb-2 min-h-10 border-b border-outline-variant/30 text-on-surface-variant font-mono-sm text-mono-sm grid grid-cols-[1fr_auto_1fr] gap-2 items-center">
+            <span class="opacity-60">Type the text as it appears.</span>
+            <div class="text-center">
+              <Show when={typingState().status === "completed" && !props.disabled && props.onContinue}>
+                <button
+                  id="sentence-review"
+                  onClick={() => props.onContinue?.()}
+                  class="relative z-20 whitespace-nowrap text-primary border-b border-primary cursor-pointer"
+                >
+                  {props.continueLabel ?? "Enter to continue"}
+                </button>
+              </Show>
+            </div>
+            <span class="uppercase tracking-tighter text-right opacity-60">CTRL+R or ESC to restart</span>
           </div>
 
           {/* Target Text Container */}
@@ -339,15 +350,6 @@ export const TypingInterface: Component<TypingInterfaceProps> = (props) => {
           />
         </div>
       </div>
-
-      <Show when={typingState().status === "completed" && !props.disabled && props.onContinue}>
-        <div class="mt-4 flex flex-wrap items-center gap-3 font-mono-label" id="sentence-review">
-          <span>Sentence complete —</span>
-          <button onClick={() => props.onContinue?.()} class="px-3 py-2 border border-primary text-primary hover:bg-primary hover:text-on-primary">
-            {props.continueLabel ?? "Enter to continue"}
-          </button>
-        </div>
-      </Show>
 
       {/* Contextual Hints */}
       <div class="mt-6 flex flex-col md:flex-row justify-between items-center gap-4">
