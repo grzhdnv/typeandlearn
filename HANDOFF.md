@@ -7,7 +7,8 @@ inference key; authentication is no longer blocked. Preserve unrelated `opencode
 
 - Ultra 550B and Dots 280B: 7/7 final typed tasks each, first attempts, reasoning off.
 - Ultra is the better free challenger in this sample; Dots made more hint errors.
-- Super 120B: 7 upstream 404s; its current free endpoint is unavailable.
+- Super 120B: 7 upstream 404s; a fresh seven-case retry after user API-key
+  setting edits also returned Nvidia 404s. Key preflight succeeded; retry cost $0.
 - Final costs: $0, 15,010 reported tokens. All probes together: $0, 45,980 returned
   tokens plus one interrupted call retaining a 3,477-token reservation.
 - Groq/DeepSeek defaults remain unchanged. Review endpoint data handling and enforce

@@ -62,6 +62,14 @@ Super's seven calls reached OpenRouter but its Nvidia backend returned 404 with
 an unavailable-function error. These are availability failures, not evidence about
 Super's language ability. The advertised catalog alone is insufficient acceptance.
 
+At the user's request, Super was retried after the API key settings were edited.
+The key preflight succeeded (32 used / 1,000 allowed free requests); all seven
+fresh cases again returned 404 “Provider returned error” from Nvidia, with zero
+tokens and $0 reported cost. See the [retry outputs](evaluations/openrouter-2026-10-20-super-retry.json)
+and [retry preflight](evaluations/openrouter-2026-10-20-super-retry.preflight.json).
+The repeated result leaves Super unavailable under the current routing/settings;
+it does not isolate which upstream or account setting is responsible.
+
 ## Why earlier probes failed
 
 The initial key was a management key. `/api/v1/key` returned 200, but all 21 cases
@@ -87,8 +95,8 @@ reported 18 used / 1,000 allowed free requests. Earlier key snapshots reported a
 purchase or account setting was performed by the agent.
 
 Across all OpenRouter attempts in this session, including authentication failures,
-probes, and interruption, the shared ledger contained 61 calls: 31 with returned
-usage, 29 failed without usage, and one unknown. Returned usage totaled **45,980
+probes, and interruption, the shared ledger contained 68 calls after the Super retry: 31 with returned
+usage, 36 failed without usage, and one unknown. Returned usage totaled **45,980
 tokens at $0**; the unknown call retains a 3,477-token reservation. Final-run totals
 above exclude these earlier probes. Raw failures remain available in the matching
 `openrouter-2026-10-20-*` files under `evaluations/`.
