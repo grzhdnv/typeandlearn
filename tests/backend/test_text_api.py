@@ -55,6 +55,7 @@ class TextApiTests(unittest.TestCase):
         self.addCleanup(self.engine.dispose)
         llm = mock.Mock(spec=llm_service.LlmService)
         self.llm = llm
+        llm.is_configured = True
         llm.extract_metadata.return_value = schemas.GeneratedMetadata(
             title="Test garden", difficulty_level="A1", language="German"
         )
@@ -104,6 +105,108 @@ class TextApiTests(unittest.TestCase):
         self.assertEqual(response.status_code, 200, response.text)
         self.worker.process_one_job()
         return self.client.get("/texts/titles").json()["titles"][0]["id"]
+
+    def test_upload_persists_source_and_job_without_nlp_or_provider_work(self) -> None:
+        source = "Le petit chat dort. Il rêve."
+        with mock.patch.object(self.preprocessing, "process_text") as preprocess:
+            response = self.client.post("/texts", json={"text": source, "filtering_method": "llm"})
+            self.assertEqual(response.status_code, 200)
+            preprocess.assert_not_called()
+        self.llm.extract_metadata.assert_not_called()
+        self.llm.filter_meaningful_words.assert_not_called()
+        self.llm.translate_sentence_async.assert_not_called()
+        data = self.client.get(f"/texts/{response.json()['id']}").json()["data"]
+        self.assertEqual(data["source_text"], source)
+        self.assertEqual(data["original_paragraphs"], [])
+        jobs = self.job_repo.load_jobs_by_text(response.json()["id"], "owner_local_default")
+        self.assertEqual([(job.status, job.attempt_count) for job in jobs], [("pending", 0)])
+        self.assertNotIn(source, str(jobs[0].payload))
+
+    def test_original_ready_during_metadata_wait_and_user_edits_survive(self) -> None:
+        started, release = threading.Event(), threading.Event()
+        inferred = schemas.GeneratedMetadata(title="Inferred title", language="French", difficulty_level="B1")
+        def metadata(*args, **kwargs):
+            started.set()
+            release.wait(10)
+            return inferred
+        self.llm.extract_metadata.side_effect = metadata
+        response = self.client.post("/texts", json={"text": "Der Hund läuft. Die Sonne scheint.", "language": "German"})
+        path = f"/texts/{response.json()['id']}"
+        thread = threading.Thread(target=self.worker.process_one_job)
+        thread.start()
+        try:
+            self.assertTrue(started.wait(10))
+            data = self.client.get(path).json()["data"]
+            self.assertEqual(data["enrichment_stage"], "analyzing_metadata")
+            self.assertEqual(data["total_sentences"], 2)
+            sentence_ids = [s.id for s in app_state.text_service._repository.load_sentences(response.json()["id"], "owner_local_default")]
+            self.assertEqual(self.client.post(path+"/progress", json={"sentence_index": 0}).status_code, 200)
+            self.assertEqual(self.client.patch(path, json={"title": "My chosen title"}).status_code, 200)
+        finally:
+            release.set()
+            thread.join(15)
+        self.assertFalse(thread.is_alive())
+        data = self.client.get(path).json()["data"]
+        self.assertEqual(data["status"], "processed")
+        self.assertEqual(data["title"], "My chosen title")
+        self.assertEqual(data["language"], "German")
+        self.assertEqual(data["difficulty_level"], "B1")
+        self.assertEqual(data["completed_sentence_indices"], [0])
+        # Regeneration stays off the request path and never replaces sentence positions.
+        with mock.patch.object(self.preprocessing, "process_text", wraps=self.preprocessing.process_text) as prepare:
+            self.client.post(path+"/regenerate-words")
+            prepare.assert_not_called()
+            self.worker.process_one_job()
+        self.assertEqual([s.id for s in app_state.text_service._repository.load_sentences(response.json()["id"], "owner_local_default")], sentence_ids)
+        self.assertEqual(self.client.get(path).json()["data"]["completed_sentence_indices"], [0])
+
+    def test_ai_regeneration_is_queued_and_failure_preserves_previous_vocabulary(self) -> None:
+        text_id = self._upload()
+        path = f"/texts/{text_id}"
+        before = self.client.get(path).json()["data"]
+        self.llm.filter_meaningful_words.side_effect = RuntimeError("Provider unavailable")
+        response = self.client.post(path+"/regenerate-words", json={"filtering_method": "llm"})
+        self.assertEqual(response.status_code, 200)
+        self.llm.filter_meaningful_words.assert_not_called()
+        self.worker.process_one_job()
+        data = self.client.get(path).json()["data"]
+        self.assertEqual(data["status"], "failed")
+        self.assertIn("AI word filtering is unavailable", data["error_message"])
+        self.assertEqual(data["top_words"], before["top_words"])
+        self.assertEqual(data["practice_sentences"], before["practice_sentences"])
+
+    def test_failed_language_detection_retries_persisted_source(self) -> None:
+        self.llm.extract_metadata.side_effect = RuntimeError("Provider unavailable")
+        source = "Le petit chat dort."
+        response = self.client.post("/texts", json={"text": source})
+        path = f"/texts/{response.json()['id']}"
+        self.worker.process_one_job()
+        data = self.client.get(path).json()["data"]
+        self.assertEqual(data["status"], "failed")
+        self.assertIn("Choose German", data["error_message"])
+        self.assertEqual(data["source_text"], source)
+        self.llm.extract_metadata.side_effect = None
+        self.llm.extract_metadata.return_value = schemas.GeneratedMetadata(title="French", language="French", difficulty_level="A1")
+        self.client.post(path+"/retry")
+        self.worker.process_one_job()
+        data = self.client.get(path).json()["data"]
+        self.assertEqual(data["status"], "processed")
+        self.assertEqual(data["language"], "French")
+
+    def test_translation_retry_reuses_preparation_checkpoint(self) -> None:
+        self.llm.translate_sentence_async.side_effect = RuntimeError("Provider unavailable")
+        text_id = self._upload()
+        path = f"/texts/{text_id}"
+        before = self.client.get(path).json()["data"]
+        self.llm.translate_sentence_async.side_effect = None
+        self.client.post(path+"/retry")
+        with mock.patch.object(self.preprocessing, "process_text", side_effect=AssertionError("Must not repeat NLP")) as prepare:
+            self.assertTrue(self.worker.process_one_job())
+            prepare.assert_not_called()
+        after = self.client.get(path).json()["data"]
+        self.assertEqual(after["status"], "processed")
+        self.assertEqual([s["text"] for p in before["original_paragraphs"] for s in p["sentences"]],
+                         [s["text"] for p in after["original_paragraphs"] for s in p["sentences"]])
 
     def test_http_intake_two_workers_and_active_retry_share_one_job(self) -> None:
         started, release = threading.Event(), threading.Event()
@@ -264,6 +367,7 @@ class TextApiTests(unittest.TestCase):
 
     def test_intake_without_provider_requires_explicit_language(self) -> None:
         self.llm.extract_metadata.side_effect = RuntimeError("No provider configured")
+        self.llm.is_configured = False
         response = self.client.post("/texts", json={"text": "Hallo Welt."})
         self.assertEqual(response.status_code, 400)
         self.assertIn("Choose German", response.json()["detail"])
@@ -313,6 +417,7 @@ class TextApiTests(unittest.TestCase):
             "text": "Le petit chat dort. Il rêve.",
         })
         self.assertEqual(response.status_code, 200, response.text)
+        self.worker.process_one_job()
 
         text_id = self.client.get("/texts/titles").json()["titles"][0]["id"]
         data = self.client.get(f"/texts/{text_id}").json()["data"]
@@ -336,6 +441,7 @@ class TextApiTests(unittest.TestCase):
             "title": "Client title",
         })
         self.assertEqual(response.status_code, 200, response.text)
+        self.worker.process_one_job()
 
         text_id = self.client.get("/texts/titles").json()["titles"][0]["id"]
         data = self.client.get(f"/texts/{text_id}").json()["data"]
@@ -364,30 +470,34 @@ class TextApiTests(unittest.TestCase):
         self.assertEqual(response.status_code, 200, response.text)
         self.assertEqual(response.json()["data"]["title"], "Renamed by user")
 
-    def test_missing_model_returns_actionable_503_without_saving(self) -> None:
-        with mock.patch.object(
-            preprocessing_service.spacy, "load", side_effect=OSError("missing")
-        ):
-            response = self.client.post("/texts", json={
-                "text": "Der Hund läuft.", "language": "German",
-            })
-        self.assertEqual(response.status_code, 503)
-        self.assertIn("npm run bootstrap", response.json()["detail"])
-        self.assertEqual(self.client.get("/texts/titles").json()["titles"], [])
+    def test_missing_model_is_async_actionable_failure_with_source_saved(self) -> None:
+        with mock.patch.object(preprocessing_service.spacy, "load", side_effect=OSError("missing")):
+            response = self.client.post("/texts", json={"text": "Der Hund läuft.", "language": "German"})
+            self.assertEqual(response.status_code, 200)
+            self.worker.process_one_job()
+        data = self.client.get(f"/texts/{response.json()['id']}").json()["data"]
+        self.assertEqual(data["status"], "failed")
+        self.assertIn("npm run bootstrap", data["error_message"])
+        self.assertEqual(data["source_text"], "Der Hund läuft.")
+        self.assertEqual(data["original_paragraphs"], [])
+        # A later retry with the restored model prepares the original source.
+        self.client.post(f"/texts/{response.json()['id']}/retry")
+        self.worker.process_one_job()
+        self.assertEqual(self.client.get(f"/texts/{response.json()['id']}").json()["data"]["status"], "processed")
 
-    def test_regeneration_missing_model_preserves_existing_text(self) -> None:
+    def test_regeneration_missing_model_preserves_original_and_saved_practice(self) -> None:
         text_id = self._upload()
         path = f"/texts/{text_id}"
         before = self.client.get(path).json()["data"]
-        with mock.patch.object(
-            self.preprocessing, "process_text",
-            side_effect=preprocessing_service.MissingLanguageModelError(
-                "Run `npm run bootstrap`"
-            ),
-        ):
+        with mock.patch.object(self.preprocessing, "process_text", side_effect=preprocessing_service.MissingLanguageModelError("Run `npm run bootstrap`")):
             response = self.client.post(f"{path}/regenerate-words")
-        self.assertEqual(response.status_code, 503)
-        self.assertEqual(self.client.get(path).json()["data"], before)
+            self.assertEqual(response.status_code, 200)
+            self.worker.process_one_job()
+        data = self.client.get(path).json()["data"]
+        self.assertEqual(data["status"], "failed")
+        for key in ("original_paragraphs", "practice_sentences", "top_words", "source_text"):
+            self.assertEqual(data[key], before[key])
+        self.assertIn("npm run bootstrap", data["error_message"])
 
 
 if __name__ == "__main__":

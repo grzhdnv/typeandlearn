@@ -9,8 +9,8 @@ translations, and practice-sentence generation.
 
 Active local v2 prototype. Local repairs verified on 19 October 2026: text intake,
 metadata editing, original and generated practice navigation, reset, saved progress,
-results, and history. The current checks cover 112 backend tests, 31 frontend unit
-tests, and 27 Chromium browser regressions. A live synthetic comparison verified
+results, and history. The current checks cover 118 backend tests, 32 frontend unit
+tests, and 28 Chromium browser regressions. A live synthetic comparison verified
 five languages, metadata, generated exercises, and real DeepSeek fallback.
 
 Core library and original-text practice work without provider credentials when a
@@ -21,6 +21,8 @@ the original text stays available.
 Owner-scoped data, JWT backend support, a job queue, and analytics are implemented,
 but this remains a local development app. API intake, retry, and regeneration now
 use one durable queue consumed by the local embedded worker or standalone workers.
+Upload saves the source and job before any NLP or provider work; preparation and
+metadata/filtering run in the worker with durable checkpoints.
 SQLite concurrency, lease loss, crash budgets, and recovery across owners are tested.
 The staging workflow
 builds and smoke-tests containers without deploying a hosted service. Private-beta
@@ -38,9 +40,9 @@ was activated in the local profile with user approval: Groq → MiniMax → capp
 DeepSeek. CEFR estimates/exercise style still need review. Repository defaults
 remain Groq/DeepSeek. See the
 [evaluation report](docs/openrouter-evaluation-2026-10-20.md) and
-[session handoff](HANDOFF.md). Next, move intake preprocessing/metadata off the HTTP
-fast path, expand realistic multilingual browser coverage, and verify PostgreSQL,
-staging, and recovery before private beta.
+[session handoff](HANDOFF.md). Next, verify PostgreSQL migrations/lease recovery on
+staging, improve CEFR/exercise quality, and expand realistic multilingual practice
+coverage before private beta.
 
 ## Repository layout
 
@@ -108,7 +110,11 @@ terminal. To use dedicated workers, set `EMBEDDED_WORKER_ENABLED=false` for the 
 and run `.venv/bin/python apps/backend/worker.py` against the same database and
 provider settings. Docker Compose uses this dedicated-worker arrangement.
 Both modes use identical leases and heartbeats; shutdown drains the active job.
-See [queue verification and recovery limits](docs/queue-acceptance-2026-10-20.md).
+See [queue verification and recovery limits](docs/queue-acceptance-2026-10-20.md)
+and [background intake acceptance](docs/intake-acceptance-2026-10-20.md).
+While preparation runs, the practice page shows a saved-source preview. With an
+explicit language, original practice becomes available after local sentence
+preparation, before optional metadata and AI enrichment finish.
 
 To run them in separate terminals instead:
 
@@ -133,7 +139,7 @@ SQLite database, and disable provider keys; they never reuse the personal librar
 or development servers. Backend tests use real spaCy pipelines and temporary SQLite databases. Automated API
 tests replace external LLM and dictionary calls with fixtures and need no API key.
 
-If text intake reports a missing language model, rerun `npm run bootstrap` and
+If background text preparation reports a missing language model, rerun `npm run bootstrap` and
 restart the backend. If ports 3000 or 8000 are occupied, stop the other local server
 before starting this one.
 

@@ -48,6 +48,7 @@ class TextData(BaseModel):
     """Canonical stored representation of one text unit."""
 
     id: Optional[int] = None
+    source_text: Optional[str] = None
     title: str
     status: str
     language: str = "Unknown"

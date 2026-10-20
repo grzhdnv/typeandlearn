@@ -46,6 +46,7 @@ export type TopWord = {
  * Canonical text payload returned by the backend.
  */
 export type TextData = {
+  source_text?: string | null;
   id?: number;
   title: string;
   status: string;

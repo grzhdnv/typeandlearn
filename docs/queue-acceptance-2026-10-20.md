@@ -1,6 +1,9 @@
 # Durable queue acceptance — 20 October 2026
 
 The API and standalone worker now execute enrichment through one durable queue.
+The subsequent [background intake change](intake-acceptance-2026-10-20.md) also
+removes NLP/metadata/filtering from request handlers; counts below describe the
+queue-unification checkpoint.
 Request handlers no longer start enrichment directly, and startup no longer scans
 one owner's texts to spawn independent processing threads.
 
@@ -64,5 +67,5 @@ SQLite concurrency and API/process flows were exercised locally. Live PostgreSQL
 locking, migrations, and recovery are still a staging acceptance gate; PostgreSQL
 was not available on this host. No schema migration is introduced by this change.
 
-Intake still performs local preprocessing and optional AI metadata/filtering before
-responding. Moving those operations onto durable jobs is the next engineering task.
+The subsequent background intake change completed the preprocessing/metadata task.
+See its linked acceptance report for the updated checks and additive migration.

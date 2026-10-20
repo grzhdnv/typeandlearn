@@ -40,3 +40,28 @@ test("automatic detection without AI gives an actionable error and preserves the
   await expect(page.getByLabel("Source text", { exact: true })).toHaveValue("Hallo Welt.");
   await expect(page.getByRole("button", { name: "SUBMIT", exact: true })).toBeEnabled();
 });
+
+
+test("saved source stays visible while preparation waits and practice appears on polling", async ({ page, request }) => {
+  const source = "Le petit chat dort. Il rêve.";
+  const upload = await request.post("http://127.0.0.1:18000/texts", { data: { text: source, language: "French" } });
+  expect(upload.ok()).toBe(true);
+  const { id } = await upload.json();
+  let preparing = true;
+  await page.route(`**/api/texts/${id}`, async route => {
+    const response = await route.fetch();
+    const payload = await response.json();
+    if (preparing) {
+      payload.data = { ...payload.data, status: "processing", enrichment_stage: "preprocessing", original_paragraphs: [], total_sentences: 0, source_text: source };
+    }
+    await route.fulfill({ response, json: payload });
+  });
+  await page.goto(`/practice/${id}`);
+  await expect(page.getByText("Preparing text for practice...", { exact: true })).toBeVisible();
+  await expect(page.getByText("You can start typing the original text now", { exact: false })).not.toBeVisible();
+  await page.getByText("View saved source", { exact: true }).click();
+  await expect(page.locator("details")).toContainText(source);
+  preparing = false;
+  await expect(page.locator("#typing-canvas")).toContainText("Le petit chat dort.");
+  await expect(page.getByText("Preparing text for practice...", { exact: true })).not.toBeVisible();
+});

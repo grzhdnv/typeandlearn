@@ -63,3 +63,17 @@ checks reject late responses at the next checkpoint; they are not a distributed
 transaction with an external provider. Existing sentence/cache persistence limits
 repeated work. Live PostgreSQL locking/recovery still needs staging acceptance.
 See [SQLite and process verification](../queue-acceptance-2026-10-20.md).
+
+## Source-first intake follow-up — 20 October 2026
+
+Upload now commits immutable source and preparation options with its job, before
+spaCy or any provider call. The worker commits sentence/vocabulary preparation as
+a durable checkpoint; retries do not resegment playable text. Existing rows with
+no intake options retain their current sentence structure. Metadata inference and
+regeneration filtering also run in the consumer. API progress/metadata updates
+and worker status updates change only their own fields, preserving concurrent work.
+
+The additive `0006_durable_intake` migration preserves existing rows and sources.
+Compatibility rollback retains its nullable columns and refuses downgrade while
+source-only uploads remain unprepared. It does not silently discard queued content.
+See [intake verification](../intake-acceptance-2026-10-20.md).

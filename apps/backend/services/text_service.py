@@ -100,6 +100,7 @@ class TextService:
 
         return TextData(
             id=record.id,
+            source_text=record.source_text,
             title=record.title,
             status=record.status,
             language=record.language,
@@ -181,119 +182,186 @@ class TextService:
         category: str | None = None,
         filtering_method: str = "spacy",
     ) -> TextRecord:
-        """Generate and persist a new text entry from raw input using local preprocessing."""
-
-        # 1. Infer any missing metadata first; the language selects the preprocessing model
-        final_language = language
-        final_title = title
-        final_difficulty = difficulty_level
-        final_author = author
-        final_category = category
-        if not all((final_language, final_title, final_difficulty, final_author, final_category)):
-            try:
-                metadata = self._llm.extract_metadata(text, owner_id=owner_id)
-                final_language = final_language or metadata.language
-                final_title = final_title or metadata.title
-                final_difficulty = final_difficulty or metadata.difficulty_level
-                final_author = final_author or metadata.author
-                final_category = final_category or metadata.category
-            except Exception:
-                logger.info("Metadata unavailable; retaining explicit values and local defaults.")
-
-        languages = {name.lower(): name for name in ("German", "French", "Italian", "Spanish", "English")}
-        final_language = languages.get((final_language or "").strip().lower())
-        if final_language is None:
-            raise ValueError("Choose German, French, Italian, Spanish, or English when automatic language detection is unavailable.")
-        final_title = final_title or "[Untitled]"
-        final_difficulty = final_difficulty or "Unrated"
-
-        # 2. Preprocess the text locally using spaCy
-        paragraphs_data, word_frequencies = self._preprocessing.process_text(text, final_language, filtering_method)
-        
-        if not any(p["sentences"] for p in paragraphs_data):
-            raise ValueError("Text must contain at least one practiceable sentence")
-
-        if filtering_method == "llm":
-            try:
-                filtered_response = self._llm.filter_meaningful_words(word_frequencies, final_language, owner_id=owner_id)
-                word_frequencies = [{"word": fw.word, "count": fw.count} for fw in filtered_response.words]
-            except Exception:
-                _, word_frequencies = self._preprocessing.process_text(text, final_language, "spacy")
-
-        # Calculate basic metrics
-        word_count = sum(len(s["text"].split()) for p in paragraphs_data for s in p["sentences"])
-        total_sentences = sum(len(p["sentences"]) for p in paragraphs_data)
-        estimated_time = max(1, word_count // 40)
-        
-        # 3. Save the TextRecord
+        """Persist immutable source and its durable job without NLP or provider work."""
+        languages = {
+            name.lower(): name
+            for name in ("German", "French", "Italian", "Spanish", "English")
+        }
+        final_language = languages.get((language or "").strip().lower())
+        if language and final_language is None:
+            raise ValueError("Choose German, French, Italian, Spanish, or English")
+        if final_language is None and getattr(self._llm, "is_configured", True) is False:
+            raise ValueError(
+                "Choose German, French, Italian, Spanish, or English when automatic language detection is unavailable."
+            )
+        if filtering_method not in {"spacy", "llm"}:
+            raise ValueError("Choose spaCy or AI word filtering")
+        if not text.strip():
+            raise ValueError("Text cannot be empty")
+        provided = {
+            "language": final_language,
+            "title": title,
+            "difficulty_level": difficulty_level,
+            "author": author,
+            "category": category,
+        }
+        missing = [name for name, value in provided.items() if not value]
         record = TextRecord(
             owner_id=owner_id,
-            title=final_title, 
+            source_text=text,
+            intake_options={
+                "prepared": False,
+                "metadata_done": not missing,
+                "missing_metadata": missing,
+                "filtering_method": filtering_method,
+                "words_pending": True,
+            },
+            title=title or "[Untitled]",
+            language=final_language or "Unknown",
+            difficulty_level=difficulty_level or "Unrated",
+            author=author,
+            category=category,
             status="processing",
             enrichment_stage="queued",
-            error_message=None,
-            language=final_language,
-            difficulty_level=final_difficulty,
-            author=final_author,
-            category=final_category,
-            word_count=word_count,
-            total_sentences=total_sentences,
-            estimated_time_minutes=estimated_time
         )
-        # 3. Save the blank sentences (translations will be generated later)
-        sentence_records = []
-        for p in paragraphs_data:
-            for s in p["sentences"]:
-                sentence_records.append(
-                    SentenceRecord(
-                        text_id=0,
-                        owner_id=owner_id,
-                        paragraph_index=p["index"],
-                        sentence_index=s["index"],
-                        original_text=s["text"],
-                        translation="",
-                        translation_hints=[],
-                        status="pending",
-                    )
-                )
+        record, _ = self._repository.save_text_with_job(
+            record,
+            "process_text",
+            {"filtering_method": filtering_method},
+            [],
+            [],
+        )
+        return record
 
-        # 4. Save the word frequencies for later use in generating practice sentences
-        frequency_records = []
-        for wf in word_frequencies:
-            frequency_records.append(
-                WordFrequencyRecord(
-                    text_id=0,
-                    owner_id=owner_id,
-                    word=wf["word"],
-                    count=wf["count"],
-                )
+    def _prepare_intake(
+        self, record: TextRecord, check_lease: Callable[[], None]
+    ) -> TextRecord:
+        """Resume persisted preparation checkpoints; never resegment playable sentences."""
+        if record.id is None or record.intake_options is None:
+            return record  # Existing pre-queue libraries already contain sentence rows.
+        text_id, owner_id = record.id, record.owner_id
+        options = record.intake_options
+        source = record.source_text
+        if source is None:
+            source = " ".join(
+                s.original_text for s in self._repository.load_sentences(text_id, owner_id)
             )
-
-        job_payload = {
-            "owner_id": owner_id,
-            "filtering_method": filtering_method,
-            "language": final_language,
+        languages = {
+            name.lower(): name
+            for name in ("German", "French", "Italian", "Spanish", "English")
         }
 
-        if hasattr(self._repository, "save_text_with_job"):
-            record, _ = self._repository.save_text_with_job(
-                record=record,
-                task_type="process_text",
-                payload=job_payload,
-                sentences=sentence_records,
-                frequencies=frequency_records,
+        def prepare(current: TextRecord) -> TextRecord:
+            check_lease()
+            current = self._repository.update_processing_state(
+                text_id, owner_id, "processing", "preprocessing"
             )
-        else:
-            record = self._repository.save_text(record)
-            if record.id is None:
-                raise RuntimeError("Failed to generate database ID for text.")
-            for s in sentence_records:
-                s.text_id = record.id
-            self._repository.save_sentences(sentence_records)
-            for f in frequency_records:
-                f.text_id = record.id
-            self._repository.save_word_frequencies(frequency_records)
+            paragraphs, words = self._preprocessing.process_text(
+                source,
+                current.language,
+                (current.intake_options or {}).get("filtering_method", "spacy"),
+            )
+            sentences = [
+                SentenceRecord(
+                    owner_id=owner_id,
+                    text_id=text_id,
+                    paragraph_index=p["index"],
+                    sentence_index=s["index"],
+                    original_text=s["text"],
+                    translation="",
+                    translation_hints=[],
+                    status="pending",
+                )
+                for p in paragraphs
+                for s in p["sentences"]
+            ]
+            if not sentences:
+                raise ValueError("Text must contain at least one practiceable sentence")
+            frequencies = [
+                WordFrequencyRecord(owner_id=owner_id, text_id=text_id, **word)
+                for word in words
+            ]
+            check_lease()
+            return self._repository.save_preparation(
+                text_id,
+                owner_id,
+                current.language,
+                frequencies,
+                sentences=sentences,
+                words_pending=(current.intake_options or {}).get("filtering_method")
+                == "llm",
+            )
 
+        # Explicit language enables original practice before optional metadata waits.
+        if not options.get("prepared") and record.language.lower() in languages:
+            record = prepare(record)
+        options = record.intake_options or {}
+        if not options.get("metadata_done"):
+            check_lease()
+            record = self._repository.update_processing_state(
+                text_id, owner_id, "processing", "analyzing_metadata"
+            )
+            values = {}
+            try:
+                metadata = self._llm.extract_metadata(source, owner_id=owner_id)
+                values = metadata.model_dump()
+                inferred_language = languages.get(
+                    str(values.get("language", "")).strip().lower()
+                )
+                if inferred_language:
+                    values["language"] = inferred_language
+                else:
+                    values.pop("language", None)
+            except Exception:
+                logger.info("Optional metadata unavailable for text %s", text_id)
+            check_lease()
+            latest = self._repository.load_one_text(text_id, owner_id)
+            if latest is None:
+                raise LeaseLostError("Text was deleted during preparation")
+            if latest.language.lower() not in languages and not values.get("language"):
+                raise ValueError(
+                    "Language detection was unavailable. Choose German, French, Italian, Spanish, or English in the text metadata, then retry enrichment. Your source is saved."
+                )
+            record = self._repository.apply_metadata(
+                text_id, owner_id, values, inferred=True
+            )
+        if record.language.lower() not in languages:
+            raise ValueError(
+                "Language detection was unavailable. Choose German, French, Italian, Spanish, or English in the text metadata, then retry enrichment. Your source is saved."
+            )
+        if not (record.intake_options or {}).get("prepared"):
+            record = prepare(record)
+        if (record.intake_options or {}).get("words_pending"):
+            check_lease()
+            record = self._repository.update_processing_state(
+                text_id, owner_id, "processing", "filtering_words"
+            )
+            method = (record.intake_options or {}).get("filtering_method", "spacy")
+            _, words = self._preprocessing.process_text(source, record.language, method)
+            if method == "llm":
+                try:
+                    result = self._llm.filter_meaningful_words(
+                        words, record.language, owner_id=owner_id
+                    )
+                    words = [word.model_dump() for word in result.words]
+                except Exception as error:
+                    if (record.intake_options or {}).get("strict_filtering"):
+                        raise RuntimeError(
+                            "AI word filtering is unavailable; retry later or use spaCy."
+                        ) from error
+                    _, words = self._preprocessing.process_text(
+                        source, record.language, "spacy"
+                    )
+            check_lease()
+            record = self._repository.save_preparation(
+                text_id,
+                owner_id,
+                record.language,
+                [
+                    WordFrequencyRecord(owner_id=owner_id, text_id=text_id, **word)
+                    for word in words
+                ],
+            )
         return record
 
     def delete(self, text_id: str, owner_id: str) -> TextData:
@@ -315,7 +383,9 @@ class TextService:
         self._repository.delete_text(tid, owner_id)
         return data_to_return
 
-    def regenerate_words(self, text_id: str, owner_id: str, filtering_method: str = "spacy") -> TextData:
+    def regenerate_words(
+        self, text_id: str, owner_id: str, filtering_method: str = "spacy"
+    ) -> TextData:
         """Regenerate word frequencies and trigger practice sentence regeneration."""
         try:
             tid = int(text_id)
@@ -325,48 +395,25 @@ class TextService:
         record = self._repository.load_one_text(tid, owner_id)
         if record is None or record.id is None:
             raise IndexError("Text not found")
-            
-        s_records = self._repository.load_sentences(record.id, owner_id)
-        full_text = " ".join(s.original_text for s in s_records)
-        
-        # 1. Re-extract word frequencies using new logic
-        _, word_frequencies = self._preprocessing.process_text(full_text, record.language, filtering_method)
-        
-        if filtering_method == "llm":
-            try:
-                filtered_response = self._llm.filter_meaningful_words(word_frequencies, record.language, owner_id=owner_id)
-                word_frequencies = [{"word": fw.word, "count": fw.count} for fw in filtered_response.words]
-            except Exception as error:
-                raise ValueError("AI word filtering is unavailable; retry later or use spaCy") from error
 
-        frequency_records = [WordFrequencyRecord(
-            owner_id=owner_id, text_id=record.id, word=wf["word"], count=wf["count"],
-        ) for wf in word_frequencies]
-        self._repository.queue_enrichment(record.id, owner_id, frequencies=frequency_records)
+        if filtering_method not in {"spacy", "llm"}:
+            raise ValueError("Choose spaCy or AI word filtering")
+        self._repository.queue_enrichment(
+            record.id, owner_id, filtering_method=filtering_method
+        )
 
         return self.get_one(text_id, owner_id)
 
-    def update_progress(self, text_id: str, sentence_index: int, owner_id: str) -> TextRecord:
+    def update_progress(
+        self, text_id: str, sentence_index: int, owner_id: str
+    ) -> TextRecord:
         """Update the completed sentences count for a text by tracking unique completed indices."""
         try:
             tid = int(text_id)
         except ValueError as error:
             raise ValueError(f"Invalid text ID format: {text_id}") from error
 
-        record = self._repository.load_one_text(tid, owner_id)
-        if record is None or record.id is None:
-            raise IndexError("Text not found")
-            
-        if sentence_index < 0 or sentence_index >= record.total_sentences:
-            raise ValueError("Sentence index is outside the original text")
-        indices = set(record.completed_sentence_indices or [])
-        if sentence_index not in indices:
-            indices.add(sentence_index)
-            record.completed_sentence_indices = list(indices)
-            record.completed_sentences = len(indices)
-            return self._repository.update_text(record)
-            
-        return record
+        return self._repository.update_progress(tid, owner_id, sentence_index)
 
     def reset_progress(self, text_id: str, owner_id: str) -> TextRecord:
         """Reset the completed sentences count for a text."""
@@ -375,15 +422,11 @@ class TextService:
         except ValueError as error:
             raise ValueError(f"Invalid text ID format: {text_id}") from error
 
-        record = self._repository.load_one_text(tid, owner_id)
-        if record is None or record.id is None:
-            raise IndexError("Text not found")
-            
-        record.completed_sentences = 0
-        record.completed_sentence_indices = []
-        return self._repository.update_text(record)
+        return self._repository.update_progress(tid, owner_id)
 
-    def update_metadata(self, text_id: str, payload: TextUpdateRequest, owner_id: str) -> TextData:
+    def update_metadata(
+        self, text_id: str, payload: TextUpdateRequest, owner_id: str
+    ) -> TextData:
         """Update language and/or difficulty level of a text."""
         try:
             tid = int(text_id)
@@ -393,36 +436,34 @@ class TextService:
         record = self._repository.load_one_text(tid, owner_id)
         if record is None or record.id is None:
             raise IndexError("Text not found")
-            
-        if payload.title is not None:
-            record.title = payload.title
-        if payload.language is not None:
-            record.language = payload.language
-        if payload.difficulty_level is not None:
-            record.difficulty_level = payload.difficulty_level
-        if payload.author is not None:
-            record.author = payload.author
-        if payload.category is not None:
-            record.category = payload.category
-            
-        self._repository.update_text(record)
+
+        values = payload.model_dump(exclude_none=True)
+        if "language" in values:
+            languages = {
+                name.lower(): name
+                for name in ("German", "French", "Italian", "Spanish", "English")
+            }
+            language = languages.get(values["language"].strip().lower())
+            if language is None:
+                raise ValueError("Choose German, French, Italian, Spanish, or English")
+            values["language"] = language
+        self._repository.apply_metadata(tid, owner_id, values)
         return self.get_one(text_id, owner_id)
 
     def process_pending_text(self, text_id: int, owner_id: str, *, ensure_lease: Callable[[], None] | None = None) -> None:
         """Background worker to translate sentences and generate practice sentences."""
-        record = self._repository.load_one_text(text_id, owner_id)
-        if not record or record.status not in {"processing", "failed"}:
+        loaded = self._repository.load_one_text(text_id, owner_id)
+        if not loaded or loaded.status not in {"processing", "failed"}:
             return
+        record: TextRecord = loaded
             
         check_lease = ensure_lease or (lambda: None)
         try:
             check_lease()
-            record.status = "processing"
+            record = self._prepare_intake(record, check_lease)
             if getattr(self._llm, "is_configured", True) is False:
                 raise RuntimeError("AI enrichment is unavailable. Configure a provider key to enable translations and generated drills; original-text practice is available.")
-            record.enrichment_stage = "translating"
-            record.error_message = None
-            self._repository.update_text(record)
+            record = self._repository.update_processing_state(text_id, owner_id, "processing", "translating")
 
             s_records = self._repository.load_sentences(text_id, owner_id)
             
@@ -565,8 +606,7 @@ class TextService:
 
             # 2. Generate Practice Sentences
             check_lease()
-            record.enrichment_stage = "generating_practice"
-            self._repository.update_text(record)
+            record = self._repository.update_processing_state(text_id, owner_id, "processing", "generating_practice")
 
             frequencies = self._repository.load_word_frequencies(text_id, owner_id)
             # Take the top 15 words to seed the practice sentence generator
@@ -652,19 +692,16 @@ class TextService:
 
             # 4. Mark text as fully processed
             check_lease()
-            record.status = "processed"
-            record.enrichment_stage = "completed"
-            record.error_message = None
-            self._repository.update_text(record)
+            self._repository.update_processing_state(text_id, owner_id, "processed", "completed")
             logger.info(f"Finished processing text {text_id}.")
         except LeaseLostError:
             raise
         except Exception as err:
             check_lease()
-            record.status = "failed"
-            record.enrichment_stage = "failed"
-            record.error_message = str(err)
-            self._repository.update_text(record)
+            from services.preprocessing_service import MissingLanguageModelError
+            known = isinstance(err, (ValueError, MissingLanguageModelError, DailyBudgetExceededError))
+            message = str(err) if known or type(err) is RuntimeError else "Text preparation failed; your source is saved. Retry enrichment."
+            self._repository.update_processing_state(text_id, owner_id, "failed", "failed", message)
             raise
 
     def retry_enrichment(self, text_id: str, owner_id: str) -> TextData:

@@ -1,3 +1,36 @@
+# Background intake update — 20 October 2026
+
+Source-first asynchronous intake is complete. Read
+[intake acceptance](docs/intake-acceptance-2026-10-20.md).
+
+- HTTP upload only validates inexpensive choices and atomically saves the source,
+  preparation options, and queue job. No spaCy load, NLP pass, metadata call, or AI
+  filtering runs on upload/regeneration requests.
+- Worker checkpoints local sentence preparation, metadata, and vocabulary work.
+  Explicit language enables original practice before optional AI metadata finishes.
+  Without a language, the worker detects it first; offline intake still asks for an
+  explicit supported language before saving.
+- Until sentence preparation finishes, the practice page shows a preparation state
+  and expandable saved-source preview. Polling exposes the prepared typing canvas;
+  empty sentence controls are hidden. Errors preserve the source for correction/retry.
+- Sentence IDs/boundaries are not replaced on enrichment retry or regeneration.
+  Metadata inference cannot overwrite user edits, and worker/progress writes update
+  only their own fields. Explicit AI-filter regeneration failures retain old results.
+- Migration `0006_durable_intake` adds nullable source/options columns. Older rows
+  remain valid. Compatibility downgrade retains source columns and refuses to strand
+  unprepared uploads; migration fixtures verify upgrade, adoption and rollback.
+- Verification: full lint/types/build/compile checks, 118 backend / 32 frontend /
+  28 Chromium tests. Real isolated API + two CLI workers also passed with synthetic
+  content and disabled keys. Existing SQLite ResourceWarnings remain separate.
+- Provider chain/caps below remain approved and unchanged. No new live inference
+  benchmark or dependency installation was required. Preserve unrelated `opencode.json`.
+
+Next: live PostgreSQL migration/lease recovery acceptance on staging, improve
+CEFR/exercise naturalness with labeled examples, then broader practice/accessibility.
+Jev remains deferred.
+
+---
+
 # Queue dispatch update — 20 October 2026
 
 API/worker dispatch unification is complete. Read
@@ -21,8 +54,8 @@ API/worker dispatch unification is complete. Read
 - Local provider activation and caps below remain in effect. Preserve credentials
   and unrelated `opencode.json`.
 
-Next: move intake preprocessing and optional metadata/filtering off the HTTP fast
-path, then verify PostgreSQL/staging recovery. Jev remains deferred.
+That intake task is now complete; see the newer update above. PostgreSQL/staging
+recovery remains open. Jev remains deferred.
 
 ---
 

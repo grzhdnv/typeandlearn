@@ -8,7 +8,7 @@ from unittest import mock
 
 from alembic import command
 from alembic.config import Config
-from sqlalchemy import inspect
+from sqlalchemy import inspect, text
 from sqlmodel import Session, SQLModel, create_engine, select
 
 sys.path.append(str(pathlib.Path(__file__).resolve().parents[2] / "apps/backend"))
@@ -33,7 +33,7 @@ class ProviderMigrationTests(unittest.TestCase):
         previous = "0004_practice_sessions_and_weak_words"
         command.upgrade(self.config, previous)
         with Session(self.engine) as session:
-            session.add(TextRecord(title="Keep me", language="French", owner_id="reader"))
+            session.execute(text("INSERT INTO texts (title, language, owner_id, status, difficulty_level, word_count, completed_sentences, total_sentences, estimated_time_minutes) VALUES ('Keep me', 'French', 'reader', 'processed', 'Unrated', 1, 0, 1, 1)"))
             session.commit()
         command.upgrade(self.config, "head")
         governor = ProviderGovernor(self.engine, Settings())
@@ -53,3 +53,29 @@ class ProviderMigrationTests(unittest.TestCase):
         command.upgrade(self.config, "head")
         with Session(self.engine) as session:
             self.assertIsNotNone(session.get(ProviderCallRecord, call_id))
+
+    def test_intake_rollback_preserves_sources_and_refuses_unprepared_uploads(self):
+        command.upgrade(self.config, "head")
+        with Session(self.engine) as session:
+            record = TextRecord(title="Queued source", owner_id="reader", source_text="A saved source.",
+                                intake_options={"prepared": False}, status="processing")
+            session.add(record)
+            session.commit()
+            text_id = record.id
+        with self.assertRaisesRegex(RuntimeError, "Prepare or explicitly delete"):
+            command.downgrade(self.config, "0005_provider_governance")
+        with Session(self.engine) as session:
+            record = session.get(TextRecord, text_id)
+            assert record is not None
+            self.assertEqual(record.source_text, "A saved source.")
+            record.total_sentences = 1
+            record.intake_options = {"prepared": True}
+            session.add(record)
+            session.commit()
+        command.downgrade(self.config, "0005_provider_governance")
+        self.assertIn("source_text", {column["name"] for column in inspect(self.engine).get_columns("texts")})
+        command.upgrade(self.config, "head")
+        with Session(self.engine) as session:
+            record = session.get(TextRecord, text_id)
+            assert record is not None
+            self.assertEqual(record.source_text, "A saved source.")

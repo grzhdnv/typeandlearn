@@ -14,8 +14,8 @@ checkmarks in the historical issue map do not establish production readiness.
   controls, saved original-text completion progress, results, and practice history.
 - Provider routing, owner scoping, backend JWT validation, analytics, and export/delete
   implementations with automated backend coverage.
-- Ruff, Python type checking, frontend type checking and build, 112 backend tests,
-  31 frontend unit tests, and 27 isolated Chromium browser regressions.
+- Ruff, Python type checking, frontend type checking and build, 118 backend tests,
+  32 frontend unit tests, and 28 isolated Chromium browser regressions.
 - Live synthetic comparison across five languages, metadata, exercises, and a real
   DeepSeek fallback flow; shared quotas and approved $0.50/day and $5/month limits.
 
@@ -39,7 +39,10 @@ checkmarks in the historical issue map do not establish production readiness.
   concurrency, expired-worker fencing, crash budgets, and queue resumption across
   owners are verified; live PostgreSQL acceptance remains below. See
   `queue-acceptance-2026-10-20.md`.
-- [ ] Move intake preprocessing and optional AI metadata off the HTTP fast path.
+- [x] Move intake preprocessing, metadata, and vocabulary filtering off the HTTP
+  fast path. Source/job persistence precedes all NLP/provider work; preparation
+  checkpoints, user edits/progress, missing-model recovery and browser polling are
+  verified. See `intake-acceptance-2026-10-20.md`.
 - [x] Verify local Groq/DeepSeek retry classification, quota reservations, actual-model
   usage accounting, and daily/monthly spend caps; PostgreSQL acceptance remains below.
 - [ ] Exercise longer multilingual texts, mobile keyboards, real IME/dead keys,
