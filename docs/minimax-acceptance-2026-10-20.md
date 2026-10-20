@@ -1,7 +1,8 @@
 # MiniMax and hint acceptance — 20 October 2026
 
 Technical acceptance passed for the optional Groq → MiniMax → capped DeepSeek
-chain. Default routing remains Groq/DeepSeek. MiniMax's content-use terms and the
+chain. The user approved local activation after the content-use disclosure.
+Repository defaults remain Groq/DeepSeek. MiniMax's content-use terms and the
 remaining teaching-quality limits are documented below; Jev remains deferred.
 
 ## Implemented
@@ -106,8 +107,8 @@ Its [privacy policy](https://platform.minimax.io/protocol/privacy-policy) descri
 processing input/output and retaining personal data as needed for stated purposes
 or applicable law. These are not a blanket no-training or zero-retention guarantee.
 [OpenRouter provider-logging documentation](https://openrouter.ai/docs/guides/privacy/provider-logging)
-explains account/request controls for providers that may train; the default chain
-has not been changed to send arbitrary user learning material through MiniMax.
+explains account/request controls for providers that may train. The user explicitly
+approved activating this chain for future learning texts after this disclosure.
 
 For optional use with suitable non-sensitive study material, the tested setting is:
 
@@ -116,9 +117,12 @@ FALLBACK_MODELS=["openrouter:minimax/minimax-m3.1-flash:free","deepseek:deepseek
 ```
 
 The primary remains Groq. `.env.example` documents this opt-in choice and the content
-use terms. This work does not enable MiniMax globally or alter account privacy
-settings. The user's next provider decision is whether that content scope and
-policy are acceptable; implementation and technical verification are ready.
+use terms. On 20 October, the user approved activation in the ignored local `.env`.
+The account endpoint reported 120/1,000 free requests used; the local free allowance
+is now 800 RPD with 16 RPM, leaving headroom below the account limits. DeepSeek
+remains capped at $0.50 per UTC day and $5 per UTC month. Repository defaults and
+account privacy settings remain unchanged. The running development backend was
+reloaded to pick up the local configuration.
 
 ## Verification and remaining work
 

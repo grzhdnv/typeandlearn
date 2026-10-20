@@ -17,10 +17,12 @@ unrelated `opencode.json` and user credentials.
 - Drill output cap: 4,096; other tasks: 2,048. Cache version: `v3-validated-hints`.
 - MiniMax uses prompted JSON + low mandatory reasoning; its tool path is unreliable.
   Ultra is an alternative; Super's free endpoint returned 404 twice.
-- Groq/DeepSeek default order remains unchanged. The tested opt-in
-  Groq→MiniMax→DeepSeek setting is documented in `.env.example`. MiniMax's terms
-  allow service-improvement use of inputs/outputs; no blanket no-training/ZDR was
-  established. Do not silently promote it for arbitrary private learning material.
+- User approved local Groq→MiniMax→DeepSeek activation on 20 October after the
+  content-use disclosure. The ignored `.env` now enables it; repository defaults
+  remain Groq/DeepSeek. Local OpenRouter limits are 16 RPM / 800 RPD, below the
+  verified 1,000-RPD account tier. DeepSeek remains capped at $0.50/day and $5/month.
+  MiniMax terms allow service-improvement use of inputs/outputs; no blanket
+  no-training/ZDR was established. Keep this scope explicit for private material.
 - Jev is explicitly deferred. CEFR grading and naturalness remain provisional.
 - Offline verification: 102 backend / 31 frontend tests, lint/types/build, and
   27 Chromium tests. Existing SQLite ResourceWarnings remain.

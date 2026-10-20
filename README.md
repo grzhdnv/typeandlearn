@@ -32,8 +32,9 @@ and mandatory low-effort reasoning. MiniMax is the leading free challenger in th
 small sample, with Ultra as an alternative. A subsequent five-language technical
 acceptance pass saved ten translations and 25 drills with no missing UI hints;
 see [acceptance and content-use scope](docs/minimax-acceptance-2026-10-20.md). MiniMax
-remains opt-in, and CEFR estimates/exercise style still need review. Groq/DeepSeek
-defaults remain unchanged. See the
+was activated in the local profile with user approval: Groq → MiniMax → capped
+DeepSeek. CEFR estimates/exercise style still need review. Repository defaults
+remain Groq/DeepSeek. See the
 [evaluation report](docs/openrouter-evaluation-2026-10-20.md) and
 [session handoff](HANDOFF.md). Next, unify API/worker job dispatch, expand realistic
 multilingual browser coverage, and verify staging and recovery before private beta.
