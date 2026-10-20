@@ -58,7 +58,7 @@ test.describe("Typing engine resilience", () => {
 });
 
 // Keep these flows deterministic: provider work is represented by story refetches.
-async function openStory(page: import("@playwright/test").Page, sentences = ["Hallo Welt.", "Hallo Welt."]) {
+async function openStory(page: import("@playwright/test").Page, sentences = ["Hallo Welt.", "Hallo Welt."], generated = ["Test."]) {
   const story = {
     ...inProgressStory,
     status: "processed",
@@ -67,10 +67,11 @@ async function openStory(page: import("@playwright/test").Page, sentences = ["Ha
     original_paragraphs: [{ index: 0, sentences: sentences.map((text, index) => ({
       index, text, translation: "", translation_hints: [],
     })) }],
-    practice_sentences: [{ index: 0, sentence: "Test.", translation: "", translation_hints: [] }],
+    practice_sentences: generated.map((sentence, index) => ({ index, sentence, translation: "", translation_hints: [] })),
   };
   await page.route(/\/api\/texts\/1$/, route => route.fulfill({ json: { data: story } }));
   await page.route(/\/api\/analytics\/sessions$/, route => route.fulfill({ json: {} }));
+  await page.route(/\/api\/texts\/1\/progress$/, route => route.fulfill({ json: { completed_sentences: 1 } }));
   await page.goto("/practice/1");
   await expect(page.locator("#typing-canvas")).toContainText(sentences[0]);
   await page.locator("#typing-hidden-input").focus();
@@ -101,11 +102,11 @@ test("resetting the first sentence clears typing and metrics", async ({ page }) 
 });
 
 test("brackets in source text can be typed", async ({ page }) => {
-  await openStory(page, ["[Hallo]", "Next."]);
+  await openStory(page, ["[Hallo]"]);
   await page.keyboard.type("[Hallo]");
   await expect(page.locator("#results-modal")).toBeVisible();
   await expect(page.locator("#results-accuracy")).toHaveText("100%");
-  await expect(page.getByText("Sentence 1 of 2", { exact: true })).toBeVisible();
+  await expect(page.getByText("Sentence 1 of 1", { exact: true })).toBeVisible();
 });
 
 test("generated drills do not mark original sentences completed", async ({ page }) => {
@@ -174,4 +175,67 @@ test("results respect button activation and finish the final sentence", async ({
   await expect(page.locator("#results-modal")).toBeVisible();
   await page.locator("#btn-results-next").click();
   await expect(page).toHaveURL("/");
+});
+
+
+test("completion automatically advances identical sentences and saves each result once", async ({ page }) => {
+  await openStory(page);
+  const sessions: { sentence_index: number; accuracy: number }[] = [];
+  const progress: number[] = [];
+  await page.route(/\/api\/analytics\/sessions$/, route => {
+    sessions.push(route.request().postDataJSON());
+    return route.fulfill({ json: {} });
+  });
+  await page.route(/\/api\/texts\/1\/progress$/, route => {
+    progress.push(route.request().postDataJSON().sentence_index);
+    return route.fulfill({ json: { completed_sentences: progress.length } });
+  });
+  await page.keyboard.type("Hallo Welt.");
+  await expect(page.getByText("Sentence 2 of 2", { exact: true })).toBeVisible();
+  await expect(page.locator("#results-modal")).not.toBeVisible();
+  await expect(page.locator("span.text-completed")).toHaveCount(0);
+  await expect(page.locator("#typing-hidden-input")).toBeFocused();
+  await page.keyboard.type("Hallo Welt.");
+  await expect(page.locator("#results-modal")).toBeVisible();
+  await expect.poll(() => sessions.length).toBe(2);
+  await expect.poll(() => progress.length).toBe(2);
+  expect(sessions.map(session => session.sentence_index)).toEqual([0, 1]);
+  expect(sessions.map(session => session.accuracy)).toEqual([100, 100]);
+  expect(progress).toEqual([0, 1]);
+});
+
+test("bracket shortcuts navigate while typing without inserting errors", async ({ page }) => {
+  await openStory(page, ["First.", "Second.", "Third."]);
+  await page.keyboard.type("Fi");
+  await page.keyboard.press("[");
+  await expect(page.locator("span.text-completed")).toHaveCount(2);
+  await page.keyboard.press("]");
+  await expect(page.getByText("Sentence 2 of 3", { exact: true })).toBeVisible();
+  await expect(page.locator("span.text-completed")).toHaveCount(0);
+  await expect(page.locator("#typing-hidden-input")).toBeFocused();
+  await page.keyboard.type("Se");
+  await page.keyboard.press("[");
+  await expect(page.getByText("Sentence 1 of 3", { exact: true })).toBeVisible();
+  await expect(page.locator("span.text-error")).toHaveCount(0);
+  await page.keyboard.down("]");
+  await page.keyboard.down("]");
+  await page.keyboard.up("]");
+  await expect(page.getByText("Sentence 2 of 3", { exact: true })).toBeVisible();
+  await page.keyboard.press("]");
+  await page.keyboard.press("]");
+  await expect(page.getByText("Sentence 3 of 3", { exact: true })).toBeVisible();
+  await expect(page.locator("span.text-error")).toHaveCount(0);
+});
+
+test("generated sentences also advance automatically", async ({ page }) => {
+  await openStory(page, ["Original."], ["One.", "Two."]);
+  await page.getByRole("button", { name: "Generated", exact: true }).click();
+  await page.locator("#typing-hidden-input").focus();
+  await page.keyboard.type("One.");
+  await expect(page.locator("#typing-canvas")).toContainText("Two.");
+  await expect(page.getByText("Sentence 2 of 2", { exact: true })).toBeVisible();
+  await expect(page.locator("#results-modal")).not.toBeVisible();
+  await expect(page.locator("#typing-hidden-input")).toBeFocused();
+  await page.keyboard.type("Two.");
+  await expect(page.locator("#results-modal")).toBeVisible();
 });

@@ -15,7 +15,7 @@ checkmarks in the historical issue map do not establish production readiness.
 - Provider routing, owner scoping, backend JWT validation, analytics, and export/delete
   implementations with automated backend coverage.
 - Ruff, Python type checking, frontend type checking and build, 67 backend tests,
-  27 frontend unit tests, and 17 isolated Chromium browser regressions.
+  27 frontend unit tests, and 20 isolated Chromium browser regressions.
 - Live provider smoke check: synthetic German metadata plus two translations.
 
 ## Next: reliable processing and realistic practice

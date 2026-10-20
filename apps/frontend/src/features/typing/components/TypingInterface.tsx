@@ -24,6 +24,7 @@ interface TypingInterfaceProps {
   disabled?: boolean;
   hints?: { words: string[]; hint: string }[];
   fullTranslation?: string;
+  onNavigate?: (direction: "previous" | "next") => void;
   onComplete?: (metrics: TypingMetrics) => void;
   onMetricsUpdate?: (metrics: TypingMetrics | null) => void;
 }
@@ -282,6 +283,14 @@ export const TypingInterface: Component<TypingInterfaceProps> = (props) => {
               }
             }}
             onKeyDown={(e) => {
+              if ((e.key === "[" || e.key === "]") && props.onNavigate &&
+                  !e.isComposing && !e.ctrlKey && !e.metaKey && !e.altKey &&
+                  typingState().targetGraphemes[typingState().cursorIndex] !== e.key) {
+                e.preventDefault();
+                e.stopPropagation();
+                if (!e.repeat) props.onNavigate(e.key === "[" ? "previous" : "next");
+                return;
+              }
               if (e.key === "Enter" && !e.isComposing) {
                 e.preventDefault();
                 dispatch({ type: "KEY_DOWN", char: "\n", timestampMs: Date.now() });

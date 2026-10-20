@@ -132,7 +132,6 @@ const PracticePage: Component = () => {
   };
 
   const handleSentenceComplete = (metrics: TypingMetrics) => {
-    setCompletedMetrics(metrics);
     setSrAnnouncement(
       `Drill completed. Speed: ${metrics.netWpm} words per minute. Accuracy: ${metrics.accuracy} percent.`
     );
@@ -155,6 +154,16 @@ const PracticePage: Component = () => {
         mistake_count: metrics.mistakeCount,
       }).catch(console.error);
     }
+    if (nextDisabled()) {
+      setCompletedMetrics(metrics);
+    } else {
+      goToNextSentence();
+    }
+  };
+
+  const navigateSentence = (direction: "previous" | "next") => {
+    if (direction === "previous" && !previousDisabled()) goToPreviousSentence();
+    if (direction === "next" && !nextDisabled()) goToNextSentence();
   };
 
   const advanceAfterResults = () => {
@@ -255,15 +264,15 @@ const PracticePage: Component = () => {
       }
 
       const target = e.target;
-      if (e.defaultPrevented || e.isComposing ||
+      if (e.defaultPrevented || e.isComposing || e.repeat ||
           (target instanceof HTMLElement && target.closest("input, textarea, select, button, a, [contenteditable=true]"))) return;
 
       if (e.key === "[") {
         e.preventDefault();
-        if (!previousDisabled()) goToPreviousSentence();
+        navigateSentence("previous");
       } else if (e.key === "]") {
         e.preventDefault();
-        if (!nextDisabled()) goToNextSentence();
+        navigateSentence("next");
       }
     };
     
@@ -425,6 +434,7 @@ const PracticePage: Component = () => {
               targetText={generatedSentences()[generatedIndex()].text}
               hints={generatedSentences()[generatedIndex()].hints}
               fullTranslation={generatedSentences()[generatedIndex()].translation}
+              onNavigate={navigateSentence}
               onComplete={handleSentenceComplete}
               onMetricsUpdate={setLiveMetrics}
             />
@@ -435,6 +445,7 @@ const PracticePage: Component = () => {
               targetText={originalSentences()[originalIndex()].text}
               hints={originalSentences()[originalIndex()].hints}
               fullTranslation={originalSentences()[originalIndex()].translation}
+              onNavigate={navigateSentence}
               onComplete={handleSentenceComplete}
               onMetricsUpdate={setLiveMetrics}
             />
@@ -503,6 +514,7 @@ const PracticePage: Component = () => {
         {/* Controls Footer */}
         <div class="mt-8 pt-8 border-t border-outline-variant grid grid-cols-2 gap-4 md:flex md:justify-between md:items-center">
           <button 
+            title="Previous sentence ([)"
             disabled={previousDisabled()}
             onClick={handleControlClick(goToPreviousSentence)}
             class="flex items-center justify-center gap-2 px-3 md:px-8 py-3 bg-white border border-outline-variant text-on-surface hover:border-primary transition-all active:scale-95 disabled:opacity-50 disabled:pointer-events-none"
@@ -528,6 +540,7 @@ const PracticePage: Component = () => {
           </div>
 
           <button 
+            title="Next sentence (])"
             disabled={nextDisabled()}
             onClick={handleControlClick(goToNextSentence)}
             class="flex items-center justify-center gap-2 px-3 md:px-10 py-3 bg-primary text-on-primary hover:bg-on-primary-fixed-variant transition-all active:scale-95 disabled:opacity-50 disabled:pointer-events-none"

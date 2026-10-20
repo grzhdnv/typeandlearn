@@ -10,7 +10,7 @@ translations, and practice-sentence generation.
 Active local v2 prototype. Local repairs verified on 19 October 2026: text intake,
 metadata editing, original and generated practice navigation, reset, saved progress,
 results, and history. The current checks cover 67 backend tests, 27 frontend unit
-tests, and 17 Chromium browser regressions. A bounded live check also verified metadata
+tests, and 20 Chromium browser regressions. A bounded live check also verified metadata
 and two translations through the configured providers.
 
 Core library and original-text practice work without provider credentials when a

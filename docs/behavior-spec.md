@@ -104,4 +104,12 @@ Computed as the coefficient of variation ($100\% - \sigma / \mu$) of rolling 1-s
 | `Esc` | Anywhere | Restarts current typing drill |
 | `Alt` / `Option` (Hold) | Inside Typing Canvas | Highlights current word and reveals contextual hint |
 | `Alt+Cmd` / `Option+Meta` (Hold) | Inside Typing Canvas | Reveals full sentence translation |
-| `[` and `]` | Practice Header | Navigates to previous / next sentence in sequence |
+| `[` and `]` | Typing Canvas or Practice Header | Navigates to previous / next sentence; when the bracket matches the next target character, types it literally |
+
+### Sentence transitions
+
+Completing an original or generated sentence saves its result and immediately
+loads the next sentence with a fresh attempt and typing focus. Results appear after
+the final sentence. Navigation shortcuts reset the newly selected attempt without
+marking skipped sentences complete. Held bracket keys do not repeat navigation;
+shortcuts do not intercept other editable fields or IME composition.

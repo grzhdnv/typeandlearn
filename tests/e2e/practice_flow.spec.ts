@@ -62,6 +62,13 @@ test.describe("Intake and Practice Flow", () => {
     // Type the first sentence
     await page.keyboard.type("Hallo Welt.", { delay: 40 });
 
+    // Completion advances directly and preserves focus for continuous typing.
+    await expect(page.getByText("Sentence 2 of 2", { exact: true })).toBeVisible();
+    await expect(typingCanvas).toContainText("Das ist ein Test.");
+    await expect(hiddenInput).toBeFocused();
+    await expect(page.locator("#results-modal")).not.toBeVisible();
+    await page.keyboard.type("Das ist ein Test.", { delay: 40 });
+
     // 8. Assert real-time metrics updated
     const metricWpm = page.locator("#metric-wpm");
     const metricAccuracy = page.locator("#metric-accuracy");
