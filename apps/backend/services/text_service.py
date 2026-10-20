@@ -1,21 +1,22 @@
 """Domain service for text retrieval, upload, and deletion workflows."""
 
 import concurrent.futures
+import logging
 from itertools import groupby
-from typing import Optional
-
-from sqlmodel import Session
+from typing import Callable, Optional
 
 from models.cache import compute_sentence_hash
 from models.texts import PracticeSentenceRecord, SentenceRecord, TextRecord, WordFrequencyRecord
 from repositories.cache_repository import CacheRepository, DailyBudgetExceededError
-from repositories.job_repository import JobRepository
+from repositories.job_repository import JobRepository, LeaseLostError
 from repositories.text_repository import TextRepository
 from schemas.texts import HintGroup, Paragraph, PracticeSentence, Sentence, TextData, TextTitle, TextUpdateRequest, TopWord
 from services.dictionary_service import DictionaryService
 from services.llm_service import LlmService
 from services.preprocessing_service import PreprocessingService
 
+
+logger = logging.getLogger(__name__)
 
 class TextService:
     """Coordinate repository persistence with NLP-backed preprocessing and generation."""
@@ -197,7 +198,7 @@ class TextService:
                 final_author = final_author or metadata.author
                 final_category = final_category or metadata.category
             except Exception:
-                print("Metadata unavailable; retaining explicit values and local defaults.")
+                logger.info("Metadata unavailable; retaining explicit values and local defaults.")
 
         languages = {name.lower(): name for name in ("German", "French", "Italian", "Spanish", "English")}
         final_language = languages.get((final_language or "").strip().lower())
@@ -338,35 +339,11 @@ class TextService:
             except Exception as error:
                 raise ValueError("AI word filtering is unavailable; retry later or use spaCy") from error
 
-        # 2. Update WordFrequencyRecords
-        self._repository.delete_word_frequencies(record.id, owner_id)
-        frequency_records = []
-        for wf in word_frequencies:
-            frequency_records.append(
-                WordFrequencyRecord(
-                    owner_id=owner_id,
-                    text_id=record.id,
-                    word=wf["word"],
-                    count=wf["count"]
-                )
-            )
-        self._repository.save_word_frequencies(frequency_records)
-        
-        # 3. Set status to processing to trigger background generation
-        record.status = "processing"
-        self._repository.update_text(record)
+        frequency_records = [WordFrequencyRecord(
+            owner_id=owner_id, text_id=record.id, word=wf["word"], count=wf["count"],
+        ) for wf in word_frequencies]
+        self._repository.queue_enrichment(record.id, owner_id, frequencies=frequency_records)
 
-        if self._job_repository and record.id is not None:
-            with Session(self._repository._engine) as session:
-                self._job_repository.enqueue(
-                    session=session,
-                    owner_id=owner_id,
-                    task_type="process_text",
-                    payload={"text_id": record.id, "owner_id": owner_id, "filtering_method": filtering_method},
-                    text_id=record.id,
-                )
-                session.commit()
-        
         return self.get_one(text_id, owner_id)
 
     def update_progress(self, text_id: str, sentence_index: int, owner_id: str) -> TextRecord:
@@ -431,13 +408,16 @@ class TextService:
         self._repository.update_text(record)
         return self.get_one(text_id, owner_id)
 
-    def process_pending_text(self, text_id: int, owner_id: str) -> None:
+    def process_pending_text(self, text_id: int, owner_id: str, *, ensure_lease: Callable[[], None] | None = None) -> None:
         """Background worker to translate sentences and generate practice sentences."""
         record = self._repository.load_one_text(text_id, owner_id)
-        if not record or record.status != "processing":
+        if not record or record.status not in {"processing", "failed"}:
             return
             
+        check_lease = ensure_lease or (lambda: None)
         try:
+            check_lease()
+            record.status = "processing"
             if getattr(self._llm, "is_configured", True) is False:
                 raise RuntimeError("AI enrichment is unavailable. Configure a provider key to enable translations and generated drills; original-text practice is available.")
             record.enrichment_stage = "translating"
@@ -461,7 +441,7 @@ class TextService:
             total_sentences = len(s_records)
             processed_count = sum(1 for s in s_records if s.status == "processed")
             
-            print(f"Starting background processing for text '{record.title}' (ID: {text_id}). {processed_count}/{total_sentences} sentences already processed.")
+            logger.info(f"Processing text {text_id}: {processed_count}/{total_sentences} sentences saved.")
             
             import asyncio
             
@@ -469,6 +449,7 @@ class TextService:
                 sem = asyncio.Semaphore(15)
                 
                 async def _translate_and_update(s, idx):
+                    check_lease()
                     if s.status != "pending":
                         return
 
@@ -493,8 +474,9 @@ class TextService:
                             else:
                                 s.translation_hints = []
                             s.status = "processed"
+                            check_lease()
                             await asyncio.to_thread(self._repository.update_sentence, s)
-                            print(f"  -> Cache hit for sentence {idx}: '{s.translation}'")
+                            logger.info(f"Translation cache hit for sentence {s.id}.")
                             return
 
                     # Check daily budget before invoking LLM on cache miss
@@ -505,15 +487,16 @@ class TextService:
                             daily_limit=self._daily_token_limit,
                         )
                         if not has_budget:
-                            print(f"  [ERROR] Daily token budget of {self._daily_token_limit} exceeded for owner {owner_id}")
+                            logger.info(f"  [ERROR] Daily token budget of {self._daily_token_limit} exceeded for owner {owner_id}")
                             raise DailyBudgetExceededError(
                                 f"Daily token budget of {self._daily_token_limit} exceeded for owner {owner_id}"
                             )
                         
-                    print(f"[{idx}/{total_sentences}] Translating sentence: '{s.original_text}'...")
+                    logger.info(f"Translating sentence {s.id}.")
                     context = get_previous_sentence_context(s)
                     
                     async with sem:
+                        check_lease()
                         try:
                             result = await self._llm.translate_sentence_async(
                                 title=record.title,
@@ -527,8 +510,9 @@ class TextService:
                             s.translation = result.translation
                             s.translation_hints = [hg.model_dump() for hg in result.translation_hints]
                             s.status = "processed"
+                            check_lease()
                             await asyncio.to_thread(self._repository.update_sentence, s)
-                            print(f"  -> Translated: '{s.translation}'")
+                            logger.info(f"Saved translation for sentence {s.id}.")
 
                             # Store translation in cache
                             if self._cache_repository:
@@ -568,10 +552,10 @@ class TextService:
                                         total_tokens=total_tokens,
                                         estimated_cost_usd=est_cost,
                                     )
-                        except DailyBudgetExceededError:
+                        except (DailyBudgetExceededError, LeaseLostError):
                             raise
                         except Exception:
-                            print(f"Translation attempt failed for sentence {s.id}; use retry enrichment to try again.")
+                            logger.info(f"Translation attempt failed for sentence {s.id}; use retry enrichment to try again.")
 
                 await asyncio.gather(*[_translate_and_update(s, idx) for idx, s in enumerate(s_records, start=1)])
 
@@ -580,6 +564,7 @@ class TextService:
                 raise RuntimeError("Some sentences could not be translated. You can retry enrichment or practice the original text.")
 
             # 2. Generate Practice Sentences
+            check_lease()
             record.enrichment_stage = "generating_practice"
             self._repository.update_text(record)
 
@@ -593,12 +578,13 @@ class TextService:
                         f"Daily token budget of {self._daily_token_limit} exceeded for owner {owner_id}"
                     )
 
-                print(f"Generating practice sentences using top {len(top_words)} words: {top_words}")
+                logger.info(f"Generating drills for text {text_id} using {len(top_words)} seed words.")
                 try:
                     import asyncio
                     practice_result = asyncio.run(self._llm.generate_practice_sentences_async(top_words, owner_id=owner_id, source_language=record.language))
                     practice_usage = getattr(practice_result, "usage", None)
 
+                    check_lease()
                     # Clear old practice sentences if any exist (e.g. during regeneration)
                     self._repository.delete_practice_sentences(text_id, owner_id)
                     
@@ -639,48 +625,46 @@ class TextService:
                                 total_tokens=tot_tokens,
                                 estimated_cost_usd=est_cost,
                             )
-                except DailyBudgetExceededError:
+                except (DailyBudgetExceededError, LeaseLostError):
                     raise
                 except Exception as error:
                     raise RuntimeError("Practice drills could not be generated. You can retry enrichment; completed translations have been saved.") from error
 
             # 3. Fetch Dictionary Translations for Top Words
-            print("Fetching dictionary translations for top words...")
+            logger.info("Fetching dictionary translations for top words...")
             def _fetch_dict_translation(freq):
                 if not freq.translation:
                     try:
                         translation = self._dictionary.translate_word(freq.word, record.language)
                         if translation:
                             freq.translation = translation
+                            check_lease()
                             self._repository.update_word_frequency(freq)
-                    except Exception as e:
-                        print(f"Failed to fetch translation for '{freq.word}': {e}")
+                    except LeaseLostError:
+                        raise
+                    except Exception:
+                        logger.info("Dictionary lookup unavailable.")
 
             with concurrent.futures.ThreadPoolExecutor(max_workers=25) as executor:
                 futures = [executor.submit(_fetch_dict_translation, freq) for freq in frequencies[:15]]
-                concurrent.futures.wait(futures)
+                for future in futures:
+                    future.result()
 
             # 4. Mark text as fully processed
+            check_lease()
             record.status = "processed"
             record.enrichment_stage = "completed"
             record.error_message = None
             self._repository.update_text(record)
-            if self._job_repository:
-                jobs = self._job_repository.load_jobs_by_text(text_id, owner_id)
-                for j in jobs:
-                    if j.id is not None and j.status in ("pending", "leased"):
-                        self._job_repository.complete(j.id, j.worker_id or "local_worker")
-            print(f"Successfully finished processing text '{record.title}' (ID: {text_id})!")
+            logger.info(f"Finished processing text {text_id}.")
+        except LeaseLostError:
+            raise
         except Exception as err:
+            check_lease()
             record.status = "failed"
             record.enrichment_stage = "failed"
             record.error_message = str(err)
             self._repository.update_text(record)
-            if self._job_repository:
-                jobs = self._job_repository.load_jobs_by_text(text_id, owner_id)
-                for j in jobs:
-                    if j.id is not None and j.status in ("pending", "leased"):
-                        self._job_repository.fail(j.id, j.worker_id or "local_worker", str(err))
             raise
 
     def retry_enrichment(self, text_id: str, owner_id: str) -> TextData:
@@ -694,20 +678,6 @@ class TextService:
         if record is None or record.id is None:
             raise IndexError("Text not found")
 
-        record.status = "processing"
-        record.enrichment_stage = "queued"
-        record.error_message = None
-        self._repository.update_text(record)
-
-        if self._job_repository:
-            with Session(self._repository._engine) as session:
-                self._job_repository.enqueue(
-                    session=session,
-                    owner_id=owner_id,
-                    task_type="process_text",
-                    payload={"text_id": record.id, "owner_id": owner_id},
-                    text_id=record.id,
-                )
-                session.commit()
+        self._repository.queue_enrichment(record.id, owner_id)
 
         return self.get_one(text_id, owner_id)

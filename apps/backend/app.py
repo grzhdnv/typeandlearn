@@ -1,5 +1,6 @@
 """FastAPI application assembly and router registration."""
 
+import logging
 from contextlib import asynccontextmanager
 from typing import Any, Dict, Optional
 
@@ -14,6 +15,7 @@ from api.routes.texts import router as texts_router
 from api.routes.user import router as user_router
 from core.database import engine, init_db
 from core.logging import setup_logging
+from core.settings import Settings
 from core.middleware import CorrelationIdMiddleware
 
 
@@ -26,39 +28,35 @@ async def lifespan(app: FastAPI):
     # Informative log for offline/online state
     from app_state import llm_service
     if not llm_service.is_configured:
-        print(
+        logging.getLogger(__name__).info(
             "INFO: Running in offline mode: LLM service is not configured "
             "(missing DEEPSEEK_API_KEY/GROQ_API_KEY). Core library and typing practice functions are active."
         )
 
-    # Resume any interrupted text processing
+    import asyncio
     import threading
-    from app_state import text_service
-    from core.auth import DEFAULT_OWNER_ID
+    from app_state import job_repository, text_service
+    from worker import Worker
 
-    def resume_pending_texts():
-        try:
-            texts = text_service.get_all(DEFAULT_OWNER_ID)
-            for t in texts:
-                if t.status == "processing" and t.id is not None:
-                    print(f"Resuming interrupted processing for text {t.id}...")
-                    threading.Thread(
-                        target=text_service.process_pending_text,
-                        args=(t.id, DEFAULT_OWNER_ID),
-                        daemon=True,
-                    ).start()
-        except Exception as e:
-            print(f"Failed to resume pending texts: {e}")
-
-    resume_pending_texts()
-
-    yield
+    worker = Worker(job_repository, text_service)
+    thread = None
+    if app.state.settings.embedded_worker_enabled:
+        thread = threading.Thread(target=worker.run, daemon=True, name="typeandlearn-queue")
+        thread.start()
+    try:
+        yield
+    finally:
+        worker.request_shutdown()
+        if thread is not None:
+            # Drain the active job while its heartbeat remains live.
+            await asyncio.to_thread(thread.join)
 
 
 def create_app(custom_settings: Optional[Any] = None) -> FastAPI:
     """Instantiate and configure the FastAPI application."""
     setup_logging()
     application = FastAPI(title="TypeAndLearn API", lifespan=lifespan)
+    application.state.settings = custom_settings if custom_settings is not None else Settings()
     application.add_middleware(CorrelationIdMiddleware)
 
     @application.get("/healthz", tags=["health"])

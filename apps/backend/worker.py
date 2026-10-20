@@ -5,18 +5,16 @@ import os
 import signal
 import sys
 import threading
-import time
 from pathlib import Path
 from typing import Optional
 from uuid import uuid4
 
 sys.path.append(str(Path(__file__).resolve().parent))
 
-from repositories.job_repository import JobRepository
+from repositories.job_repository import JobRepository, LeaseLostError
 from services.text_service import TextService
 
 logger = logging.getLogger("typeandlearn.worker")
-logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s")
 
 
 class HeartbeatThread(threading.Thread):
@@ -27,25 +25,35 @@ class HeartbeatThread(threading.Thread):
         job_repo: JobRepository,
         job_id: int,
         worker_id: str,
-        interval: int = 25,
+        interval: float = 25,
+        extend_seconds: int = 60,
     ) -> None:
         super().__init__(daemon=True)
         self.job_repo = job_repo
         self.job_id = job_id
         self.worker_id = worker_id
         self.interval = interval
+        self.extend_seconds = extend_seconds
         self.stop_event = threading.Event()
 
     def run(self) -> None:
         """Run periodic heartbeat until explicitly stopped."""
         while not self.stop_event.wait(self.interval):
-            success = self.job_repo.heartbeat(
-                self.job_id,
-                self.worker_id,
-                extend_seconds=self.interval * 2,
-            )
+            try:
+                success = self.job_repo.heartbeat(
+                    self.job_id,
+                    self.worker_id,
+                    extend_seconds=self.extend_seconds,
+                )
+            except Exception:
+                logger.warning("Heartbeat unavailable for job %s", self.job_id)
+                continue
             if not success:
-                logger.warning("Heartbeat failed for job %s held by worker %s", self.job_id, self.worker_id)
+                logger.warning(
+                    "Heartbeat failed for job %s held by worker %s",
+                    self.job_id,
+                    self.worker_id,
+                )
                 break
 
     def stop(self) -> None:
@@ -66,23 +74,25 @@ class Worker:
     ) -> None:
         self.job_repo = job_repo
         self.text_service = text_service
-        self.worker_id = worker_id or os.getenv("WORKER_ID", f"worker-{uuid4().hex[:8]}")
+        self.worker_id = worker_id or os.getenv(
+            "WORKER_ID", f"worker-{uuid4().hex[:8]}"
+        )
         self.lease_duration = lease_duration
         self.poll_interval = poll_interval
-        self._shutdown = False
+        self._shutdown = threading.Event()
+        if lease_duration <= 0:
+            raise ValueError("Lease duration must be positive")
 
     def request_shutdown(self) -> None:
         """Signal the worker loop to stop after the current iteration."""
         logger.info("Shutdown requested for worker %s", self.worker_id)
-        self._shutdown = True
+        self._shutdown.set()
 
     def process_one_job(self) -> bool:
         """Claim and process one job from the queue. Returns True if a job was processed."""
-        # Clean up any expired leases from crashed workers
-        self.job_repo.reclaim_expired_leases()
-
+        lease_owner = f"{self.worker_id}:{uuid4().hex}"
         job = self.job_repo.claim_next_job(
-            worker_id=self.worker_id,
+            worker_id=lease_owner,
             lease_duration_seconds=self.lease_duration,
         )
         if not job or job.id is None:
@@ -100,26 +110,37 @@ class Worker:
         heartbeat = HeartbeatThread(
             job_repo=self.job_repo,
             job_id=job.id,
-            worker_id=self.worker_id,
-            interval=max(5, self.lease_duration // 2),
+            worker_id=lease_owner,
+            interval=self.lease_duration / 3,
+            extend_seconds=self.lease_duration,
         )
         heartbeat.start()
 
+        job_id = job.id
+
+        def ensure_lease() -> None:
+            if not self.job_repo.owns_lease(job_id, lease_owner):
+                raise LeaseLostError("Worker no longer owns this job")
+
         try:
-            if job.task_type == "process_text":
-                if job.text_id is not None:
-                    self.text_service.process_pending_text(job.text_id, job.owner_id)
-                self.job_repo.complete(job.id, self.worker_id)
-                logger.info("Worker %s successfully completed job %s", self.worker_id, job.id)
-            else:
-                error_msg = f"Unknown task type: {job.task_type}"
-                logger.error(error_msg)
-                self.job_repo.fail(job.id, self.worker_id, error_msg)
+            if job.task_type != "process_text" or job.text_id is None:
+                raise ValueError("Unsupported job type or missing text ID")
+            self.text_service.process_pending_text(
+                job.text_id, job.owner_id, ensure_lease=ensure_lease
+            )
+            if self.job_repo.complete(job.id, lease_owner):
+                logger.info("Worker %s completed job %s", self.worker_id, job.id)
+        except LeaseLostError:
+            logger.warning("Worker %s lost lease for job %s", self.worker_id, job.id)
         except Exception as err:
-            logger.exception("Error processing job %s: %s", job.id, err)
-            self.job_repo.fail(job.id, self.worker_id, str(err))
+            # Upstream exceptions can contain prompts; keep only the error class.
+            logger.warning("Job %s failed (%s)", job.id, type(err).__name__)
+            self.job_repo.fail(
+                job.id, lease_owner, f"Enrichment failed ({type(err).__name__})"
+            )
         finally:
             heartbeat.stop()
+            heartbeat.join()
 
         return True
 
@@ -127,18 +148,18 @@ class Worker:
         """Run the main worker processing loop."""
         logger.info("Starting background worker %s", self.worker_id)
 
-        while not self._shutdown:
+        while not self._shutdown.is_set():
             try:
                 processed = self.process_one_job()
                 if single_run:
                     break
                 if not processed:
-                    time.sleep(self.poll_interval)
+                    self._shutdown.wait(self.poll_interval)
             except Exception as loop_err:
-                logger.exception("Unexpected error in worker loop: %s", loop_err)
+                logger.error("Worker iteration failed (%s)", type(loop_err).__name__)
                 if single_run:
                     break
-                time.sleep(self.poll_interval)
+                self._shutdown.wait(self.poll_interval)
 
         logger.info("Worker %s stopped cleanly.", self.worker_id)
 
@@ -146,6 +167,11 @@ class Worker:
 def main() -> None:
     """CLI entrypoint for standalone worker container/process."""
     from app_state import job_repository, text_service
+    from core.database import init_db
+    from core.logging import setup_logging
+
+    setup_logging()
+    init_db()
 
     worker = Worker(job_repo=job_repository, text_service=text_service)
 

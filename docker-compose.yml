@@ -28,6 +28,7 @@ services:
     environment:
       DATABASE_URL: postgresql+psycopg://typeandlearn:typeandlearn@postgres:5432/typeandlearn_dev
       PORT: 8000
+      EMBEDDED_WORKER_ENABLED: "false"
       DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY:-}
       GROQ_API_KEY: ${GROQ_API_KEY:-}
     depends_on:

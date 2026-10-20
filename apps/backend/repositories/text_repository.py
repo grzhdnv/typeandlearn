@@ -10,7 +10,7 @@ from models.texts import (
     TextRecord,
     WordFrequencyRecord,
 )
-from sqlalchemy import Engine, delete
+from sqlalchemy import Engine, delete, text
 from sqlmodel import Session, col, select
 
 
@@ -135,6 +135,46 @@ class TextRepository:
             session.refresh(record)
             session.refresh(job)
             return record, job
+
+    def queue_enrichment(self, text_id: int, owner_id: str, *, frequencies: Optional[List[WordFrequencyRecord]] = None) -> None:
+        """Commit a text reset and its queue entry together; never duplicate live work."""
+        with Session(self._engine) as session:
+            if self._engine.dialect.name == "sqlite":
+                session.connection().exec_driver_sql("BEGIN IMMEDIATE")
+            elif self._engine.dialect.name == "postgresql":
+                session.execute(text("SELECT pg_advisory_xact_lock(:text_id)"), {"text_id": text_id})
+            record = session.exec(select(TextRecord).where(
+                TextRecord.id == text_id, TextRecord.owner_id == owner_id,
+            ).with_for_update()).first()
+            if record is None:
+                raise IndexError("Text not found")
+            jobs = session.exec(select(BackgroundJobRecord).where(
+                BackgroundJobRecord.owner_id == owner_id,
+                BackgroundJobRecord.text_id == text_id,
+                BackgroundJobRecord.task_type == "process_text",
+                BackgroundJobRecord.status.in_(["pending", "leased"]),  # pyright: ignore
+            ).with_for_update()).all()
+            if any(job.status == "leased" for job in jobs):
+                raise ValueError("Enrichment is already running; wait for it to finish")
+            if frequencies is not None:
+                session.exec(delete(WordFrequencyRecord).where(
+                    col(WordFrequencyRecord.owner_id) == owner_id,
+                    col(WordFrequencyRecord.text_id) == text_id,
+                ))
+                session.add_all(frequencies)
+            record.status = "processing"
+            record.enrichment_stage = "queued"
+            record.error_message = None
+            session.add(record)
+            if jobs:
+                # A manual retry can wake the existing backoff, but keeps its budget.
+                for job in jobs:
+                    job.leased_until = None
+                    session.add(job)
+            else:
+                session.add(BackgroundJobRecord(owner_id=owner_id, text_id=text_id,
+                    task_type="process_text", payload={"text_id": text_id}))
+            session.commit()
 
     def update_text(self, record: TextRecord) -> TextRecord:
         """Update an existing text record in the database."""

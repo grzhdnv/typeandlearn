@@ -1,3 +1,31 @@
+# Queue dispatch update — 20 October 2026
+
+API/worker dispatch unification is complete. Read
+[queue acceptance](docs/queue-acceptance-2026-10-20.md) and ADR-0003.
+
+- Upload/retry/regeneration enqueue only. API startup runs the same leased consumer
+  as the CLI; set `EMBEDDED_WORKER_ENABLED=false` when using dedicated workers.
+  Docker Compose disables the embedded API consumer.
+- SQLite claims serialize before selection; PostgreSQL uses row/advisory locks.
+  Only the current unexpired unique lease owner can finish/fail its job.
+- Atomic retry/regeneration reuse pending jobs and reject leased work. Crash retries
+  are bounded; final expired attempts become dead letters and failed texts.
+- Recovery is at least once: external requests can be repeated after a crash.
+  Cooperative lease checks prevent observed stale responses from overwriting a
+  replacement's work; PostgreSQL concurrency still requires live acceptance.
+- Verification: 112 backend tests, 31 frontend tests, 27 Chromium tests; full
+  lint/types/build checks. A real isolated API plus two standalone worker processes
+  verified one claim, truthful offline failure, original preservation and clean exit.
+- Raw text/translation/word-list progress prints in enrichment were removed in favor
+  of content-free structured logging. Existing SQLite ResourceWarnings remain.
+- Local provider activation and caps below remain in effect. Preserve credentials
+  and unrelated `opencode.json`.
+
+Next: move intake preprocessing and optional metadata/filtering off the HTTP fast
+path, then verify PostgreSQL/staging recovery. Jev remains deferred.
+
+---
+
 # Current handoff — 20 October 2026
 
 Hint normalization, validation, and the expanded MiniMax technical acceptance are
@@ -27,8 +55,8 @@ unrelated `opencode.json` and user credentials.
 - Offline verification: 102 backend / 31 frontend tests, lint/types/build, and
   27 Chromium tests. Existing SQLite ResourceWarnings remain.
 
-Next engineering task: unify the API/worker dispatch and claim path to prevent
-duplicate processing. Staging/recovery and PostgreSQL acceptance remain open.
+The queue dispatch task below has since been completed; see the update above.
+Staging/recovery and PostgreSQL acceptance remain open.
 Use isolated learning databases and blank all provider keys in offline checks.
 The live acceptance script uses temporary learning SQLite but the real shared quota
 ledger; only synthetic content is authorized for such benchmarks. Run-only quota

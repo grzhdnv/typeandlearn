@@ -14,7 +14,7 @@ checkmarks in the historical issue map do not establish production readiness.
   controls, saved original-text completion progress, results, and practice history.
 - Provider routing, owner scoping, backend JWT validation, analytics, and export/delete
   implementations with automated backend coverage.
-- Ruff, Python type checking, frontend type checking and build, 102 backend tests,
+- Ruff, Python type checking, frontend type checking and build, 112 backend tests,
   31 frontend unit tests, and 27 isolated Chromium browser regressions.
 - Live synthetic comparison across five languages, metadata, exercises, and a real
   DeepSeek fallback flow; shared quotas and approved $0.50/day and $5/month limits.
@@ -35,8 +35,10 @@ checkmarks in the historical issue map do not establish production readiness.
 
 ## Next: reliable processing and realistic practice
 
-- [ ] Make API and standalone worker use one job dispatch/claim path; avoid duplicate
-  execution, and verify failures/recovery across restarts and owners.
+- [x] Unify API and standalone worker dispatch through durable leases. SQLite
+  concurrency, expired-worker fencing, crash budgets, and queue resumption across
+  owners are verified; live PostgreSQL acceptance remains below. See
+  `queue-acceptance-2026-10-20.md`.
 - [ ] Move intake preprocessing and optional AI metadata off the HTTP fast path.
 - [x] Verify local Groq/DeepSeek retry classification, quota reservations, actual-model
   usage accounting, and daily/monthly spend caps; PostgreSQL acceptance remains below.

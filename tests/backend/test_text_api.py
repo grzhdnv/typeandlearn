@@ -6,9 +6,13 @@ Only the external LLM and dictionary responses are replaced with fixtures.
 from __future__ import annotations
 
 import os
+from datetime import timedelta
 import pathlib
 import sys
 import tempfile
+import asyncio
+import threading
+import time
 import unittest
 from unittest import mock
 
@@ -26,6 +30,9 @@ with mock.patch.dict(os.environ, {
     import app
     import app_state
     from api.routes import texts
+    from core.settings import Settings
+    from worker import Worker
+    from models.jobs import BackgroundJobRecord, utc_now
     from core import database
     from repositories import job_repository, text_repository
     from schemas import texts as schemas
@@ -79,13 +86,15 @@ class TextApiTests(unittest.TestCase):
             dictionary,
             job_repository=self.job_repo,
         )
+        self.worker = Worker(self.job_repo, service, poll_interval=.02)
+        self.enterContext(mock.patch.object(app_state, "job_repository", self.job_repo))
         self.enterContext(mock.patch.object(database, "engine", self.engine))
         self.enterContext(mock.patch.object(app_state, "text_service", service))
         self.enterContext(mock.patch.object(texts, "text_service", service))
         self.enterContext(mock.patch.object(
             ai_models, "ALLOW_MODEL_REQUESTS", False
         ))
-        self.client = self.enterContext(testclient.TestClient(app.app))
+        self.client = self.enterContext(testclient.TestClient(app.create_app(Settings(embedded_worker_enabled=False))))
 
     def _upload(self) -> str:
         response = self.client.post("/texts", json={
@@ -93,7 +102,97 @@ class TextApiTests(unittest.TestCase):
             "language": "German",
         })
         self.assertEqual(response.status_code, 200, response.text)
+        self.worker.process_one_job()
         return self.client.get("/texts/titles").json()["titles"][0]["id"]
+
+    def test_http_intake_two_workers_and_active_retry_share_one_job(self) -> None:
+        started, release = threading.Event(), threading.Event()
+
+        async def translate(**kwargs):
+            started.set()
+            await asyncio.to_thread(release.wait, 10)
+            return schemas.SentenceTranslation(translation="Saved translation", translation_hints=[])
+
+        self.llm.translate_sentence_async.side_effect = translate
+        response = self.client.post("/texts", json={"text": "Der Hund läuft.", "language": "German"})
+        self.assertEqual(response.status_code, 200)
+        text_id = response.json()["id"]
+        self.llm.translate_sentence_async.assert_not_called()
+        self.assertEqual(self.client.get(f"/texts/{text_id}").json()["data"]["status"], "processing")
+        # Repeated pending retries reuse one durable record.
+        self.assertEqual(self.client.post(f"/texts/{text_id}/retry").status_code, 200)
+        thread = threading.Thread(target=self.worker.process_one_job)
+        thread.start()
+        try:
+            self.assertTrue(started.wait(10))
+            competitor = Worker(self.job_repo, app_state.text_service, worker_id="competitor")
+            self.assertFalse(competitor.process_one_job())
+            self.assertEqual(self.client.post(f"/texts/{text_id}/retry").status_code, 400)
+            self.assertEqual(self.client.post(f"/texts/{text_id}/regenerate-words").status_code, 400)
+        finally:
+            release.set()
+            thread.join(15)
+        self.assertFalse(thread.is_alive())
+        self.assertEqual(self.client.get(f"/texts/{text_id}").json()["data"]["status"], "processed")
+        jobs = self.job_repo.load_jobs_by_text(text_id, "owner_local_default")
+        self.assertEqual([(j.status, j.attempt_count) for j in jobs], [("completed", 1)])
+        self.assertEqual(self.llm.translate_sentence_async.call_count, 1)
+        self.assertEqual(self.llm.generate_practice_sentences_async.call_count, 1)
+
+    def test_expired_inflight_worker_does_not_overwrite_replacement(self) -> None:
+        started, release = threading.Event(), threading.Event()
+        async def translate(**kwargs):
+            if self.llm.translate_sentence_async.call_count == 1:
+                started.set()
+                await asyncio.to_thread(release.wait, 10)
+                value = "Stale translation"
+            else:
+                value = "Replacement translation"
+            return schemas.SentenceTranslation(translation=value, translation_hints=[])
+        self.llm.translate_sentence_async.side_effect = translate
+        response = self.client.post("/texts", json={"text": "Der Hund läuft.", "language": "German"})
+        text_id = response.json()["id"]
+        thread = threading.Thread(target=self.worker.process_one_job)
+        thread.start()
+        try:
+            self.assertTrue(started.wait(10))
+            jobs = self.job_repo.load_jobs_by_text(text_id, "owner_local_default")
+            with sqlmodel.Session(self.engine) as session:
+                row = session.get(BackgroundJobRecord, jobs[0].id)
+                assert row is not None
+                row.leased_until = utc_now() - timedelta(seconds=1)
+                session.add(row)
+                session.commit()
+            # Even a replacement with the same configured worker ID has a unique lease token.
+            replacement = Worker(self.job_repo, app_state.text_service, worker_id=self.worker.worker_id)
+            self.assertTrue(replacement.process_one_job())
+        finally:
+            release.set()
+            thread.join(15)
+        self.assertFalse(thread.is_alive())
+        data = self.client.get(f"/texts/{text_id}").json()["data"]
+        self.assertEqual(data["status"], "processed")
+        self.assertEqual(data["original_paragraphs"][0]["sentences"][0]["translation"], "Replacement translation")
+        jobs = self.job_repo.load_jobs_by_text(text_id, "owner_local_default")
+        self.assertEqual([(j.status, j.attempt_count) for j in jobs], [("completed", 2)])
+        self.assertEqual(self.llm.generate_practice_sentences_async.call_count, 1)
+
+    def test_embedded_worker_resumes_durable_queue_for_all_owners(self) -> None:
+        response = self.client.post("/texts", json={"text": "Der Hund läuft.", "language": "German"}, headers={"X-Owner-Id": "other-owner"})
+        self.assertEqual(response.status_code, 200)
+        text_id = response.json()["id"]
+        # Start a fresh API lifespan; recovery comes from the queue, not an owner-specific text scan.
+        with testclient.TestClient(app.create_app(Settings(embedded_worker_enabled=True))) as client:
+            jobs = self.job_repo.load_jobs_by_text(text_id, "other-owner")
+            deadline = time.monotonic() + 10
+            while time.monotonic() < deadline:
+                jobs = self.job_repo.load_jobs_by_text(text_id, "other-owner")
+                if jobs[0].status == "completed":
+                    break
+                time.sleep(.02)
+            self.assertEqual(jobs[0].status, "completed")
+            self.assertEqual(client.get(f"/texts/{text_id}").status_code, 404)
+        self.assertEqual(self.llm.translate_sentence_async.call_count, 1)
 
     def test_upload_processing_practice_progress_and_crud(self) -> None:
         text_id = self._upload()
@@ -131,6 +230,7 @@ class TextApiTests(unittest.TestCase):
         self.assertEqual(response.json()["completed_sentences"], 0)
         response = self.client.post(f"{path}/regenerate-words")
         self.assertEqual(response.status_code, 200, response.text)
+        self.worker.process_one_job()
         self.assertEqual(self.client.get(path).json()["data"]["status"],
                          "processed")
 
@@ -151,6 +251,7 @@ class TextApiTests(unittest.TestCase):
 
         self.llm.translate_sentence_async.side_effect = None
         self.assertEqual(self.client.post(f"{path}/retry").status_code, 200)
+        self.worker.process_one_job()
         self.assertEqual(self.client.get(path).json()["data"]["status"], "processed")
 
     def test_failed_practice_generation_is_not_reported_as_completed(self) -> None:

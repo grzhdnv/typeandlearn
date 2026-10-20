@@ -5,6 +5,8 @@ import pathlib
 import sys
 import tempfile
 import unittest
+import threading
+from concurrent.futures import ThreadPoolExecutor
 
 import sqlmodel
 from sqlmodel import Session
@@ -12,6 +14,7 @@ from sqlmodel import Session
 sys.path.append(str(pathlib.Path(__file__).resolve().parents[2] / "apps/backend"))
 
 from models.jobs import BackgroundJobRecord, utc_now
+from models.texts import TextRecord
 from repositories.job_repository import JobRepository
 
 
@@ -27,6 +30,88 @@ class JobRepositoryTests(unittest.TestCase):
         sqlmodel.SQLModel.metadata.create_all(self.engine)
         self.addCleanup(self.engine.dispose)
         self.repo = JobRepository(self.engine)
+
+    def _enqueue(self, max_retries=3):
+        with Session(self.engine) as session:
+            job = self.repo.enqueue(session, "owner_1", "process_text", {}, max_retries=max_retries)
+            session.commit()
+            assert job.id is not None
+            return job.id
+
+    def test_legacy_duplicate_jobs_for_one_text_do_not_run_together(self):
+        with Session(self.engine) as session:
+            for _ in range(2):
+                self.repo.enqueue(session, "owner_1", "process_text", {}, text_id=42)
+            session.commit()
+        first = self.repo.claim_next_job("first")
+        assert first is not None and first.id is not None
+        self.assertIsNone(self.repo.claim_next_job("second"))
+        self.assertTrue(self.repo.complete(first.id, "first"))
+        self.assertIsNotNone(self.repo.claim_next_job("second"))
+
+    def test_simultaneous_connections_claim_each_job_once(self):
+        ids = [self._enqueue() for _ in range(6)]
+        barrier = threading.Barrier(12)
+        def claim(index):
+            barrier.wait()
+            return JobRepository(self.engine).claim_next_job(f"worker-{index}")
+        with ThreadPoolExecutor(max_workers=12) as pool:
+            jobs = list(pool.map(claim, range(12)))
+        claimed = [job.id for job in jobs if job is not None]
+        self.assertCountEqual(claimed, ids)
+        self.assertEqual(len(set(claimed)), 6)
+
+    def test_unclaimed_and_finished_jobs_reject_terminal_updates(self):
+        job_id = self._enqueue()
+        self.assertFalse(self.repo.complete(job_id, "intruder"))
+        self.assertFalse(self.repo.fail(job_id, "intruder", "failure"))
+        self.repo.claim_next_job("worker")
+        self.assertTrue(self.repo.complete(job_id, "worker"))
+        self.assertFalse(self.repo.fail(job_id, "worker", "late failure"))
+        self.assertFalse(self.repo.complete(job_id, "worker"))
+        completed = self.repo.load_job(job_id)
+        assert completed is not None
+        self.assertEqual(completed.status, "completed")
+
+    def test_expired_worker_cannot_renew_or_overwrite_reclaimed_job(self):
+        job_id = self._enqueue()
+        self.repo.claim_next_job("stale", lease_duration_seconds=-1)
+        self.assertFalse(self.repo.heartbeat(job_id, "stale"))
+        self.assertFalse(self.repo.complete(job_id, "stale"))
+        current = self.repo.claim_next_job("new")
+        assert current is not None
+        self.assertEqual(current.id, job_id)
+        self.assertEqual(current.attempt_count, 2)
+        self.assertFalse(self.repo.fail(job_id, "stale", "late error"))
+        self.assertTrue(self.repo.complete(job_id, "new"))
+
+    def test_final_crash_marks_owned_text_failed(self):
+        with Session(self.engine) as session:
+            record = TextRecord(owner_id="owner_1", title="Synthetic", status="processing")
+            session.add(record)
+            session.flush()
+            job = self.repo.enqueue(session, "owner_1", "process_text", {}, text_id=record.id, max_retries=1)
+            session.commit()
+            text_id = record.id
+            job_id = job.id
+        assert job_id is not None
+        self.repo.claim_next_job("crashed", lease_duration_seconds=-1)
+        self.assertEqual(self.repo.reclaim_expired_leases(), 1)
+        with Session(self.engine) as session:
+            row = session.get(TextRecord, text_id)
+            assert row is not None
+            self.assertEqual(row.status, "failed")
+            self.assertEqual(row.enrichment_stage, "failed")
+            self.assertIn("final attempt", row.error_message or "")
+
+    def test_final_crashed_attempt_is_dead_lettered(self):
+        job_id = self._enqueue(max_retries=1)
+        self.repo.claim_next_job("crashed", lease_duration_seconds=-1)
+        self.assertIsNone(self.repo.claim_next_job("replacement"))
+        job = self.repo.load_job(job_id)
+        assert job is not None
+        self.assertEqual(job.status, "dead_letter")
+        self.assertEqual(job.attempt_count, 1)
 
     def test_enqueue_and_claim_job(self) -> None:
         """Jobs can be enqueued transactionally and claimed by a worker."""

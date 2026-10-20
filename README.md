@@ -9,7 +9,7 @@ translations, and practice-sentence generation.
 
 Active local v2 prototype. Local repairs verified on 19 October 2026: text intake,
 metadata editing, original and generated practice navigation, reset, saved progress,
-results, and history. The current checks cover 102 backend tests, 31 frontend unit
+results, and history. The current checks cover 112 backend tests, 31 frontend unit
 tests, and 27 Chromium browser regressions. A live synthetic comparison verified
 five languages, metadata, generated exercises, and real DeepSeek fallback.
 
@@ -19,8 +19,10 @@ and generated drills require a configured provider; failures remain visible whil
 the original text stays available.
 
 Owner-scoped data, JWT backend support, a job queue, and analytics are implemented,
-but this remains a local development app. The API still dispatches enrichment via
-background tasks; a separate worker can duplicate that work. The staging workflow
+but this remains a local development app. API intake, retry, and regeneration now
+use one durable queue consumed by the local embedded worker or standalone workers.
+SQLite concurrency, lease loss, crash budgets, and recovery across owners are tested.
+The staging workflow
 builds and smoke-tests containers without deploying a hosted service. Private-beta
 security, cross-browser/accessibility, recovery, and deployment acceptance remain
 unfinished. See [the roadmap](docs/roadmap.md).
@@ -36,8 +38,9 @@ was activated in the local profile with user approval: Groq → MiniMax → capp
 DeepSeek. CEFR estimates/exercise style still need review. Repository defaults
 remain Groq/DeepSeek. See the
 [evaluation report](docs/openrouter-evaluation-2026-10-20.md) and
-[session handoff](HANDOFF.md). Next, unify API/worker job dispatch, expand realistic
-multilingual browser coverage, and verify staging and recovery before private beta.
+[session handoff](HANDOFF.md). Next, move intake preprocessing/metadata off the HTTP
+fast path, expand realistic multilingual browser coverage, and verify PostgreSQL,
+staging, and recovery before private beta.
 
 ## Repository layout
 
@@ -99,6 +102,13 @@ npm run dev
 Open [TypeAndLearn](http://127.0.0.1:3000). The backend API docs are at
 [localhost:8000/docs](http://127.0.0.1:8000/docs). Both services bind to localhost,
 reload during development, and stop together on Ctrl+C.
+
+The API starts one queue consumer by default, so local enrichment needs no extra
+terminal. To use dedicated workers, set `EMBEDDED_WORKER_ENABLED=false` for the API
+and run `.venv/bin/python apps/backend/worker.py` against the same database and
+provider settings. Docker Compose uses this dedicated-worker arrangement.
+Both modes use identical leases and heartbeats; shutdown drains the active job.
+See [queue verification and recovery limits](docs/queue-acceptance-2026-10-20.md).
 
 To run them in separate terminals instead:
 

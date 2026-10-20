@@ -35,6 +35,9 @@ class Settings(BaseModel):
         )
     )
     fallback_models: list[str] = Field(default_factory=_get_fallback_models)
+    embedded_worker_enabled: bool = Field(
+        default_factory=lambda: os.getenv("EMBEDDED_WORKER_ENABLED", "true").lower() in {"true", "1", "yes"}
+    )
     daily_token_limit: int = Field(
         default_factory=lambda: int(os.getenv("DAILY_TOKEN_LIMIT", "50000"))
     )
