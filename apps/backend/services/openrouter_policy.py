@@ -9,7 +9,25 @@ FREE_ROUTING = {
 }
 
 
-def validate_free_model(model: str, catalog: dict, *, native: bool = True) -> dict:
+TOOL_OUTPUT_MODELS = frozenset({
+    "nvidia/nemotron-3-ultra-550b-a55b:free",
+})
+
+
+def uses_native_output(model: str) -> bool:
+    return model not in TOOL_OUTPUT_MODELS and not uses_prompted_output(model)
+
+
+def uses_prompted_output(model: str) -> bool:
+    return model == "minimax/minimax-m3.1-flash:free"
+
+
+def reasoning_settings(model: str) -> dict:
+    # MiniMax M3.1 Flash requires reasoning; use its lowest advertised effort.
+    return {"effort": "low"} if model == "minimax/minimax-m3.1-flash:free" else {"enabled": False}
+
+
+def validate_free_model(model: str, catalog: dict, *, native: bool = True, prompted: bool = False) -> dict:
     if not model.endswith(":free") or "/" not in model:
         raise ValueError("An explicit :free model ID is required")
     entry = next((item for item in catalog.get("data", []) if item.get("id") == model), None)
@@ -21,10 +39,19 @@ def validate_free_model(model: str, catalog: dict, *, native: bool = True) -> di
             raise ValueError("Model pricing must be explicitly zero")
     except InvalidOperation as error:
         raise ValueError("Invalid model pricing") from error
-    required = {"structured_outputs", "response_format"} if native else {"tools", "tool_choice"}
+    if prompted:
+        required = {"response_format"}
+    elif native:
+        required = {"structured_outputs", "response_format"}
+    else:
+        required = {"tools", "tool_choice"}
     required.add("reasoning")
-    if (entry.get("reasoning") or {}).get("mandatory"):
-        raise ValueError("This adapter requires optional reasoning so the output budget remains available")
+    reasoning = entry.get("reasoning") or {}
+    requested_reasoning = reasoning_settings(model)
+    if reasoning.get("mandatory") and requested_reasoning.get("enabled") is False:
+        raise ValueError("Mandatory reasoning requires an explicit supported model policy")
+    if "effort" in requested_reasoning and requested_reasoning["effort"] not in reasoning.get("supported_efforts", []):
+        raise ValueError("The model no longer advertises the configured reasoning effort")
     if not required <= set(entry.get("supported_parameters", [])):
         raise ValueError("Model does not advertise the required structured-output parameters")
     return entry

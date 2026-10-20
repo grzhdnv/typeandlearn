@@ -79,7 +79,14 @@ OpenRouter is opt-in, restricted to explicit `:free` model IDs with zero catalog
 prices and zero request price caps. Provider fallback is disabled. Native schema
 and the Ultra typed-tool path use the same transport and ledger, with independent
 16 RPM / 40 RPD application defaults and shared cooldowns. This does not change
-Groq/DeepSeek defaults. With reasoning disabled, Ultra 550B and Dots 280B passed 7/7 final synthetic tasks;
-Super 120B returned upstream 404s. Ultra is the stronger optional free challenger,
+Groq/DeepSeek defaults. With reasoning disabled, Ultra 550B and Dots 280B passed
+7/7 final synthetic tasks; Super 120B returned upstream 404s. Ultra led that original
+three-model free comparison,
 but hint normalization and endpoint data policies need review before automatic
 routing. See the [evaluation report](../openrouter-evaluation-2026-10-20.md).
+
+MiniMax M3.1 Flash was subsequently evaluated using prompted JSON output and local
+validation: 7/7 cases, low mandatory reasoning, zero reported cost. Its automatic
+tool-output path failed nested schemas; JSON mode is explicit for this model.
+MiniMax now leads the small free-model sample, with Ultra as an alternative. Wider
+quality checks and provider-policy review remain prerequisites for promotion.

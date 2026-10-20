@@ -16,7 +16,7 @@ import httpx
 from groq import AsyncGroq, APIConnectionError as GroqConnectionError
 from openai import AsyncOpenAI, APIConnectionError as OpenAIConnectionError
 from pydantic import BaseModel
-from pydantic_ai import Agent, NativeOutput
+from pydantic_ai import Agent, NativeOutput, PromptedOutput
 from pydantic_ai.exceptions import ModelHTTPError
 from pydantic_ai.models import Model
 from pydantic_ai.models.groq import GroqModel
@@ -26,7 +26,7 @@ from pydantic_ai.providers.deepseek import DeepSeekProvider
 from pydantic_ai.providers.groq import GroqProvider
 from pydantic_ai.providers.openrouter import OpenRouterProvider
 
-from services.openrouter_policy import FREE_ROUTING, validate_free_model
+from services.openrouter_policy import FREE_ROUTING, reasoning_settings, uses_native_output, uses_prompted_output, validate_free_model
 
 from core.settings import Settings
 from schemas.texts import FilteredWordsResponse, GeneratedMetadata, PracticeSentencesResponse, SentenceTranslation
@@ -74,12 +74,13 @@ class _GovernedTransport(httpx.AsyncBaseTransport):
                 await catalog_response.aread()
                 if catalog_response.status_code != 200:
                     raise ValueError(f"catalog HTTP {catalog_response.status_code}")
-                validate_free_model(model, catalog_response.json(), native="response_format" in body)
+                validate_free_model(model, catalog_response.json(), native=body.get("response_format", {}).get("type") == "json_schema",
+                                    prompted=body.get("response_format", {}).get("type") == "json_object")
             except (ValueError, httpx.HTTPError) as error:
                 return httpx.Response(400, request=request, json={"error": {"message": f"OpenRouter free preflight failed: {error}"}})
             finally:
                 await catalog_response.aclose()
-            if body.get("provider") != FREE_ROUTING or any(key in body for key in ("models", "plugins", "route")):
+            if body.get("provider") != FREE_ROUTING or body.get("reasoning") != reasoning_settings(model) or any(key in body for key in ("models", "plugins", "route")):
                 return httpx.Response(400, request=request, json={"error": {"message": "OpenRouter requires free-only routing"}})
         max_output = int(body.get("max_completion_tokens") or body.get("max_tokens") or self.settings.llm_max_output_tokens)
         input_bound = len(body_bytes) + 512 + 64 * len(body.get("messages", []))
@@ -126,9 +127,10 @@ def _create_model(model_spec: str, client: httpx.AsyncClient, max_tokens: int = 
                                settings={"max_tokens": max_tokens, "extra_body": {"thinking": {"type": "disabled"}}})
     if provider_name == "openrouter":
         sdk = AsyncOpenAI(api_key=os.getenv("OPENROUTER_API_KEY"), base_url="https://openrouter.ai/api/v1", http_client=client, max_retries=0)
-        profile = OpenAIModelProfile(supports_json_schema_output=model_name != "nvidia/nemotron-3-ultra-550b-a55b:free", json_schema_transformer=OpenAIJsonSchemaTransformer)
+        profile = OpenAIModelProfile(supports_json_schema_output=uses_native_output(model_name), supports_json_object_output=uses_prompted_output(model_name),
+                                     json_schema_transformer=OpenAIJsonSchemaTransformer)
         return OpenAIChatModel(model_name, provider=OpenRouterProvider(openai_client=sdk), profile=profile,
-                               settings={"max_tokens": max_tokens, "extra_body": {"provider": FREE_ROUTING, "reasoning": {"enabled": False}}})
+                               settings={"max_tokens": max_tokens, "extra_body": {"provider": FREE_ROUTING, "reasoning": reasoning_settings(model_name)}})
     if provider_name == "groq":
         sdk = AsyncGroq(api_key=os.getenv("GROQ_API_KEY"), http_client=client, max_retries=0)
         # The pinned SDK predates Groq native schemas for Qwen 3.8.
@@ -224,6 +226,8 @@ class LlmService:
         try:
             for index, spec in enumerate(specs):
                 output = NativeOutput(output_type, strict=True) if spec.startswith(("groq:", "openrouter:")) and self._models[spec].profile.supports_json_schema_output else output_type
+                if spec.startswith("openrouter:") and uses_prompted_output(spec.split(":", 1)[1]):
+                    output = PromptedOutput(output_type)
                 agent = Agent(self._models[spec], output_type=output, system_prompt=self._prompts[task], retries=1)
                 try:
                     result = await agent.run(prompt)

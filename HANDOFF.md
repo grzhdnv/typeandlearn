@@ -6,18 +6,24 @@ results before changing routing. The user replaced the management key with an
 inference key; authentication is no longer blocked. Preserve unrelated `opencode.json`.
 
 - Ultra 550B and Dots 280B: 7/7 final typed tasks each, first attempts, reasoning off.
-- Ultra is the better free challenger in this sample; Dots made more hint errors.
+- MiniMax M3.1 Flash was added at the user's suggestion. Its prompted JSON path
+  passed 7/7 at low (mandatory) reasoning, 2.14 s median, 9,012 tokens / $0.
+  It is now the leading free challenger in this small sample; Ultra is an alternative.
+  MiniMax tool-output probes failed nested-array validation; use JSON mode, not tools.
+- MiniMax had one unavailable UI hint (`¿Dónde`, a UI punctuation issue) across 85
+  word positions, versus Ultra's three across 82. Semantic/CEFR checks still need review.
 - Super 120B: 7 upstream 404s; a fresh seven-case retry after user API-key
   setting edits also returned Nvidia 404s. Key preflight succeeded; retry cost $0.
-- Final costs: $0, 15,010 reported tokens. All probes together: $0, 45,980 returned
+- Final comparison costs: $0; original three-model run 15,010 tokens, MiniMax 9,012.
+  All probes together: $0, 71,424 returned
   tokens plus one interrupted call retaining a 3,477-token reservation.
 - Groq/DeepSeek defaults remain unchanged. Review endpoint data handling and enforce
-  hint coverage/normalization before promoting Ultra to automatic fallback.
+  hint coverage/normalization before promoting MiniMax/Ultra to automatic fallback.
 - Regular app defaults stay 16 RPM / 40 RPD for OpenRouter. Final evaluation only
   used 100 RPD / 150,000 owner tokens to include earlier shared benchmark history;
   final account preflight reported a 1,000/day free allowance. No paid routing.
 
-Verified: `npm run check` (91 backend tests, 27 frontend tests, lint/types/build).
+Verified: `npm run check` (92 backend tests, 27 frontend tests, lint/types/build).
 21 Chromium tests also passed earlier in this implementation session. Existing
 SQLite ResourceWarnings remain. Offline checks must blank all three provider keys;
 Playwright already does this. No dependencies were installed.

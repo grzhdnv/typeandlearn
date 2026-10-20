@@ -180,6 +180,7 @@ class LlmProviderFallbackTests(unittest.TestCase):
                 self.assertNotIn("authorization", request.headers)
                 return httpx.Response(200, json={"data": [{"id": model,
                     "pricing": pricing if pricing is not None else {"prompt": "0", "completion": "0"},
+                    "reasoning": {"mandatory": model.startswith("minimax/"), "supported_efforts": ["high", "low"]},
                     "supported_parameters": ["structured_outputs", "response_format", "tools", "tool_choice", "reasoning"]}]})
             self.requests.append(request)
             return handler(request)
@@ -257,3 +258,27 @@ class LlmProviderFallbackTests(unittest.TestCase):
             with self.assertRaises(ModelHTTPError):
                 service.extract_metadata("Test")
         self.assertEqual(len(self.requests), 1)
+
+    def test_minimax_mandatory_reasoning_uses_low_effort_json_for_all_tasks(self):
+        outputs = [
+            {"title": "Test", "difficulty_level": "A1", "language": "German"},
+            {"words": [{"word": "Hund", "count": 2}]},
+            {"translation": "The dog runs.", "translation_hints": []},
+            {"sentences": [{"sentence": "Der Hund läuft.", "translation": "The dog runs.", "translation_hints": []}] * 5},
+        ]
+        def handler(request):
+            body = json.loads(request.content)
+            self.assertEqual(body["reasoning"], {"effort": "low"})
+            self.assertNotIn("tools", body)
+            self.assertNotIn("tool_choice", body)
+            self.assertEqual(body["response_format"], {"type": "json_object"})
+            self.assertFalse(body["provider"]["allow_fallbacks"])
+            response = self.success(request).json()
+            response["choices"][0]["message"] = {"role": "assistant", "content": json.dumps(outputs[len(self.requests) - 1])}
+            return httpx.Response(200, json=response)
+        service = self.openrouter_service(handler, "minimax/minimax-m3.1-flash:free")
+        service.extract_metadata("Test")
+        service.filter_meaningful_words([{"word": "Hund", "count": 2}], "German")
+        asyncio.run(service.translate_sentence_async("Test", "", "Der Hund läuft."))
+        asyncio.run(service.generate_practice_sentences_async(["Hund"]))
+        self.assertEqual(len(self.requests), 4)

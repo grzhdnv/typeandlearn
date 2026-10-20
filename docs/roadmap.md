@@ -14,7 +14,7 @@ checkmarks in the historical issue map do not establish production readiness.
   controls, saved original-text completion progress, results, and practice history.
 - Provider routing, owner scoping, backend JWT validation, analytics, and export/delete
   implementations with automated backend coverage.
-- Ruff, Python type checking, frontend type checking and build, 91 backend tests,
+- Ruff, Python type checking, frontend type checking and build, 92 backend tests,
   27 frontend unit tests, and 21 isolated Chromium browser regressions.
 - Live synthetic comparison across five languages, metadata, exercises, and a real
   DeepSeek fallback flow; shared quotas and approved $0.50/day and $5/month limits.
@@ -25,8 +25,10 @@ checkmarks in the historical issue map do not establish production readiness.
 - [x] Compare Ultra 550B, Dots 280B, and Super 120B on synthetic fixtures. Ultra and
   Dots passed 7/7 with reasoning off; Super returned upstream 404s. See
   `openrouter-evaluation-2026-10-20.md`. Groq/DeepSeek defaults remain unchanged.
+- [x] Compare MiniMax M3.1 Flash via prompted JSON output: 7/7 with mandatory low
+  reasoning, better hint lookup coverage than Ultra in this small sample.
 - [ ] Validate hint coverage/normalization and provider data handling before
-  promoting Ultra to automatic fallback.
+  promoting MiniMax or Ultra to automatic fallback.
 
 ## Next: reliable processing and realistic practice
 

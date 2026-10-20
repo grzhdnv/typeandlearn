@@ -25,7 +25,7 @@ from core.database import engine, init_db
 from services.llm_service import LlmService
 from services.provider_governor import ProviderGovernor
 from models.providers import ProviderCallRecord
-from services.openrouter_policy import validate_free_model
+from services.openrouter_policy import reasoning_settings, uses_native_output, uses_prompted_output, validate_free_model
 from pydantic_ai.exceptions import ModelHTTPError
 
 EXAMPLES = [
@@ -43,6 +43,8 @@ OPENROUTER_MODELS = [
     "openrouter:nvidia/nemotron-3-super-120b-a12b:free",
 ]
 
+OPENROUTER_EXTRA_MODELS = ["openrouter:minimax/minimax-m3.1-flash:free"]
+
 
 async def preflight_openrouter(models: list[str], output_path: Path, settings: Settings) -> None:
     key = os.getenv("OPENROUTER_API_KEY")
@@ -51,7 +53,7 @@ async def preflight_openrouter(models: list[str], output_path: Path, settings: S
     async with httpx.AsyncClient(timeout=30) as client:
         catalog_response = await client.get("https://openrouter.ai/api/v1/models")
         catalog_response.raise_for_status()
-        entries = [validate_free_model(spec.split(":", 1)[1], catalog_response.json(), native="nemotron-3-ultra-" not in spec) for spec in models]
+        entries = [validate_free_model(spec.split(":", 1)[1], catalog_response.json(), native=uses_native_output(spec.split(":", 1)[1]), prompted=uses_prompted_output(spec.split(":", 1)[1])) for spec in models]
         key_response = await client.get("https://openrouter.ai/api/v1/key", headers={"Authorization": f"Bearer {key}"})
         key_response.raise_for_status()
         data = key_response.json()["data"]
@@ -60,7 +62,7 @@ async def preflight_openrouter(models: list[str], output_path: Path, settings: S
         quota = data.get("free_model_daily_requests")
         evidence = {"checked_at_unix": time.time(), "models": entries, "free_model_daily_requests": quota,
                     "is_free_tier": data.get("is_free_tier"),
-                    "configuration": {"reasoning_enabled": False, "max_output_tokens": settings.llm_max_output_tokens,
+                    "configuration": {"reasoning_by_model": {spec: reasoning_settings(spec.split(":", 1)[1]) for spec in models}, "max_output_tokens": settings.llm_max_output_tokens,
                                       "openrouter_rpd": settings.openrouter_rpd, "openrouter_rpm": settings.openrouter_rpm,
                                       "daily_token_limit": settings.daily_token_limit}}
         output_path.with_suffix(".preflight.json").write_text(json.dumps(evidence, ensure_ascii=False, indent=2) + "\n")
@@ -178,7 +180,7 @@ async def evaluate(models: list[str], output_path: Path, resume: bool = False) -
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--model", action="append", choices=MODELS + OPENROUTER_MODELS)
+    parser.add_argument("--model", action="append", choices=MODELS + OPENROUTER_MODELS + OPENROUTER_EXTRA_MODELS)
     parser.add_argument("--resume", action="store_true", help="Keep successful cases in the output file and retry unfinished cases once; preserve prior failures")
     parser.add_argument("--openrouter-free", action="store_true", help="Compare only the explicit free OpenRouter shortlist; no paid fallback")
     parser.add_argument("--output", type=Path, default=Path("/private/tmp/typeandlearn-provider-evaluation.json"))

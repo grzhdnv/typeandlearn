@@ -1,15 +1,18 @@
 # OpenRouter free-model evaluation — 20 October 2026
 
 Keep Groq GPT-OSS 120B as primary and capped DeepSeek Flash as fallback.
-Nemotron Ultra 550B is a useful optional free challenger, but this sample does not
-justify promoting it before hint validation. Dots was faster but made more hint
-errors. Nemotron Super's current free endpoint returned upstream 404 errors.
+MiniMax M3.1 Flash in JSON mode is now the leading free challenger in this small
+sample; Ultra 550B remains a useful alternative. Neither is promoted before broader
+hint validation and provider-policy review. Dots made more hint errors. Super's
+current free endpoint returned upstream 404 errors.
 
-## Final comparison: reasoning disabled
+## Final comparison
 
 Each model received the same five synthetic translations (German, French, Italian,
 Spanish, English), French metadata, and a request for five Spanish exercises as the
 [19 October baseline](provider-evaluation-2026-10-19.md). No library text was sent.
+Ultra/Dots/Super used reasoning disabled; MiniMax requires reasoning and used
+its lowest advertised effort (`low`) with JSON mode and local Pydantic validation.
 All model IDs were checked against the live catalog for zero prices immediately
 before inference. Paid model/provider fallback and SDK retry stacks were disabled;
 one application schema repair remained available and separately accounted.
@@ -19,8 +22,9 @@ one application schema repair remained available and separately accounted.
 | `nvidia/nemotron-3-ultra-550b-a55b:free` | 550B / 55B | 7/7, first attempt | 3.83 s | 5; 25.29 s | 9,053 / $0 |
 | `dots-studio/dots-3-note-preview:free` | 280B / 16B | 7/7, first attempt | 2.42 s | 5; 9.55 s | 5,957 / $0 |
 | `nvidia/nemotron-3-super-120b-a12b:free` | 120B / 12B | 0/7: upstream 404 | Not comparable | None | 0 / $0 |
+| `minimax/minimax-m3.1-flash:free` | Not specified in catalog | 7/7, first attempt, JSON mode | 2.14 s | 5; 6.10 s | 9,012 / $0 |
 
-The final run made 21 dispatched requests, including seven nonbillable 404s;
+The original three-model final run made 21 dispatched requests, including seven nonbillable 404s;
 successful replies used **15,010 reported tokens at $0**. No quota wait occurred
 in this final run. Task times include public catalog preflight and local dispatch,
 so they are not pure model latency. Seven cases per model are a spot check, not a
@@ -70,6 +74,62 @@ and [retry preflight](evaluations/openrouter-2026-10-20-super-retry.preflight.js
 The repeated result leaves Super unavailable under the current routing/settings;
 it does not isolate which upstream or account setting is responsible.
 
+## MiniMax M3.1 Flash follow-up
+
+At the user's suggestion, MiniMax's explicit free endpoint was tested on the same
+seven synthetic cases with the same 2,048-token output cap. The catalog advertises
+mandatory reasoning; this candidate uses `reasoning.effort=low` rather than the
+reasoning-disabled policy used for Ultra/Dots. No provider/application paid fallback
+was enabled. The free-only price checks and shared governor apply unchanged.
+
+Endpoint discovery exposed two output-path differences. MiniMax supports only
+`tool_choice=auto`; `required` produced seven routing 404s before inference. After
+adapting automatic tool choice, four of seven tasks passed. German/Spanish replies
+wrapped word arrays in `{"item": ...}` objects; repair did not correct them. The
+exercise response mixed incompatible objects/strings, and its verbose repair
+request exceeded the existing 32,000-byte input guard. These failures are preserved
+in the MiniMax probe artifacts rather than silently normalized.
+
+MiniMax supports JSON output without server-enforced JSON Schema. Using the SDK's
+prompted JSON mode (`response_format.type=json_object`) with the explicit schema
+in the prompt and local Pydantic validation passed **7/7 cases on first attempts**.
+Median time was **2.14 s**, exercises took **6.10 s**, and seven requests used
+**9,012 returned tokens at $0**. The response schemas and one-repair limit remained
+the same. This is a separately configured output path, not evidence that its tool
+calling is reliable for this application's nested schemas.
+
+All five full translations preserved the main meaning; apostrophes and idiomatic
+word groups generally matched the UI better than Ultra. All five generated Spanish
+exercises were coherent, with separate hint word entries. The mechanical audit
+found **one unavailable hint across 85 positions**: the source word `¿Dónde` has a
+correct `Dónde` hint, but the current UI's punctuation cleaner omits inverted
+question marks. This is a UI normalization defect. Mechanical coverage does not
+establish complete semantic quality: the French `j'avais su` hint omitted the
+explicit “I,” and the French counterfactual metadata was rated A1, which needs
+review rather than acceptance as a validated CEFR estimate.
+
+MiniMax is a stronger candidate for the next broader acceptance pass in this spot
+check: faster than Ultra, with fewer unavailable hints. We have not yet established
+its larger-sample reliability, real-text pipeline behavior, or provider data-policy
+suitability. Groq/DeepSeek defaults remain unchanged.
+
+- [Final MiniMax outputs and response diagnostics](evaluations/openrouter-2026-10-20-minimax-final.json)
+- [Final MiniMax catalog/quota/config snapshot](evaluations/openrouter-2026-10-20-minimax-final.preflight.json)
+- [MiniMax UI hint audit](evaluations/openrouter-2026-10-20-minimax-hint-audit.json)
+- [Automatic-tool output probe](evaluations/openrouter-2026-10-20-minimax-tools.json)
+- [Required-tool-choice routing failures](evaluations/openrouter-2026-10-20-minimax-tool-choice-probe.json)
+
+Reproduce the final MiniMax test with a configured regular key:
+
+```bash
+OPENROUTER_RPD=100 DAILY_TOKEN_LIMIT=150000 .venv/bin/python scripts/evaluate_providers.py \
+  --model openrouter:minimax/minimax-m3.1-flash:free \
+  --output /private/tmp/typeandlearn-openrouter-minimax.json
+```
+
+The higher run-only limits include previous synthetic benchmark history. App
+defaults remain 16 RPM / 40 RPD and 50,000 tokens/owner/day.
+
 ## Why earlier probes failed
 
 The initial key was a management key. `/api/v1/key` returned 200, but all 21 cases
@@ -95,8 +155,8 @@ reported 18 used / 1,000 allowed free requests. Earlier key snapshots reported a
 purchase or account setting was performed by the agent.
 
 Across all OpenRouter attempts in this session, including authentication failures,
-probes, and interruption, the shared ledger contained 68 calls after the Super retry: 31 with returned
-usage, 36 failed without usage, and one unknown. Returned usage totaled **45,980
+probes, and interruption, the shared ledger contained 91 calls after the Super retry and MiniMax follow-up: 47 with returned
+usage, 43 failed without usage, and one unknown. Returned usage totaled **71,424
 tokens at $0**; the unknown call retains a 3,477-token reservation. Final-run totals
 above exclude these earlier probes. Raw failures remain available in the matching
 `openrouter-2026-10-20-*` files under `evaluations/`.
@@ -105,10 +165,11 @@ above exclude these earlier probes. Raw failures remain available in the matchin
 
 The opt-in adapter reuses the existing SDK, transport, and database governor.
 It requires explicit `:free` IDs, zero catalog prices, supported output parameters,
-and optional reasoning. Every inference checks the public catalog. Requests cap
+and a supported explicit reasoning policy. Every inference checks the public catalog. Requests cap
 prompt, completion, and per-request prices at zero, disable provider fallback,
-disable reasoning, and require parameter support. Ultra uses typed tool output;
-Dots and Super use native strict JSON schema. Every inference/repair reserves
+use model-specific reasoning controls, and require parameter support. Ultra uses typed
+tool output; Dots and Super use native strict JSON schema; MiniMax uses prompted
+JSON output with local validation. Every inference/repair reserves
 capacity and reconciles returned models, usage, and reported cost.
 
 OpenRouter's application defaults remain **16 RPM / 40 RPD**, with bounded waits,
@@ -133,13 +194,15 @@ comparisons remain opt-in and never run in CI.
 ## Data handling and recommendation
 
 OpenRouter prompt/response retention is opt-in, while request metadata is retained.
-Underlying free-provider retention/training policies vary. The comparison used
+Underlying free-provider retention/training policies vary. Ultra's endpoint page
+explicitly excludes confidential/personal submissions and describes logging for
+security and product improvement. MiniMax's provider policy still needs review. The comparison used
 synthetic content and existing account privacy settings; it did not change toggles
 or clear these providers for personal learning texts.
 
-Ultra deserves the next optional free-fallback experiment after Groq, provided
-provider data handling is acceptable and hint validation/normalization is added.
-It does not show a quality or speed advantage over the working Groq baseline in
+MiniMax and Ultra deserve the next optional free-fallback acceptance pass after Groq,
+provided provider data handling is acceptable and hint validation/normalization is added.
+Neither has established a quality or speed advantage over the working Groq baseline in
 this small sample. Dots' hint errors make it a weaker learning-app choice despite
 its lower latency. Super should remain out of automatic routing until its endpoint
 works. Current default routing stays unchanged.
@@ -147,13 +210,15 @@ works. Current default routing stays unchanged.
 ## Verification
 
 `npm run check` uses isolated SQLite and blank Groq, DeepSeek, and OpenRouter keys:
-Ruff, Pyright, compilation, 91 backend tests, frontend typecheck/build, and 27 frontend
+Ruff, Pyright, compilation, 92 backend tests, frontend typecheck/build, and 27 frontend
 tests. All 21 isolated Chromium tests passed earlier in this implementation session.
 Existing SQLite unclosed-connection ResourceWarnings remain. PostgreSQL concurrency
 and production acceptance remain unverified.
 
 ## Official sources checked
 
+- [MiniMax model and JSON output capabilities](https://openrouter.ai/minimax/minimax-m3.1-flash:free)
+- [Ultra endpoint data-handling terms](https://openrouter.ai/nvidia/nemotron-3-ultra-550b-a55b:free)
 - [Live model catalog](https://openrouter.ai/api/v1/models)
 - [Pricing and free-tier limits](https://openrouter.ai/pricing)
 - [Limits and quota endpoint](https://openrouter.ai/docs/api_reference/limits)
