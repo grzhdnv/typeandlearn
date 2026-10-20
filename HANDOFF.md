@@ -1,3 +1,110 @@
+# Resume here — session handoff, 20 October 2026
+
+The user is stopping for now and will continue in a new session. No automation,
+new chat, deployment, or push was requested. Completed implementation is committed
+locally; the remaining work is acceptance and quality, not finishing today's code.
+
+## Checkout and first reads
+
+- Project: `/Users/mgrzhdnv/Documents/dev/typeandlearn` (independent Git repository).
+  Shared hub: `/Users/mgrzhdnv/ai`; its dashboard already matches the README.
+- Branch: `codex/restore-local-flow`. Latest implementation: `3b52632`
+  (`feat: prepare uploaded texts asynchronously through durable jobs`). Queue fix:
+  `30aaed7`; hints/provider acceptance: `e3e2bcd`; activation documentation: `d6a15e9`.
+  This handoff is a subsequent documentation commit. Do not assume an upstream or
+  that this branch has been pushed. Inspect status/remotes and fetch before coding;
+  preserve local work and use fast-forward-only synchronization where applicable.
+- The only project untracked file at handoff is unrelated `opencode.json`: leave it
+  alone. Never print or commit `.env`, provider keys, personal learning data, or logs
+  containing content. Outer-hub untracked outputs are also unrelated.
+- Read `README.md`, `.github/copilot-instructions.md`,
+  `docs/intake-acceptance-2026-10-20.md`, `docs/queue-acceptance-2026-10-20.md`,
+  ADR-0003 and ADR-0005, then `docs/roadmap.md`.
+- Use the existing locked dependencies and stable toolchain. Do not install Docker,
+  PostgreSQL, packages, or substitute tools merely because a capability is absent.
+
+## Current behavior to preserve
+
+- Upload commits source/options/job before any NLP or provider call. The same
+  durable consumer performs preparation, metadata, filtering, translations and drills.
+- Local API starts one embedded worker by default. Dedicated-worker deployments use
+  `EMBEDDED_WORKER_ENABLED=false`; Docker Compose already selects that arrangement.
+- Explicit language lets local sentence preparation finish before optional metadata
+  waits, enabling original practice early. Automatic language detection happens in
+  the worker; offline upload still requires an explicit supported language.
+- Source preview/preparation state covers the period before sentences exist. Missing
+  models/detection failures retain source and actionable errors. Retries preserve
+  sentence IDs, boundaries, progress, and explicit user metadata edits.
+- Lease claims are serialized on SQLite; PostgreSQL uses row/advisory locks. Unique
+  per-attempt tokens protect job completion/failure, heartbeat renews active work,
+  and final crashed attempts dead-letter. Recovery is **at least once**; lease checks
+  around persistence are cooperative, not transactional fencing of every write or
+  an exactly-once guarantee for external provider requests.
+- Migration head is `0006_durable_intake`, applied to the local development database.
+  Its downgrade retains nullable source/options columns and refuses to strand
+  source-only uploads. Do not force rollback or delete sources to bypass this guard.
+- Preserve typing behavior: pause after completion, Enter advances, brackets navigate,
+  incomplete sessions resume, completed sessions restart; no detailed mistake review.
+
+## Approved providers and scope
+
+- User explicitly approved local **Groq GPT-OSS 120B → OpenRouter MiniMax M3.1 Flash
+  `:free` → DeepSeek Flash**, after disclosure that MiniMax may use inputs/outputs
+  for service improvement. That approval persists; do not ask again just to resume.
+- Local free OpenRouter limits: 16 RPM / 800 RPD, below the verified 1,000-RPD tier.
+  DeepSeek ceilings remain **$0.50 per UTC day / $5 per UTC month**. Repository
+  defaults remain Groq/DeepSeek; local `.env` activates the extra free step.
+- Cache/prompt version: `v3-validated-hints`; output limits 2,048 generally / 4,096
+  for drills. Free MiniMax uses prompted JSON and mandatory low reasoning.
+- Live benchmarks use synthetic content only and the real shared provider ledger;
+  never reset accounting or submit personal library content as a benchmark. The
+  five-language MiniMax acceptance report is already complete; no repeat is needed.
+- Jev is explicitly deferred. CEFR labels and exercise naturalness are provisional.
+
+## Verification and local runtime
+
+- Latest full `npm run check`: **118 backend / 32 frontend tests**, Ruff, Pyright,
+  compilation, frontend types/build all passed. Latest Chromium suite: **28 passed**.
+- Real isolated Uvicorn API plus two CLI workers passed: one claim, background NLP,
+  truthful offline enrichment failure, original preservation, clean SIGTERM exits.
+- Existing SQLite unclosed-connection ResourceWarnings remain a separate finding.
+- Development API/frontend were healthy on ports 8000/3000 at the end of implementation.
+  Check the ports and health again in a new session; do not start duplicate servers
+  or assume old process/session IDs remain valid. Start with `npm run dev` if needed.
+- Offline check example (from the project root):
+
+```bash
+qa_dir=$(mktemp -d /private/tmp/typeandlearn-check.XXXXXX)
+DATABASE_URL="sqlite:///$qa_dir/check.sqlite" GROQ_API_KEY= DEEPSEEK_API_KEY= OPENROUTER_API_KEY= EMBEDDED_WORKER_ENABLED=false npm run check
+npm run test:e2e
+```
+
+Browser configuration supplies temporary services/databases and blank keys itself.
+Never run general checks against the personal development database or active keys.
+
+## Next work, in order
+
+1. Verify live PostgreSQL migrations, queue concurrency, and recovery using an
+   isolated database and existing approved runtime. PostgreSQL/Docker was not
+   available for live acceptance in this session; SQLite results do not establish it.
+   Inspect staging/container configuration and available tools first. Cover populated
+   upgrade, source-preserving rollback, API/worker concurrent startup migrations,
+   multiple claimers including duplicate jobs for one text, heartbeat/expired leases,
+   retry budgets, another owner's queued raw source, and crash/restart checkpoints.
+   Keep real provider keys disabled and replace external calls with synthetic fixtures.
+   Do not deploy a hosted service or change the toolchain silently.
+2. Improve CEFR grading and generated exercise naturalness using labeled synthetic
+   examples and an explicit acceptance rubric. Mechanical hints/schema checks already
+   pass; they do not prove pedagogical quality. See the MiniMax acceptance report.
+3. Continue realistic multilingual/mobile/IME/accessibility coverage and private-beta
+   staging/security/recovery work from the roadmap. Update README/dashboard together
+   if status or next actions change.
+
+The sections below preserve completed milestones and older context. Their test
+counts and future-task descriptions are historical; this resume section takes priority.
+
+---
+
 # Background intake update — 20 October 2026
 
 Source-first asynchronous intake is complete. Read
