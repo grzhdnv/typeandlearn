@@ -115,18 +115,3 @@ Enter to continue” prompt appears. There is no timer; Enter loads the next sen
 with a fresh attempt and typing focus. Results appear after the final sentence. Navigation shortcuts reset the newly selected attempt without
 marking skipped sentences complete. Held bracket keys do not repeat navigation;
 shortcuts do not intercept other editable fields or IME composition.
-
-
-## 8. Mistake review
-
-Completed sentences show the expected sentence and the final typed sentence, with
-remaining mismatches highlighted. A character-level table includes every incorrect
-attempt, even those removed with Backspace or word deletion. Positions count Unicode
-graphemes. Attempts are labeled Corrected, Still present, or Retried.
-
-The user's practice keyboard is US QWERTY. Approximate key-center distances separate
-nearby and farther keys. Case, same-key Shift punctuation, accents, whitespace, and
-unmapped characters receive separate comparisons. These are explanations of the
-character difference, not proof of the user's intent or the physical key pressed.
-The same breakdown is available in final results. Mistake detail is local to the
-current attempt; saved history continues to contain the existing session summaries.
