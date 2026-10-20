@@ -11,6 +11,8 @@ import {
   createInitialTypingState,
   typingReducer,
 } from "../core/reducer.ts";
+import { MistakeReview } from "./MistakeReview";
+import { buildSentenceReview, type SentenceReview } from "../core/review.ts";
 import { computeSessionMetrics } from "../core/statistics.ts";
 import type {
   TypingAction,
@@ -27,7 +29,7 @@ interface TypingInterfaceProps {
   onContinue?: () => void;
   continueLabel?: string;
   onNavigate?: (direction: "previous" | "next") => void;
-  onComplete?: (metrics: TypingMetrics) => void;
+  onComplete?: (metrics: TypingMetrics, review: SentenceReview) => void;
   onMetricsUpdate?: (metrics: TypingMetrics | null) => void;
 }
 
@@ -82,7 +84,7 @@ export const TypingInterface: Component<TypingInterfaceProps> = (props) => {
     const metrics = computeSessionMetrics(next);
     props.onMetricsUpdate?.(action.type === "RESTART" ? null : metrics);
     if (next.status === "completed" && previous.status !== "completed") {
-      props.onComplete?.(metrics);
+      props.onComplete?.(metrics, buildSentenceReview(next));
     }
   };
 
@@ -350,6 +352,10 @@ export const TypingInterface: Component<TypingInterfaceProps> = (props) => {
           />
         </div>
       </div>
+
+      <Show when={typingState().status === "completed" && !props.disabled}>
+        <MistakeReview review={buildSentenceReview(typingState())} />
+      </Show>
 
       {/* Contextual Hints */}
       <div class="mt-6 flex flex-col md:flex-row justify-between items-center gap-4">

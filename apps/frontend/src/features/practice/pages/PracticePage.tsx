@@ -3,6 +3,8 @@ import { useNavigate, useParams } from '@solidjs/router';
 import { fetchStory, updateProgress, resetProgress, regenerateTopWords, retryEnrichment } from '../../../features/texts/api/textsApi';
 import { recordPracticeSession } from '../../../features/analytics/api/analyticsApi';
 import { StatusBadge } from '../../../features/texts/components/StatusBadge';
+import { MistakeReview } from "../../../features/typing/components/MistakeReview";
+import type { SentenceReview } from "../../../features/typing/core/review.ts";
 import { TypingInterface } from '../../../features/typing/components/TypingInterface';
 import { HintGroup } from '../../../shared/types/contracts';
 import type { TypingMetrics } from '../../../features/typing/core/types.ts';
@@ -25,6 +27,7 @@ const PracticePage: Component = () => {
   const [originalIndex, setOriginalIndex] = createSignal(0);
   const [generatedIndex, setGeneratedIndex] = createSignal(0);
   const [liveMetrics, setLiveMetrics] = createSignal<TypingMetrics | null>(null);
+  const [completedReview, setCompletedReview] = createSignal<SentenceReview | null>(null);
   const [completedMetrics, setCompletedMetrics] = createSignal<TypingMetrics | null>(null);
   const [srAnnouncement, setSrAnnouncement] = createSignal("");
   const [attempt, setAttempt] = createSignal(0);
@@ -131,7 +134,8 @@ const PracticePage: Component = () => {
     }
   };
 
-  const handleSentenceComplete = (metrics: TypingMetrics) => {
+  const handleSentenceComplete = (metrics: TypingMetrics, review: SentenceReview) => {
+    setCompletedReview(review);
     setSrAnnouncement(
       `Drill completed. Speed: ${metrics.netWpm} words per minute. Accuracy: ${metrics.accuracy} percent.`
     );
@@ -565,7 +569,7 @@ const PracticePage: Component = () => {
             aria-modal="true"
             aria-labelledby="results-modal-title"
           >
-            <div class="bg-surface border-2 border-primary max-w-md w-full p-8 shadow-2xl space-y-6">
+            <div class="bg-surface border-2 border-primary max-w-2xl w-full max-h-[calc(100dvh-2rem)] overflow-y-auto p-4 sm:p-8 shadow-2xl space-y-6">
               <div class="space-y-1">
                 <span class="font-mono-label text-mono-label text-primary uppercase tracking-widest">
                   Drill Completed
@@ -591,6 +595,8 @@ const PracticePage: Component = () => {
                   <div class="font-mono-label text-lg text-error" id="results-mistakes">{metrics().mistakeCount}</div>
                 </div>
               </div>
+
+              <Show when={completedReview()}>{review => <MistakeReview review={review()} />}</Show>
 
               <div class="flex gap-4">
                 <button

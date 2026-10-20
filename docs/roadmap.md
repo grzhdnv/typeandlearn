@@ -12,10 +12,12 @@ checkmarks in the historical issue map do not establish production readiness.
 - Library browsing, metadata save/reload, deletion, and truthful enrichment failures.
 - Original and generated typing practice, sentence-specific restart/reset, keyboard
   controls, saved original-text resume positions, results, and practice history.
+- Mistake review with expected/typed characters, corrected-attempt history, and
+  approximate US QWERTY proximity, case, Shift, and accent comparisons.
 - Provider routing, owner scoping, backend JWT validation, analytics, and export/delete
   implementations with automated backend coverage.
 - Ruff, Python type checking, frontend type checking and build, 67 backend tests,
-  27 frontend unit tests, and 21 isolated Chromium browser regressions.
+  37 frontend unit tests, and 24 isolated Chromium browser regressions.
 - Live provider smoke check: synthetic German metadata plus two translations.
 
 ## Next: reliable processing and realistic practice
