@@ -34,10 +34,7 @@ const PracticePage: Component = () => {
     const story = storyData();
     if (story && story.id !== lastStoryId) {
       lastStoryId = story.id;
-      const completed = new Set(story.completed_sentence_indices ?? []);
-      const firstIncomplete = Array.from({ length: story.total_sentences }, (_, i) => i)
-        .find(i => !completed.has(i));
-      setOriginalIndex(firstIncomplete ?? Math.max(0, story.total_sentences - 1));
+      setOriginalIndex(0);
       setGeneratedIndex(0);
       setCompletedMetrics(null);
       setLiveMetrics(null);

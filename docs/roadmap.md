@@ -11,7 +11,7 @@ checkmarks in the historical issue map do not establish production readiness.
 - Text intake with optional AI metadata and explicit language selection for offline use.
 - Library browsing, metadata save/reload, deletion, and truthful enrichment failures.
 - Original and generated typing practice, sentence-specific restart/reset, keyboard
-  controls, saved original-text resume positions, results, and practice history.
+  controls, saved original-text completion progress, results, and practice history.
 - Provider routing, owner scoping, backend JWT validation, analytics, and export/delete
   implementations with automated backend coverage.
 - Ruff, Python type checking, frontend type checking and build, 67 backend tests,

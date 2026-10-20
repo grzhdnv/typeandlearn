@@ -127,19 +127,27 @@ test("generated drills do not mark original sentences completed", async ({ page 
 });
 
 
-test("reopening a story resumes the first unfinished original sentence", async ({ page }) => {
-  await page.route(/\/api\/texts\/1$/, route => route.fulfill({ json: { data: {
-    ...inProgressStory,
-    status: "processed", enrichment_stage: "completed", total_sentences: 2,
-    completed_sentences: 1, completed_sentence_indices: [0],
-    original_paragraphs: [{ index: 0, sentences: [
-      { index: 0, text: "First.", translation: "", translation_hints: [] },
-      { index: 1, text: "Second.", translation: "", translation_hints: [] },
-    ] }],
-  } } }));
-  await page.goto("/practice/1");
-  await expect(page.locator("#typing-canvas")).toContainText("Second.");
-  await expect(page.getByText("Sentence 2 of 2", { exact: true })).toBeVisible();
+test("opening practice always starts at sentence one regardless of saved progress", async ({ page }) => {
+  for (const completed of [[0], [0, 1]]) {
+    await page.route(/\/api\/texts\/1$/, route => route.fulfill({ json: { data: {
+      ...inProgressStory,
+      status: "processed", enrichment_stage: "completed", total_sentences: 2,
+      completed_sentences: completed.length, completed_sentence_indices: completed,
+      original_paragraphs: [{ index: 0, sentences: [
+        { index: 0, text: "First.", translation: "", translation_hints: [] },
+        { index: 1, text: "Second.", translation: "", translation_hints: [] },
+      ] }],
+    } } }));
+    await page.goto("/practice/1");
+    await expect(page.locator("#typing-canvas")).toContainText("First.");
+    await expect(page.getByText("Sentence 1 of 2", { exact: true })).toBeVisible();
+    await page.locator("#typing-hidden-input").focus();
+    await page.keyboard.press("]");
+    await expect(page.locator("#typing-canvas")).toContainText("Second.");
+    await page.reload();
+    await expect(page.locator("#typing-canvas")).toContainText("First.");
+    await expect(page.getByText("Sentence 1 of 2", { exact: true })).toBeVisible();
+  }
 });
 
 test("backend failures leave a usable error page", async ({ page }) => {
