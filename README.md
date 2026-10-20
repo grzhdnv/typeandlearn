@@ -10,8 +10,8 @@ translations, and practice-sentence generation.
 Active local v2 prototype. Local repairs verified on 19 October 2026: text intake,
 metadata editing, original and generated practice navigation, reset, saved progress,
 results, and history. The current checks cover 81 backend tests, 27 frontend unit
-tests, and 21 Chromium browser regressions. A bounded live check also verified metadata
-and two translations through the configured providers.
+tests, and 21 Chromium browser regressions. A live synthetic comparison verified
+five languages, metadata, generated exercises, and real DeepSeek fallback.
 
 Core library and original-text practice work without provider credentials when a
 supported language is selected during intake. Automatic metadata, translations,
@@ -25,8 +25,10 @@ builds and smoke-tests containers without deploying a hosted service. Private-be
 security, cross-browser/accessibility, recovery, and deployment acceptance remain
 unfinished. See [the roadmap](docs/roadmap.md).
 
-Next: reconcile API/worker job dispatch, expand realistic multilingual browser
-coverage, and verify staging and recovery before considering private beta.
+Next session: test OpenRouter free models and compare them with the working
+Groq/DeepSeek baseline. Read [the session handoff](HANDOFF.md) first. Then reconcile
+API/worker job dispatch, expand realistic multilingual browser coverage, and verify
+staging and recovery before considering private beta.
 
 ## Repository layout
 
