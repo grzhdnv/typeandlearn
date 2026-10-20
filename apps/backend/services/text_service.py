@@ -43,6 +43,15 @@ class TextService:
         self._daily_token_limit = daily_token_limit
         self._prompt_version = prompt_version
 
+    @staticmethod
+    def _effective_stage(record: TextRecord) -> str:
+        """Derive the enrichment stage, preferring terminal status over stale stage values."""
+        if record.status in ("processed", "completed"):
+            return "completed"
+        if record.status == "failed":
+            return "failed"
+        return record.enrichment_stage or "queued"
+
     def _build_text_data(
         self,
         record: TextRecord,
@@ -88,9 +97,7 @@ class TextService:
                 )
             )
 
-        stage = record.enrichment_stage
-        if not stage:
-            stage = "completed" if record.status == "processed" else ("failed" if record.status == "failed" else "queued")
+        stage = self._effective_stage(record)
 
         return TextData(
             id=record.id,
@@ -104,6 +111,7 @@ class TextService:
             completed_sentences=record.completed_sentences,
             total_sentences=record.total_sentences,
             estimated_time_minutes=record.estimated_time_minutes,
+            completed_sentence_indices=record.completed_sentence_indices or [],
             original_paragraphs=paragraphs,
             practice_sentences=practice_sentences,
             top_words=top_words or [],
@@ -133,11 +141,13 @@ class TextService:
                 status=record.status,
                 language=record.language,
                 difficulty_level=record.difficulty_level,
+                author=record.author,
+                category=record.category,
                 word_count=record.word_count,
                 completed_sentences=record.completed_sentences,
                 total_sentences=record.total_sentences,
                 estimated_time_minutes=record.estimated_time_minutes,
-                enrichment_stage=record.enrichment_stage or ("completed" if record.status == "processed" else "queued"),
+                enrichment_stage=self._effective_stage(record),
                 error_message=record.error_message,
             ) 
             for record in records
@@ -164,8 +174,8 @@ class TextService:
     def upload(
         self,
         text: str,
-        language: str,
         owner_id: str,
+        language: str | None = None,
         title: str | None = None,
         difficulty_level: str | None = None,
         author: str | None = None,
@@ -173,14 +183,48 @@ class TextService:
         filtering_method: str = "spacy",
     ) -> TextRecord:
         """Generate and persist a new text entry from raw input using local preprocessing."""
+
+        # 1. Infer any missing metadata first; the language selects the preprocessing model
+        final_language = language
+        final_title = title
+        final_difficulty = difficulty_level
+        final_author = author
+        final_category = category
+        if not all((final_language, final_title, final_difficulty, final_author, final_category)):
+            for attempt in range(4):
+                try:
+                    metadata = self._llm.extract_metadata(text)
+                    final_language = final_language or metadata.language
+                    final_title = final_title or metadata.title
+                    final_difficulty = final_difficulty or metadata.difficulty_level
+                    final_author = final_author or metadata.author
+                    final_category = final_category or metadata.category
+                    break
+                except Exception as e:
+                    if "429" in str(e).lower() or "rate limit" in str(e).lower():
+                        if attempt < 3:
+                            time.sleep(2 ** attempt)
+                            continue
+                    print(f"Failed to extract metadata: {e}")
+                    break
+
+        languages = {name.lower(): name for name in ("German", "French", "Italian", "Spanish", "English")}
+        final_language = languages.get((final_language or "").strip().lower())
+        if final_language is None:
+            raise ValueError("Choose German, French, Italian, Spanish, or English when automatic language detection is unavailable.")
+        final_title = final_title or "[Untitled]"
+        final_difficulty = final_difficulty or "Unrated"
+
+        # 2. Preprocess the text locally using spaCy
+        paragraphs_data, word_frequencies = self._preprocessing.process_text(text, final_language, filtering_method)
         
-        # 1. Preprocess the text locally using spaCy
-        paragraphs_data, word_frequencies = self._preprocessing.process_text(text, language, filtering_method)
-        
+        if not any(p["sentences"] for p in paragraphs_data):
+            raise ValueError("Text must contain at least one practiceable sentence")
+
         if filtering_method == "llm":
             for attempt in range(4):
                 try:
-                    filtered_response = self._llm.filter_meaningful_words(word_frequencies, language)
+                    filtered_response = self._llm.filter_meaningful_words(word_frequencies, final_language)
                     word_frequencies = [{"word": fw.word, "count": fw.count} for fw in filtered_response.words]
                     break
                 except Exception as e:
@@ -191,33 +235,6 @@ class TextService:
                     print(f"Failed to filter words via LLM: {e}")
                     # Fallback to spacy logic if LLM fails
                     break
-        
-        # 2. Extract metadata if missing
-        final_title = title
-        final_difficulty = difficulty_level
-        if not final_title or not final_difficulty:
-            for attempt in range(4):
-                try:
-                    metadata = self._llm.extract_metadata(text)
-                    if not final_title:
-                        final_title = f"[{metadata.title}]"
-                    if not final_difficulty:
-                        final_difficulty = metadata.difficulty_level
-                    break
-                except Exception as e:
-                    if "429" in str(e).lower() or "rate limit" in str(e).lower():
-                        if attempt < 3:
-                            time.sleep(2 ** attempt)
-                            continue
-                    print(f"Failed to extract metadata: {e}")
-                    if not final_title:
-                        final_title = "[Untitled]"
-                    if not final_difficulty:
-                        final_difficulty = "Unrated"
-                    break
-
-        final_title = final_title or "[Untitled]"
-        final_difficulty = final_difficulty or "Unrated"
 
         # Calculate basic metrics
         word_count = sum(len(s["text"].split()) for p in paragraphs_data for s in p["sentences"])
@@ -231,10 +248,10 @@ class TextService:
             status="processing",
             enrichment_stage="queued",
             error_message=None,
-            language=language,
+            language=final_language,
             difficulty_level=final_difficulty,
-            author=author,
-            category=category,
+            author=final_author,
+            category=final_category,
             word_count=word_count,
             total_sentences=total_sentences,
             estimated_time_minutes=estimated_time
@@ -271,7 +288,7 @@ class TextService:
         job_payload = {
             "owner_id": owner_id,
             "filtering_method": filtering_method,
-            "language": language,
+            "language": final_language,
         }
 
         if hasattr(self._repository, "save_text_with_job"):
@@ -387,6 +404,8 @@ class TextService:
         if record is None or record.id is None:
             raise IndexError("Text not found")
             
+        if sentence_index < 0 or sentence_index >= record.total_sentences:
+            raise ValueError("Sentence index is outside the original text")
         indices = set(record.completed_sentence_indices or [])
         if sentence_index not in indices:
             indices.add(sentence_index)
@@ -422,6 +441,8 @@ class TextService:
         if record is None or record.id is None:
             raise IndexError("Text not found")
             
+        if payload.title is not None:
+            record.title = payload.title
         if payload.language is not None:
             record.language = payload.language
         if payload.difficulty_level is not None:
@@ -441,6 +462,8 @@ class TextService:
             return
             
         try:
+            if getattr(self._llm, "is_configured", True) is False:
+                raise RuntimeError("AI enrichment is unavailable. Configure a provider key to enable translations and generated drills; original-text practice is available.")
             record.enrichment_stage = "translating"
             record.error_message = None
             self._repository.update_text(record)
@@ -588,6 +611,8 @@ class TextService:
                 await asyncio.gather(*[_translate_and_update(s, idx) for idx, s in enumerate(s_records, start=1)])
 
             asyncio.run(_translate_all())
+            if any(sentence.status != "processed" for sentence in s_records):
+                raise RuntimeError("Some sentences could not be translated. You can retry enrichment or practice the original text.")
 
             # 2. Generate Practice Sentences
             record.enrichment_stage = "generating_practice"
@@ -604,6 +629,7 @@ class TextService:
                     )
 
                 print(f"Generating practice sentences using top {len(top_words)} words: {top_words}")
+                practice_generated = False
                 for attempt in range(3):
                     try:
                         import asyncio
@@ -648,6 +674,7 @@ class TextService:
                                     total_tokens=tot_tokens,
                                     estimated_cost_usd=est_cost,
                                 )
+                        practice_generated = True
                         break # Success
                     except DailyBudgetExceededError:
                         raise
@@ -663,6 +690,9 @@ class TextService:
                 else:
                     print(f"Failed to generate practice sentences for text {text_id}: Max retries exceeded")
                     
+                if not practice_generated:
+                    raise RuntimeError("Practice drills could not be generated. You can retry enrichment; completed translations have been saved.")
+
             # 3. Fetch Dictionary Translations for Top Words
             print("Fetching dictionary translations for top words...")
             def _fetch_dict_translation(freq):

@@ -57,6 +57,7 @@ export type TextData = {
   completed_sentences: number;
   total_sentences: number;
   estimated_time_minutes: number;
+  completed_sentence_indices?: number[];
   original_paragraphs: Paragraph[];
   practice_sentences: PracticeSentence[];
   top_words: TopWord[];
@@ -113,6 +114,7 @@ export type TextResponse = {
 export type UploadResponse = {
   message: string;
   text: string;
+  id?: number;
 };
 
 /**

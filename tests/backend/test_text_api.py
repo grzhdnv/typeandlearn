@@ -47,8 +47,9 @@ class TextApiTests(unittest.TestCase):
         sqlmodel.SQLModel.metadata.create_all(self.engine)
         self.addCleanup(self.engine.dispose)
         llm = mock.Mock(spec=llm_service.LlmService)
+        self.llm = llm
         llm.extract_metadata.return_value = schemas.GeneratedMetadata(
-            title="Test garden", difficulty_level="A1"
+            title="Test garden", difficulty_level="A1", language="German"
         )
         llm.translate_sentence_async = mock.AsyncMock(
             return_value=schemas.SentenceTranslation(
@@ -121,8 +122,11 @@ class TextApiTests(unittest.TestCase):
         titles = self.client.get("/texts/titles").json()["titles"]
         self.assertEqual(titles[0]["completed_sentences"], 2)
 
-        response = self.client.patch(path, json={"category": "Test"})
+        response = self.client.patch(path, json={"category": "Test", "author": "Test author"})
         self.assertEqual(response.json()["data"]["category"], "Test")
+        titles = self.client.get("/texts/titles").json()["titles"]
+        self.assertEqual(titles[0]["author"], "Test author")
+        self.assertEqual(titles[0]["category"], "Test")
         response = self.client.post(f"{path}/reset")
         self.assertEqual(response.json()["completed_sentences"], 0)
         response = self.client.post(f"{path}/regenerate-words")
@@ -133,6 +137,131 @@ class TextApiTests(unittest.TestCase):
         self.assertEqual(self.client.delete(path).status_code, 200)
         self.assertEqual(self.client.get(path).status_code, 404)
         self.assertEqual(self.client.get("/texts/titles").json()["titles"], [])
+
+    def test_failed_translation_is_visible_and_retry_preserves_original(self) -> None:
+        self.llm.translate_sentence_async.side_effect = RuntimeError("Provider unavailable")
+        text_id = self._upload()
+        path = f"/texts/{text_id}"
+        data = self.client.get(path).json()["data"]
+        self.assertEqual(data["status"], "failed")
+        self.assertEqual(data["enrichment_stage"], "failed")
+        self.assertIn("could not be translated", data["error_message"])
+        self.assertEqual(data["total_sentences"], 2)
+        self.llm.generate_practice_sentences_async.assert_not_called()
+
+        self.llm.translate_sentence_async.side_effect = None
+        self.assertEqual(self.client.post(f"{path}/retry").status_code, 200)
+        self.assertEqual(self.client.get(path).json()["data"]["status"], "processed")
+
+    def test_failed_practice_generation_is_not_reported_as_completed(self) -> None:
+        self.llm.generate_practice_sentences_async.side_effect = RuntimeError("Provider unavailable")
+        text_id = self._upload()
+        data = self.client.get(f"/texts/{text_id}").json()["data"]
+        self.assertEqual(data["status"], "failed")
+        self.assertIn("could not be generated", data["error_message"])
+        self.assertTrue(data["original_paragraphs"][0]["sentences"][0]["translation"])
+
+    def test_intake_without_provider_requires_explicit_language(self) -> None:
+        self.llm.extract_metadata.side_effect = RuntimeError("No provider configured")
+        response = self.client.post("/texts", json={"text": "Hallo Welt."})
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("Choose German", response.json()["detail"])
+        self.assertEqual(self.client.get("/texts/titles").json()["titles"], [])
+        response = self.client.post("/texts", json={"text": "Hallo Welt.", "language": "german"})
+        self.assertEqual(response.status_code, 200)
+        data = self.client.get(f"/texts/{response.json()['id']}").json()["data"]
+        self.assertEqual(data["language"], "German")
+
+    def test_progress_rejects_invalid_indices_and_exposes_resume_positions(self) -> None:
+        text_id = self._upload()
+        path = f"/texts/{text_id}"
+        for invalid_index in (-1, 2, 100):
+            self.assertEqual(self.client.post(f"{path}/progress", json={"sentence_index": invalid_index}).status_code, 400)
+        self.client.post(f"{path}/progress", json={"sentence_index": 1})
+        data = self.client.get(path).json()["data"]
+        self.assertEqual(data["completed_sentences"], 1)
+        self.assertEqual(data["completed_sentence_indices"], [1])
+
+    def test_terminal_status_overrides_stale_enrichment_stage(self) -> None:
+        text_id = self._upload()
+        path = f"/texts/{text_id}"
+
+        # Simulate legacy rows whose stage stayed "queued" after processing
+        repository = text_repository.TextRepository(self.engine)
+        record = repository.load_one_text(int(text_id), "owner_local_default")
+        assert record is not None
+        record.enrichment_stage = "queued"
+        repository.update_text(record)
+
+        data = self.client.get(path).json()["data"]
+        self.assertEqual(data["status"], "processed")
+        self.assertEqual(data["enrichment_stage"], "completed")
+
+        titles = self.client.get("/texts/titles").json()["titles"]
+        self.assertEqual(titles[0]["enrichment_stage"], "completed")
+
+    def test_upload_infers_all_metadata_when_client_provides_only_text(self) -> None:
+        self.llm.extract_metadata.return_value = schemas.GeneratedMetadata(
+            title="Inferred title",
+            difficulty_level="B1",
+            language="French",
+            author="Inferred author",
+            category="Fairy Tale",
+        )
+        response = self.client.post("/texts", json={
+            "text": "Le petit chat dort. Il rêve.",
+        })
+        self.assertEqual(response.status_code, 200, response.text)
+
+        text_id = self.client.get("/texts/titles").json()["titles"][0]["id"]
+        data = self.client.get(f"/texts/{text_id}").json()["data"]
+        self.assertEqual(data["language"], "French")
+        self.assertEqual(data["title"], "Inferred title")
+        self.assertEqual(data["difficulty_level"], "B1")
+        self.assertEqual(data["author"], "Inferred author")
+        self.assertEqual(data["category"], "Fairy Tale")
+
+    def test_client_provided_metadata_wins_over_inference(self) -> None:
+        self.llm.extract_metadata.return_value = schemas.GeneratedMetadata(
+            title="Inferred title",
+            difficulty_level="B1",
+            language="French",
+            author="Inferred author",
+            category="Inferred category",
+        )
+        response = self.client.post("/texts", json={
+            "text": "Der Hund läuft.",
+            "language": "German",
+            "title": "Client title",
+        })
+        self.assertEqual(response.status_code, 200, response.text)
+
+        text_id = self.client.get("/texts/titles").json()["titles"][0]["id"]
+        data = self.client.get(f"/texts/{text_id}").json()["data"]
+        self.assertEqual(data["language"], "German")
+        self.assertEqual(data["title"], "Client title")
+        self.assertEqual(data["difficulty_level"], "B1")
+        self.assertEqual(data["author"], "Inferred author")
+        self.assertEqual(data["category"], "Inferred category")
+
+    def test_upload_response_includes_text_id(self) -> None:
+        response = self.client.post("/texts", json={
+            "text": "Der Hund läuft.",
+            "language": "German",
+        })
+        self.assertEqual(response.status_code, 200, response.text)
+        payload = response.json()
+        self.assertIsInstance(payload["id"], int)
+        titles = self.client.get("/texts/titles").json()["titles"]
+        self.assertEqual(str(payload["id"]), titles[0]["id"])
+
+    def test_patch_updates_title(self) -> None:
+        text_id = self._upload()
+        response = self.client.patch(
+            f"/texts/{text_id}", json={"title": "Renamed by user"}
+        )
+        self.assertEqual(response.status_code, 200, response.text)
+        self.assertEqual(response.json()["data"]["title"], "Renamed by user")
 
     def test_missing_model_returns_actionable_503_without_saving(self) -> None:
         with mock.patch.object(

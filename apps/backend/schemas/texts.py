@@ -2,7 +2,7 @@
 
 from typing import List, Optional
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class HintGroup(BaseModel):
@@ -58,6 +58,7 @@ class TextData(BaseModel):
     completed_sentences: int = 0
     total_sentences: int = 0
     estimated_time_minutes: int = 0
+    completed_sentence_indices: List[int] = Field(default_factory=list)
     original_paragraphs: List[Paragraph]
     practice_sentences: List[PracticeSentence]
     top_words: List[TopWord] = []
@@ -91,6 +92,9 @@ class GeneratedMetadata(BaseModel):
     """LLM response schema for generating metadata."""
     title: str
     difficulty_level: str
+    language: str = "Unknown"
+    author: Optional[str] = None
+    category: Optional[str] = None
 
 
 class FilteredWordsResponse(BaseModel):
@@ -108,7 +112,7 @@ class TextUploadRequest(BaseModel):
     """Request payload for submitting raw text content."""
 
     text: str
-    language: str
+    language: Optional[str] = None
     title: Optional[str] = None
     difficulty_level: Optional[str] = None
     author: Optional[str] = None
@@ -119,6 +123,7 @@ class TextUploadRequest(BaseModel):
 class TextUpdateRequest(BaseModel):
     """Request payload for updating text metadata."""
 
+    title: Optional[str] = None
     language: Optional[str] = None
     difficulty_level: Optional[str] = None
     author: Optional[str] = None
@@ -181,6 +186,7 @@ class UploadResponse(BaseModel):
 
     message: str
     text: str
+    id: Optional[int] = None
 
 
 class DeleteResponse(BaseModel):

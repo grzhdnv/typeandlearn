@@ -45,6 +45,7 @@ async def lifespan(app: FastAPI):
                     threading.Thread(
                         target=text_service.process_pending_text,
                         args=(t.id, DEFAULT_OWNER_ID),
+                        daemon=True,
                     ).start()
         except Exception as e:
             print(f"Failed to resume pending texts: {e}")

@@ -8,7 +8,7 @@ backend_dir = Path(__file__).resolve().parents[2] / "apps" / "backend"
 sys.path.append(str(backend_dir))
 
 # Import directly (not via apps.backend) to prevent double-importing in SQLModel metadata registry
-from models.texts import TextRecord
+from models.texts import SentenceRecord, TextRecord
 from repositories.text_repository import TextRepository
 
 
@@ -43,6 +43,28 @@ class TextRepositoryTests(unittest.TestCase):
         self.assertEqual(len(loaded), 1)
         self.assertEqual(loaded[0].title, "Sample Text")
         self.assertEqual(loaded[0].id, saved.id)
+
+    def test_delete_text_removes_dependent_sentences(self) -> None:
+        """Verify deleting a text removes its sentences instead of orphaning them."""
+        record = self.repository.save_text(
+            TextRecord(owner_id=self.owner, title="Cascade Check")
+        )
+        assert record.id is not None
+        self.repository.save_sentences([
+            SentenceRecord(
+                owner_id=self.owner,
+                text_id=record.id,
+                paragraph_index=0,
+                sentence_index=0,
+                original_text="Guten Tag.",
+                translation="Good day.",
+            )
+        ])
+
+        self.repository.delete_text(record.id, self.owner)
+
+        self.assertIsNone(self.repository.load_one_text(record.id, self.owner))
+        self.assertEqual(self.repository.load_sentences(record.id, self.owner), [])
 
     def test_load_one(self) -> None:
         """Verify loading a single text record by its database ID and owner."""

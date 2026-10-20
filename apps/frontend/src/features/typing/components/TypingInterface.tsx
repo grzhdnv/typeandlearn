@@ -20,10 +20,12 @@ import type {
 
 interface TypingInterfaceProps {
   targetText: string;
+  sessionKey?: string;
+  disabled?: boolean;
   hints?: { words: string[]; hint: string }[];
   fullTranslation?: string;
   onComplete?: (metrics: TypingMetrics) => void;
-  onMetricsUpdate?: (metrics: TypingMetrics) => void;
+  onMetricsUpdate?: (metrics: TypingMetrics | null) => void;
 }
 
 /**
@@ -69,24 +71,35 @@ export const TypingInterface: Component<TypingInterfaceProps> = (props) => {
   let inputRef: HTMLInputElement | undefined;
 
   const dispatch = (action: TypingAction) => {
-    setTypingState((prev) => {
-      const next = typingReducer(prev, action);
-      const metrics = computeSessionMetrics(next);
-      props.onMetricsUpdate?.(metrics);
-
-      if (next.status === "completed" && prev.status !== "completed") {
-        props.onComplete?.(metrics);
-      }
-      return next;
-    });
+    if (props.disabled) return;
+    const previous = typingState();
+    const next = typingReducer(previous, action);
+    setTypingState(next);
+    const metrics = computeSessionMetrics(next);
+    props.onMetricsUpdate?.(action.type === "RESTART" ? null : metrics);
+    if (next.status === "completed" && previous.status !== "completed") {
+      props.onComplete?.(metrics);
+    }
   };
 
+  let lastTargetText = props.targetText;
+  let lastSessionKey = props.sessionKey;
   createEffect(() => {
-    setTypingState(createInitialTypingState(props.targetText));
+    const targetText = props.targetText;
+    const sessionKey = props.sessionKey;
+    if (targetText === lastTargetText && sessionKey === lastSessionKey) return;
+    lastTargetText = targetText;
+    lastSessionKey = sessionKey;
+    setTypingState(createInitialTypingState(targetText));
+    props.onMetricsUpdate?.(null);
     if (inputRef) {
       inputRef.value = "";
       inputRef.focus();
     }
+  });
+
+  createEffect(() => {
+    if (!props.disabled) inputRef?.focus();
   });
 
   const currentWord = () =>
@@ -123,6 +136,10 @@ export const TypingInterface: Component<TypingInterfaceProps> = (props) => {
    * Track modifier keys and global shortcuts
    */
   const handleKeyDown = (event: KeyboardEvent) => {
+    if (props.disabled || event.defaultPrevented || event.isComposing) return;
+    const target = event.target;
+    if (target instanceof HTMLElement && target !== inputRef &&
+        target.closest("input, textarea, select, button, a, [contenteditable=true], [role=dialog]")) return;
     if (event.key === "Alt") setOptionPressed(true);
     if (event.key === "Meta") setCommandPressed(true);
 
@@ -194,7 +211,7 @@ export const TypingInterface: Component<TypingInterfaceProps> = (props) => {
         <div class="absolute -inset-4 border-2 border-primary opacity-0 group-focus-within:opacity-10 transition-opacity pointer-events-none"></div>
         {/* The Typing Canvas */}
         <div
-          class="bg-surface-container-lowest border border-outline-variant p-10 min-h-[320px] shadow-sm relative focus-within:border-primary transition-colors cursor-text"
+          class="bg-surface-container-lowest border border-outline-variant p-4 sm:p-10 min-h-[240px] sm:min-h-[320px] shadow-sm relative focus-within:border-primary transition-colors cursor-text"
           id="typing-canvas"
         >
           <div class="mb-4 pb-2 border-b border-outline-variant/30 text-on-surface-variant font-mono-sm text-mono-sm opacity-60 flex justify-between items-center">
@@ -246,6 +263,13 @@ export const TypingInterface: Component<TypingInterfaceProps> = (props) => {
           {/* Hidden Input to capture keystrokes and IME composition */}
           <input
             ref={inputRef}
+            aria-label="Type the displayed text"
+            disabled={props.disabled}
+            onPaste={(e) => e.preventDefault()}
+            onDrop={(e) => e.preventDefault()}
+            onBeforeInput={(e) => {
+              if (e.inputType === "insertFromPaste" || e.inputType === "insertFromDrop") e.preventDefault();
+            }}
             onInput={(e) => {
               const val = e.currentTarget.value;
               if (val.length > 0 && !typingState().isComposing) {
@@ -258,6 +282,10 @@ export const TypingInterface: Component<TypingInterfaceProps> = (props) => {
               }
             }}
             onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.isComposing) {
+                e.preventDefault();
+                dispatch({ type: "KEY_DOWN", char: "\n", timestampMs: Date.now() });
+              }
               if (e.key === "Backspace") {
                 e.preventDefault();
                 dispatch({

@@ -1,5 +1,7 @@
 """HTTP routes for text CRUD and processing workflows with owner scoping."""
 
+import logging
+
 from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException
 
 from app_state import text_service
@@ -18,6 +20,16 @@ from schemas.texts import (
 from services import preprocessing_service
 
 router = APIRouter(prefix="/texts", tags=["texts"])
+logger = logging.getLogger(__name__)
+
+
+def _process_text_background(text_id: int, owner_id: str) -> None:
+    # The service persists failures. A background failure must not invalidate the
+    # successful intake response, since the original text remains practiceable.
+    try:
+        text_service.process_pending_text(text_id, owner_id)
+    except Exception:
+        logger.warning("Text enrichment failed", extra={"text_id": text_id})
 
 
 @router.get("", response_model=TextsResponse)
@@ -97,12 +109,16 @@ def upload_text(
         )
         if record.id is not None:
             background_tasks.add_task(
-                text_service.process_pending_text, record.id, owner_id
+                _process_text_background, record.id, owner_id
             )
 
-        return UploadResponse(message="Text uploaded successfully", text=text)
+        return UploadResponse(
+            message="Text uploaded successfully", text=text, id=record.id
+        )
     except preprocessing_service.MissingLanguageModelError as error:
         raise HTTPException(status_code=503, detail=str(error)) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
     except HTTPException:
         raise
     except Exception as error:
@@ -220,7 +236,7 @@ def regenerate_words(
         )
         if data.id is not None:
             background_tasks.add_task(
-                text_service.process_pending_text, data.id, owner_id
+                _process_text_background, data.id, owner_id
             )
 
         return TextResponse(
@@ -250,7 +266,7 @@ def retry_enrichment(
         data = text_service.retry_enrichment(text_id, owner_id)
         if data.id is not None:
             background_tasks.add_task(
-                text_service.process_pending_text, data.id, owner_id
+                _process_text_background, data.id, owner_id
             )
         return TextResponse(
             message="Retrying enrichment...",

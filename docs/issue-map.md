@@ -1,6 +1,10 @@
 # TypeAndLearn Issue & Milestone Map
 
-This issue map translates the production plan into discrete, reviewable engineering milestones and tasks.
+This issue map translates the production plan into engineering milestones.
+
+Status reconciliation, 19 October 2026: older checkmarks record implementation
+claims, not verified launch acceptance. Use [the roadmap](roadmap.md) and the
+[README](../README.md) for the verified local baseline and remaining work.
 
 ---
 
@@ -69,14 +73,14 @@ This issue map translates the production plan into discrete, reviewable engineer
 
 - **[x] ISSUE-050**: **Structured Logging & Telemetry with Content Redaction**
   - *Acceptance*: Standardized JSON stdout logger; correlation IDs; automated redaction preventing user learning text from entering logs.
-- **[x] ISSUE-051**: **CI/CD Pipeline & Staging Environment Deployment**
+- **[ ] ISSUE-051**: **CI/CD Pipeline & Staging Environment Deployment**
   - *Acceptance*: GitHub Actions running parallel lint, unit, migration, and Playwright tests; immutable image build and staging deploy.
 
 ---
 
 ## Milestone M6 — Private Beta & Production Readiness
 
-- **[x] ISSUE-060**: **Accessibility (WCAG 2.1 AA) & Cross-Browser Audit**
+- **[ ] ISSUE-060**: **Accessibility (WCAG 2.1 AA) & Cross-Browser Audit**
   - *Acceptance*: Keyboard-only navigation; screen reader announcements; high-contrast checks via Axe.
-- **[x] ISSUE-061**: **Disaster Recovery & Backup Rehearsal**
+- **[ ] ISSUE-061**: **Disaster Recovery & Backup Rehearsal**
   - *Acceptance*: Documented automated backup script and verified database recovery runbook.

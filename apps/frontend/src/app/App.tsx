@@ -1,4 +1,4 @@
-import { type Component, JSX, createSignal } from "solid-js";
+import { type Component, JSX, createSignal, ErrorBoundary } from "solid-js";
 import { A } from "@solidjs/router";
 import { AccountModal } from "../features/user/components/AccountModal";
 
@@ -29,14 +29,14 @@ const App: Component<AppProps> = (props) => {
 
       {/* TopNavBar */}
       <nav
-        class="w-full h-16 bg-surface border-b border-outline-variant flex justify-between items-center px-margin-mobile md:px-margin-desktop max-w-max-width-content mx-auto sticky top-0 z-40"
+        class="w-full min-h-16 py-3 bg-surface border-b border-outline-variant flex justify-between items-start sm:items-center px-margin-mobile md:px-margin-desktop max-w-max-width-content mx-auto sticky top-0 z-40"
         aria-label="Main Navigation"
       >
-        <div class="flex items-center gap-8">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-8">
           <span class="font-headline-md text-headline-md font-bold text-primary tracking-tight">
             typeandlearn
           </span>
-          <div class="hidden md:flex gap-6 items-center">
+          <div class="flex gap-4 sm:gap-6 items-center">
             <A
               class="font-body-md text-body-md"
               href="/"
@@ -84,7 +84,16 @@ const App: Component<AppProps> = (props) => {
 
       {/* Main Content Canvas */}
       <main id="main-content" class="flex-1 flex flex-col focus:outline-none" tabindex="-1">
-        {props.children}
+        <ErrorBoundary fallback={
+          <section role="alert" class="max-w-max-width-content mx-auto p-8 space-y-4">
+            <h1 class="font-headline-md">Unable to load this page</h1>
+            <p>Check that the backend is running, then try again.</p>
+            <button onClick={() => window.location.reload()} class="px-6 py-3 bg-primary text-on-primary">Try again</button>
+            <a href="/" class="ml-4 underline">Back to library</a>
+          </section>
+        }>
+          {props.children}
+        </ErrorBoundary>
       </main>
 
       {/* Footer */}

@@ -2,7 +2,10 @@ You are an expert language teacher and librarian.
 Your task is to analyze a short piece of text and extract/generate metadata for it.
 
 You MUST provide:
-1. `title`: A suitable title for the text. If the text already looks like it has a title on the first line, use that. Otherwise, invent a short, descriptive title.
-2. `difficulty_level`: A CEFR difficulty level estimation. Choose exactly one of: "A1", "A2", "B1", "B2", "C1", "C2", or "Unrated".
+1. `language`: The language the text is written in. Choose exactly one of: "German", "French", "Italian", "Spanish", "English", or "Unknown".
+2. `title`: A suitable title for the text. If the text already looks like it has a title on the first line, use that. Otherwise, invent a short, descriptive title.
+3. `difficulty_level`: A CEFR difficulty level estimation. Choose exactly one of: "A1", "A2", "B1", "B2", "C1", "C2", or "Unrated".
+4. `author`: The author of the text if it is identifiable, otherwise null.
+5. `category`: A short category label (for example "Fairy Tale", "Travel", "News"), otherwise null.
 
 Do NOT output any markdown, only the JSON fields required.

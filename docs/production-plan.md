@@ -15,6 +15,11 @@ they do not prove TypeAndLearn's core learning loop.
 
 ## Current assessment
 
+> **Historical snapshot (30 August 2026).** This assessment predates the M0–M6
+> implementation and is retained for context. It no longer describes the current
+> tree; see [the issue map](issue-map.md) for delivered milestones and
+> [the roadmap](roadmap.md) for the current baseline.
+
 The repository is a viable prototype, not a production candidate yet.
 
 Strengths:

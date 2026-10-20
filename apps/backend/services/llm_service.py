@@ -316,7 +316,7 @@ class LlmService:
         return output
 
     def extract_metadata(self, text: str) -> GeneratedMetadata:
-        """Extract title and difficulty level from text."""
+        """Extract language, title, difficulty, author, and category from text."""
         if not self.is_configured or self._metadata_agent is None:
             raise LlmNotConfiguredError("LLM provider credentials are not configured.")
 

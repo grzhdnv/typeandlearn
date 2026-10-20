@@ -2,6 +2,7 @@
 
 from typing import Any, Dict, List, Optional
 
+from models.analytics import PracticeSessionRecord
 from models.jobs import BackgroundJobRecord, utc_now
 from models.texts import (
     PracticeSentenceRecord,
@@ -9,8 +10,8 @@ from models.texts import (
     TextRecord,
     WordFrequencyRecord,
 )
-from sqlalchemy import Engine
-from sqlmodel import Session, select
+from sqlalchemy import Engine, delete
+from sqlmodel import Session, col, select
 
 
 class TextRepository:
@@ -202,10 +203,18 @@ class TextRepository:
             session.commit()
 
     def delete_text(self, text_id: int, owner_id: str) -> Optional[TextRecord]:
-        """Delete one text entry from the database by ID and owner ID (SQL cascades sentences)."""
+        """Delete one text entry and its dependent records by ID and owner ID."""
         with Session(self._engine) as session:
             record = self.load_one_text(text_id, owner_id)
             if record is not None:
+                for table in (
+                    SentenceRecord,
+                    PracticeSentenceRecord,
+                    WordFrequencyRecord,
+                    PracticeSessionRecord,
+                    BackgroundJobRecord,
+                ):
+                    session.exec(delete(table).where(col(table.text_id) == text_id, col(table.owner_id) == owner_id))
                 session.delete(record)
                 session.commit()
             return record
