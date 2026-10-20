@@ -16,8 +16,8 @@ import httpx
 from groq import AsyncGroq, APIConnectionError as GroqConnectionError
 from openai import AsyncOpenAI, APIConnectionError as OpenAIConnectionError
 from pydantic import BaseModel
-from pydantic_ai import Agent, NativeOutput, PromptedOutput
-from pydantic_ai.exceptions import ModelHTTPError
+from pydantic_ai import Agent, ModelRetry, NativeOutput, PromptedOutput
+from pydantic_ai.exceptions import ModelHTTPError, UnexpectedModelBehavior
 from pydantic_ai.models import Model
 from pydantic_ai.models.groq import GroqModel
 from pydantic_ai.models.openai import OpenAIChatModel
@@ -31,6 +31,7 @@ from services.openrouter_policy import FREE_ROUTING, reasoning_settings, uses_na
 from core.settings import Settings
 from schemas.texts import FilteredWordsResponse, GeneratedMetadata, PracticeSentencesResponse, SentenceTranslation
 from services.provider_governor import ProviderBudgetExceeded, ProviderGovernor, QuotaUnavailable
+from services.hint_validation import normalize_hints
 
 logger = logging.getLogger("typeandlearn.llm")
 _owner: ContextVar[str] = ContextVar("provider_owner", default="owner_local_default")
@@ -43,6 +44,8 @@ def should_fallback(error: Exception) -> bool:
     cause: BaseException | None = error
     while cause is not None and id(cause) not in seen:
         seen.add(id(cause))
+        if isinstance(cause, UnexpectedModelBehavior):
+            return True  # Bounded output repair has already been exhausted.
         if isinstance(cause, ModelHTTPError):
             return cause.status_code in (408, 429, 500, 502, 503, 504)
         if isinstance(cause, (httpx.TransportError, GroqConnectionError, OpenAIConnectionError)):
@@ -217,7 +220,7 @@ class LlmService:
             self._loop.close()
             self._loop, self._thread = None, None
 
-    async def _execute(self, task: str, prompt: str, output_type: type[T], owner_id: str) -> tuple[T, Any, str]:
+    async def _execute(self, task: str, prompt: str, output_type: type[T], owner_id: str, source_text: str | None = None) -> tuple[T, Any, str]:
         if not self.is_configured:
             raise LlmNotConfiguredError("LLM provider credentials are not configured.")
         owner_token, task_token = _owner.set(owner_id), _task.set(task)
@@ -229,8 +232,28 @@ class LlmService:
                 if spec.startswith("openrouter:") and uses_prompted_output(spec.split(":", 1)[1]):
                     output = PromptedOutput(output_type)
                 agent = Agent(self._models[spec], output_type=output, system_prompt=self._prompts[task], retries=1)
+                @agent.output_validator
+                def validate_result(result: T) -> T:
+                    try:
+                        if isinstance(result, SentenceTranslation):
+                            if not result.translation.strip():
+                                raise ValueError("The English translation must not be empty")
+                            result.translation_hints = normalize_hints(source_text or "", result.translation_hints)
+                        elif isinstance(result, PracticeSentencesResponse):
+                            if len(result.sentences) != 5:
+                                raise ValueError("Generate exactly five practice sentences")
+                            for index, sentence in enumerate(result.sentences, start=1):
+                                if not sentence.sentence.strip() or not sentence.translation.strip():
+                                    raise ValueError("Each exercise needs a source sentence and English translation")
+                                try:
+                                    sentence.translation_hints = normalize_hints(sentence.sentence, sentence.translation_hints)
+                                except ValueError as error:
+                                    raise ValueError(f"Exercise {index}: {error}") from error
+                    except ValueError as error:
+                        raise ModelRetry(str(error)) from error
+                    return result
                 try:
-                    result = await agent.run(prompt)
+                    result = await agent.run(prompt, model_settings={"max_tokens": self._settings.llm_practice_max_output_tokens} if task == "practice" else None)
                     return cast(T, result.output), result.usage(), spec
                 except Exception as error:
                     if index == len(specs) - 1 or not should_fallback(error):
@@ -244,7 +267,7 @@ class LlmService:
     async def translate_sentence_with_usage_async(self, title: str, context: str, target_sentence: str,
                                                   owner_id: str = "owner_local_default", source_language: str = "German") -> tuple[SentenceTranslation, Any]:
         result, usage, spec = await asyncio.wrap_future(self._submit(self._execute("translation",
-            f"LANGUAGE: {source_language}\nTITLE: {title}\nCONTEXT: {context}\nTARGET_SENTENCE: {target_sentence}", SentenceTranslation, owner_id)))
+            f"LANGUAGE: {source_language}\nTITLE: {title}\nCONTEXT: {context}\nTARGET_SENTENCE: {target_sentence}", SentenceTranslation, owner_id, target_sentence)))
         setattr(result, "provider", spec.split(":", 1)[0])
         setattr(result, "model", spec.split(":", 1)[1])
         return result, usage

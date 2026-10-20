@@ -1,0 +1,247 @@
+[
+  {
+    "language": "German",
+    "kind": "translation",
+    "index": 0,
+    "word_positions": 6,
+    "unavailable_hints": 0
+  },
+  {
+    "language": "German",
+    "kind": "translation",
+    "index": 1,
+    "word_positions": 11,
+    "unavailable_hints": 0
+  },
+  {
+    "language": "German",
+    "kind": "practice",
+    "index": 2,
+    "word_positions": 9,
+    "unavailable_hints": 0
+  },
+  {
+    "language": "German",
+    "kind": "practice",
+    "index": 3,
+    "word_positions": 9,
+    "unavailable_hints": 0
+  },
+  {
+    "language": "German",
+    "kind": "practice",
+    "index": 4,
+    "word_positions": 8,
+    "unavailable_hints": 0
+  },
+  {
+    "language": "German",
+    "kind": "practice",
+    "index": 5,
+    "word_positions": 10,
+    "unavailable_hints": 0
+  },
+  {
+    "language": "German",
+    "kind": "practice",
+    "index": 6,
+    "word_positions": 10,
+    "unavailable_hints": 0
+  },
+  {
+    "language": "French",
+    "kind": "translation",
+    "index": 0,
+    "word_positions": 14,
+    "unavailable_hints": 0
+  },
+  {
+    "language": "French",
+    "kind": "translation",
+    "index": 1,
+    "word_positions": 11,
+    "unavailable_hints": 0
+  },
+  {
+    "language": "French",
+    "kind": "practice",
+    "index": 2,
+    "word_positions": 12,
+    "unavailable_hints": 0
+  },
+  {
+    "language": "French",
+    "kind": "practice",
+    "index": 3,
+    "word_positions": 11,
+    "unavailable_hints": 0
+  },
+  {
+    "language": "French",
+    "kind": "practice",
+    "index": 4,
+    "word_positions": 13,
+    "unavailable_hints": 0
+  },
+  {
+    "language": "French",
+    "kind": "practice",
+    "index": 5,
+    "word_positions": 9,
+    "unavailable_hints": 0
+  },
+  {
+    "language": "French",
+    "kind": "practice",
+    "index": 6,
+    "word_positions": 13,
+    "unavailable_hints": 0
+  },
+  {
+    "language": "Italian",
+    "kind": "translation",
+    "index": 0,
+    "word_positions": 5,
+    "unavailable_hints": 0
+  },
+  {
+    "language": "Italian",
+    "kind": "translation",
+    "index": 1,
+    "word_positions": 10,
+    "unavailable_hints": 0
+  },
+  {
+    "language": "Italian",
+    "kind": "practice",
+    "index": 2,
+    "word_positions": 9,
+    "unavailable_hints": 0
+  },
+  {
+    "language": "Italian",
+    "kind": "practice",
+    "index": 3,
+    "word_positions": 11,
+    "unavailable_hints": 0
+  },
+  {
+    "language": "Italian",
+    "kind": "practice",
+    "index": 4,
+    "word_positions": 13,
+    "unavailable_hints": 0
+  },
+  {
+    "language": "Italian",
+    "kind": "practice",
+    "index": 5,
+    "word_positions": 14,
+    "unavailable_hints": 0
+  },
+  {
+    "language": "Italian",
+    "kind": "practice",
+    "index": 6,
+    "word_positions": 16,
+    "unavailable_hints": 0
+  },
+  {
+    "language": "Spanish",
+    "kind": "translation",
+    "index": 0,
+    "word_positions": 7,
+    "unavailable_hints": 0
+  },
+  {
+    "language": "Spanish",
+    "kind": "translation",
+    "index": 1,
+    "word_positions": 10,
+    "unavailable_hints": 0
+  },
+  {
+    "language": "Spanish",
+    "kind": "practice",
+    "index": 2,
+    "word_positions": 5,
+    "unavailable_hints": 0
+  },
+  {
+    "language": "Spanish",
+    "kind": "practice",
+    "index": 3,
+    "word_positions": 8,
+    "unavailable_hints": 0
+  },
+  {
+    "language": "Spanish",
+    "kind": "practice",
+    "index": 4,
+    "word_positions": 7,
+    "unavailable_hints": 0
+  },
+  {
+    "language": "Spanish",
+    "kind": "practice",
+    "index": 5,
+    "word_positions": 9,
+    "unavailable_hints": 0
+  },
+  {
+    "language": "Spanish",
+    "kind": "practice",
+    "index": 6,
+    "word_positions": 16,
+    "unavailable_hints": 0
+  },
+  {
+    "language": "English",
+    "kind": "translation",
+    "index": 0,
+    "word_positions": 12,
+    "unavailable_hints": 0
+  },
+  {
+    "language": "English",
+    "kind": "translation",
+    "index": 1,
+    "word_positions": 10,
+    "unavailable_hints": 0
+  },
+  {
+    "language": "English",
+    "kind": "practice",
+    "index": 2,
+    "word_positions": 10,
+    "unavailable_hints": 0
+  },
+  {
+    "language": "English",
+    "kind": "practice",
+    "index": 3,
+    "word_positions": 8,
+    "unavailable_hints": 0
+  },
+  {
+    "language": "English",
+    "kind": "practice",
+    "index": 4,
+    "word_positions": 6,
+    "unavailable_hints": 0
+  },
+  {
+    "language": "English",
+    "kind": "practice",
+    "index": 5,
+    "word_positions": 9,
+    "unavailable_hints": 0
+  },
+  {
+    "language": "English",
+    "kind": "practice",
+    "index": 6,
+    "word_positions": 12,
+    "unavailable_hints": 0
+  }
+]

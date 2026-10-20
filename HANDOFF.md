@@ -1,37 +1,36 @@
 # Current handoff — 20 October 2026
 
-OpenRouter free-model comparison is complete. Read
-[the evaluation report](docs/openrouter-evaluation-2026-10-20.md) and its frozen
-results before changing routing. The user replaced the management key with an
-inference key; authentication is no longer blocked. Preserve unrelated `opencode.json`.
+Hint normalization, validation, and the expanded MiniMax technical acceptance are
+complete. Read [the acceptance report](docs/minimax-acceptance-2026-10-20.md), then
+[the provider comparison](docs/openrouter-evaluation-2026-10-20.md). Preserve the
+unrelated `opencode.json` and user credentials.
 
-- Ultra 550B and Dots 280B: 7/7 final typed tasks each, first attempts, reasoning off.
-- MiniMax M3.1 Flash was added at the user's suggestion. Its prompted JSON path
-  passed 7/7 at low (mandatory) reasoning, 2.14 s median, 9,012 tokens / $0.
-  It is now the leading free challenger in this small sample; Ultra is an alternative.
-  MiniMax tool-output probes failed nested-array validation; use JSON mode, not tools.
-- MiniMax had one unavailable UI hint (`¿Dónde`, a UI punctuation issue) across 85
-  word positions, versus Ultra's three across 82. Semantic/CEFR checks still need review.
-- Super 120B: 7 upstream 404s; a fresh seven-case retry after user API-key
-  setting edits also returned Nvidia 404s. Key preflight succeeded; retry cost $0.
-- Final comparison costs: $0; original three-model run 15,010 tokens, MiniMax 9,012.
-  All probes together: $0, 71,424 returned
-  tokens plus one interrupted call retaining a 3,477-token reservation.
-- Groq/DeepSeek defaults remain unchanged. Review endpoint data handling and enforce
-  hint coverage/normalization before promoting MiniMax/Ultra to automatic fallback.
-- Regular app defaults stay 16 RPM / 40 RPD for OpenRouter. Final evaluation only
-  used 100 RPD / 150,000 owner tokens to include earlier shared benchmark history;
-  final account preflight reported a 1,000/day free allowance. No paid routing.
+- Five real synthetic storage/enrichment flows passed in German, French, Italian,
+  Spanish, and English: 10 saved translations, 25 saved drills, fresh readback.
+- Final acceptance: 25 MiniMax requests, 36,571 tokens, $0, no repair attempts.
+  The actual frontend matcher found zero unavailable hints at 353 word positions.
+- New backend coverage checks require all source occurrences and nonempty hints.
+  One repair is allowed/accounted; exhausted output validation may select the next
+  configured provider. Bad credentials, permanent errors and budgets still stop.
+- UI hint lookup is Unicode- and occurrence-aware. Curly apostrophes, inverted
+  punctuation, NFC, repeated meanings and separable-verb highlights are verified.
+- Drill output cap: 4,096; other tasks: 2,048. Cache version: `v3-validated-hints`.
+- MiniMax uses prompted JSON + low mandatory reasoning; its tool path is unreliable.
+  Ultra is an alternative; Super's free endpoint returned 404 twice.
+- Groq/DeepSeek default order remains unchanged. The tested opt-in
+  Groq→MiniMax→DeepSeek setting is documented in `.env.example`. MiniMax's terms
+  allow service-improvement use of inputs/outputs; no blanket no-training/ZDR was
+  established. Do not silently promote it for arbitrary private learning material.
+- Jev is explicitly deferred. CEFR grading and naturalness remain provisional.
+- Offline verification: 102 backend / 31 frontend tests, lint/types/build, and
+  27 Chromium tests. Existing SQLite ResourceWarnings remain.
 
-Verified: `npm run check` (92 backend tests, 27 frontend tests, lint/types/build).
-21 Chromium tests also passed earlier in this implementation session. Existing
-SQLite ResourceWarnings remain. Offline checks must blank all three provider keys;
-Playwright already does this. No dependencies were installed.
-
-Next engineering work: unify API/worker job dispatch and claim semantics to avoid
-duplicate processing, then broaden multilingual browser coverage and verify
-staging/recovery. See `docs/roadmap.md`. Keep the user's practice behavior decisions
-at the end of this historical handoff. Use isolated learning databases for probes.
+Next engineering task: unify the API/worker dispatch and claim path to prevent
+duplicate processing. Staging/recovery and PostgreSQL acceptance remain open.
+Use isolated learning databases and blank all provider keys in offline checks.
+The live acceptance script uses temporary learning SQLite but the real shared quota
+ledger; only synthetic content is authorized for such benchmarks. Run-only quota
+and owner-token overrides are documented, not global app settings.
 
 The original 19 October handoff below is historical background. Its OpenRouter
 starting-state instructions are superseded by the completed report above.

@@ -59,3 +59,9 @@ Example Separable Verb Output:
 ```
 
 Follow LANGUAGE for the actual input; the German examples only illustrate the format. For English source text, preserve its meaning in clear English.
+
+Hint formatting and coverage requirements:
+- Keep each whitespace-separated source word whole, including internal apostrophes and hyphens (e.g. j'avais, l'ora, don't). Ignore only surrounding punctuation.
+- Each words array entry is one source word, never a phrase. Multi-word meanings use multiple entries in one group.
+- Preserve every occurrence of repeated words. Put groups in the order of their first source occurrence; a separable verb may include a later prefix in that same group.
+- Every group needs a nonempty English hint. Do not leave words with empty hints to compensate for another group's meaning.

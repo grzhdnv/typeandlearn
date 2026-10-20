@@ -46,7 +46,7 @@ OPENROUTER_MODELS = [
 OPENROUTER_EXTRA_MODELS = ["openrouter:minimax/minimax-m3.1-flash:free"]
 
 
-async def preflight_openrouter(models: list[str], output_path: Path, settings: Settings) -> None:
+async def preflight_openrouter(models: list[str], output_path: Path, settings: Settings, *, minimum_requests: int | None = None) -> None:
     key = os.getenv("OPENROUTER_API_KEY")
     if not key:
         raise RuntimeError("Set OPENROUTER_API_KEY in the ignored .env file")
@@ -63,12 +63,14 @@ async def preflight_openrouter(models: list[str], output_path: Path, settings: S
         evidence = {"checked_at_unix": time.time(), "models": entries, "free_model_daily_requests": quota,
                     "is_free_tier": data.get("is_free_tier"),
                     "configuration": {"reasoning_by_model": {spec: reasoning_settings(spec.split(":", 1)[1]) for spec in models}, "max_output_tokens": settings.llm_max_output_tokens,
+                                      "practice_max_output_tokens": settings.llm_practice_max_output_tokens, "prompt_version": settings.prompt_version,
                                       "openrouter_rpd": settings.openrouter_rpd, "openrouter_rpm": settings.openrouter_rpm,
                                       "daily_token_limit": settings.daily_token_limit}}
         output_path.with_suffix(".preflight.json").write_text(json.dumps(evidence, ensure_ascii=False, indent=2) + "\n")
         print(f"OpenRouter free quota: {quota or 'not reported'}", flush=True)
-        if quota is not None and quota.get("remaining", 0) < len(models) * 7:
-            raise RuntimeError("Insufficient remaining free allowance for seven cases per model")
+        required_requests = minimum_requests if minimum_requests is not None else len(models) * 7
+        if quota is not None and quota.get("remaining", 0) < required_requests:
+            raise RuntimeError("Insufficient remaining free allowance for the planned evaluation")
 
 
 def safe_provider_error(body: Any) -> dict | None:

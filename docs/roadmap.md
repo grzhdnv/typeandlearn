@@ -14,8 +14,8 @@ checkmarks in the historical issue map do not establish production readiness.
   controls, saved original-text completion progress, results, and practice history.
 - Provider routing, owner scoping, backend JWT validation, analytics, and export/delete
   implementations with automated backend coverage.
-- Ruff, Python type checking, frontend type checking and build, 92 backend tests,
-  27 frontend unit tests, and 21 isolated Chromium browser regressions.
+- Ruff, Python type checking, frontend type checking and build, 102 backend tests,
+  31 frontend unit tests, and 27 isolated Chromium browser regressions.
 - Live synthetic comparison across five languages, metadata, exercises, and a real
   DeepSeek fallback flow; shared quotas and approved $0.50/day and $5/month limits.
 
@@ -27,8 +27,11 @@ checkmarks in the historical issue map do not establish production readiness.
   `openrouter-evaluation-2026-10-20.md`. Groq/DeepSeek defaults remain unchanged.
 - [x] Compare MiniMax M3.1 Flash via prompted JSON output: 7/7 with mandatory low
   reasoning, better hint lookup coverage than Ultra in this small sample.
-- [ ] Validate hint coverage/normalization and provider data handling before
-  promoting MiniMax or Ultra to automatic fallback.
+- [x] Normalize/validate hint coverage and run the real MiniMax pipeline in all five
+  languages; verify the three-provider fallback chain. See `minimax-acceptance-2026-10-20.md`.
+- [x] Review MiniMax content-use terms and document opt-in routing. Global defaults
+  remain unchanged; no blanket no-training/ZDR commitment was established.
+- [ ] Improve CEFR grading and generated exercise naturalness with a labeled review set.
 
 ## Next: reliable processing and realistic practice
 

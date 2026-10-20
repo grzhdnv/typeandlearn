@@ -154,7 +154,7 @@ reported 18 used / 1,000 allowed free requests. Earlier key snapshots reported a
 50-request tier; the recorded current allowance controlled the final run. No credit
 purchase or account setting was performed by the agent.
 
-Across all OpenRouter attempts in this session, including authentication failures,
+Across the initial comparison (before the later hint-acceptance work), including authentication failures,
 probes, and interruption, the shared ledger contained 91 calls after the Super retry and MiniMax follow-up: 47 with returned
 usage, 43 failed without usage, and one unknown. Returned usage totaled **71,424
 tokens at $0**; the unknown call retains a 3,477-token reservation. Final-run totals
@@ -227,3 +227,12 @@ and production acceptance remain unverified.
 - [Reasoning controls and token budgets](https://openrouter.ai/docs/guides/best-practices/reasoning-tokens)
 - [Data collection](https://openrouter.ai/docs/guides/privacy/data-collection)
 - [Management keys](https://openrouter.ai/docs/guides/overview/auth/management-api-keys)
+
+## Subsequent acceptance work
+
+Hint normalization, bounded coverage repair, occurrence-aware UI lookup, and the
+five-language real storage/enrichment flow were subsequently verified. See
+[the acceptance report](minimax-acceptance-2026-10-20.md) for the current code state,
+new drill cap, quota/usage evidence, opt-in routing, and remaining content-quality
+and provider-policy limitations. The original comparison outputs above remain
+historical observations rather than results from the revised hint validator.

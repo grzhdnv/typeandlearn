@@ -47,6 +47,7 @@ class Settings(BaseModel):
     openrouter_rpd: int = Field(default_factory=lambda: int(os.getenv("OPENROUTER_RPD", "40")), gt=0)
     openrouter_max_wait_seconds: float = Field(default_factory=lambda: float(os.getenv("OPENROUTER_MAX_WAIT_SECONDS", "10")), ge=0)
     llm_max_output_tokens: int = Field(default_factory=lambda: int(os.getenv("LLM_MAX_OUTPUT_TOKENS", "2048")), gt=0)
+    llm_practice_max_output_tokens: int = Field(default_factory=lambda: int(os.getenv("LLM_PRACTICE_MAX_OUTPUT_TOKENS", "4096")), gt=0)
     llm_max_request_bytes: int = Field(default_factory=lambda: int(os.getenv("LLM_MAX_REQUEST_BYTES", "32000")), gt=0)
     deepseek_daily_usd: float = Field(default_factory=lambda: float(os.getenv("DEEPSEEK_DAILY_USD", "0.50")), ge=0)
     deepseek_monthly_usd: float = Field(default_factory=lambda: float(os.getenv("DEEPSEEK_MONTHLY_USD", "5")), ge=0)
@@ -54,7 +55,7 @@ class Settings(BaseModel):
     deepseek_cached_input_usd_per_mtok: float = Field(default_factory=lambda: float(os.getenv("DEEPSEEK_CACHED_INPUT_USD_PER_MTOK", "0.006")), ge=0)
     deepseek_output_usd_per_mtok: float = Field(default_factory=lambda: float(os.getenv("DEEPSEEK_OUTPUT_USD_PER_MTOK", "1.20")), ge=0)
     prompt_version: str = Field(
-        default_factory=lambda: os.getenv("PROMPT_VERSION", "v2-multilingual")
+        default_factory=lambda: os.getenv("PROMPT_VERSION", "v3-validated-hints")
     )
     auth_mode: str = Field(
         default_factory=lambda: os.getenv("AUTH_MODE", "local").lower()

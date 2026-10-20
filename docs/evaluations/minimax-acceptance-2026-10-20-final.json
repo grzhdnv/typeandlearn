@@ -1,0 +1,3757 @@
+[
+  {
+    "language": "German",
+    "source": "„Ich stehe früh auf“, sagt Anna. Am Bahnhof wartet sie, bis der Zug um sieben Uhr abfährt.",
+    "saved": {
+      "id": 1,
+      "title": "Am Bahnhof",
+      "status": "processed",
+      "language": "German",
+      "difficulty_level": "A1",
+      "author": null,
+      "category": "Short Story",
+      "word_count": 17,
+      "completed_sentences": 0,
+      "total_sentences": 2,
+      "estimated_time_minutes": 1,
+      "completed_sentence_indices": [],
+      "original_paragraphs": [
+        {
+          "index": 0,
+          "sentences": [
+            {
+              "index": 0,
+              "text": "\"Ich stehe früh auf\", sagt Anna.",
+              "translation": "\"I get up early,\" says Anna.",
+              "translation_hints": [
+                {
+                  "words": [
+                    "Ich"
+                  ],
+                  "hint": "I"
+                },
+                {
+                  "words": [
+                    "stehe",
+                    "auf"
+                  ],
+                  "hint": "get up"
+                },
+                {
+                  "words": [
+                    "früh"
+                  ],
+                  "hint": "early"
+                },
+                {
+                  "words": [
+                    "sagt"
+                  ],
+                  "hint": "says"
+                },
+                {
+                  "words": [
+                    "Anna"
+                  ],
+                  "hint": "Anna"
+                }
+              ]
+            },
+            {
+              "index": 1,
+              "text": "Am Bahnhof wartet sie, bis der Zug um sieben Uhr abfährt.",
+              "translation": "At the station, she waits until the train departs at seven o'clock.",
+              "translation_hints": [
+                {
+                  "words": [
+                    "Am",
+                    "Bahnhof"
+                  ],
+                  "hint": "at the station"
+                },
+                {
+                  "words": [
+                    "wartet"
+                  ],
+                  "hint": "waits"
+                },
+                {
+                  "words": [
+                    "sie"
+                  ],
+                  "hint": "she"
+                },
+                {
+                  "words": [
+                    "bis"
+                  ],
+                  "hint": "until"
+                },
+                {
+                  "words": [
+                    "der",
+                    "Zug"
+                  ],
+                  "hint": "the train"
+                },
+                {
+                  "words": [
+                    "um"
+                  ],
+                  "hint": "at"
+                },
+                {
+                  "words": [
+                    "sieben"
+                  ],
+                  "hint": "seven"
+                },
+                {
+                  "words": [
+                    "Uhr"
+                  ],
+                  "hint": "o'clock"
+                },
+                {
+                  "words": [
+                    "abfährt"
+                  ],
+                  "hint": "departs"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "practice_sentences": [
+        {
+          "index": 0,
+          "sentence": "Anna sagt, dass der Zug um acht Uhr abfährt.",
+          "translation": "Anna says that the train departs at eight o’clock.",
+          "translation_hints": [
+            {
+              "words": [
+                "Anna"
+              ],
+              "hint": "Anna"
+            },
+            {
+              "words": [
+                "sagt"
+              ],
+              "hint": "says"
+            },
+            {
+              "words": [
+                "dass"
+              ],
+              "hint": "that"
+            },
+            {
+              "words": [
+                "der"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "Zug"
+              ],
+              "hint": "train"
+            },
+            {
+              "words": [
+                "um"
+              ],
+              "hint": "at"
+            },
+            {
+              "words": [
+                "acht"
+              ],
+              "hint": "eight"
+            },
+            {
+              "words": [
+                "Uhr"
+              ],
+              "hint": "o’clock"
+            },
+            {
+              "words": [
+                "abfährt"
+              ],
+              "hint": "departs"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "sentence": "Der Zug fährt um neun Uhr vom Bahnhof ab.",
+          "translation": "The train departs from the station at nine o’clock.",
+          "translation_hints": [
+            {
+              "words": [
+                "Der"
+              ],
+              "hint": "The"
+            },
+            {
+              "words": [
+                "Zug"
+              ],
+              "hint": "train"
+            },
+            {
+              "words": [
+                "fährt",
+                "ab"
+              ],
+              "hint": "departs"
+            },
+            {
+              "words": [
+                "um"
+              ],
+              "hint": "at"
+            },
+            {
+              "words": [
+                "neun"
+              ],
+              "hint": "nine"
+            },
+            {
+              "words": [
+                "Uhr"
+              ],
+              "hint": "o’clock"
+            },
+            {
+              "words": [
+                "vom"
+              ],
+              "hint": "from the"
+            },
+            {
+              "words": [
+                "Bahnhof"
+              ],
+              "hint": "station"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "sentence": "Wir warten am Bahnhof, weil Anna früh kommt.",
+          "translation": "We wait at the station because Anna is coming early.",
+          "translation_hints": [
+            {
+              "words": [
+                "Wir"
+              ],
+              "hint": "We"
+            },
+            {
+              "words": [
+                "warten"
+              ],
+              "hint": "wait"
+            },
+            {
+              "words": [
+                "am"
+              ],
+              "hint": "at the"
+            },
+            {
+              "words": [
+                "Bahnhof"
+              ],
+              "hint": "station"
+            },
+            {
+              "words": [
+                "weil"
+              ],
+              "hint": "because"
+            },
+            {
+              "words": [
+                "Anna"
+              ],
+              "hint": "Anna"
+            },
+            {
+              "words": [
+                "früh"
+              ],
+              "hint": "early"
+            },
+            {
+              "words": [
+                "kommt"
+              ],
+              "hint": "is coming"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "sentence": "Der Zug steht am Bahnhof, und die Uhr zeigt fünf.",
+          "translation": "The train is standing at the station, and the clock shows five.",
+          "translation_hints": [
+            {
+              "words": [
+                "Der"
+              ],
+              "hint": "The"
+            },
+            {
+              "words": [
+                "Zug"
+              ],
+              "hint": "train"
+            },
+            {
+              "words": [
+                "steht"
+              ],
+              "hint": "is standing"
+            },
+            {
+              "words": [
+                "am"
+              ],
+              "hint": "at the"
+            },
+            {
+              "words": [
+                "Bahnhof"
+              ],
+              "hint": "station"
+            },
+            {
+              "words": [
+                "und"
+              ],
+              "hint": "and"
+            },
+            {
+              "words": [
+                "die"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "Uhr"
+              ],
+              "hint": "clock"
+            },
+            {
+              "words": [
+                "zeigt"
+              ],
+              "hint": "shows"
+            },
+            {
+              "words": [
+                "fünf"
+              ],
+              "hint": "five"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "sentence": "Am Bahnhof sagen wir Anna, dass der Zug gleich abfährt.",
+          "translation": "At the station, we tell Anna that the train departs soon.",
+          "translation_hints": [
+            {
+              "words": [
+                "Am"
+              ],
+              "hint": "At the"
+            },
+            {
+              "words": [
+                "Bahnhof"
+              ],
+              "hint": "station"
+            },
+            {
+              "words": [
+                "sagen"
+              ],
+              "hint": "tell"
+            },
+            {
+              "words": [
+                "wir"
+              ],
+              "hint": "we"
+            },
+            {
+              "words": [
+                "Anna"
+              ],
+              "hint": "Anna"
+            },
+            {
+              "words": [
+                "dass"
+              ],
+              "hint": "that"
+            },
+            {
+              "words": [
+                "der"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "Zug"
+              ],
+              "hint": "train"
+            },
+            {
+              "words": [
+                "gleich"
+              ],
+              "hint": "soon"
+            },
+            {
+              "words": [
+                "abfährt"
+              ],
+              "hint": "departs"
+            }
+          ]
+        }
+      ],
+      "top_words": [
+        {
+          "word": "stehen",
+          "translation": "Synthetic dictionary fixture"
+        },
+        {
+          "word": "früh",
+          "translation": "Synthetic dictionary fixture"
+        },
+        {
+          "word": "sagen",
+          "translation": "Synthetic dictionary fixture"
+        },
+        {
+          "word": "Anna",
+          "translation": "Synthetic dictionary fixture"
+        },
+        {
+          "word": "Bahnhof",
+          "translation": "Synthetic dictionary fixture"
+        },
+        {
+          "word": "warten",
+          "translation": "Synthetic dictionary fixture"
+        },
+        {
+          "word": "Zug",
+          "translation": "Synthetic dictionary fixture"
+        },
+        {
+          "word": "Uhr",
+          "translation": "Synthetic dictionary fixture"
+        },
+        {
+          "word": "abfahren",
+          "translation": "Synthetic dictionary fixture"
+        }
+      ],
+      "enrichment_stage": "completed",
+      "error_message": null
+    },
+    "accepted": true,
+    "calls": [
+      {
+        "task": "metadata",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 624,
+        "cost_usd": 0.0,
+        "returned_model": "minimax/minimax-m3.1-flash:free"
+      },
+      {
+        "task": "filter",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 996,
+        "cost_usd": 0.0,
+        "returned_model": "minimax/minimax-m3.1-flash:free"
+      },
+      {
+        "task": "translation",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 1321,
+        "cost_usd": 0.0,
+        "returned_model": "minimax/minimax-m3.1-flash:free"
+      },
+      {
+        "task": "translation",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 1535,
+        "cost_usd": 0.0,
+        "returned_model": "minimax/minimax-m3.1-flash:free"
+      },
+      {
+        "task": "practice",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 3105,
+        "cost_usd": 0.0,
+        "returned_model": "minimax/minimax-m3.1-flash:free"
+      }
+    ],
+    "responses": [
+      {
+        "status_code": 200,
+        "model": "minimax/minimax-m3.1-flash:free",
+        "provider": "Minimax",
+        "usage": {
+          "prompt_tokens": 595,
+          "completion_tokens": 29,
+          "total_tokens": 624,
+          "cost": 0,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 186,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0,
+            "upstream_inference_prompt_cost": 0,
+            "upstream_inference_completions_cost": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "content": "{\"title\":\"Am Bahnhof\",\"difficulty_level\":\"A1\",\"language\":\"German\",\"author\":null,\"category\":\"Short Story\"}",
+            "tool_calls": null
+          }
+        ],
+        "error": null
+      },
+      {
+        "status_code": 200,
+        "model": "minimax/minimax-m3.1-flash:free",
+        "provider": "Minimax",
+        "usage": {
+          "prompt_tokens": 732,
+          "completion_tokens": 264,
+          "total_tokens": 996,
+          "cost": 0,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 186,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0,
+            "upstream_inference_prompt_cost": 0,
+            "upstream_inference_completions_cost": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 172,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "content": "{\"words\":[{\"word\":\"stehen\",\"count\":1},{\"word\":\"früh\",\"count\":1},{\"word\":\"sagen\",\"count\":1},{\"word\":\"Anna\",\"count\":1},{\"word\":\"Bahnhof\",\"count\":1},{\"word\":\"warten\",\"count\":1},{\"word\":\"Zug\",\"count\":1},{\"word\":\"Uhr\",\"count\":1},{\"word\":\"abfahren\",\"count\":1}]}",
+            "tool_calls": null
+          }
+        ],
+        "error": null
+      },
+      {
+        "status_code": 200,
+        "model": "minimax/minimax-m3.1-flash:free",
+        "provider": "Minimax",
+        "usage": {
+          "prompt_tokens": 1223,
+          "completion_tokens": 98,
+          "total_tokens": 1321,
+          "cost": 0,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 1222,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0,
+            "upstream_inference_prompt_cost": 0,
+            "upstream_inference_completions_cost": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 32,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "content": "{\"translation\":\"\\\"I get up early,\\\" says Anna.\",\"translation_hints\":[{\"words\":[\"Ich\"],\"hint\":\"I\"},{\"words\":[\"stehe\",\"auf\"],\"hint\":\"get up\"},{\"words\":[\"früh\"],\"hint\":\"early\"},{\"words\":[\"sagt\"],\"hint\":\"says\"},{\"words\":[\"Anna\"],\"hint\":\"Anna\"}]}",
+            "tool_calls": null
+          }
+        ],
+        "error": null
+      },
+      {
+        "status_code": 200,
+        "model": "minimax/minimax-m3.1-flash:free",
+        "provider": "Minimax",
+        "usage": {
+          "prompt_tokens": 1241,
+          "completion_tokens": 294,
+          "total_tokens": 1535,
+          "cost": 0,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 1239,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0,
+            "upstream_inference_prompt_cost": 0,
+            "upstream_inference_completions_cost": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 180,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "content": "{\"translation\":\"At the station, she waits until the train departs at seven o'clock.\",\"translation_hints\":[{\"words\":[\"Am\",\"Bahnhof\"],\"hint\":\"at the station\"},{\"words\":[\"wartet\"],\"hint\":\"waits\"},{\"words\":[\"sie\"],\"hint\":\"she\"},{\"words\":[\"bis\"],\"hint\":\"until\"},{\"words\":[\"der\",\"Zug\"],\"hint\":\"the train\"},{\"words\":[\"um\"],\"hint\":\"at\"},{\"words\":[\"sieben\"],\"hint\":\"seven\"},{\"words\":[\"Uhr\"],\"hint\":\"o'clock\"},{\"words\":[\"abfährt\"],\"hint\":\"departs\"}]}",
+            "tool_calls": null
+          }
+        ],
+        "error": null
+      },
+      {
+        "status_code": 200,
+        "model": "minimax/minimax-m3.1-flash:free",
+        "provider": "Minimax",
+        "usage": {
+          "prompt_tokens": 1120,
+          "completion_tokens": 1985,
+          "total_tokens": 3105,
+          "cost": 0,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 1118,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0,
+            "upstream_inference_prompt_cost": 0,
+            "upstream_inference_completions_cost": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 1004,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "content": "{\n  \"sentences\": [\n    {\n      \"sentence\": \"Anna sagt, dass der Zug um acht Uhr abfährt.\",\n      \"translation\": \"Anna says that the train departs at eight o’clock.\",\n      \"translation_hints\": [\n        { \"words\": [\"Anna\"], \"hint\": \"Anna\" },\n        { \"words\": [\"sagt\"], \"hint\": \"says\" },\n        { \"words\": [\"dass\"], \"hint\": \"that\" },\n        { \"words\": [\"der\"], \"hint\": \"the\" },\n        { \"words\": [\"Zug\"], \"hint\": \"train\" },\n        { \"words\": [\"um\"], \"hint\": \"at\" },\n        { \"words\": [\"acht\"], \"hint\": \"eight\" },\n        { \"words\": [\"Uhr\"], \"hint\": \"o’clock\" },\n        { \"words\": [\"abfährt\"], \"hint\": \"departs\" }\n      ]\n    },\n    {\n      \"sentence\": \"Der Zug fährt um neun Uhr vom Bahnhof ab.\",\n      \"translation\": \"The train departs from the station at nine o’clock.\",\n      \"translation_hints\": [\n        { \"words\": [\"Der\"], \"hint\": \"The\" },\n        { \"words\": [\"Zug\"], \"hint\": \"train\" },\n        { \"words\": [\"fährt\", \"ab\"], \"hint\": \"departs\" },\n        { \"words\": [\"um\"], \"hint\": \"at\" },\n        { \"words\": [\"neun\"], \"hint\": \"nine\" },\n        { \"words\": [\"Uhr\"], \"hint\": \"o’clock\" },\n        { \"words\": [\"vom\"], \"hint\": \"from the\" },\n        { \"words\": [\"Bahnhof\"], \"hint\": \"station\" }\n      ]\n    },\n    {\n      \"sentence\": \"Wir warten am Bahnhof, weil Anna früh kommt.\",\n      \"translation\": \"We wait at the station because Anna is coming early.\",\n      \"translation_hints\": [\n        { \"words\": [\"Wir\"], \"hint\": \"We\" },\n        { \"words\": [\"warten\"], \"hint\": \"wait\" },\n        { \"words\": [\"am\"], \"hint\": \"at the\" },\n        { \"words\": [\"Bahnhof\"], \"hint\": \"station\" },\n        { \"words\": [\"weil\"], \"hint\": \"because\" },\n        { \"words\": [\"Anna\"], \"hint\": \"Anna\" },\n        { \"words\": [\"früh\"], \"hint\": \"early\" },\n        { \"words\": [\"kommt\"], \"hint\": \"is coming\" }\n      ]\n    },\n    {\n      \"sentence\": \"Der Zug steht am Bahnhof, und die Uhr zeigt fünf.\",\n      \"translation\": \"The train is standing at the station, and the clock shows five.\",\n      \"translation_hints\": [\n        { \"words\": [\"Der\"], \"hint\": \"The\" },\n        { \"words\": [\"Zug\"], \"hint\": \"train\" },\n        { \"words\": [\"steht\"], \"hint\": \"is standing\" },\n        { \"words\": [\"am\"], \"hint\": \"at the\" },\n        { \"words\": [\"Bahnhof\"], \"hint\": \"station\" },\n        { \"words\": [\"und\"], \"hint\": \"and\" },\n        { \"words\": [\"die\"], \"hint\": \"the\" },\n        { \"words\": [\"Uhr\"], \"hint\": \"clock\" },\n        { \"words\": [\"zeigt\"], \"hint\": \"shows\" },\n        { \"words\": [\"fünf\"], \"hint\": \"five\" }\n      ]\n    },\n    {\n      \"sentence\": \"Am Bahnhof sagen wir Anna, dass der Zug gleich abfährt.\",\n      \"translation\": \"At the station, we tell Anna that the train departs soon.\",\n      \"translation_hints\": [\n        { \"words\": [\"Am\"], \"hint\": \"At the\" },\n        { \"words\": [\"Bahnhof\"], \"hint\": \"station\" },\n        { \"words\": [\"sagen\"], \"hint\": \"tell\" },\n        { \"words\": [\"wir\"], \"hint\": \"we\" },\n        { \"words\": [\"Anna\"], \"hint\": \"Anna\" },\n        { \"words\": [\"dass\"], \"hint\": \"that\" },\n        { \"words\": [\"der\"], \"hint\": \"the\" },\n        { \"words\": [\"Zug\"], \"hint\": \"train\" },\n        { \"words\": [\"gleich\"], \"hint\": \"soon\" },\n        { \"words\": [\"abfährt\"], \"hint\": \"departs\" }\n      ]\n    }\n  ]\n}",
+            "tool_calls": null
+          }
+        ],
+        "error": null
+      }
+    ],
+    "seconds": 25.79
+  },
+  {
+    "language": "French",
+    "source": "Si j’avais su que le train était en retard, je serais venu plus tôt. Au marché, elle achète du pain, puis elle rentre chez elle.",
+    "saved": {
+      "id": 2,
+      "title": "Un retard de train et un retour du marché",
+      "status": "processed",
+      "language": "French",
+      "difficulty_level": "A2",
+      "author": null,
+      "category": "Vie quotidienne",
+      "word_count": 25,
+      "completed_sentences": 0,
+      "total_sentences": 2,
+      "estimated_time_minutes": 1,
+      "completed_sentence_indices": [],
+      "original_paragraphs": [
+        {
+          "index": 0,
+          "sentences": [
+            {
+              "index": 0,
+              "text": "Si j’avais su que le train était en retard, je serais venu plus tôt.",
+              "translation": "If I had known that the train was delayed, I would have come earlier.",
+              "translation_hints": [
+                {
+                  "words": [
+                    "Si"
+                  ],
+                  "hint": "If"
+                },
+                {
+                  "words": [
+                    "j'avais",
+                    "su"
+                  ],
+                  "hint": "had known"
+                },
+                {
+                  "words": [
+                    "que"
+                  ],
+                  "hint": "that"
+                },
+                {
+                  "words": [
+                    "le"
+                  ],
+                  "hint": "the"
+                },
+                {
+                  "words": [
+                    "train"
+                  ],
+                  "hint": "train"
+                },
+                {
+                  "words": [
+                    "était"
+                  ],
+                  "hint": "was"
+                },
+                {
+                  "words": [
+                    "en",
+                    "retard"
+                  ],
+                  "hint": "delayed"
+                },
+                {
+                  "words": [
+                    "je"
+                  ],
+                  "hint": "I"
+                },
+                {
+                  "words": [
+                    "serais",
+                    "venu"
+                  ],
+                  "hint": "would have come"
+                },
+                {
+                  "words": [
+                    "plus",
+                    "tôt"
+                  ],
+                  "hint": "earlier"
+                }
+              ]
+            },
+            {
+              "index": 1,
+              "text": "Au marché, elle achète du pain, puis elle rentre chez elle.",
+              "translation": "At the market, she buys some bread, and then she goes home.",
+              "translation_hints": [
+                {
+                  "words": [
+                    "Au"
+                  ],
+                  "hint": "At the"
+                },
+                {
+                  "words": [
+                    "marché"
+                  ],
+                  "hint": "market"
+                },
+                {
+                  "words": [
+                    "elle"
+                  ],
+                  "hint": "she"
+                },
+                {
+                  "words": [
+                    "achète"
+                  ],
+                  "hint": "buys"
+                },
+                {
+                  "words": [
+                    "du"
+                  ],
+                  "hint": "some"
+                },
+                {
+                  "words": [
+                    "pain"
+                  ],
+                  "hint": "bread"
+                },
+                {
+                  "words": [
+                    "puis"
+                  ],
+                  "hint": "then"
+                },
+                {
+                  "words": [
+                    "elle"
+                  ],
+                  "hint": "she"
+                },
+                {
+                  "words": [
+                    "rentre"
+                  ],
+                  "hint": "goes"
+                },
+                {
+                  "words": [
+                    "chez"
+                  ],
+                  "hint": "home"
+                },
+                {
+                  "words": [
+                    "elle"
+                  ],
+                  "hint": "she"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "practice_sentences": [
+        {
+          "index": 0,
+          "sentence": "Je vais au marché pour acheter du pain, puis je vais rentrer.",
+          "translation": "I am going to the market to buy some bread, and then I am going home.",
+          "translation_hints": [
+            {
+              "words": [
+                "Je"
+              ],
+              "hint": "I"
+            },
+            {
+              "words": [
+                "vais"
+              ],
+              "hint": "am going"
+            },
+            {
+              "words": [
+                "au"
+              ],
+              "hint": "to the"
+            },
+            {
+              "words": [
+                "marché"
+              ],
+              "hint": "market"
+            },
+            {
+              "words": [
+                "pour"
+              ],
+              "hint": "in order to"
+            },
+            {
+              "words": [
+                "acheter"
+              ],
+              "hint": "to buy"
+            },
+            {
+              "words": [
+                "du"
+              ],
+              "hint": "some"
+            },
+            {
+              "words": [
+                "pain"
+              ],
+              "hint": "bread"
+            },
+            {
+              "words": [
+                "puis"
+              ],
+              "hint": "then"
+            },
+            {
+              "words": [
+                "je"
+              ],
+              "hint": "I"
+            },
+            {
+              "words": [
+                "vais"
+              ],
+              "hint": "am going"
+            },
+            {
+              "words": [
+                "rentrer"
+              ],
+              "hint": "to go home"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "sentence": "J'ai su acheter du pain au marché, puis je suis rentré.",
+          "translation": "I knew how to buy some bread at the market, and then I went home.",
+          "translation_hints": [
+            {
+              "words": [
+                "J'ai"
+              ],
+              "hint": "I have"
+            },
+            {
+              "words": [
+                "su"
+              ],
+              "hint": "known how"
+            },
+            {
+              "words": [
+                "acheter"
+              ],
+              "hint": "to buy"
+            },
+            {
+              "words": [
+                "du"
+              ],
+              "hint": "some"
+            },
+            {
+              "words": [
+                "pain"
+              ],
+              "hint": "bread"
+            },
+            {
+              "words": [
+                "au"
+              ],
+              "hint": "at the"
+            },
+            {
+              "words": [
+                "marché"
+              ],
+              "hint": "market"
+            },
+            {
+              "words": [
+                "puis"
+              ],
+              "hint": "then"
+            },
+            {
+              "words": [
+                "je"
+              ],
+              "hint": "I"
+            },
+            {
+              "words": [
+                "suis"
+              ],
+              "hint": "went"
+            },
+            {
+              "words": [
+                "rentré"
+              ],
+              "hint": "entered; went home"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "sentence": "Le train a du retard, donc je ne vais pas être à l'heure.",
+          "translation": "The train is delayed, so I am not going to be on time.",
+          "translation_hints": [
+            {
+              "words": [
+                "Le"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "train"
+              ],
+              "hint": "train"
+            },
+            {
+              "words": [
+                "a",
+                "du",
+                "retard"
+              ],
+              "hint": "is delayed"
+            },
+            {
+              "words": [
+                "donc"
+              ],
+              "hint": "so"
+            },
+            {
+              "words": [
+                "je"
+              ],
+              "hint": "I"
+            },
+            {
+              "words": [
+                "ne"
+              ],
+              "hint": "not"
+            },
+            {
+              "words": [
+                "vais"
+              ],
+              "hint": "am going"
+            },
+            {
+              "words": [
+                "pas"
+              ],
+              "hint": "not"
+            },
+            {
+              "words": [
+                "être"
+              ],
+              "hint": "to be"
+            },
+            {
+              "words": [
+                "à",
+                "l'heure"
+              ],
+              "hint": "on time"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "sentence": "Nous devons venir plus tôt pour avoir le train.",
+          "translation": "We have to come earlier to catch the train.",
+          "translation_hints": [
+            {
+              "words": [
+                "Nous"
+              ],
+              "hint": "we"
+            },
+            {
+              "words": [
+                "devons"
+              ],
+              "hint": "must"
+            },
+            {
+              "words": [
+                "venir"
+              ],
+              "hint": "to come"
+            },
+            {
+              "words": [
+                "plus",
+                "tôt"
+              ],
+              "hint": "earlier"
+            },
+            {
+              "words": [
+                "pour"
+              ],
+              "hint": "in order to"
+            },
+            {
+              "words": [
+                "avoir"
+              ],
+              "hint": "to catch"
+            },
+            {
+              "words": [
+                "le"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "train"
+              ],
+              "hint": "train"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "sentence": "Elle va être au marché pour acheter du pain et avoir du temps.",
+          "translation": "She is going to be at the market to buy some bread and have some time.",
+          "translation_hints": [
+            {
+              "words": [
+                "Elle"
+              ],
+              "hint": "she"
+            },
+            {
+              "words": [
+                "va"
+              ],
+              "hint": "is going"
+            },
+            {
+              "words": [
+                "être"
+              ],
+              "hint": "to be"
+            },
+            {
+              "words": [
+                "au"
+              ],
+              "hint": "at the"
+            },
+            {
+              "words": [
+                "marché"
+              ],
+              "hint": "market"
+            },
+            {
+              "words": [
+                "pour"
+              ],
+              "hint": "in order to"
+            },
+            {
+              "words": [
+                "acheter"
+              ],
+              "hint": "to buy"
+            },
+            {
+              "words": [
+                "du"
+              ],
+              "hint": "some"
+            },
+            {
+              "words": [
+                "pain"
+              ],
+              "hint": "bread"
+            },
+            {
+              "words": [
+                "et"
+              ],
+              "hint": "and"
+            },
+            {
+              "words": [
+                "avoir"
+              ],
+              "hint": "to have"
+            },
+            {
+              "words": [
+                "du"
+              ],
+              "hint": "some"
+            },
+            {
+              "words": [
+                "temps"
+              ],
+              "hint": "time"
+            }
+          ]
+        }
+      ],
+      "top_words": [
+        {
+          "word": "être",
+          "translation": "Synthetic dictionary fixture"
+        },
+        {
+          "word": "su",
+          "translation": "Synthetic dictionary fixture"
+        },
+        {
+          "word": "train",
+          "translation": "Synthetic dictionary fixture"
+        },
+        {
+          "word": "retard",
+          "translation": "Synthetic dictionary fixture"
+        },
+        {
+          "word": "avoir",
+          "translation": "Synthetic dictionary fixture"
+        },
+        {
+          "word": "venir",
+          "translation": "Synthetic dictionary fixture"
+        },
+        {
+          "word": "plus",
+          "translation": "Synthetic dictionary fixture"
+        },
+        {
+          "word": "tôt",
+          "translation": "Synthetic dictionary fixture"
+        },
+        {
+          "word": "marché",
+          "translation": "Synthetic dictionary fixture"
+        },
+        {
+          "word": "acheter",
+          "translation": "Synthetic dictionary fixture"
+        },
+        {
+          "word": "pain",
+          "translation": "Synthetic dictionary fixture"
+        },
+        {
+          "word": "puis",
+          "translation": "Synthetic dictionary fixture"
+        },
+        {
+          "word": "rentrer",
+          "translation": "Synthetic dictionary fixture"
+        }
+      ],
+      "enrichment_stage": "completed",
+      "error_message": null
+    },
+    "accepted": true,
+    "calls": [
+      {
+        "task": "metadata",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 659,
+        "cost_usd": 0.0,
+        "returned_model": "minimax/minimax-m3.1-flash:free"
+      },
+      {
+        "task": "filter",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 1205,
+        "cost_usd": 0.0,
+        "returned_model": "minimax/minimax-m3.1-flash:free"
+      },
+      {
+        "task": "translation",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 1440,
+        "cost_usd": 0.0,
+        "returned_model": "minimax/minimax-m3.1-flash:free"
+      },
+      {
+        "task": "translation",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 1369,
+        "cost_usd": 0.0,
+        "returned_model": "minimax/minimax-m3.1-flash:free"
+      },
+      {
+        "task": "practice",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 3204,
+        "cost_usd": 0.0,
+        "returned_model": "minimax/minimax-m3.1-flash:free"
+      }
+    ],
+    "responses": [
+      {
+        "status_code": 200,
+        "model": "minimax/minimax-m3.1-flash:free",
+        "provider": "Minimax",
+        "usage": {
+          "prompt_tokens": 598,
+          "completion_tokens": 61,
+          "total_tokens": 659,
+          "cost": 0,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 186,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0,
+            "upstream_inference_prompt_cost": 0,
+            "upstream_inference_completions_cost": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 28,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "content": "{\"title\":\"Un retard de train et un retour du marché\",\"difficulty_level\":\"A2\",\"language\":\"French\",\"author\":null,\"category\":\"Vie quotidienne\"}",
+            "tool_calls": null
+          }
+        ],
+        "error": null
+      },
+      {
+        "status_code": 200,
+        "model": "minimax/minimax-m3.1-flash:free",
+        "provider": "Minimax",
+        "usage": {
+          "prompt_tokens": 802,
+          "completion_tokens": 403,
+          "total_tokens": 1205,
+          "cost": 0,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 801,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0,
+            "upstream_inference_prompt_cost": 0,
+            "upstream_inference_completions_cost": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 273,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "content": "{\"words\":[{\"word\":\"être\",\"count\":2},{\"word\":\"su\",\"count\":1},{\"word\":\"train\",\"count\":1},{\"word\":\"retard\",\"count\":1},{\"word\":\"avoir\",\"count\":1},{\"word\":\"venir\",\"count\":1},{\"word\":\"plus\",\"count\":1},{\"word\":\"tôt\",\"count\":1},{\"word\":\"marché\",\"count\":1},{\"word\":\"acheter\",\"count\":1},{\"word\":\"pain\",\"count\":1},{\"word\":\"puis\",\"count\":1},{\"word\":\"rentrer\",\"count\":1}]}",
+            "tool_calls": null
+          }
+        ],
+        "error": null
+      },
+      {
+        "status_code": 200,
+        "model": "minimax/minimax-m3.1-flash:free",
+        "provider": "Minimax",
+        "usage": {
+          "prompt_tokens": 1249,
+          "completion_tokens": 120,
+          "total_tokens": 1369,
+          "cost": 0,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 128,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0,
+            "upstream_inference_prompt_cost": 0,
+            "upstream_inference_completions_cost": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "content": "{\"translation\":\"At the market, she buys some bread, and then she goes home.\",\"translation_hints\":[{\"words\":[\"Au\"],\"hint\":\"At the\"},{\"words\":[\"marché\"],\"hint\":\"market\"},{\"words\":[\"elle\"],\"hint\":\"she\"},{\"words\":[\"achète\"],\"hint\":\"buys\"},{\"words\":[\"du\"],\"hint\":\"some\"},{\"words\":[\"pain\"],\"hint\":\"bread\"},{\"words\":[\"puis\"],\"hint\":\"then\"},{\"words\":[\"elle\"],\"hint\":\"she\"},{\"words\":[\"rentre\"],\"hint\":\"goes\"},{\"words\":[\"chez\"],\"hint\":\"home\"},{\"words\":[\"elle\"],\"hint\":\"she\"}]}",
+            "tool_calls": null
+          }
+        ],
+        "error": null
+      },
+      {
+        "status_code": 200,
+        "model": "minimax/minimax-m3.1-flash:free",
+        "provider": "Minimax",
+        "usage": {
+          "prompt_tokens": 1235,
+          "completion_tokens": 205,
+          "total_tokens": 1440,
+          "cost": 0,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 1187,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0,
+            "upstream_inference_prompt_cost": 0,
+            "upstream_inference_completions_cost": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 83,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "content": "{\"translation\":\"If I had known that the train was delayed, I would have come earlier.\",\"translation_hints\":[{\"words\":[\"Si\"],\"hint\":\"If\"},{\"words\":[\"j’avais\",\"su\"],\"hint\":\"had known\"},{\"words\":[\"que\"],\"hint\":\"that\"},{\"words\":[\"le\"],\"hint\":\"the\"},{\"words\":[\"train\"],\"hint\":\"train\"},{\"words\":[\"était\"],\"hint\":\"was\"},{\"words\":[\"en\",\"retard\"],\"hint\":\"delayed\"},{\"words\":[\"je\"],\"hint\":\"I\"},{\"words\":[\"serais\",\"venu\"],\"hint\":\"would have come\"},{\"words\":[\"plus\",\"tôt\"],\"hint\":\"earlier\"}]}",
+            "tool_calls": null
+          }
+        ],
+        "error": null
+      },
+      {
+        "status_code": 200,
+        "model": "minimax/minimax-m3.1-flash:free",
+        "provider": "Minimax",
+        "usage": {
+          "prompt_tokens": 1131,
+          "completion_tokens": 2073,
+          "total_tokens": 3204,
+          "cost": 0,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 1082,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0,
+            "upstream_inference_prompt_cost": 0,
+            "upstream_inference_completions_cost": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 927,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "content": "{\n  \"sentences\": [\n    {\n      \"sentence\": \"Je vais au marché pour acheter du pain, puis je vais rentrer.\",\n      \"translation\": \"I am going to the market to buy some bread, and then I am going home.\",\n      \"translation_hints\": [\n        { \"words\": [\"Je\"], \"hint\": \"I\" },\n        { \"words\": [\"vais\"], \"hint\": \"am going\" },\n        { \"words\": [\"au\"], \"hint\": \"to the\" },\n        { \"words\": [\"marché\"], \"hint\": \"market\" },\n        { \"words\": [\"pour\"], \"hint\": \"in order to\" },\n        { \"words\": [\"acheter\"], \"hint\": \"to buy\" },\n        { \"words\": [\"du\"], \"hint\": \"some\" },\n        { \"words\": [\"pain\"], \"hint\": \"bread\" },\n        { \"words\": [\"puis\"], \"hint\": \"then\" },\n        { \"words\": [\"je\"], \"hint\": \"I\" },\n        { \"words\": [\"vais\"], \"hint\": \"am going\" },\n        { \"words\": [\"rentrer\"], \"hint\": \"to go home\" }\n      ]\n    },\n    {\n      \"sentence\": \"J'ai su acheter du pain au marché, puis je suis rentré.\",\n      \"translation\": \"I knew how to buy some bread at the market, and then I went home.\",\n      \"translation_hints\": [\n        { \"words\": [\"J'ai\"], \"hint\": \"I have\" },\n        { \"words\": [\"su\"], \"hint\": \"known how\" },\n        { \"words\": [\"acheter\"], \"hint\": \"to buy\" },\n        { \"words\": [\"du\"], \"hint\": \"some\" },\n        { \"words\": [\"pain\"], \"hint\": \"bread\" },\n        { \"words\": [\"au\"], \"hint\": \"at the\" },\n        { \"words\": [\"marché\"], \"hint\": \"market\" },\n        { \"words\": [\"puis\"], \"hint\": \"then\" },\n        { \"words\": [\"je\"], \"hint\": \"I\" },\n        { \"words\": [\"suis\"], \"hint\": \"went\" },\n        { \"words\": [\"rentré\"], \"hint\": \"entered; went home\" }\n      ]\n    },\n    {\n      \"sentence\": \"Le train a du retard, donc je ne vais pas être à l'heure.\",\n      \"translation\": \"The train is delayed, so I am not going to be on time.\",\n      \"translation_hints\": [\n        { \"words\": [\"Le\"], \"hint\": \"the\" },\n        { \"words\": [\"train\"], \"hint\": \"train\" },\n        { \"words\": [\"a\", \"du\", \"retard\"], \"hint\": \"is delayed\" },\n        { \"words\": [\"donc\"], \"hint\": \"so\" },\n        { \"words\": [\"je\"], \"hint\": \"I\" },\n        { \"words\": [\"ne\"], \"hint\": \"not\" },\n        { \"words\": [\"vais\"], \"hint\": \"am going\" },\n        { \"words\": [\"pas\"], \"hint\": \"not\" },\n        { \"words\": [\"être\"], \"hint\": \"to be\" },\n        { \"words\": [\"à\", \"l'heure\"], \"hint\": \"on time\" }\n      ]\n    },\n    {\n      \"sentence\": \"Nous devons venir plus tôt pour avoir le train.\",\n      \"translation\": \"We have to come earlier to catch the train.\",\n      \"translation_hints\": [\n        { \"words\": [\"Nous\"], \"hint\": \"we\" },\n        { \"words\": [\"devons\"], \"hint\": \"must\" },\n        { \"words\": [\"venir\"], \"hint\": \"to come\" },\n        { \"words\": [\"plus\", \"tôt\"], \"hint\": \"earlier\" },\n        { \"words\": [\"pour\"], \"hint\": \"in order to\" },\n        { \"words\": [\"avoir\"], \"hint\": \"to catch\" },\n        { \"words\": [\"le\"], \"hint\": \"the\" },\n        { \"words\": [\"train\"], \"hint\": \"train\" }\n      ]\n    },\n    {\n      \"sentence\": \"Elle va être au marché pour acheter du pain et avoir du temps.\",\n      \"translation\": \"She is going to be at the market to buy some bread and have some time.\",\n      \"translation_hints\": [\n        { \"words\": [\"Elle\"], \"hint\": \"she\" },\n        { \"words\": [\"va\"], \"hint\": \"is going\" },\n        { \"words\": [\"être\"], \"hint\": \"to be\" },\n        { \"words\": [\"au\"], \"hint\": \"at the\" },\n        { \"words\": [\"marché\"], \"hint\": \"market\" },\n        { \"words\": [\"pour\"], \"hint\": \"in order to\" },\n        { \"words\": [\"acheter\"], \"hint\": \"to buy\" },\n        { \"words\": [\"du\"], \"hint\": \"some\" },\n        { \"words\": [\"pain\"], \"hint\": \"bread\" },\n        { \"words\": [\"et\"], \"hint\": \"and\" },\n        { \"words\": [\"avoir\"], \"hint\": \"to have\" },\n        { \"words\": [\"du\"], \"hint\": \"some\" },\n        { \"words\": [\"temps\"], \"hint\": \"time\" }\n      ]\n    }\n  ]\n}",
+            "tool_calls": null
+          }
+        ],
+        "error": null
+      }
+    ],
+    "seconds": 25.35
+  },
+  {
+    "language": "Italian",
+    "source": "Non vedo l’ora di rivederti. Quando arrivi alla stazione, chiamami prima di comprare il biglietto.",
+    "saved": {
+      "id": 3,
+      "title": "Un messaggio per rivedersi",
+      "status": "processed",
+      "language": "Italian",
+      "difficulty_level": "A1",
+      "author": null,
+      "category": "Personal Message",
+      "word_count": 15,
+      "completed_sentences": 0,
+      "total_sentences": 2,
+      "estimated_time_minutes": 1,
+      "completed_sentence_indices": [],
+      "original_paragraphs": [
+        {
+          "index": 0,
+          "sentences": [
+            {
+              "index": 0,
+              "text": "Non vedo l’ora di rivederti.",
+              "translation": "I can’t wait to see you again.",
+              "translation_hints": [
+                {
+                  "words": [
+                    "Non",
+                    "vedo",
+                    "l'ora"
+                  ],
+                  "hint": "can’t wait"
+                },
+                {
+                  "words": [
+                    "di",
+                    "rivederti"
+                  ],
+                  "hint": "to see you again"
+                }
+              ]
+            },
+            {
+              "index": 1,
+              "text": "Quando arrivi alla stazione, chiamami prima di comprare il biglietto.",
+              "translation": "When you arrive at the station, call me before buying the ticket.",
+              "translation_hints": [
+                {
+                  "words": [
+                    "Quando"
+                  ],
+                  "hint": "When"
+                },
+                {
+                  "words": [
+                    "arrivi"
+                  ],
+                  "hint": "you arrive"
+                },
+                {
+                  "words": [
+                    "alla"
+                  ],
+                  "hint": "at the"
+                },
+                {
+                  "words": [
+                    "stazione"
+                  ],
+                  "hint": "station"
+                },
+                {
+                  "words": [
+                    "chiamami"
+                  ],
+                  "hint": "call me"
+                },
+                {
+                  "words": [
+                    "prima"
+                  ],
+                  "hint": "before"
+                },
+                {
+                  "words": [
+                    "di"
+                  ],
+                  "hint": "to"
+                },
+                {
+                  "words": [
+                    "comprare"
+                  ],
+                  "hint": "buy"
+                },
+                {
+                  "words": [
+                    "il"
+                  ],
+                  "hint": "the"
+                },
+                {
+                  "words": [
+                    "biglietto"
+                  ],
+                  "hint": "ticket"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "practice_sentences": [
+        {
+          "index": 0,
+          "sentence": "Prima di arrivare alla stazione, devo comprare un biglietto.",
+          "translation": "Before arriving at the station, I have to buy a ticket.",
+          "translation_hints": [
+            {
+              "words": [
+                "Prima"
+              ],
+              "hint": "Before"
+            },
+            {
+              "words": [
+                "di"
+              ],
+              "hint": "of"
+            },
+            {
+              "words": [
+                "arrivare"
+              ],
+              "hint": "to arrive"
+            },
+            {
+              "words": [
+                "alla"
+              ],
+              "hint": "at the"
+            },
+            {
+              "words": [
+                "stazione"
+              ],
+              "hint": "station"
+            },
+            {
+              "words": [
+                "devo"
+              ],
+              "hint": "I have to"
+            },
+            {
+              "words": [
+                "comprare"
+              ],
+              "hint": "to buy"
+            },
+            {
+              "words": [
+                "un"
+              ],
+              "hint": "a"
+            },
+            {
+              "words": [
+                "biglietto"
+              ],
+              "hint": "ticket"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "sentence": "Ora devo chiamare Marta, perché voglio rivedere un amico alla stazione.",
+          "translation": "Now I have to call Marta because I want to see a friend again at the station.",
+          "translation_hints": [
+            {
+              "words": [
+                "Ora"
+              ],
+              "hint": "Now"
+            },
+            {
+              "words": [
+                "devo"
+              ],
+              "hint": "I have to"
+            },
+            {
+              "words": [
+                "chiamare"
+              ],
+              "hint": "to call"
+            },
+            {
+              "words": [
+                "Marta"
+              ],
+              "hint": "Marta"
+            },
+            {
+              "words": [
+                "perché"
+              ],
+              "hint": "because"
+            },
+            {
+              "words": [
+                "voglio"
+              ],
+              "hint": "I want"
+            },
+            {
+              "words": [
+                "rivedere"
+              ],
+              "hint": "to see again"
+            },
+            {
+              "words": [
+                "un"
+              ],
+              "hint": "a"
+            },
+            {
+              "words": [
+                "amico"
+              ],
+              "hint": "friend"
+            },
+            {
+              "words": [
+                "alla"
+              ],
+              "hint": "at the"
+            },
+            {
+              "words": [
+                "stazione"
+              ],
+              "hint": "station"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "sentence": "Vorrei vedere il paesaggio dalla finestra del treno, prima che arrivi alla stazione.",
+          "translation": "I would like to see the landscape from the train window before it arrives at the station.",
+          "translation_hints": [
+            {
+              "words": [
+                "Vorrei"
+              ],
+              "hint": "I would like"
+            },
+            {
+              "words": [
+                "vedere"
+              ],
+              "hint": "to see"
+            },
+            {
+              "words": [
+                "il"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "paesaggio"
+              ],
+              "hint": "landscape"
+            },
+            {
+              "words": [
+                "dalla"
+              ],
+              "hint": "from the"
+            },
+            {
+              "words": [
+                "finestra"
+              ],
+              "hint": "window"
+            },
+            {
+              "words": [
+                "del"
+              ],
+              "hint": "of the"
+            },
+            {
+              "words": [
+                "treno"
+              ],
+              "hint": "train"
+            },
+            {
+              "words": [
+                "prima"
+              ],
+              "hint": "before"
+            },
+            {
+              "words": [
+                "che"
+              ],
+              "hint": "that"
+            },
+            {
+              "words": [
+                "arrivi"
+              ],
+              "hint": "arrives"
+            },
+            {
+              "words": [
+                "alla"
+              ],
+              "hint": "at the"
+            },
+            {
+              "words": [
+                "stazione"
+              ],
+              "hint": "station"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "sentence": "Il biglietto che compro alla stazione mi permette di vedere il treno in arrivo.",
+          "translation": "The ticket I buy at the station allows me to see the arriving train.",
+          "translation_hints": [
+            {
+              "words": [
+                "Il"
+              ],
+              "hint": "The"
+            },
+            {
+              "words": [
+                "biglietto"
+              ],
+              "hint": "ticket"
+            },
+            {
+              "words": [
+                "che"
+              ],
+              "hint": "that"
+            },
+            {
+              "words": [
+                "compro"
+              ],
+              "hint": "I buy"
+            },
+            {
+              "words": [
+                "alla"
+              ],
+              "hint": "at the"
+            },
+            {
+              "words": [
+                "stazione"
+              ],
+              "hint": "station"
+            },
+            {
+              "words": [
+                "mi"
+              ],
+              "hint": "me"
+            },
+            {
+              "words": [
+                "permette"
+              ],
+              "hint": "allows"
+            },
+            {
+              "words": [
+                "di"
+              ],
+              "hint": "to"
+            },
+            {
+              "words": [
+                "vedere"
+              ],
+              "hint": "see"
+            },
+            {
+              "words": [
+                "il"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "treno"
+              ],
+              "hint": "train"
+            },
+            {
+              "words": [
+                "in"
+              ],
+              "hint": "in"
+            },
+            {
+              "words": [
+                "arrivo"
+              ],
+              "hint": "arrival"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "sentence": "Ora devo chiamare la stazione per rivedere gli orari e sapere quando deve arrivare il treno.",
+          "translation": "Now I have to call the station to check the timetables and find out when the train is due to arrive.",
+          "translation_hints": [
+            {
+              "words": [
+                "Ora"
+              ],
+              "hint": "Now"
+            },
+            {
+              "words": [
+                "devo"
+              ],
+              "hint": "I have to"
+            },
+            {
+              "words": [
+                "chiamare"
+              ],
+              "hint": "to call"
+            },
+            {
+              "words": [
+                "la"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "stazione"
+              ],
+              "hint": "station"
+            },
+            {
+              "words": [
+                "per"
+              ],
+              "hint": "in order to"
+            },
+            {
+              "words": [
+                "rivedere"
+              ],
+              "hint": "to check"
+            },
+            {
+              "words": [
+                "gli"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "orari"
+              ],
+              "hint": "timetables"
+            },
+            {
+              "words": [
+                "e"
+              ],
+              "hint": "and"
+            },
+            {
+              "words": [
+                "sapere"
+              ],
+              "hint": "to know"
+            },
+            {
+              "words": [
+                "quando"
+              ],
+              "hint": "when"
+            },
+            {
+              "words": [
+                "deve"
+              ],
+              "hint": "is due to"
+            },
+            {
+              "words": [
+                "arrivare"
+              ],
+              "hint": "arrive"
+            },
+            {
+              "words": [
+                "il"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "treno"
+              ],
+              "hint": "train"
+            }
+          ]
+        }
+      ],
+      "top_words": [
+        {
+          "word": "vedere",
+          "translation": "Synthetic dictionary fixture"
+        },
+        {
+          "word": "ora",
+          "translation": "Synthetic dictionary fixture"
+        },
+        {
+          "word": "rivedere",
+          "translation": "Synthetic dictionary fixture"
+        },
+        {
+          "word": "arrivare",
+          "translation": "Synthetic dictionary fixture"
+        },
+        {
+          "word": "stazione",
+          "translation": "Synthetic dictionary fixture"
+        },
+        {
+          "word": "chiamare",
+          "translation": "Synthetic dictionary fixture"
+        },
+        {
+          "word": "prima",
+          "translation": "Synthetic dictionary fixture"
+        },
+        {
+          "word": "comprare",
+          "translation": "Synthetic dictionary fixture"
+        },
+        {
+          "word": "biglietto",
+          "translation": "Synthetic dictionary fixture"
+        }
+      ],
+      "enrichment_stage": "completed",
+      "error_message": null
+    },
+    "accepted": true,
+    "calls": [
+      {
+        "task": "metadata",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 654,
+        "cost_usd": 0.0,
+        "returned_model": "minimax/minimax-m3.1-flash:free"
+      },
+      {
+        "task": "filter",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 958,
+        "cost_usd": 0.0,
+        "returned_model": "minimax/minimax-m3.1-flash:free"
+      },
+      {
+        "task": "translation",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 1392,
+        "cost_usd": 0.0,
+        "returned_model": "minimax/minimax-m3.1-flash:free"
+      },
+      {
+        "task": "translation",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 1357,
+        "cost_usd": 0.0,
+        "returned_model": "minimax/minimax-m3.1-flash:free"
+      },
+      {
+        "task": "practice",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 3527,
+        "cost_usd": 0.0,
+        "returned_model": "minimax/minimax-m3.1-flash:free"
+      }
+    ],
+    "responses": [
+      {
+        "status_code": 200,
+        "model": "minimax/minimax-m3.1-flash:free",
+        "provider": "Minimax",
+        "usage": {
+          "prompt_tokens": 594,
+          "completion_tokens": 60,
+          "total_tokens": 654,
+          "cost": 0,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 256,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0,
+            "upstream_inference_prompt_cost": 0,
+            "upstream_inference_completions_cost": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 26,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "content": "{\"title\":\"Un messaggio per rivedersi\",\"difficulty_level\":\"A1\",\"language\":\"Italian\",\"author\":null,\"category\":\"Personal Message\"}",
+            "tool_calls": null
+          }
+        ],
+        "error": null
+      },
+      {
+        "status_code": 200,
+        "model": "minimax/minimax-m3.1-flash:free",
+        "provider": "Minimax",
+        "usage": {
+          "prompt_tokens": 696,
+          "completion_tokens": 262,
+          "total_tokens": 958,
+          "cost": 0,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0,
+            "upstream_inference_prompt_cost": 0,
+            "upstream_inference_completions_cost": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 163,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "content": "{\"words\":[{\"word\":\"vedere\",\"count\":1},{\"word\":\"ora\",\"count\":1},{\"word\":\"rivedere\",\"count\":1},{\"word\":\"arrivare\",\"count\":1},{\"word\":\"stazione\",\"count\":1},{\"word\":\"chiamare\",\"count\":1},{\"word\":\"prima\",\"count\":1},{\"word\":\"comprare\",\"count\":1},{\"word\":\"biglietto\",\"count\":1}]}",
+            "tool_calls": null
+          }
+        ],
+        "error": null
+      },
+      {
+        "status_code": 200,
+        "model": "minimax/minimax-m3.1-flash:free",
+        "provider": "Minimax",
+        "usage": {
+          "prompt_tokens": 1243,
+          "completion_tokens": 114,
+          "total_tokens": 1357,
+          "cost": 0,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 1187,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0,
+            "upstream_inference_prompt_cost": 0,
+            "upstream_inference_completions_cost": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "content": "{\"translation\":\"When you arrive at the station, call me before buying the ticket.\",\"translation_hints\":[{\"words\":[\"Quando\"],\"hint\":\"When\"},{\"words\":[\"arrivi\"],\"hint\":\"you arrive\"},{\"words\":[\"alla\"],\"hint\":\"at the\"},{\"words\":[\"stazione\"],\"hint\":\"station\"},{\"words\":[\"chiamami\"],\"hint\":\"call me\"},{\"words\":[\"prima\"],\"hint\":\"before\"},{\"words\":[\"di\"],\"hint\":\"to\"},{\"words\":[\"comprare\"],\"hint\":\"buy\"},{\"words\":[\"il\"],\"hint\":\"the\"},{\"words\":[\"biglietto\"],\"hint\":\"ticket\"}]}",
+            "tool_calls": null
+          }
+        ],
+        "error": null
+      },
+      {
+        "status_code": 200,
+        "model": "minimax/minimax-m3.1-flash:free",
+        "provider": "Minimax",
+        "usage": {
+          "prompt_tokens": 1226,
+          "completion_tokens": 166,
+          "total_tokens": 1392,
+          "cost": 0,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 1187,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0,
+            "upstream_inference_prompt_cost": 0,
+            "upstream_inference_completions_cost": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 118,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "content": "{\"translation\":\"I can’t wait to see you again.\",\"translation_hints\":[{\"words\":[\"Non\",\"vedo\",\"l’ora\"],\"hint\":\"can’t wait\"},{\"words\":[\"di\",\"rivederti\"],\"hint\":\"to see you again\"}]}",
+            "tool_calls": null
+          }
+        ],
+        "error": null
+      },
+      {
+        "status_code": 200,
+        "model": "minimax/minimax-m3.1-flash:free",
+        "provider": "Minimax",
+        "usage": {
+          "prompt_tokens": 1124,
+          "completion_tokens": 2403,
+          "total_tokens": 3527,
+          "cost": 0,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 1122,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0,
+            "upstream_inference_prompt_cost": 0,
+            "upstream_inference_completions_cost": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 856,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "content": "{\n  \"sentences\": [\n    {\n      \"sentence\": \"Prima di arrivare alla stazione, devo comprare un biglietto.\",\n      \"translation\": \"Before arriving at the station, I have to buy a ticket.\",\n      \"translation_hints\": [\n        {\n          \"words\": [\"Prima\"],\n          \"hint\": \"Before\"\n        },\n        {\n          \"words\": [\"di\"],\n          \"hint\": \"of\"\n        },\n        {\n          \"words\": [\"arrivare\"],\n          \"hint\": \"to arrive\"\n        },\n        {\n          \"words\": [\"alla\"],\n          \"hint\": \"at the\"\n        },\n        {\n          \"words\": [\"stazione\"],\n          \"hint\": \"station\"\n        },\n        {\n          \"words\": [\"devo\"],\n          \"hint\": \"I have to\"\n        },\n        {\n          \"words\": [\"comprare\"],\n          \"hint\": \"to buy\"\n        },\n        {\n          \"words\": [\"un\"],\n          \"hint\": \"a\"\n        },\n        {\n          \"words\": [\"biglietto\"],\n          \"hint\": \"ticket\"\n        }\n      ]\n    },\n    {\n      \"sentence\": \"Ora devo chiamare Marta, perché voglio rivedere un amico alla stazione.\",\n      \"translation\": \"Now I have to call Marta because I want to see a friend again at the station.\",\n      \"translation_hints\": [\n        {\n          \"words\": [\"Ora\"],\n          \"hint\": \"Now\"\n        },\n        {\n          \"words\": [\"devo\"],\n          \"hint\": \"I have to\"\n        },\n        {\n          \"words\": [\"chiamare\"],\n          \"hint\": \"to call\"\n        },\n        {\n          \"words\": [\"Marta,\"],\n          \"hint\": \"Marta\"\n        },\n        {\n          \"words\": [\"perché\"],\n          \"hint\": \"because\"\n        },\n        {\n          \"words\": [\"voglio\"],\n          \"hint\": \"I want\"\n        },\n        {\n          \"words\": [\"rivedere\"],\n          \"hint\": \"to see again\"\n        },\n        {\n          \"words\": [\"un\"],\n          \"hint\": \"a\"\n        },\n        {\n          \"words\": [\"amico\"],\n          \"hint\": \"friend\"\n        },\n        {\n          \"words\": [\"alla\"],\n          \"hint\": \"at the\"\n        },\n        {\n          \"words\": [\"stazione\"],\n          \"hint\": \"station\"\n        }\n      ]\n    },\n    {\n      \"sentence\": \"Vorrei vedere il paesaggio dalla finestra del treno, prima che arrivi alla stazione.\",\n      \"translation\": \"I would like to see the landscape from the train window before it arrives at the station.\",\n      \"translation_hints\": [\n        {\n          \"words\": [\"Vorrei\"],\n          \"hint\": \"I would like\"\n        },\n        {\n          \"words\": [\"vedere\"],\n          \"hint\": \"to see\"\n        },\n        {\n          \"words\": [\"il\"],\n          \"hint\": \"the\"\n        },\n        {\n          \"words\": [\"paesaggio\"],\n          \"hint\": \"landscape\"\n        },\n        {\n          \"words\": [\"dalla\"],\n          \"hint\": \"from the\"\n        },\n        {\n          \"words\": [\"finestra\"],\n          \"hint\": \"window\"\n        },\n        {\n          \"words\": [\"del\"],\n          \"hint\": \"of the\"\n        },\n        {\n          \"words\": [\"treno,\"],\n          \"hint\": \"train\"\n        },\n        {\n          \"words\": [\"prima\"],\n          \"hint\": \"before\"\n        },\n        {\n          \"words\": [\"che\"],\n          \"hint\": \"that\"\n        },\n        {\n          \"words\": [\"arrivi\"],\n          \"hint\": \"arrives\"\n        },\n        {\n          \"words\": [\"alla\"],\n          \"hint\": \"at the\"\n        },\n        {\n          \"words\": [\"stazione\"],\n          \"hint\": \"station\"\n        }\n      ]\n    },\n    {\n      \"sentence\": \"Il biglietto che compro alla stazione mi permette di vedere il treno in arrivo.\",\n      \"translation\": \"The ticket I buy at the station allows me to see the arriving train.\",\n      \"translation_hints\": [\n        {\n          \"words\": [\"Il\"],\n          \"hint\": \"The\"\n        },\n        {\n          \"words\": [\"biglietto\"],\n          \"hint\": \"ticket\"\n        },\n        {\n          \"words\": [\"che\"],\n          \"hint\": \"that\"\n        },\n        {\n          \"words\": [\"compro\"],\n          \"hint\": \"I buy\"\n        },\n        {\n          \"words\": [\"alla\"],\n          \"hint\": \"at the\"\n        },\n        {\n          \"words\": [\"stazione\"],\n          \"hint\": \"station\"\n        },\n        {\n          \"words\": [\"mi\"],\n          \"hint\": \"me\"\n        },\n        {\n          \"words\": [\"permette\"],\n          \"hint\": \"allows\"\n        },\n        {\n          \"words\": [\"di\"],\n          \"hint\": \"to\"\n        },\n        {\n          \"words\": [\"vedere\"],\n          \"hint\": \"see\"\n        },\n        {\n          \"words\": [\"il\"],\n          \"hint\": \"the\"\n        },\n        {\n          \"words\": [\"treno\"],\n          \"hint\": \"train\"\n        },\n        {\n          \"words\": [\"in\"],\n          \"hint\": \"in\"\n        },\n        {\n          \"words\": [\"arrivo\"],\n          \"hint\": \"arrival\"\n        }\n      ]\n    },\n    {\n      \"sentence\": \"Ora devo chiamare la stazione per rivedere gli orari e sapere quando deve arrivare il treno.\",\n      \"translation\": \"Now I have to call the station to check the timetables and find out when the train is due to arrive.\",\n      \"translation_hints\": [\n        {\n          \"words\": [\"Ora\"],\n          \"hint\": \"Now\"\n        },\n        {\n          \"words\": [\"devo\"],\n          \"hint\": \"I have to\"\n        },\n        {\n          \"words\": [\"chiamare\"],\n          \"hint\": \"to call\"\n        },\n        {\n          \"words\": [\"la\"],\n          \"hint\": \"the\"\n        },\n        {\n          \"words\": [\"stazione\"],\n          \"hint\": \"station\"\n        },\n        {\n          \"words\": [\"per\"],\n          \"hint\": \"in order to\"\n        },\n        {\n          \"words\": [\"rivedere\"],\n          \"hint\": \"to check\"\n        },\n        {\n          \"words\": [\"gli\"],\n          \"hint\": \"the\"\n        },\n        {\n          \"words\": [\"orari\"],\n          \"hint\": \"timetables\"\n        },\n        {\n          \"words\": [\"e\"],\n          \"hint\": \"and\"\n        },\n        {\n          \"words\": [\"sapere\"],\n          \"hint\": \"to know\"\n        },\n        {\n          \"words\": [\"quando\"],\n          \"hint\": \"when\"\n        },\n        {\n          \"words\": [\"deve\"],\n          \"hint\": \"is due to\"\n        },\n        {\n          \"words\": [\"arrivare\"],\n          \"hint\": \"arrive\"\n        },\n        {\n          \"words\": [\"il\"],\n          \"hint\": \"the\"\n        },\n        {\n          \"words\": [\"treno\"],\n          \"hint\": \"train\"\n        }\n      ]\n    }\n  ]\n}",
+            "tool_calls": null
+          }
+        ],
+        "error": null
+      }
+    ],
+    "seconds": 22.54
+  },
+  {
+    "language": "Spanish",
+    "source": "¿Dónde dejaste la llave de la casa? Si olvido la llave, no puedo entrar en la casa.",
+    "saved": {
+      "id": 4,
+      "title": "La llave de la casa",
+      "status": "processed",
+      "language": "Spanish",
+      "difficulty_level": "A1",
+      "author": null,
+      "category": "Diálogo cotidiano",
+      "word_count": 17,
+      "completed_sentences": 0,
+      "total_sentences": 2,
+      "estimated_time_minutes": 1,
+      "completed_sentence_indices": [],
+      "original_paragraphs": [
+        {
+          "index": 0,
+          "sentences": [
+            {
+              "index": 0,
+              "text": "¿Dónde dejaste la llave de la casa?",
+              "translation": "Where did you leave the house key?",
+              "translation_hints": [
+                {
+                  "words": [
+                    "Dónde"
+                  ],
+                  "hint": "Where"
+                },
+                {
+                  "words": [
+                    "dejaste"
+                  ],
+                  "hint": "did you leave"
+                },
+                {
+                  "words": [
+                    "la"
+                  ],
+                  "hint": "the"
+                },
+                {
+                  "words": [
+                    "llave"
+                  ],
+                  "hint": "key"
+                },
+                {
+                  "words": [
+                    "de"
+                  ],
+                  "hint": "of"
+                },
+                {
+                  "words": [
+                    "la"
+                  ],
+                  "hint": "the"
+                },
+                {
+                  "words": [
+                    "casa"
+                  ],
+                  "hint": "house"
+                }
+              ]
+            },
+            {
+              "index": 1,
+              "text": "Si olvido la llave, no puedo entrar en la casa.",
+              "translation": "If I forget the key, I can't enter the house.",
+              "translation_hints": [
+                {
+                  "words": [
+                    "Si"
+                  ],
+                  "hint": "if"
+                },
+                {
+                  "words": [
+                    "olvido"
+                  ],
+                  "hint": "forget"
+                },
+                {
+                  "words": [
+                    "la"
+                  ],
+                  "hint": "the"
+                },
+                {
+                  "words": [
+                    "llave"
+                  ],
+                  "hint": "key"
+                },
+                {
+                  "words": [
+                    "no"
+                  ],
+                  "hint": "not"
+                },
+                {
+                  "words": [
+                    "puedo"
+                  ],
+                  "hint": "can"
+                },
+                {
+                  "words": [
+                    "entrar"
+                  ],
+                  "hint": "enter"
+                },
+                {
+                  "words": [
+                    "en"
+                  ],
+                  "hint": "in"
+                },
+                {
+                  "words": [
+                    "la"
+                  ],
+                  "hint": "the"
+                },
+                {
+                  "words": [
+                    "casa"
+                  ],
+                  "hint": "house"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "practice_sentences": [
+        {
+          "index": 0,
+          "sentence": "Olvidé la llave en casa.",
+          "translation": "I forgot the key at home.",
+          "translation_hints": [
+            {
+              "words": [
+                "Olvidé"
+              ],
+              "hint": "I forgot"
+            },
+            {
+              "words": [
+                "la"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "llave"
+              ],
+              "hint": "key"
+            },
+            {
+              "words": [
+                "en"
+              ],
+              "hint": "at"
+            },
+            {
+              "words": [
+                "casa"
+              ],
+              "hint": "home"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "sentence": "¿Dónde está la llave que dejé en casa?",
+          "translation": "Where is the key that I left at home?",
+          "translation_hints": [
+            {
+              "words": [
+                "Dónde"
+              ],
+              "hint": "where"
+            },
+            {
+              "words": [
+                "está"
+              ],
+              "hint": "is"
+            },
+            {
+              "words": [
+                "la"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "llave"
+              ],
+              "hint": "key"
+            },
+            {
+              "words": [
+                "que"
+              ],
+              "hint": "that"
+            },
+            {
+              "words": [
+                "dejé"
+              ],
+              "hint": "I left"
+            },
+            {
+              "words": [
+                "en"
+              ],
+              "hint": "at"
+            },
+            {
+              "words": [
+                "casa"
+              ],
+              "hint": "home"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "sentence": "No puedo entrar porque olvidé la llave.",
+          "translation": "I cannot enter because I forgot the key.",
+          "translation_hints": [
+            {
+              "words": [
+                "No"
+              ],
+              "hint": "not"
+            },
+            {
+              "words": [
+                "puedo"
+              ],
+              "hint": "can"
+            },
+            {
+              "words": [
+                "entrar"
+              ],
+              "hint": "to enter"
+            },
+            {
+              "words": [
+                "porque"
+              ],
+              "hint": "because"
+            },
+            {
+              "words": [
+                "olvidé"
+              ],
+              "hint": "I forgot"
+            },
+            {
+              "words": [
+                "la"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "llave"
+              ],
+              "hint": "key"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "sentence": "Mi hermana puede entrar en casa con la llave.",
+          "translation": "My sister can enter the house with the key.",
+          "translation_hints": [
+            {
+              "words": [
+                "Mi"
+              ],
+              "hint": "my"
+            },
+            {
+              "words": [
+                "hermana"
+              ],
+              "hint": "sister"
+            },
+            {
+              "words": [
+                "puede"
+              ],
+              "hint": "can"
+            },
+            {
+              "words": [
+                "entrar"
+              ],
+              "hint": "to enter"
+            },
+            {
+              "words": [
+                "en"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "casa"
+              ],
+              "hint": "house"
+            },
+            {
+              "words": [
+                "con"
+              ],
+              "hint": "with"
+            },
+            {
+              "words": [
+                "la"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "llave"
+              ],
+              "hint": "key"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "sentence": "Para no olvidar la llave, la dejo junto a la puerta antes de salir de casa.",
+          "translation": "To avoid forgetting the key, I leave it by the door before leaving home.",
+          "translation_hints": [
+            {
+              "words": [
+                "Para"
+              ],
+              "hint": "to"
+            },
+            {
+              "words": [
+                "no"
+              ],
+              "hint": "not"
+            },
+            {
+              "words": [
+                "olvidar"
+              ],
+              "hint": "to forget"
+            },
+            {
+              "words": [
+                "la"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "llave"
+              ],
+              "hint": "key"
+            },
+            {
+              "words": [
+                "la"
+              ],
+              "hint": "it"
+            },
+            {
+              "words": [
+                "dejo"
+              ],
+              "hint": "I leave"
+            },
+            {
+              "words": [
+                "junto"
+              ],
+              "hint": "near"
+            },
+            {
+              "words": [
+                "a"
+              ],
+              "hint": "to"
+            },
+            {
+              "words": [
+                "la"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "puerta"
+              ],
+              "hint": "door"
+            },
+            {
+              "words": [
+                "antes"
+              ],
+              "hint": "before"
+            },
+            {
+              "words": [
+                "de"
+              ],
+              "hint": "of"
+            },
+            {
+              "words": [
+                "salir"
+              ],
+              "hint": "to leave"
+            },
+            {
+              "words": [
+                "de"
+              ],
+              "hint": "from"
+            },
+            {
+              "words": [
+                "casa"
+              ],
+              "hint": "home"
+            }
+          ]
+        }
+      ],
+      "top_words": [
+        {
+          "word": "casa",
+          "translation": "Synthetic dictionary fixture"
+        },
+        {
+          "word": "llave",
+          "translation": "Synthetic dictionary fixture"
+        },
+        {
+          "word": "dónde",
+          "translation": "Synthetic dictionary fixture"
+        },
+        {
+          "word": "dejar",
+          "translation": "Synthetic dictionary fixture"
+        },
+        {
+          "word": "entrar",
+          "translation": "Synthetic dictionary fixture"
+        },
+        {
+          "word": "olvidar",
+          "translation": "Synthetic dictionary fixture"
+        },
+        {
+          "word": "poder",
+          "translation": "Synthetic dictionary fixture"
+        }
+      ],
+      "enrichment_stage": "completed",
+      "error_message": null
+    },
+    "accepted": true,
+    "calls": [
+      {
+        "task": "metadata",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 656,
+        "cost_usd": 0.0,
+        "returned_model": "minimax/minimax-m3.1-flash:free"
+      },
+      {
+        "task": "filter",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 975,
+        "cost_usd": 0.0,
+        "returned_model": "minimax/minimax-m3.1-flash:free"
+      },
+      {
+        "task": "translation",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 1304,
+        "cost_usd": 0.0,
+        "returned_model": "minimax/minimax-m3.1-flash:free"
+      },
+      {
+        "task": "translation",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 1407,
+        "cost_usd": 0.0,
+        "returned_model": "minimax/minimax-m3.1-flash:free"
+      },
+      {
+        "task": "practice",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 2584,
+        "cost_usd": 0.0,
+        "returned_model": "minimax/minimax-m3.1-flash:free"
+      }
+    ],
+    "responses": [
+      {
+        "status_code": 200,
+        "model": "minimax/minimax-m3.1-flash:free",
+        "provider": "Minimax",
+        "usage": {
+          "prompt_tokens": 586,
+          "completion_tokens": 70,
+          "total_tokens": 656,
+          "cost": 0,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 186,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0,
+            "upstream_inference_prompt_cost": 0,
+            "upstream_inference_completions_cost": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 40,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "content": "{\"title\":\"La llave de la casa\",\"difficulty_level\":\"A1\",\"language\":\"Spanish\",\"author\":null,\"category\":\"Diálogo cotidiano\"}",
+            "tool_calls": null
+          }
+        ],
+        "error": null
+      },
+      {
+        "status_code": 200,
+        "model": "minimax/minimax-m3.1-flash:free",
+        "provider": "Minimax",
+        "usage": {
+          "prompt_tokens": 670,
+          "completion_tokens": 305,
+          "total_tokens": 975,
+          "cost": 0,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 186,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0,
+            "upstream_inference_prompt_cost": 0,
+            "upstream_inference_completions_cost": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 232,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "content": "{\"words\":[{\"word\":\"dónde\",\"count\":1},{\"word\":\"dejar\",\"count\":1},{\"word\":\"entrar\",\"count\":1},{\"word\":\"casa\",\"count\":2},{\"word\":\"llave\",\"count\":2},{\"word\":\"olvidar\",\"count\":1},{\"word\":\"poder\",\"count\":1}]}",
+            "tool_calls": null
+          }
+        ],
+        "error": null
+      },
+      {
+        "status_code": 200,
+        "model": "minimax/minimax-m3.1-flash:free",
+        "provider": "Minimax",
+        "usage": {
+          "prompt_tokens": 1223,
+          "completion_tokens": 81,
+          "total_tokens": 1304,
+          "cost": 0,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 1191,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0,
+            "upstream_inference_prompt_cost": 0,
+            "upstream_inference_completions_cost": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "content": "{\"translation\":\"Where did you leave the house key?\",\"translation_hints\":[{\"words\":[\"¿Dónde\"],\"hint\":\"Where\"},{\"words\":[\"dejaste\"],\"hint\":\"did you leave\"},{\"words\":[\"la\"],\"hint\":\"the\"},{\"words\":[\"llave\"],\"hint\":\"key\"},{\"words\":[\"de\"],\"hint\":\"of\"},{\"words\":[\"la\"],\"hint\":\"the\"},{\"words\":[\"casa\"],\"hint\":\"house\"}]}",
+            "tool_calls": null
+          }
+        ],
+        "error": null
+      },
+      {
+        "status_code": 200,
+        "model": "minimax/minimax-m3.1-flash:free",
+        "provider": "Minimax",
+        "usage": {
+          "prompt_tokens": 1234,
+          "completion_tokens": 173,
+          "total_tokens": 1407,
+          "cost": 0,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 1187,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0,
+            "upstream_inference_prompt_cost": 0,
+            "upstream_inference_completions_cost": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 66,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "content": "{\"translation\":\"If I forget the key, I can't enter the house.\",\"translation_hints\":[{\"words\":[\"Si\"],\"hint\":\"if\"},{\"words\":[\"olvido\"],\"hint\":\"forget\"},{\"words\":[\"la\"],\"hint\":\"the\"},{\"words\":[\"llave\"],\"hint\":\"key\"},{\"words\":[\"no\"],\"hint\":\"not\"},{\"words\":[\"puedo\"],\"hint\":\"can\"},{\"words\":[\"entrar\"],\"hint\":\"enter\"},{\"words\":[\"en\"],\"hint\":\"in\"},{\"words\":[\"la\"],\"hint\":\"the\"},{\"words\":[\"casa\"],\"hint\":\"house\"}]}",
+            "tool_calls": null
+          }
+        ],
+        "error": null
+      },
+      {
+        "status_code": 200,
+        "model": "minimax/minimax-m3.1-flash:free",
+        "provider": "Minimax",
+        "usage": {
+          "prompt_tokens": 1113,
+          "completion_tokens": 1471,
+          "total_tokens": 2584,
+          "cost": 0,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 1074,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0,
+            "upstream_inference_prompt_cost": 0,
+            "upstream_inference_completions_cost": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 394,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "content": "{\n  \"sentences\": [\n    {\n      \"sentence\": \"Olvidé la llave en casa.\",\n      \"translation\": \"I forgot the key at home.\",\n      \"translation_hints\": [\n        {\n          \"words\": [\"Olvidé\"],\n          \"hint\": \"I forgot\"\n        },\n        {\n          \"words\": [\"la\"],\n          \"hint\": \"the\"\n        },\n        {\n          \"words\": [\"llave\"],\n          \"hint\": \"key\"\n        },\n        {\n          \"words\": [\"en\"],\n          \"hint\": \"at\"\n        },\n        {\n          \"words\": [\"casa\"],\n          \"hint\": \"home\"\n        }\n      ]\n    },\n    {\n      \"sentence\": \"¿Dónde está la llave que dejé en casa?\",\n      \"translation\": \"Where is the key that I left at home?\",\n      \"translation_hints\": [\n        {\n          \"words\": [\"Dónde\"],\n          \"hint\": \"where\"\n        },\n        {\n          \"words\": [\"está\"],\n          \"hint\": \"is\"\n        },\n        {\n          \"words\": [\"la\"],\n          \"hint\": \"the\"\n        },\n        {\n          \"words\": [\"llave\"],\n          \"hint\": \"key\"\n        },\n        {\n          \"words\": [\"que\"],\n          \"hint\": \"that\"\n        },\n        {\n          \"words\": [\"dejé\"],\n          \"hint\": \"I left\"\n        },\n        {\n          \"words\": [\"en\"],\n          \"hint\": \"at\"\n        },\n        {\n          \"words\": [\"casa\"],\n          \"hint\": \"home\"\n        }\n      ]\n    },\n    {\n      \"sentence\": \"No puedo entrar porque olvidé la llave.\",\n      \"translation\": \"I cannot enter because I forgot the key.\",\n      \"translation_hints\": [\n        {\n          \"words\": [\"No\"],\n          \"hint\": \"not\"\n        },\n        {\n          \"words\": [\"puedo\"],\n          \"hint\": \"can\"\n        },\n        {\n          \"words\": [\"entrar\"],\n          \"hint\": \"to enter\"\n        },\n        {\n          \"words\": [\"porque\"],\n          \"hint\": \"because\"\n        },\n        {\n          \"words\": [\"olvidé\"],\n          \"hint\": \"I forgot\"\n        },\n        {\n          \"words\": [\"la\"],\n          \"hint\": \"the\"\n        },\n        {\n          \"words\": [\"llave\"],\n          \"hint\": \"key\"\n        }\n      ]\n    },\n    {\n      \"sentence\": \"Mi hermana puede entrar en casa con la llave.\",\n      \"translation\": \"My sister can enter the house with the key.\",\n      \"translation_hints\": [\n        {\n          \"words\": [\"Mi\"],\n          \"hint\": \"my\"\n        },\n        {\n          \"words\": [\"hermana\"],\n          \"hint\": \"sister\"\n        },\n        {\n          \"words\": [\"puede\"],\n          \"hint\": \"can\"\n        },\n        {\n          \"words\": [\"entrar\"],\n          \"hint\": \"to enter\"\n        },\n        {\n          \"words\": [\"en\"],\n          \"hint\": \"the\"\n        },\n        {\n          \"words\": [\"casa\"],\n          \"hint\": \"house\"\n        },\n        {\n          \"words\": [\"con\"],\n          \"hint\": \"with\"\n        },\n        {\n          \"words\": [\"la\"],\n          \"hint\": \"the\"\n        },\n        {\n          \"words\": [\"llave\"],\n          \"hint\": \"key\"\n        }\n      ]\n    },\n    {\n      \"sentence\": \"Para no olvidar la llave, la dejo junto a la puerta antes de salir de casa.\",\n      \"translation\": \"To avoid forgetting the key, I leave it by the door before leaving home.\",\n      \"translation_hints\": [\n        {\n          \"words\": [\"Para\"],\n          \"hint\": \"to\"\n        },\n        {\n          \"words\": [\"no\"],\n          \"hint\": \"not\"\n        },\n        {\n          \"words\": [\"olvidar\"],\n          \"hint\": \"to forget\"\n        },\n        {\n          \"words\": [\"la\"],\n          \"hint\": \"the\"\n        },\n        {\n          \"words\": [\"llave\"],\n          \"hint\": \"key\"\n        },\n        {\n          \"words\": [\"la\"],\n          \"hint\": \"it\"\n        },\n        {\n          \"words\": [\"dejo\"],\n          \"hint\": \"I leave\"\n        },\n        {\n          \"words\": [\"junto\"],\n          \"hint\": \"near\"\n        },\n        {\n          \"words\": [\"a\"],\n          \"hint\": \"to\"\n        },\n        {\n          \"words\": [\"la\"],\n          \"hint\": \"the\"\n        },\n        {\n          \"words\": [\"puerta\"],\n          \"hint\": \"door\"\n        },\n        {\n          \"words\": [\"antes\"],\n          \"hint\": \"before\"\n        },\n        {\n          \"words\": [\"de\"],\n          \"hint\": \"of\"\n        },\n        {\n          \"words\": [\"salir\"],\n          \"hint\": \"to leave\"\n        },\n        {\n          \"words\": [\"de\"],\n          \"hint\": \"from\"\n        },\n        {\n          \"words\": [\"casa\"],\n          \"hint\": \"home\"\n        }\n      ]\n    }\n  ]\n}",
+            "tool_calls": null
+          }
+        ],
+        "error": null
+      }
+    ],
+    "seconds": 17.02
+  },
+  {
+    "language": "English",
+    "source": "She had been waiting for an hour when the train finally arrived. Don’t forget your ticket, because you will need it again.",
+    "saved": {
+      "id": 5,
+      "title": "Waiting for the Train",
+      "status": "processed",
+      "language": "English",
+      "difficulty_level": "A2",
+      "author": null,
+      "category": "Travel",
+      "word_count": 22,
+      "completed_sentences": 0,
+      "total_sentences": 2,
+      "estimated_time_minutes": 1,
+      "completed_sentence_indices": [],
+      "original_paragraphs": [
+        {
+          "index": 0,
+          "sentences": [
+            {
+              "index": 0,
+              "text": "She had been waiting for an hour when the train finally arrived.",
+              "translation": "She had been waiting for an hour when the train finally arrived.",
+              "translation_hints": [
+                {
+                  "words": [
+                    "She"
+                  ],
+                  "hint": "she"
+                },
+                {
+                  "words": [
+                    "had",
+                    "been",
+                    "waiting"
+                  ],
+                  "hint": "had been waiting"
+                },
+                {
+                  "words": [
+                    "for"
+                  ],
+                  "hint": "for"
+                },
+                {
+                  "words": [
+                    "an"
+                  ],
+                  "hint": "an"
+                },
+                {
+                  "words": [
+                    "hour"
+                  ],
+                  "hint": "hour"
+                },
+                {
+                  "words": [
+                    "when"
+                  ],
+                  "hint": "when"
+                },
+                {
+                  "words": [
+                    "the"
+                  ],
+                  "hint": "the"
+                },
+                {
+                  "words": [
+                    "train"
+                  ],
+                  "hint": "train"
+                },
+                {
+                  "words": [
+                    "finally"
+                  ],
+                  "hint": "finally"
+                },
+                {
+                  "words": [
+                    "arrived"
+                  ],
+                  "hint": "arrived"
+                }
+              ]
+            },
+            {
+              "index": 1,
+              "text": "Don’t forget your ticket, because you will need it again.",
+              "translation": "Don’t forget your ticket, because you will need it again.",
+              "translation_hints": [
+                {
+                  "words": [
+                    "Don't"
+                  ],
+                  "hint": "Don't"
+                },
+                {
+                  "words": [
+                    "forget"
+                  ],
+                  "hint": "forget"
+                },
+                {
+                  "words": [
+                    "your"
+                  ],
+                  "hint": "your"
+                },
+                {
+                  "words": [
+                    "ticket"
+                  ],
+                  "hint": "ticket"
+                },
+                {
+                  "words": [
+                    "because"
+                  ],
+                  "hint": "because"
+                },
+                {
+                  "words": [
+                    "you"
+                  ],
+                  "hint": "you"
+                },
+                {
+                  "words": [
+                    "will"
+                  ],
+                  "hint": "will"
+                },
+                {
+                  "words": [
+                    "need"
+                  ],
+                  "hint": "need"
+                },
+                {
+                  "words": [
+                    "it"
+                  ],
+                  "hint": "it"
+                },
+                {
+                  "words": [
+                    "again"
+                  ],
+                  "hint": "again"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "practice_sentences": [
+        {
+          "index": 0,
+          "sentence": "I need to wait for the train for an hour.",
+          "translation": "I need to wait for the train for an hour.",
+          "translation_hints": [
+            {
+              "words": [
+                "I"
+              ],
+              "hint": "I"
+            },
+            {
+              "words": [
+                "need"
+              ],
+              "hint": "need to"
+            },
+            {
+              "words": [
+                "to"
+              ],
+              "hint": "to"
+            },
+            {
+              "words": [
+                "wait"
+              ],
+              "hint": "wait"
+            },
+            {
+              "words": [
+                "for"
+              ],
+              "hint": "for"
+            },
+            {
+              "words": [
+                "the"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "train"
+              ],
+              "hint": "train"
+            },
+            {
+              "words": [
+                "for"
+              ],
+              "hint": "for"
+            },
+            {
+              "words": [
+                "an"
+              ],
+              "hint": "an"
+            },
+            {
+              "words": [
+                "hour"
+              ],
+              "hint": "hour"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "sentence": "The train finally arrives, and we can leave.",
+          "translation": "The train finally arrives, and we can leave.",
+          "translation_hints": [
+            {
+              "words": [
+                "The"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "train"
+              ],
+              "hint": "train"
+            },
+            {
+              "words": [
+                "finally"
+              ],
+              "hint": "finally"
+            },
+            {
+              "words": [
+                "arrives"
+              ],
+              "hint": "arrives"
+            },
+            {
+              "words": [
+                "and"
+              ],
+              "hint": "and"
+            },
+            {
+              "words": [
+                "we"
+              ],
+              "hint": "we"
+            },
+            {
+              "words": [
+                "can"
+              ],
+              "hint": "can"
+            },
+            {
+              "words": [
+                "leave"
+              ],
+              "hint": "leave"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "sentence": "Do not forget your ticket again.",
+          "translation": "Do not forget your ticket again.",
+          "translation_hints": [
+            {
+              "words": [
+                "Do"
+              ],
+              "hint": "do"
+            },
+            {
+              "words": [
+                "not"
+              ],
+              "hint": "not"
+            },
+            {
+              "words": [
+                "forget"
+              ],
+              "hint": "forget"
+            },
+            {
+              "words": [
+                "your"
+              ],
+              "hint": "your"
+            },
+            {
+              "words": [
+                "ticket"
+              ],
+              "hint": "ticket"
+            },
+            {
+              "words": [
+                "again"
+              ],
+              "hint": "again"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "sentence": "We waited an hour, but the train finally arrived.",
+          "translation": "We waited an hour, but the train finally arrived.",
+          "translation_hints": [
+            {
+              "words": [
+                "We"
+              ],
+              "hint": "we"
+            },
+            {
+              "words": [
+                "waited"
+              ],
+              "hint": "waited"
+            },
+            {
+              "words": [
+                "an"
+              ],
+              "hint": "an"
+            },
+            {
+              "words": [
+                "hour"
+              ],
+              "hint": "hour"
+            },
+            {
+              "words": [
+                "but"
+              ],
+              "hint": "but"
+            },
+            {
+              "words": [
+                "the"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "train"
+              ],
+              "hint": "train"
+            },
+            {
+              "words": [
+                "finally"
+              ],
+              "hint": "finally"
+            },
+            {
+              "words": [
+                "arrived"
+              ],
+              "hint": "arrived"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "sentence": "I forgot my ticket, so I need to buy another one again.",
+          "translation": "I forgot my ticket, so I need to buy another one again.",
+          "translation_hints": [
+            {
+              "words": [
+                "I"
+              ],
+              "hint": "I"
+            },
+            {
+              "words": [
+                "forgot"
+              ],
+              "hint": "forgot"
+            },
+            {
+              "words": [
+                "my"
+              ],
+              "hint": "my"
+            },
+            {
+              "words": [
+                "ticket"
+              ],
+              "hint": "ticket"
+            },
+            {
+              "words": [
+                "so"
+              ],
+              "hint": "so"
+            },
+            {
+              "words": [
+                "I"
+              ],
+              "hint": "I"
+            },
+            {
+              "words": [
+                "need"
+              ],
+              "hint": "need to"
+            },
+            {
+              "words": [
+                "to"
+              ],
+              "hint": "to"
+            },
+            {
+              "words": [
+                "buy"
+              ],
+              "hint": "buy"
+            },
+            {
+              "words": [
+                "another"
+              ],
+              "hint": "another"
+            },
+            {
+              "words": [
+                "one"
+              ],
+              "hint": "one"
+            },
+            {
+              "words": [
+                "again"
+              ],
+              "hint": "again"
+            }
+          ]
+        }
+      ],
+      "top_words": [
+        {
+          "word": "wait",
+          "translation": "Synthetic dictionary fixture"
+        },
+        {
+          "word": "hour",
+          "translation": "Synthetic dictionary fixture"
+        },
+        {
+          "word": "train",
+          "translation": "Synthetic dictionary fixture"
+        },
+        {
+          "word": "finally",
+          "translation": "Synthetic dictionary fixture"
+        },
+        {
+          "word": "arrive",
+          "translation": "Synthetic dictionary fixture"
+        },
+        {
+          "word": "do",
+          "translation": "Synthetic dictionary fixture"
+        },
+        {
+          "word": "forget",
+          "translation": "Synthetic dictionary fixture"
+        },
+        {
+          "word": "ticket",
+          "translation": "Synthetic dictionary fixture"
+        },
+        {
+          "word": "need",
+          "translation": "Synthetic dictionary fixture"
+        },
+        {
+          "word": "again",
+          "translation": "Synthetic dictionary fixture"
+        }
+      ],
+      "enrichment_stage": "completed",
+      "error_message": null
+    },
+    "accepted": true,
+    "calls": [
+      {
+        "task": "metadata",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 620,
+        "cost_usd": 0.0,
+        "returned_model": "minimax/minimax-m3.1-flash:free"
+      },
+      {
+        "task": "filter",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 1165,
+        "cost_usd": 0.0,
+        "returned_model": "minimax/minimax-m3.1-flash:free"
+      },
+      {
+        "task": "translation",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 1432,
+        "cost_usd": 0.0,
+        "returned_model": "minimax/minimax-m3.1-flash:free"
+      },
+      {
+        "task": "translation",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 1392,
+        "cost_usd": 0.0,
+        "returned_model": "minimax/minimax-m3.1-flash:free"
+      },
+      {
+        "task": "practice",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 1690,
+        "cost_usd": 0.0,
+        "returned_model": "minimax/minimax-m3.1-flash:free"
+      }
+    ],
+    "responses": [
+      {
+        "status_code": 200,
+        "model": "minimax/minimax-m3.1-flash:free",
+        "provider": "Minimax",
+        "usage": {
+          "prompt_tokens": 591,
+          "completion_tokens": 29,
+          "total_tokens": 620,
+          "cost": 0,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 256,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0,
+            "upstream_inference_prompt_cost": 0,
+            "upstream_inference_completions_cost": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "content": "{\"title\":\"Waiting for the Train\",\"difficulty_level\":\"A2\",\"language\":\"English\",\"author\":null,\"category\":\"Travel\"}",
+            "tool_calls": null
+          }
+        ],
+        "error": null
+      },
+      {
+        "status_code": 200,
+        "model": "minimax/minimax-m3.1-flash:free",
+        "provider": "Minimax",
+        "usage": {
+          "prompt_tokens": 783,
+          "completion_tokens": 382,
+          "total_tokens": 1165,
+          "cost": 0,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 186,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0,
+            "upstream_inference_prompt_cost": 0,
+            "upstream_inference_completions_cost": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 287,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "content": "{\"words\":[{\"word\":\"wait\",\"count\":1},{\"word\":\"hour\",\"count\":1},{\"word\":\"train\",\"count\":1},{\"word\":\"finally\",\"count\":1},{\"word\":\"arrive\",\"count\":1},{\"word\":\"do\",\"count\":1},{\"word\":\"forget\",\"count\":1},{\"word\":\"ticket\",\"count\":1},{\"word\":\"need\",\"count\":1},{\"word\":\"again\",\"count\":1}]}",
+            "tool_calls": null
+          }
+        ],
+        "error": null
+      },
+      {
+        "status_code": 200,
+        "model": "minimax/minimax-m3.1-flash:free",
+        "provider": "Minimax",
+        "usage": {
+          "prompt_tokens": 1237,
+          "completion_tokens": 155,
+          "total_tokens": 1392,
+          "cost": 0,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 1235,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0,
+            "upstream_inference_prompt_cost": 0,
+            "upstream_inference_completions_cost": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 51,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "content": "{\"translation\":\"Don’t forget your ticket, because you will need it again.\",\"translation_hints\":[{\"words\":[\"Don’t\"],\"hint\":\"Don't\"},{\"words\":[\"forget\"],\"hint\":\"forget\"},{\"words\":[\"your\"],\"hint\":\"your\"},{\"words\":[\"ticket\"],\"hint\":\"ticket\"},{\"words\":[\"because\"],\"hint\":\"because\"},{\"words\":[\"you\"],\"hint\":\"you\"},{\"words\":[\"will\"],\"hint\":\"will\"},{\"words\":[\"need\"],\"hint\":\"need\"},{\"words\":[\"it\"],\"hint\":\"it\"},{\"words\":[\"again\"],\"hint\":\"again\"}]}",
+            "tool_calls": null
+          }
+        ],
+        "error": null
+      },
+      {
+        "status_code": 200,
+        "model": "minimax/minimax-m3.1-flash:free",
+        "provider": "Minimax",
+        "usage": {
+          "prompt_tokens": 1225,
+          "completion_tokens": 207,
+          "total_tokens": 1432,
+          "cost": 0,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 1223,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0,
+            "upstream_inference_prompt_cost": 0,
+            "upstream_inference_completions_cost": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 98,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "content": "{\"translation\":\"She had been waiting for an hour when the train finally arrived.\",\"translation_hints\":[{\"words\":[\"She\"],\"hint\":\"she\"},{\"words\":[\"had\",\"been\",\"waiting\"],\"hint\":\"had been waiting\"},{\"words\":[\"for\"],\"hint\":\"for\"},{\"words\":[\"an\"],\"hint\":\"an\"},{\"words\":[\"hour\"],\"hint\":\"hour\"},{\"words\":[\"when\"],\"hint\":\"when\"},{\"words\":[\"the\"],\"hint\":\"the\"},{\"words\":[\"train\"],\"hint\":\"train\"},{\"words\":[\"finally\"],\"hint\":\"finally\"},{\"words\":[\"arrived\"],\"hint\":\"arrived\"}]}",
+            "tool_calls": null
+          }
+        ],
+        "error": null
+      },
+      {
+        "status_code": 200,
+        "model": "minimax/minimax-m3.1-flash:free",
+        "provider": "Minimax",
+        "usage": {
+          "prompt_tokens": 1117,
+          "completion_tokens": 573,
+          "total_tokens": 1690,
+          "cost": 0,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 128,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0,
+            "upstream_inference_prompt_cost": 0,
+            "upstream_inference_completions_cost": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 37,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "content": "{\"sentences\":[{\"sentence\":\"I need to wait for the train for an hour.\",\"translation\":\"I need to wait for the train for an hour.\",\"translation_hints\":[{\"words\":[\"I\"],\"hint\":\"I\"},{\"words\":[\"need\"],\"hint\":\"need to\"},{\"words\":[\"to\"],\"hint\":\"to\"},{\"words\":[\"wait\"],\"hint\":\"wait\"},{\"words\":[\"for\"],\"hint\":\"for\"},{\"words\":[\"the\"],\"hint\":\"the\"},{\"words\":[\"train\"],\"hint\":\"train\"},{\"words\":[\"for\"],\"hint\":\"for\"},{\"words\":[\"an\"],\"hint\":\"an\"},{\"words\":[\"hour\"],\"hint\":\"hour\"}]},{\"sentence\":\"The train finally arrives, and we can leave.\",\"translation\":\"The train finally arrives, and we can leave.\",\"translation_hints\":[{\"words\":[\"The\"],\"hint\":\"the\"},{\"words\":[\"train\"],\"hint\":\"train\"},{\"words\":[\"finally\"],\"hint\":\"finally\"},{\"words\":[\"arrives\"],\"hint\":\"arrives\"},{\"words\":[\"and\"],\"hint\":\"and\"},{\"words\":[\"we\"],\"hint\":\"we\"},{\"words\":[\"can\"],\"hint\":\"can\"},{\"words\":[\"leave\"],\"hint\":\"leave\"}]},{\"sentence\":\"Do not forget your ticket again.\",\"translation\":\"Do not forget your ticket again.\",\"translation_hints\":[{\"words\":[\"Do\"],\"hint\":\"do\"},{\"words\":[\"not\"],\"hint\":\"not\"},{\"words\":[\"forget\"],\"hint\":\"forget\"},{\"words\":[\"your\"],\"hint\":\"your\"},{\"words\":[\"ticket\"],\"hint\":\"ticket\"},{\"words\":[\"again\"],\"hint\":\"again\"}]},{\"sentence\":\"We waited an hour, but the train finally arrived.\",\"translation\":\"We waited an hour, but the train finally arrived.\",\"translation_hints\":[{\"words\":[\"We\"],\"hint\":\"we\"},{\"words\":[\"waited\"],\"hint\":\"waited\"},{\"words\":[\"an\"],\"hint\":\"an\"},{\"words\":[\"hour\"],\"hint\":\"hour\"},{\"words\":[\"but\"],\"hint\":\"but\"},{\"words\":[\"the\"],\"hint\":\"the\"},{\"words\":[\"train\"],\"hint\":\"train\"},{\"words\":[\"finally\"],\"hint\":\"finally\"},{\"words\":[\"arrived\"],\"hint\":\"arrived\"}]},{\"sentence\":\"I forgot my ticket, so I need to buy another one again.\",\"translation\":\"I forgot my ticket, so I need to buy another one again.\",\"translation_hints\":[{\"words\":[\"I\"],\"hint\":\"I\"},{\"words\":[\"forgot\"],\"hint\":\"forgot\"},{\"words\":[\"my\"],\"hint\":\"my\"},{\"words\":[\"ticket\"],\"hint\":\"ticket\"},{\"words\":[\"so\"],\"hint\":\"so\"},{\"words\":[\"I\"],\"hint\":\"I\"},{\"words\":[\"need\"],\"hint\":\"need to\"},{\"words\":[\"to\"],\"hint\":\"to\"},{\"words\":[\"buy\"],\"hint\":\"buy\"},{\"words\":[\"another\"],\"hint\":\"another\"},{\"words\":[\"one\"],\"hint\":\"one\"},{\"words\":[\"again\"],\"hint\":\"again\"}]}]}",
+            "tool_calls": null
+          }
+        ],
+        "error": null
+      }
+    ],
+    "seconds": 13.36
+  }
+]

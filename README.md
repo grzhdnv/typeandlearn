@@ -9,8 +9,8 @@ translations, and practice-sentence generation.
 
 Active local v2 prototype. Local repairs verified on 19 October 2026: text intake,
 metadata editing, original and generated practice navigation, reset, saved progress,
-results, and history. The current checks cover 92 backend tests, 27 frontend unit
-tests, and 21 Chromium browser regressions. A live synthetic comparison verified
+results, and history. The current checks cover 102 backend tests, 31 frontend unit
+tests, and 27 Chromium browser regressions. A live synthetic comparison verified
 five languages, metadata, generated exercises, and real DeepSeek fallback.
 
 Core library and original-text practice work without provider credentials when a
@@ -29,7 +29,11 @@ The OpenRouter free-only comparison completed on 20 October: Ultra 550B and Dots
 280B completed all seven final tasks with reasoning disabled; Super 120B returned
 upstream 404s. A MiniMax M3.1 Flash follow-up passed 7/7 using prompted JSON output
 and mandatory low-effort reasoning. MiniMax is the leading free challenger in this
-small sample, with Ultra as an alternative; hint quality and wider acceptance need work. Groq/DeepSeek defaults remain unchanged. See the
+small sample, with Ultra as an alternative. A subsequent five-language technical
+acceptance pass saved ten translations and 25 drills with no missing UI hints;
+see [acceptance and content-use scope](docs/minimax-acceptance-2026-10-20.md). MiniMax
+remains opt-in, and CEFR estimates/exercise style still need review. Groq/DeepSeek
+defaults remain unchanged. See the
 [evaluation report](docs/openrouter-evaluation-2026-10-20.md) and
 [session handoff](HANDOFF.md). Next, unify API/worker job dispatch, expand realistic
 multilingual browser coverage, and verify staging and recovery before private beta.

@@ -281,3 +281,50 @@ test("review allows bracket navigation and restarting without duplicate completi
   await page.getByRole("button", { name: "Enter to continue", exact: true }).click();
   await expect(page.locator("#typing-canvas")).toContainText("Two.");
 });
+
+
+test("word hints handle Spanish punctuation and repeated meanings", async ({ page }) => {
+  const story = {
+    ...inProgressStory, status: "processed", enrichment_stage: "completed", language: "Spanish",
+    original_paragraphs: [{ index: 0, sentences: [{ index: 0, text: "¿Dónde Bank Bank.", translation: "Test",
+      translation_hints: [{ words: ["Dónde"], hint: "where" }, { words: ["Bank"], hint: "bench" }, { words: ["Bank"], hint: "bank" }] }] }],
+  };
+  await page.route(/\/api\/texts\/1$/, route => route.fulfill({ json: { data: story } }));
+  await page.goto("/practice/1");
+  await page.locator("#typing-hidden-input").focus();
+  await page.keyboard.down("Alt");
+  await expect(page.getByText("¿Dónde → where", { exact: true })).toBeVisible();
+  await page.keyboard.up("Alt");
+  await page.keyboard.insertText("¿Dónde ");
+  await page.keyboard.down("Alt");
+  await expect(page.getByText("Bank → bench", { exact: true })).toBeVisible();
+  await page.keyboard.up("Alt");
+  await page.keyboard.insertText("Bank ");
+  await page.keyboard.down("Alt");
+  await expect(page.getByText("Bank. → bank", { exact: true })).toBeVisible();
+  await page.keyboard.up("Alt");
+});
+
+for (const example of [
+  { language: "German", text: "Ich stehe früh auf.", prefix: "Ich ", words: ["stehe", "auf"], hint: "get up", active: "stehe" },
+  { language: "French", text: "Si j’avais su.", prefix: "Si ", words: ["j'avais", "su"], hint: "I had known", active: "j’avais" },
+  { language: "Italian", text: "Non vedo l’ora di partire.", prefix: "Non vedo ", words: ["Non", "vedo", "l'ora"], hint: "can't wait", active: "l’ora" },
+  { language: "Spanish", text: "¿Dónde está la llave?", prefix: "", words: ["Dónde"], hint: "where", active: "¿Dónde" },
+  { language: "English", text: "Don’t forget the key.", prefix: "", words: ["Don't"], hint: "do not", active: "Don’t" },
+]) {
+  test(`${example.language} contextual hints appear at the real typing cursor`, async ({ page }) => {
+    const story = {
+      ...inProgressStory, status: "processed", enrichment_stage: "completed", language: example.language,
+      original_paragraphs: [{ index: 0, sentences: [{ index: 0, text: example.text, translation: "Synthetic translation",
+        translation_hints: [{ words: example.words, hint: example.hint }] }] }],
+    };
+    await page.route(/\/api\/texts\/1$/, route => route.fulfill({ json: { data: story } }));
+    await page.goto("/practice/1");
+    await page.locator("#typing-hidden-input").focus();
+    if (example.prefix) await page.keyboard.insertText(example.prefix);
+    await page.keyboard.down("Alt");
+    await expect(page.getByText(`${example.active} → ${example.hint}`, { exact: true })).toBeVisible();
+    await expect(page.locator('#typing-canvas span[style*="background-color"]')).not.toHaveCount(0);
+    await page.keyboard.up("Alt");
+  });
+}

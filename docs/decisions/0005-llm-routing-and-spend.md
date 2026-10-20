@@ -1,7 +1,7 @@
 # ADR-0005: Groq-First LLM Routing, Failover, and Spend Governance
 
-- **Status**: Accepted; local implementation verified 2026-10-19
-- **Date**: 2026-08-30; provider policy revised 2026-10-19
+- **Status**: Accepted; local implementation verified 2026-10-20
+- **Date**: 2026-08-30; provider policy revised 2026-10-20
 
 ## Decision
 
@@ -22,7 +22,9 @@ allow fallback. Provider reset headers and Retry-After establish a shared cooldo
 Local Groq quota contention waits at most ten seconds before selecting fallback;
 an upstream transient failure can select fallback immediately. There is no SDK
 retry stack. One bounded schema-repair attempt is allowed and accounted separately.
-Exhausted application or paid budgets terminate the attempt without further routing.
+After the single bounded repair, exhausted schema/hint validation can select the
+next configured provider. Exhausted application or paid budgets terminate without
+further routing.
 
 ## Quotas and spending
 
@@ -90,3 +92,15 @@ validation: 7/7 cases, low mandatory reasoning, zero reported cost. Its automati
 tool-output path failed nested schemas; JSON mode is explicit for this model.
 MiniMax now leads the small free-model sample, with Ultra as an alternative. Wider
 quality checks and provider-policy review remain prerequisites for promotion.
+
+### Hint and MiniMax technical acceptance
+
+[The expanded acceptance](../minimax-acceptance-2026-10-20.md) passed all five
+supported language flows: 10 saved translations and 25 saved drills with complete
+UI hint availability. All provider outputs now receive exact word-occurrence and
+nonempty-hint validation with one bounded repair. Safe spellings are normalized;
+lemmas and missing meanings are not guessed. Prompt/cache version is
+`v3-validated-hints`. Five-drill requests allow 4,096 output tokens, separately
+configured and reserved through the same governor; other tasks retain 2,048.
+MiniMax's optional routing order is documented, with content-use terms reviewed;
+Groq/DeepSeek remain the defaults. CEFR/style and production acceptance remain open.

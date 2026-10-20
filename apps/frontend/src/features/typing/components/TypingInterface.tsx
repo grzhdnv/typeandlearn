@@ -3,6 +3,7 @@ import {
   For,
   Show,
   createEffect,
+  createMemo,
   createSignal,
   onCleanup,
   onMount,
@@ -18,6 +19,8 @@ import type {
   TypingState,
 } from "../core/types.ts";
 
+import { buildHintSpans, hintAt } from "../core/hints.ts";
+
 interface TypingInterfaceProps {
   targetText: string;
   sessionKey?: string;
@@ -30,37 +33,6 @@ interface TypingInterfaceProps {
   onComplete?: (metrics: TypingMetrics) => void;
   onMetricsUpdate?: (metrics: TypingMetrics | null) => void;
 }
-
-/**
- * Resolves the active word from a cursor offset in the target text.
- */
-const getCurrentWord = (target: string, cursor: number): string => {
-  if (target.length === 0) return "";
-  const isSpace = (char: string) => /\s/.test(char);
-
-  let lastWord = "";
-  let i = 0;
-  while (i < target.length) {
-    while (i < target.length && isSpace(target[i])) {
-      i++;
-    }
-    if (i >= target.length) break;
-
-    const wordStart = i;
-    while (i < target.length && !isSpace(target[i])) {
-      i++;
-    }
-    const wordEnd = i;
-
-    if (wordStart <= cursor) {
-      lastWord = target.slice(wordStart, wordEnd);
-    } else {
-      break;
-    }
-  }
-
-  return lastWord;
-};
 
 /**
  * Keyboard-driven typing surface powered by the pure typing state reducer.
@@ -106,16 +78,10 @@ export const TypingInterface: Component<TypingInterfaceProps> = (props) => {
     if (!props.disabled) inputRef?.focus();
   });
 
-  const currentWord = () =>
-    getCurrentWord(props.targetText, typingState().cursorIndex);
-
-  const currentHintGroup = () => {
-    const word = currentWord();
-    if (!word) return null;
-    const clean = word.replace(/[.,;:!?"'`„“»«]/g, "");
-    const hints = props.hints ?? [];
-    return hints.find((h) => h.words.includes(clean) || h.words.includes(word)) ?? null;
-  };
+  const hintSpans = createMemo(() => buildHintSpans(props.targetText, props.hints ?? []));
+  const currentSpan = () => hintAt(hintSpans(), typingState().cursorIndex);
+  const currentWord = () => currentSpan()?.word ?? "";
+  const currentHintGroup = () => currentSpan()?.group ?? null;
 
   const currentHint = () => {
     const group = currentHintGroup();
@@ -130,10 +96,8 @@ export const TypingInterface: Component<TypingInterfaceProps> = (props) => {
     const group = currentHintGroup();
     if (!group) return false;
 
-    const wordAtIndex = getCurrentWord(props.targetText, index);
-    if (!wordAtIndex) return false;
-    const cleanWordAtIndex = wordAtIndex.replace(/[.,;:!?"'`„“»«]/g, "");
-    return group.words.includes(cleanWordAtIndex) || group.words.includes(wordAtIndex);
+    const span = hintAt(hintSpans(), index);
+    return !!span && index < span.end && span.group === group;
   };
 
   /**
