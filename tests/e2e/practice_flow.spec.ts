@@ -18,30 +18,34 @@ test.describe("Intake and Practice Flow", () => {
     await expect(addTextBtn).toBeVisible();
     await addTextBtn.click();
 
-    // 3. Fill in custom text form
-    const uniqueTitle = `E2E Story ${Date.now()}`;
-    await page.getByPlaceholder("Title (Optional)").fill(uniqueTitle);
+    // 3. Provide only the source text; metadata is inferred by the LLM
     await page
       .getByPlaceholder("Paste new text here...")
       .fill("Hallo Welt. Das ist ein Test.");
 
-    // Submit text
+    // Submit text and capture the created text id from the upload response
     const submitBtn = page.getByRole("button", { name: "SUBMIT" });
-    await submitBtn.click();
+    await page.getByLabel("Text language", { exact: true }).selectOption("German");
+    const [uploadResponse] = await Promise.all([
+      page.waitForResponse(
+        (response) => response.url().endsWith("/texts") && response.request().method() === "POST"
+      ),
+      submitBtn.click(),
+    ]);
+    const textId = (await uploadResponse.json()).id as number;
+    const practiceHref = `/practice/${textId}`;
 
-    // 4. Wait for text card in library
-    const textCard = page.locator("div.text-card-hover", {
-      hasText: uniqueTitle,
-    });
-    await expect(textCard).toBeVisible({ timeout: 15000 });
+    // 4. Locate the new card by its practice link (the inferred title is not predictable)
+    const textCard = page.locator(`div.text-card-hover:has(a[href="${practiceHref}"])`);
+    await expect(textCard).toBeVisible({ timeout: 30000 });
 
     // 5. Navigate to practice page
     const practiceLink = textCard.getByRole("link", { name: /practice/i });
     await practiceLink.click();
     await expect(page).toHaveURL(/\/practice\/\d+/);
 
-    // 6. Verify practice view rendered & wait for background processing to complete
-    await expect(page.locator("h1")).toContainText(uniqueTitle);
+    // 6. Verify practice view rendered and wait for background processing to settle
+    await expect(page.locator("h1")).toBeVisible();
     await expect(page.getByText(/Translating text with AI/i)).not.toBeVisible({
       timeout: 30000,
     });
@@ -57,6 +61,16 @@ test.describe("Intake and Practice Flow", () => {
 
     // Type the first sentence
     await page.keyboard.type("Hallo Welt.", { delay: 40 });
+
+    // Review the completed sentence, then continue without a mouse.
+    await expect(page.locator("#sentence-review")).toBeVisible();
+    await expect(page.getByText("Sentence 1 of 2", { exact: true })).toBeVisible();
+    await page.keyboard.press("Enter");
+    await expect(page.getByText("Sentence 2 of 2", { exact: true })).toBeVisible();
+    await expect(typingCanvas).toContainText("Das ist ein Test.");
+    await expect(hiddenInput).toBeFocused();
+    await expect(page.locator("#results-modal")).not.toBeVisible();
+    await page.keyboard.type("Das ist ein Test.", { delay: 40 });
 
     // 8. Assert real-time metrics updated
     const metricWpm = page.locator("#metric-wpm");
@@ -84,9 +98,7 @@ test.describe("Intake and Practice Flow", () => {
 
     // 12. Cleanup: Return to library and delete the test text
     await page.goto("/");
-    const cardToDelete = page.locator("div.text-card-hover", {
-      hasText: uniqueTitle,
-    });
+    const cardToDelete = page.locator(`div.text-card-hover:has(a[href="${practiceHref}"])`);
     await expect(cardToDelete).toBeVisible();
     const deleteBtn = cardToDelete.getByTitle("Delete Text");
     await deleteBtn.click();

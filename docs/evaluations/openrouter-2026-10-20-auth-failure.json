@@ -1,0 +1,434 @@
+[
+  {
+    "model": "openrouter:nvidia/nemotron-3-ultra-550b-a55b:free",
+    "task": "translation",
+    "language": "German",
+    "source": "Ich stehe früh auf, weil der Zug um sieben Uhr abfährt.",
+    "error": "ModelHTTPError: status_code: 401, model_name: nvidia/nemotron-3-ultra-550b-a55b:free, body: {'message': 'User not found.', 'code': 401}",
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "returned_model": null,
+        "status": "failed",
+        "status_code": 401,
+        "tokens": 0,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.37
+      }
+    ],
+    "seconds": 0.55
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-ultra-550b-a55b:free",
+    "task": "translation",
+    "language": "French",
+    "source": "Si j'avais su, je serais venu plus tôt.",
+    "error": "ModelHTTPError: status_code: 401, model_name: nvidia/nemotron-3-ultra-550b-a55b:free, body: {'message': 'User not found.', 'code': 401}",
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "returned_model": null,
+        "status": "failed",
+        "status_code": 401,
+        "tokens": 0,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.09
+      }
+    ],
+    "seconds": 0.14
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-ultra-550b-a55b:free",
+    "task": "translation",
+    "language": "Italian",
+    "source": "Non vedo l'ora di rivederti.",
+    "error": "ModelHTTPError: status_code: 401, model_name: nvidia/nemotron-3-ultra-550b-a55b:free, body: {'message': 'User not found.', 'code': 401}",
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "returned_model": null,
+        "status": "failed",
+        "status_code": 401,
+        "tokens": 0,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.1
+      }
+    ],
+    "seconds": 0.14
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-ultra-550b-a55b:free",
+    "task": "translation",
+    "language": "Spanish",
+    "source": "Se me olvidaron las llaves en casa.",
+    "error": "ModelHTTPError: status_code: 401, model_name: nvidia/nemotron-3-ultra-550b-a55b:free, body: {'message': 'User not found.', 'code': 401}",
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "returned_model": null,
+        "status": "failed",
+        "status_code": 401,
+        "tokens": 0,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.1
+      }
+    ],
+    "seconds": 0.21
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-ultra-550b-a55b:free",
+    "task": "translation",
+    "language": "English",
+    "source": "She had been waiting for an hour when the train finally arrived.",
+    "error": "ModelHTTPError: status_code: 401, model_name: nvidia/nemotron-3-ultra-550b-a55b:free, body: {'message': 'User not found.', 'code': 401}",
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "returned_model": null,
+        "status": "failed",
+        "status_code": 401,
+        "tokens": 0,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.1
+      }
+    ],
+    "seconds": 0.14
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-ultra-550b-a55b:free",
+    "task": "metadata",
+    "language": "French",
+    "source": "Si j'avais su, je serais venu plus tôt.",
+    "error": "ModelHTTPError: status_code: 401, model_name: nvidia/nemotron-3-ultra-550b-a55b:free, body: {'message': 'User not found.', 'code': 401}",
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "returned_model": null,
+        "status": "failed",
+        "status_code": 401,
+        "tokens": 0,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.1
+      }
+    ],
+    "seconds": 0.14
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-ultra-550b-a55b:free",
+    "task": "practice",
+    "language": "Spanish",
+    "source": [
+      "llave",
+      "casa",
+      "olvidar"
+    ],
+    "error": "ModelHTTPError: status_code: 401, model_name: nvidia/nemotron-3-ultra-550b-a55b:free, body: {'message': 'User not found.', 'code': 401}",
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "returned_model": null,
+        "status": "failed",
+        "status_code": 401,
+        "tokens": 0,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.09
+      }
+    ],
+    "seconds": 0.14
+  },
+  {
+    "model": "openrouter:dots-studio/dots-3-note-preview:free",
+    "task": "translation",
+    "language": "German",
+    "source": "Ich stehe früh auf, weil der Zug um sieben Uhr abfährt.",
+    "error": "ModelHTTPError: status_code: 401, model_name: dots-studio/dots-3-note-preview:free, body: {'message': 'User not found.', 'code': 401}",
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "dots-studio/dots-3-note-preview:free",
+        "returned_model": null,
+        "status": "failed",
+        "status_code": 401,
+        "tokens": 0,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.27
+      }
+    ],
+    "seconds": 0.36
+  },
+  {
+    "model": "openrouter:dots-studio/dots-3-note-preview:free",
+    "task": "translation",
+    "language": "French",
+    "source": "Si j'avais su, je serais venu plus tôt.",
+    "error": "ModelHTTPError: status_code: 401, model_name: dots-studio/dots-3-note-preview:free, body: {'message': 'User not found.', 'code': 401}",
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "dots-studio/dots-3-note-preview:free",
+        "returned_model": null,
+        "status": "failed",
+        "status_code": 401,
+        "tokens": 0,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.1
+      }
+    ],
+    "seconds": 0.14
+  },
+  {
+    "model": "openrouter:dots-studio/dots-3-note-preview:free",
+    "task": "translation",
+    "language": "Italian",
+    "source": "Non vedo l'ora di rivederti.",
+    "error": "ModelHTTPError: status_code: 401, model_name: dots-studio/dots-3-note-preview:free, body: {'message': 'User not found.', 'code': 401}",
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "dots-studio/dots-3-note-preview:free",
+        "returned_model": null,
+        "status": "failed",
+        "status_code": 401,
+        "tokens": 0,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.13
+      }
+    ],
+    "seconds": 0.17
+  },
+  {
+    "model": "openrouter:dots-studio/dots-3-note-preview:free",
+    "task": "translation",
+    "language": "Spanish",
+    "source": "Se me olvidaron las llaves en casa.",
+    "error": "ModelHTTPError: status_code: 401, model_name: dots-studio/dots-3-note-preview:free, body: {'message': 'User not found.', 'code': 401}",
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "dots-studio/dots-3-note-preview:free",
+        "returned_model": null,
+        "status": "failed",
+        "status_code": 401,
+        "tokens": 0,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.1
+      }
+    ],
+    "seconds": 0.14
+  },
+  {
+    "model": "openrouter:dots-studio/dots-3-note-preview:free",
+    "task": "translation",
+    "language": "English",
+    "source": "She had been waiting for an hour when the train finally arrived.",
+    "error": "ModelHTTPError: status_code: 401, model_name: dots-studio/dots-3-note-preview:free, body: {'message': 'User not found.', 'code': 401}",
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "dots-studio/dots-3-note-preview:free",
+        "returned_model": null,
+        "status": "failed",
+        "status_code": 401,
+        "tokens": 0,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.1
+      }
+    ],
+    "seconds": 0.13
+  },
+  {
+    "model": "openrouter:dots-studio/dots-3-note-preview:free",
+    "task": "metadata",
+    "language": "French",
+    "source": "Si j'avais su, je serais venu plus tôt.",
+    "error": "ModelHTTPError: status_code: 401, model_name: dots-studio/dots-3-note-preview:free, body: {'message': 'User not found.', 'code': 401}",
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "dots-studio/dots-3-note-preview:free",
+        "returned_model": null,
+        "status": "failed",
+        "status_code": 401,
+        "tokens": 0,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.1
+      }
+    ],
+    "seconds": 0.21
+  },
+  {
+    "model": "openrouter:dots-studio/dots-3-note-preview:free",
+    "task": "practice",
+    "language": "Spanish",
+    "source": [
+      "llave",
+      "casa",
+      "olvidar"
+    ],
+    "error": "ModelHTTPError: status_code: 401, model_name: dots-studio/dots-3-note-preview:free, body: {'message': 'User not found.', 'code': 401}",
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "dots-studio/dots-3-note-preview:free",
+        "returned_model": null,
+        "status": "failed",
+        "status_code": 401,
+        "tokens": 0,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.1
+      }
+    ],
+    "seconds": 0.13
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-super-120b-a12b:free",
+    "task": "translation",
+    "language": "German",
+    "source": "Ich stehe früh auf, weil der Zug um sieben Uhr abfährt.",
+    "error": "ModelHTTPError: status_code: 401, model_name: nvidia/nemotron-3-super-120b-a12b:free, body: {'message': 'User not found.', 'code': 401}",
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "nvidia/nemotron-3-super-120b-a12b:free",
+        "returned_model": null,
+        "status": "failed",
+        "status_code": 401,
+        "tokens": 0,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.18
+      }
+    ],
+    "seconds": 0.24
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-super-120b-a12b:free",
+    "task": "translation",
+    "language": "French",
+    "source": "Si j'avais su, je serais venu plus tôt.",
+    "error": "ModelHTTPError: status_code: 401, model_name: nvidia/nemotron-3-super-120b-a12b:free, body: {'message': 'User not found.', 'code': 401}",
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "nvidia/nemotron-3-super-120b-a12b:free",
+        "returned_model": null,
+        "status": "failed",
+        "status_code": 401,
+        "tokens": 0,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.15
+      }
+    ],
+    "seconds": 0.19
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-super-120b-a12b:free",
+    "task": "translation",
+    "language": "Italian",
+    "source": "Non vedo l'ora di rivederti.",
+    "error": "ModelHTTPError: status_code: 401, model_name: nvidia/nemotron-3-super-120b-a12b:free, body: {'message': 'User not found.', 'code': 401}",
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "nvidia/nemotron-3-super-120b-a12b:free",
+        "returned_model": null,
+        "status": "failed",
+        "status_code": 401,
+        "tokens": 0,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 57.36
+      }
+    ],
+    "seconds": 57.5
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-super-120b-a12b:free",
+    "task": "translation",
+    "language": "Spanish",
+    "source": "Se me olvidaron las llaves en casa.",
+    "error": "ModelHTTPError: status_code: 401, model_name: nvidia/nemotron-3-super-120b-a12b:free, body: {'message': 'User not found.', 'code': 401}",
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "nvidia/nemotron-3-super-120b-a12b:free",
+        "returned_model": null,
+        "status": "failed",
+        "status_code": 401,
+        "tokens": 0,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.18
+      }
+    ],
+    "seconds": 0.22
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-super-120b-a12b:free",
+    "task": "translation",
+    "language": "English",
+    "source": "She had been waiting for an hour when the train finally arrived.",
+    "error": "ModelHTTPError: status_code: 401, model_name: nvidia/nemotron-3-super-120b-a12b:free, body: {'message': 'User not found.', 'code': 401}",
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "nvidia/nemotron-3-super-120b-a12b:free",
+        "returned_model": null,
+        "status": "failed",
+        "status_code": 401,
+        "tokens": 0,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.09
+      }
+    ],
+    "seconds": 0.15
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-super-120b-a12b:free",
+    "task": "metadata",
+    "language": "French",
+    "source": "Si j'avais su, je serais venu plus tôt.",
+    "error": "ModelHTTPError: status_code: 401, model_name: nvidia/nemotron-3-super-120b-a12b:free, body: {'message': 'User not found.', 'code': 401}",
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "nvidia/nemotron-3-super-120b-a12b:free",
+        "returned_model": null,
+        "status": "failed",
+        "status_code": 401,
+        "tokens": 0,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.08
+      }
+    ],
+    "seconds": 0.11
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-super-120b-a12b:free",
+    "task": "practice",
+    "language": "Spanish",
+    "source": [
+      "llave",
+      "casa",
+      "olvidar"
+    ],
+    "error": "ModelHTTPError: status_code: 401, model_name: nvidia/nemotron-3-super-120b-a12b:free, body: {'message': 'User not found.', 'code': 401}",
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "nvidia/nemotron-3-super-120b-a12b:free",
+        "returned_model": null,
+        "status": "failed",
+        "status_code": 401,
+        "tokens": 0,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.15
+      }
+    ],
+    "seconds": 0.2
+  }
+]

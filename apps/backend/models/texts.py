@@ -14,6 +14,8 @@ class TextRecord(SQLModel, table=True):
 
     id: Optional[int] = Field(default=None, primary_key=True)
     owner_id: str = Field(default="owner_local_default", index=True)
+    source_text: Optional[str] = Field(default=None)
+    intake_options: Optional[Dict[str, Any]] = Field(default=None, sa_column=Column(JSON))
     title: str = Field(index=True)
     status: str = Field(default="pending", index=True)
     language: str = Field(default="Unknown", index=True)

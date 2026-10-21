@@ -1,0 +1,1938 @@
+[
+  {
+    "model": "groq:openai/gpt-oss-120b",
+    "task": "translation",
+    "language": "German",
+    "source": "Ich stehe früh auf, weil der Zug um sieben Uhr abfährt.",
+    "output": {
+      "translation": "I get up early because the train departs at seven o'clock.",
+      "translation_hints": [
+        {
+          "words": [
+            "Ich"
+          ],
+          "hint": "I"
+        },
+        {
+          "words": [
+            "stehe",
+            "auf"
+          ],
+          "hint": "get up"
+        },
+        {
+          "words": [
+            "früh"
+          ],
+          "hint": "early"
+        },
+        {
+          "words": [
+            "weil"
+          ],
+          "hint": "because"
+        },
+        {
+          "words": [
+            "der"
+          ],
+          "hint": "the"
+        },
+        {
+          "words": [
+            "Zug"
+          ],
+          "hint": "train"
+        },
+        {
+          "words": [
+            "um"
+          ],
+          "hint": "at"
+        },
+        {
+          "words": [
+            "sieben"
+          ],
+          "hint": "seven"
+        },
+        {
+          "words": [
+            "Uhr"
+          ],
+          "hint": "o'clock"
+        },
+        {
+          "words": [
+            "abfährt"
+          ],
+          "hint": "departs"
+        }
+      ]
+    },
+    "seconds": 1.26
+  },
+  {
+    "model": "groq:openai/gpt-oss-120b",
+    "task": "translation",
+    "language": "French",
+    "source": "Si j'avais su, je serais venu plus tôt.",
+    "output": {
+      "translation": "If I had known, I would have come earlier.",
+      "translation_hints": [
+        {
+          "words": [
+            "Si"
+          ],
+          "hint": "if"
+        },
+        {
+          "words": [
+            "j'avais"
+          ],
+          "hint": "I had"
+        },
+        {
+          "words": [
+            "su"
+          ],
+          "hint": "known"
+        },
+        {
+          "words": [
+            "je"
+          ],
+          "hint": "I"
+        },
+        {
+          "words": [
+            "serais"
+          ],
+          "hint": "would have"
+        },
+        {
+          "words": [
+            "venu"
+          ],
+          "hint": "come"
+        },
+        {
+          "words": [
+            "plus",
+            "tôt"
+          ],
+          "hint": "earlier"
+        }
+      ]
+    },
+    "seconds": 1.28
+  },
+  {
+    "model": "groq:openai/gpt-oss-120b",
+    "task": "translation",
+    "language": "Italian",
+    "source": "Non vedo l'ora di rivederti.",
+    "output": {
+      "translation": "I can't wait to see you again.",
+      "translation_hints": [
+        {
+          "words": [
+            "Non",
+            "vedo",
+            "l'ora"
+          ],
+          "hint": "can't wait"
+        },
+        {
+          "words": [
+            "di"
+          ],
+          "hint": "to"
+        },
+        {
+          "words": [
+            "rivederti"
+          ],
+          "hint": "see you again"
+        }
+      ]
+    },
+    "seconds": 0.91
+  },
+  {
+    "model": "groq:openai/gpt-oss-120b",
+    "task": "translation",
+    "language": "Spanish",
+    "source": "Se me olvidaron las llaves en casa.",
+    "output": {
+      "translation": "I forgot the keys at home.",
+      "translation_hints": [
+        {
+          "words": [
+            "Se",
+            "me",
+            "olvidaron"
+          ],
+          "hint": "I forgot"
+        },
+        {
+          "words": [
+            "las"
+          ],
+          "hint": "the"
+        },
+        {
+          "words": [
+            "llaves"
+          ],
+          "hint": "keys"
+        },
+        {
+          "words": [
+            "en"
+          ],
+          "hint": "at"
+        },
+        {
+          "words": [
+            "casa"
+          ],
+          "hint": "home"
+        }
+      ]
+    },
+    "seconds": 58.14
+  },
+  {
+    "model": "groq:openai/gpt-oss-120b",
+    "task": "translation",
+    "language": "English",
+    "source": "She had been waiting for an hour when the train finally arrived.",
+    "output": {
+      "translation": "She had been waiting for an hour when the train finally arrived.",
+      "translation_hints": [
+        {
+          "words": [
+            "She"
+          ],
+          "hint": "She"
+        },
+        {
+          "words": [
+            "had"
+          ],
+          "hint": "had"
+        },
+        {
+          "words": [
+            "been"
+          ],
+          "hint": "been"
+        },
+        {
+          "words": [
+            "waiting"
+          ],
+          "hint": "waiting"
+        },
+        {
+          "words": [
+            "for"
+          ],
+          "hint": "for"
+        },
+        {
+          "words": [
+            "an"
+          ],
+          "hint": "an"
+        },
+        {
+          "words": [
+            "hour"
+          ],
+          "hint": "hour"
+        },
+        {
+          "words": [
+            "when"
+          ],
+          "hint": "when"
+        },
+        {
+          "words": [
+            "the"
+          ],
+          "hint": "the"
+        },
+        {
+          "words": [
+            "train"
+          ],
+          "hint": "train"
+        },
+        {
+          "words": [
+            "finally"
+          ],
+          "hint": "finally"
+        },
+        {
+          "words": [
+            "arrived"
+          ],
+          "hint": "arrived"
+        }
+      ]
+    },
+    "seconds": 1.26
+  },
+  {
+    "model": "groq:openai/gpt-oss-120b",
+    "task": "metadata",
+    "language": "French",
+    "source": "Si j'avais su, je serais venu plus tôt.",
+    "output": {
+      "title": "Si j'avais su, je serais venu plus tôt.",
+      "difficulty_level": "A2",
+      "language": "French",
+      "author": null,
+      "category": "General"
+    },
+    "seconds": 0.46
+  },
+  {
+    "model": "groq:openai/gpt-oss-120b",
+    "task": "practice",
+    "language": "Spanish",
+    "source": [
+      "llave",
+      "casa",
+      "olvidar"
+    ],
+    "output": {
+      "sentences": [
+        {
+          "sentence": "No olvides la llave cuando salgas de la casa.",
+          "translation": "Don’t forget the key when you leave the house.",
+          "translation_hints": [
+            {
+              "words": [
+                "No"
+              ],
+              "hint": "Don’t"
+            },
+            {
+              "words": [
+                "olvides"
+              ],
+              "hint": "forget (you)"
+            },
+            {
+              "words": [
+                "la"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "llave"
+              ],
+              "hint": "key"
+            },
+            {
+              "words": [
+                "cuando"
+              ],
+              "hint": "when"
+            },
+            {
+              "words": [
+                "salgas"
+              ],
+              "hint": "you leave"
+            },
+            {
+              "words": [
+                "de"
+              ],
+              "hint": "of / from"
+            },
+            {
+              "words": [
+                "la"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "casa"
+              ],
+              "hint": "house"
+            }
+          ]
+        },
+        {
+          "sentence": "Mi vecino encontró una llave bajo la alfombra de su casa.",
+          "translation": "My neighbor found a key under the rug of his house.",
+          "translation_hints": [
+            {
+              "words": [
+                "Mi"
+              ],
+              "hint": "My"
+            },
+            {
+              "words": [
+                "vecino"
+              ],
+              "hint": "neighbor"
+            },
+            {
+              "words": [
+                "encontró"
+              ],
+              "hint": "found"
+            },
+            {
+              "words": [
+                "una"
+              ],
+              "hint": "a"
+            },
+            {
+              "words": [
+                "llave"
+              ],
+              "hint": "key"
+            },
+            {
+              "words": [
+                "bajo"
+              ],
+              "hint": "under"
+            },
+            {
+              "words": [
+                "la"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "alfombra"
+              ],
+              "hint": "rug"
+            },
+            {
+              "words": [
+                "de"
+              ],
+              "hint": "of"
+            },
+            {
+              "words": [
+                "su"
+              ],
+              "hint": "his"
+            },
+            {
+              "words": [
+                "casa"
+              ],
+              "hint": "house"
+            }
+          ]
+        },
+        {
+          "sentence": "Si pierdes la llave, no podrás entrar a la casa.",
+          "translation": "If you lose the key, you won’t be able to enter the house.",
+          "translation_hints": [
+            {
+              "words": [
+                "Si"
+              ],
+              "hint": "If"
+            },
+            {
+              "words": [
+                "pierdes"
+              ],
+              "hint": "you lose"
+            },
+            {
+              "words": [
+                "la"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "llave"
+              ],
+              "hint": "key"
+            },
+            {
+              "words": [
+                ","
+              ],
+              "hint": ""
+            },
+            {
+              "words": [
+                "no"
+              ],
+              "hint": "not"
+            },
+            {
+              "words": [
+                "podrás"
+              ],
+              "hint": "you will be able to"
+            },
+            {
+              "words": [
+                "entrar"
+              ],
+              "hint": "enter"
+            },
+            {
+              "words": [
+                "a"
+              ],
+              "hint": "to"
+            },
+            {
+              "words": [
+                "la"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "casa"
+              ],
+              "hint": "house"
+            },
+            {
+              "words": [
+                "."
+              ],
+              "hint": ""
+            }
+          ]
+        },
+        {
+          "sentence": "Ellos siempre guardan la llave en un cajón de la cocina de la casa.",
+          "translation": "They always keep the key in a drawer of the kitchen of the house.",
+          "translation_hints": [
+            {
+              "words": [
+                "Ellos"
+              ],
+              "hint": "They"
+            },
+            {
+              "words": [
+                "siempre"
+              ],
+              "hint": "always"
+            },
+            {
+              "words": [
+                "guardan"
+              ],
+              "hint": "keep"
+            },
+            {
+              "words": [
+                "la"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "llave"
+              ],
+              "hint": "key"
+            },
+            {
+              "words": [
+                "en"
+              ],
+              "hint": "in"
+            },
+            {
+              "words": [
+                "un"
+              ],
+              "hint": "a"
+            },
+            {
+              "words": [
+                "cajón"
+              ],
+              "hint": "drawer"
+            },
+            {
+              "words": [
+                "de"
+              ],
+              "hint": "of"
+            },
+            {
+              "words": [
+                "la"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "cocina"
+              ],
+              "hint": "kitchen"
+            },
+            {
+              "words": [
+                "de"
+              ],
+              "hint": "of"
+            },
+            {
+              "words": [
+                "la"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "casa"
+              ],
+              "hint": "house"
+            },
+            {
+              "words": [
+                "."
+              ],
+              "hint": ""
+            }
+          ]
+        },
+        {
+          "sentence": "Olvidé la llave en el parque y tuve que volver a la casa.",
+          "translation": "I forgot the key in the park and had to go back to the house.",
+          "translation_hints": [
+            {
+              "words": [
+                "Olvidé"
+              ],
+              "hint": "I forgot"
+            },
+            {
+              "words": [
+                "la"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "llave"
+              ],
+              "hint": "key"
+            },
+            {
+              "words": [
+                "en"
+              ],
+              "hint": "in"
+            },
+            {
+              "words": [
+                "el"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "parque"
+              ],
+              "hint": "park"
+            },
+            {
+              "words": [
+                "y"
+              ],
+              "hint": "and"
+            },
+            {
+              "words": [
+                "tuve"
+              ],
+              "hint": "I had"
+            },
+            {
+              "words": [
+                "que"
+              ],
+              "hint": "to"
+            },
+            {
+              "words": [
+                "volver"
+              ],
+              "hint": "return"
+            },
+            {
+              "words": [
+                "a"
+              ],
+              "hint": "to"
+            },
+            {
+              "words": [
+                "la"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "casa"
+              ],
+              "hint": "house"
+            },
+            {
+              "words": [
+                "."
+              ],
+              "hint": ""
+            }
+          ]
+        }
+      ]
+    },
+    "seconds": 3.48
+  },
+  {
+    "model": "deepseek:deepseek-flash",
+    "task": "translation",
+    "language": "German",
+    "source": "Ich stehe früh auf, weil der Zug um sieben Uhr abfährt.",
+    "output": {
+      "translation": "I get up early because the train departs at seven o'clock.",
+      "translation_hints": [
+        {
+          "words": [
+            "Ich"
+          ],
+          "hint": "I"
+        },
+        {
+          "words": [
+            "stehe",
+            "auf"
+          ],
+          "hint": "get up"
+        },
+        {
+          "words": [
+            "früh"
+          ],
+          "hint": "early"
+        },
+        {
+          "words": [
+            "weil"
+          ],
+          "hint": "because"
+        },
+        {
+          "words": [
+            "der"
+          ],
+          "hint": "the"
+        },
+        {
+          "words": [
+            "Zug"
+          ],
+          "hint": "train"
+        },
+        {
+          "words": [
+            "um"
+          ],
+          "hint": "at"
+        },
+        {
+          "words": [
+            "sieben"
+          ],
+          "hint": "seven"
+        },
+        {
+          "words": [
+            "Uhr"
+          ],
+          "hint": "o'clock"
+        },
+        {
+          "words": [
+            "abfährt"
+          ],
+          "hint": "departs"
+        }
+      ]
+    },
+    "seconds": 1.68
+  },
+  {
+    "model": "deepseek:deepseek-flash",
+    "task": "translation",
+    "language": "French",
+    "source": "Si j'avais su, je serais venu plus tôt.",
+    "output": {
+      "translation": "If I had known, I would have come earlier.",
+      "translation_hints": [
+        {
+          "words": [
+            "Si"
+          ],
+          "hint": "If"
+        },
+        {
+          "words": [
+            "j'avais",
+            "su"
+          ],
+          "hint": "I had known"
+        },
+        {
+          "words": [
+            "je"
+          ],
+          "hint": "I"
+        },
+        {
+          "words": [
+            "serais",
+            "venu"
+          ],
+          "hint": "would have come"
+        },
+        {
+          "words": [
+            "plus",
+            "tôt"
+          ],
+          "hint": "earlier"
+        }
+      ]
+    },
+    "seconds": 1.14
+  },
+  {
+    "model": "deepseek:deepseek-flash",
+    "task": "translation",
+    "language": "Italian",
+    "source": "Non vedo l'ora di rivederti.",
+    "output": {
+      "translation": "I can't wait to see you again.",
+      "translation_hints": [
+        {
+          "words": [
+            "Non",
+            "vedo",
+            "l'ora"
+          ],
+          "hint": "can't wait"
+        },
+        {
+          "words": [
+            "di"
+          ],
+          "hint": "to"
+        },
+        {
+          "words": [
+            "rivederti"
+          ],
+          "hint": "see you again"
+        }
+      ]
+    },
+    "seconds": 1.31
+  },
+  {
+    "model": "deepseek:deepseek-flash",
+    "task": "translation",
+    "language": "Spanish",
+    "source": "Se me olvidaron las llaves en casa.",
+    "output": {
+      "translation": "I forgot the keys at home.",
+      "translation_hints": [
+        {
+          "words": [
+            "Se",
+            "me",
+            "olvidaron"
+          ],
+          "hint": "I forgot"
+        },
+        {
+          "words": [
+            "las"
+          ],
+          "hint": "the"
+        },
+        {
+          "words": [
+            "llaves"
+          ],
+          "hint": "keys"
+        },
+        {
+          "words": [
+            "en"
+          ],
+          "hint": "at"
+        },
+        {
+          "words": [
+            "casa"
+          ],
+          "hint": "home"
+        }
+      ]
+    },
+    "seconds": 1.36
+  },
+  {
+    "model": "deepseek:deepseek-flash",
+    "task": "translation",
+    "language": "English",
+    "source": "She had been waiting for an hour when the train finally arrived.",
+    "output": {
+      "translation": "She had been waiting for an hour when the train finally arrived.",
+      "translation_hints": [
+        {
+          "words": [
+            "She"
+          ],
+          "hint": "She"
+        },
+        {
+          "words": [
+            "had",
+            "been",
+            "waiting"
+          ],
+          "hint": "had been waiting"
+        },
+        {
+          "words": [
+            "for"
+          ],
+          "hint": "for"
+        },
+        {
+          "words": [
+            "an"
+          ],
+          "hint": "an"
+        },
+        {
+          "words": [
+            "hour"
+          ],
+          "hint": "hour"
+        },
+        {
+          "words": [
+            "when"
+          ],
+          "hint": "when"
+        },
+        {
+          "words": [
+            "the"
+          ],
+          "hint": "the"
+        },
+        {
+          "words": [
+            "train"
+          ],
+          "hint": "train"
+        },
+        {
+          "words": [
+            "finally"
+          ],
+          "hint": "finally"
+        },
+        {
+          "words": [
+            "arrived"
+          ],
+          "hint": "arrived"
+        }
+      ]
+    },
+    "seconds": 1.23
+  },
+  {
+    "model": "deepseek:deepseek-flash",
+    "task": "metadata",
+    "language": "French",
+    "source": "Si j'avais su, je serais venu plus tôt.",
+    "output": {
+      "title": "Si j'avais su",
+      "difficulty_level": "B1",
+      "language": "French",
+      "author": null,
+      "category": null
+    },
+    "seconds": 1.23
+  },
+  {
+    "model": "deepseek:deepseek-flash",
+    "task": "practice",
+    "language": "Spanish",
+    "source": [
+      "llave",
+      "casa",
+      "olvidar"
+    ],
+    "output": {
+      "sentences": [
+        {
+          "sentence": "Olvidé la llave dentro de la casa.",
+          "translation": "I forgot the key inside the house.",
+          "translation_hints": [
+            {
+              "words": [
+                "Olvidé"
+              ],
+              "hint": "I forgot"
+            },
+            {
+              "words": [
+                "la"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "llave"
+              ],
+              "hint": "key"
+            },
+            {
+              "words": [
+                "dentro de"
+              ],
+              "hint": "inside of"
+            },
+            {
+              "words": [
+                "la"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "casa"
+              ],
+              "hint": "house"
+            }
+          ]
+        },
+        {
+          "sentence": "No olvides la llave cuando salgas de casa.",
+          "translation": "Don't forget the key when you leave the house.",
+          "translation_hints": [
+            {
+              "words": [
+                "No"
+              ],
+              "hint": "not"
+            },
+            {
+              "words": [
+                "olvides"
+              ],
+              "hint": "forget"
+            },
+            {
+              "words": [
+                "la"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "llave"
+              ],
+              "hint": "key"
+            },
+            {
+              "words": [
+                "cuando"
+              ],
+              "hint": "when"
+            },
+            {
+              "words": [
+                "salgas"
+              ],
+              "hint": "you leave"
+            },
+            {
+              "words": [
+                "de"
+              ],
+              "hint": "of"
+            },
+            {
+              "words": [
+                "casa"
+              ],
+              "hint": "house"
+            }
+          ]
+        },
+        {
+          "sentence": "Mi vecino olvidó su llave y no pudo entrar en su casa.",
+          "translation": "My neighbor forgot his key and couldn't get into his house.",
+          "translation_hints": [
+            {
+              "words": [
+                "Mi"
+              ],
+              "hint": "my"
+            },
+            {
+              "words": [
+                "vecino"
+              ],
+              "hint": "neighbor"
+            },
+            {
+              "words": [
+                "olvidó"
+              ],
+              "hint": "forgot"
+            },
+            {
+              "words": [
+                "su"
+              ],
+              "hint": "his"
+            },
+            {
+              "words": [
+                "llave"
+              ],
+              "hint": "key"
+            },
+            {
+              "words": [
+                "y"
+              ],
+              "hint": "and"
+            },
+            {
+              "words": [
+                "no"
+              ],
+              "hint": "not"
+            },
+            {
+              "words": [
+                "pudo"
+              ],
+              "hint": "could"
+            },
+            {
+              "words": [
+                "entrar en"
+              ],
+              "hint": "get into"
+            },
+            {
+              "words": [
+                "su"
+              ],
+              "hint": "his"
+            },
+            {
+              "words": [
+                "casa"
+              ],
+              "hint": "house"
+            }
+          ]
+        },
+        {
+          "sentence": "Es fácil olvidar dónde dejaste la llave de casa.",
+          "translation": "It is easy to forget where you left the house key.",
+          "translation_hints": [
+            {
+              "words": [
+                "Es"
+              ],
+              "hint": "it is"
+            },
+            {
+              "words": [
+                "fácil"
+              ],
+              "hint": "easy"
+            },
+            {
+              "words": [
+                "olvidar"
+              ],
+              "hint": "to forget"
+            },
+            {
+              "words": [
+                "dónde"
+              ],
+              "hint": "where"
+            },
+            {
+              "words": [
+                "dejaste"
+              ],
+              "hint": "you left"
+            },
+            {
+              "words": [
+                "la"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "llave"
+              ],
+              "hint": "key"
+            },
+            {
+              "words": [
+                "de"
+              ],
+              "hint": "of"
+            },
+            {
+              "words": [
+                "casa"
+              ],
+              "hint": "house"
+            }
+          ]
+        },
+        {
+          "sentence": "Guardo una llave extra en casa por si alguien la olvida.",
+          "translation": "I keep an extra key at home in case someone forgets it.",
+          "translation_hints": [
+            {
+              "words": [
+                "Guardo"
+              ],
+              "hint": "I keep"
+            },
+            {
+              "words": [
+                "una"
+              ],
+              "hint": "an"
+            },
+            {
+              "words": [
+                "llave"
+              ],
+              "hint": "key"
+            },
+            {
+              "words": [
+                "extra"
+              ],
+              "hint": "extra"
+            },
+            {
+              "words": [
+                "en"
+              ],
+              "hint": "at"
+            },
+            {
+              "words": [
+                "casa"
+              ],
+              "hint": "home"
+            },
+            {
+              "words": [
+                "por si"
+              ],
+              "hint": "in case"
+            },
+            {
+              "words": [
+                "alguien"
+              ],
+              "hint": "someone"
+            },
+            {
+              "words": [
+                "la"
+              ],
+              "hint": "it"
+            },
+            {
+              "words": [
+                "olvida"
+              ],
+              "hint": "forgets"
+            }
+          ]
+        }
+      ]
+    },
+    "seconds": 3.19
+  },
+  {
+    "model": "groq:qwen/qwen3.8-27b",
+    "task": "translation",
+    "language": "German",
+    "source": "Ich stehe früh auf, weil der Zug um sieben Uhr abfährt.",
+    "output": {
+      "translation": "I get up early because the train leaves at seven o'clock.",
+      "translation_hints": [
+        {
+          "words": [
+            "Ich"
+          ],
+          "hint": "I"
+        },
+        {
+          "words": [
+            "stehe",
+            "auf"
+          ],
+          "hint": "get up"
+        },
+        {
+          "words": [
+            "fr\u001ch"
+          ],
+          "hint": "early"
+        },
+        {
+          "words": [
+            "weil"
+          ],
+          "hint": "because"
+        },
+        {
+          "words": [
+            "der Zug"
+          ],
+          "hint": "the train"
+        },
+        {
+          "words": [
+            "um"
+          ],
+          "hint": "at"
+        },
+        {
+          "words": [
+            "sieben"
+          ],
+          "hint": "seven"
+        },
+        {
+          "words": [
+            "Uhr"
+          ],
+          "hint": "o'clock"
+        },
+        {
+          "words": [
+            "abf\u001chrt"
+          ],
+          "hint": "left"
+        }
+      ]
+    },
+    "seconds": 0.63
+  },
+  {
+    "model": "groq:qwen/qwen3.8-27b",
+    "task": "translation",
+    "language": "French",
+    "source": "Si j'avais su, je serais venu plus tôt.",
+    "output": {
+      "translation": "If I had known, I would have come earlier.",
+      "translation_hints": [
+        {
+          "words": [
+            "Si"
+          ],
+          "hint": "If"
+        },
+        {
+          "words": [
+            "j'avais",
+            "su"
+          ],
+          "hint": "had known (I would have known)"
+        },
+        {
+          "words": [
+            "je",
+            "serais",
+            "venu"
+          ],
+          "hint": "would have come (I would have come)"
+        },
+        {
+          "words": [
+            "plus",
+            "tôt"
+          ],
+          "hint": "earlier (more early)"
+        }
+      ]
+    },
+    "seconds": 0.39
+  },
+  {
+    "model": "groq:qwen/qwen3.8-27b",
+    "task": "translation",
+    "language": "Italian",
+    "source": "Non vedo l'ora di rivederti.",
+    "output": {
+      "translation": "I can't wait to see you again.",
+      "translation_hints": [
+        {
+          "words": [
+            "Non vedo l'ora"
+          ],
+          "hint": "I"
+        },
+        {
+          "words": [
+            "di rivederti"
+          ],
+          "hint": "to see you again"
+        }
+      ]
+    },
+    "seconds": 0.35
+  },
+  {
+    "model": "groq:qwen/qwen3.8-27b",
+    "task": "translation",
+    "language": "Spanish",
+    "source": "Se me olvidaron las llaves en casa.",
+    "output": {
+      "translation": "I forgot my keys at home.",
+      "translation_hints": [
+        {
+          "words": [
+            "Se",
+            "me",
+            "olvidaron",
+            "las",
+            "llaves",
+            "en",
+            "casa"
+          ],
+          "hint": "I forgot my keys at home."
+        }
+      ]
+    },
+    "seconds": 0.43
+  },
+  {
+    "model": "groq:qwen/qwen3.8-27b",
+    "task": "translation",
+    "language": "English",
+    "source": "She had been waiting for an hour when the train finally arrived.",
+    "output": {
+      "translation": "She had been waiting for an hour when the train finally arrived.",
+      "translation_hints": [
+        {
+          "words": [
+            "She"
+          ],
+          "hint": "she"
+        },
+        {
+          "words": [
+            "had",
+            "been",
+            "waiting"
+          ],
+          "hint": "had been waiting"
+        },
+        {
+          "words": [
+            "for"
+          ],
+          "hint": "for"
+        },
+        {
+          "words": [
+            "an",
+            "hour"
+          ],
+          "hint": "an hour"
+        },
+        {
+          "words": [
+            "when"
+          ],
+          "hint": "when"
+        },
+        {
+          "words": [
+            "the",
+            "train"
+          ],
+          "hint": "the train"
+        },
+        {
+          "words": [
+            "finally"
+          ],
+          "hint": "finally"
+        },
+        {
+          "words": [
+            "arrived"
+          ],
+          "hint": "arrived"
+        }
+      ]
+    },
+    "seconds": 58.82
+  },
+  {
+    "model": "groq:qwen/qwen3.8-27b",
+    "task": "metadata",
+    "language": "French",
+    "source": "Si j'avais su, je serais venu plus tôt.",
+    "output": {
+      "title": "Si j'avais su",
+      "difficulty_level": "B2",
+      "language": "French",
+      "author": null,
+      "category": null
+    },
+    "seconds": 0.23
+  },
+  {
+    "model": "groq:qwen/qwen3.8-27b",
+    "task": "practice",
+    "language": "Spanish",
+    "source": [
+      "llave",
+      "casa",
+      "olvidar"
+    ],
+    "output": {
+      "sentences": [
+        {
+          "sentence": "Si olvidas la llave, no puedes entrar a la casa.",
+          "translation": "If you forget the key, you cannot enter the house.",
+          "translation_hints": [
+            {
+              "words": [
+                "Si"
+              ],
+              "hint": "If"
+            },
+            {
+              "words": [
+                "olvidas"
+              ],
+              "hint": "forget"
+            },
+            {
+              "words": [
+                "la"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "llave"
+              ],
+              "hint": "key"
+            },
+            {
+              "words": [
+                ","
+              ],
+              "hint": ","
+            },
+            {
+              "words": [
+                "no"
+              ],
+              "hint": "you"
+            },
+            {
+              "words": [
+                "puedes"
+              ],
+              "hint": "cannot"
+            },
+            {
+              "words": [
+                "entrar"
+              ],
+              "hint": "enter"
+            },
+            {
+              "words": [
+                "a"
+              ],
+              "hint": "to"
+            },
+            {
+              "words": [
+                "la"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "casa"
+              ],
+              "hint": "house"
+            },
+            {
+              "words": [
+                "."
+              ],
+              "hint": "."
+            }
+          ]
+        },
+        {
+          "sentence": "Mi gato no olvida dónde escondo la llave de la casa.",
+          "translation": "My cat does not forget where I hide the house key.",
+          "translation_hints": [
+            {
+              "words": [
+                "Mi"
+              ],
+              "hint": "My"
+            },
+            {
+              "words": [
+                "gato"
+              ],
+              "hint": "cat"
+            },
+            {
+              "words": [
+                "no"
+              ],
+              "hint": "does not"
+            },
+            {
+              "words": [
+                "olvida"
+              ],
+              "hint": "forget"
+            },
+            {
+              "words": [
+                "dónde"
+              ],
+              "hint": "where"
+            },
+            {
+              "words": [
+                "escondo"
+              ],
+              "hint": "I"
+            },
+            {
+              "words": [
+                "la"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "llave"
+              ],
+              "hint": "key"
+            },
+            {
+              "words": [
+                "de"
+              ],
+              "hint": "of"
+            },
+            {
+              "words": [
+                "la"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "casa"
+              ],
+              "hint": "house"
+            },
+            {
+              "words": [
+                "."
+              ],
+              "hint": "."
+            }
+          ]
+        },
+        {
+          "sentence": "La llave está en la casa, no puedes olvidarla.",
+          "translation": "The key is in the house, you cannot forget it.",
+          "translation_hints": [
+            {
+              "words": [
+                "La"
+              ],
+              "hint": "The"
+            },
+            {
+              "words": [
+                "llave"
+              ],
+              "hint": "key"
+            },
+            {
+              "words": [
+                "está"
+              ],
+              "hint": "is"
+            },
+            {
+              "words": [
+                "en"
+              ],
+              "hint": "in"
+            },
+            {
+              "words": [
+                "la"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "casa"
+              ],
+              "hint": "house"
+            },
+            {
+              "words": [
+                ","
+              ],
+              "hint": ","
+            },
+            {
+              "words": [
+                "no"
+              ],
+              "hint": "you"
+            },
+            {
+              "words": [
+                "puedes"
+              ],
+              "hint": "cannot"
+            },
+            {
+              "words": [
+                "olvidarla"
+              ],
+              "hint": "forget"
+            },
+            {
+              "words": [
+                "."
+              ],
+              "hint": "."
+            }
+          ]
+        },
+        {
+          "sentence": "Así que no olvides llevar la llave a la casa esta noche.",
+          "translation": "So do not forget to bring the key to the house this night.",
+          "translation_hints": [
+            {
+              "words": [
+                "Así"
+              ],
+              "hint": "So"
+            },
+            {
+              "words": [
+                "que"
+              ],
+              "hint": "that"
+            },
+            {
+              "words": [
+                "no"
+              ],
+              "hint": "not"
+            },
+            {
+              "words": [
+                "olvides"
+              ],
+              "hint": "forget"
+            },
+            {
+              "words": [
+                "llevar"
+              ],
+              "hint": "to"
+            },
+            {
+              "words": [
+                "la"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "llave"
+              ],
+              "hint": "key"
+            },
+            {
+              "words": [
+                "a"
+              ],
+              "hint": "to"
+            },
+            {
+              "words": [
+                "la"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "casa"
+              ],
+              "hint": "house"
+            },
+            {
+              "words": [
+                "esta"
+              ],
+              "hint": "this"
+            },
+            {
+              "words": [
+                "noche"
+              ],
+              "hint": "night"
+            },
+            {
+              "words": [
+                "."
+              ],
+              "hint": "."
+            }
+          ]
+        },
+        {
+          "sentence": "Ella olvidó la llave porque dejó la casa sin pensarlo.",
+          "translation": "She forgot the key because she left the house without thinking about it.",
+          "translation_hints": [
+            {
+              "words": [
+                "Ella"
+              ],
+              "hint": "She"
+            },
+            {
+              "words": [
+                "olvidó"
+              ],
+              "hint": "forgot"
+            },
+            {
+              "words": [
+                "la"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "llave"
+              ],
+              "hint": "key"
+            },
+            {
+              "words": [
+                "porque"
+              ],
+              "hint": "because"
+            },
+            {
+              "words": [
+                "dejó"
+              ],
+              "hint": "she"
+            },
+            {
+              "words": [
+                "la"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "casa"
+              ],
+              "hint": "house"
+            },
+            {
+              "words": [
+                "sin"
+              ],
+              "hint": "without"
+            },
+            {
+              "words": [
+                "pensarlo"
+              ],
+              "hint": "thinking"
+            },
+            {
+              "words": [
+                "."
+              ],
+              "hint": "."
+            }
+          ]
+        }
+      ]
+    },
+    "seconds": 2.39
+  }
+]

@@ -9,6 +9,7 @@ from repositories.text_repository import TextRepository
 from services.analytics_service import AnalyticsService
 from services.dictionary_service import DictionaryService
 from services.llm_service import LlmService
+from services.provider_governor import ProviderGovernor
 from services.preprocessing_service import PreprocessingService
 from services.text_service import TextService
 
@@ -23,6 +24,7 @@ llm_service = LlmService(
     settings.model_name,
     settings.structured_model_name,
     settings.fallback_models,
+    governor=ProviderGovernor(engine, settings),
 )
 
 text_service = TextService(

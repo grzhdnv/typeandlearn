@@ -64,3 +64,13 @@ test("getStatusBadgeInfo handles ready/processed status", () => {
   assert.strictEqual(info.isSpinning, false);
   assert.strictEqual(info.canRetry, false);
 });
+
+
+test("preparation stages remain active and cannot be mistaken for ready", () => {
+  for (const stage of ["preprocessing", "analyzing_metadata", "filtering_words"]) {
+    const info = getStatusBadgeInfo("processing", stage);
+    assert.equal(info.isSpinning, true);
+    assert.equal(info.canRetry, false);
+    assert.notEqual(info.variant, "ready");
+  }
+});

@@ -15,6 +15,11 @@ they do not prove TypeAndLearn's core learning loop.
 
 ## Current assessment
 
+> **Historical snapshot (30 August 2026).** This assessment predates the M0–M6
+> implementation and is retained for context. It no longer describes the current
+> tree; see [the issue map](issue-map.md) for delivered milestones and
+> [the roadmap](roadmap.md) for the current baseline.
+
 The repository is a viable prototype, not a production candidate yet.
 
 Strengths:
@@ -142,18 +147,19 @@ fallback reason, and timestamps. Terminal states are `succeeded`, `degraded`,
 
 Provider policy:
 
-- Groq is first for capability-tested structured tasks. As of this plan, a current
-  candidate is `qwen/qwen3.8-27b`; the model id remains configuration, not domain
-  code.
-- A Groq 429 pauses work until the advertised reset time. It does not immediately
-  spill a burst into the paid fallback.
-- DeepSeek `deepseek-v4-flash` handles sustained Groq outage, explicit deadline or
-  capacity shortfall, or bounded structured-output repair, only under per-user and
-  global daily/monthly spend caps.
-- Do not fall back on bad credentials, invalid requests, policy rejection, or
-  deterministic input validation errors.
-- Centralize retries. Honor `Retry-After` and provider headers, add jitter, limit
-  concurrency, cap attempts, and use a circuit breaker.
+- Local implementation verified 19 October 2026: Groq `openai/gpt-oss-120b`
+  with strict JSON is primary; DeepSeek `deepseek-flash` with thinking disabled
+  is fallback. Qwen 3.8 remains an optional preview challenger.
+- Shared database reservations enforce Groq request/token limits with 20% headroom,
+  honor reset headers and Retry-After, and wait up to ten seconds for local capacity.
+  An upstream transient failure may select the paid fallback immediately.
+- DeepSeek requests require remaining capacity under both the approved $0.50/day
+  and $5/month global application budgets; in-flight and uncertain calls count.
+- Bad credentials, invalid requests, and deterministic validation failures do not
+  trigger paid fallback. Schema repair is limited to one attempt; SDK retries are
+  disabled, and every real response is accounted against its actual provider/model.
+- See [ADR-0005](decisions/0005-llm-routing-and-spend.md) for current configuration,
+  limits, and evidence. Batched transport and production acceptance remain planned.
 - Cache by task type, normalized input, language, prompt version, schema version,
   and model policy.
 

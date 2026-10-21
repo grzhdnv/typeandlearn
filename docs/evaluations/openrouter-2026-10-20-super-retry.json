@@ -1,0 +1,244 @@
+[
+  {
+    "model": "openrouter:nvidia/nemotron-3-super-120b-a12b:free",
+    "task": "translation",
+    "language": "German",
+    "source": "Ich stehe früh auf, weil der Zug um sieben Uhr abfährt.",
+    "error": "ModelHTTPError: status_code: 404, model_name: nvidia/nemotron-3-super-120b-a12b:free, error: {'code': 404, 'message': 'Provider returned error', 'provider': 'Nvidia'}",
+    "responses": [
+      {
+        "status_code": 404,
+        "model": null,
+        "provider": null,
+        "usage": null,
+        "choices": [],
+        "error": {
+          "code": 404,
+          "message": "Provider returned error",
+          "provider": "Nvidia"
+        }
+      }
+    ],
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "nvidia/nemotron-3-super-120b-a12b:free",
+        "returned_model": null,
+        "status": "failed",
+        "status_code": 404,
+        "tokens": 0,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.38
+      }
+    ],
+    "seconds": 0.71
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-super-120b-a12b:free",
+    "task": "translation",
+    "language": "French",
+    "source": "Si j'avais su, je serais venu plus tôt.",
+    "error": "ModelHTTPError: status_code: 404, model_name: nvidia/nemotron-3-super-120b-a12b:free, error: {'code': 404, 'message': 'Provider returned error', 'provider': 'Nvidia'}",
+    "responses": [
+      {
+        "status_code": 404,
+        "model": null,
+        "provider": null,
+        "usage": null,
+        "choices": [],
+        "error": {
+          "code": 404,
+          "message": "Provider returned error",
+          "provider": "Nvidia"
+        }
+      }
+    ],
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "nvidia/nemotron-3-super-120b-a12b:free",
+        "returned_model": null,
+        "status": "failed",
+        "status_code": 404,
+        "tokens": 0,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.2
+      }
+    ],
+    "seconds": 0.43
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-super-120b-a12b:free",
+    "task": "translation",
+    "language": "Italian",
+    "source": "Non vedo l'ora di rivederti.",
+    "error": "ModelHTTPError: status_code: 404, model_name: nvidia/nemotron-3-super-120b-a12b:free, error: {'code': 404, 'message': 'Provider returned error', 'provider': 'Nvidia'}",
+    "responses": [
+      {
+        "status_code": 404,
+        "model": null,
+        "provider": null,
+        "usage": null,
+        "choices": [],
+        "error": {
+          "code": 404,
+          "message": "Provider returned error",
+          "provider": "Nvidia"
+        }
+      }
+    ],
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "nvidia/nemotron-3-super-120b-a12b:free",
+        "returned_model": null,
+        "status": "failed",
+        "status_code": 404,
+        "tokens": 0,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.1
+      }
+    ],
+    "seconds": 0.25
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-super-120b-a12b:free",
+    "task": "translation",
+    "language": "Spanish",
+    "source": "Se me olvidaron las llaves en casa.",
+    "error": "ModelHTTPError: status_code: 404, model_name: nvidia/nemotron-3-super-120b-a12b:free, error: {'code': 404, 'message': 'Provider returned error', 'provider': 'Nvidia'}",
+    "responses": [
+      {
+        "status_code": 404,
+        "model": null,
+        "provider": null,
+        "usage": null,
+        "choices": [],
+        "error": {
+          "code": 404,
+          "message": "Provider returned error",
+          "provider": "Nvidia"
+        }
+      }
+    ],
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "nvidia/nemotron-3-super-120b-a12b:free",
+        "returned_model": null,
+        "status": "failed",
+        "status_code": 404,
+        "tokens": 0,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.17
+      }
+    ],
+    "seconds": 0.45
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-super-120b-a12b:free",
+    "task": "translation",
+    "language": "English",
+    "source": "She had been waiting for an hour when the train finally arrived.",
+    "error": "ModelHTTPError: status_code: 404, model_name: nvidia/nemotron-3-super-120b-a12b:free, error: {'code': 404, 'message': 'Provider returned error', 'provider': 'Nvidia'}",
+    "responses": [
+      {
+        "status_code": 404,
+        "model": null,
+        "provider": null,
+        "usage": null,
+        "choices": [],
+        "error": {
+          "code": 404,
+          "message": "Provider returned error",
+          "provider": "Nvidia"
+        }
+      }
+    ],
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "nvidia/nemotron-3-super-120b-a12b:free",
+        "returned_model": null,
+        "status": "failed",
+        "status_code": 404,
+        "tokens": 0,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.1
+      }
+    ],
+    "seconds": 0.24
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-super-120b-a12b:free",
+    "task": "metadata",
+    "language": "French",
+    "source": "Si j'avais su, je serais venu plus tôt.",
+    "error": "ModelHTTPError: status_code: 404, model_name: nvidia/nemotron-3-super-120b-a12b:free, error: {'code': 404, 'message': 'Provider returned error', 'provider': 'Nvidia'}",
+    "responses": [
+      {
+        "status_code": 404,
+        "model": null,
+        "provider": null,
+        "usage": null,
+        "choices": [],
+        "error": {
+          "code": 404,
+          "message": "Provider returned error",
+          "provider": "Nvidia"
+        }
+      }
+    ],
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "nvidia/nemotron-3-super-120b-a12b:free",
+        "returned_model": null,
+        "status": "failed",
+        "status_code": 404,
+        "tokens": 0,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.1
+      }
+    ],
+    "seconds": 0.23
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-super-120b-a12b:free",
+    "task": "practice",
+    "language": "Spanish",
+    "source": [
+      "llave",
+      "casa",
+      "olvidar"
+    ],
+    "error": "ModelHTTPError: status_code: 404, model_name: nvidia/nemotron-3-super-120b-a12b:free, error: {'code': 404, 'message': 'Provider returned error', 'provider': 'Nvidia'}",
+    "responses": [
+      {
+        "status_code": 404,
+        "model": null,
+        "provider": null,
+        "usage": null,
+        "choices": [],
+        "error": {
+          "code": 404,
+          "message": "Provider returned error",
+          "provider": "Nvidia"
+        }
+      }
+    ],
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "nvidia/nemotron-3-super-120b-a12b:free",
+        "returned_model": null,
+        "status": "failed",
+        "status_code": 404,
+        "tokens": 0,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.1
+      }
+    ],
+    "seconds": 0.3
+  }
+]

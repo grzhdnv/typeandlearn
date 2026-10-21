@@ -12,7 +12,16 @@ import type {
  */
 export const fetchTextTitles = async (): Promise<TextTitle[]> => {
   const json = await getJson<TitlesResponse>("/api/texts/titles");
-  return json.titles ?? [];
+  // Defensive read compatibility with older APIs/records that serialized nulls.
+  const optionalMetadata = (value?: string | null) => {
+    const trimmed = value?.trim();
+    return trimmed && !/^(null|none|undefined)$/i.test(trimmed) ? trimmed : undefined;
+  };
+  return (json.titles ?? []).map(text => ({
+    ...text,
+    author: optionalMetadata(text.author),
+    category: optionalMetadata(text.category),
+  }));
 };
 
 /**
@@ -30,14 +39,14 @@ export const fetchStory = async (id: string): Promise<TextData> => {
  *
  * @param text Raw user input from the editor.
  */
-export const postText = async (text: string, language: string, title?: string, difficultyLevel?: string, author?: string, category?: string, filteringMethod: "spacy" | "llm" = "spacy"): Promise<UploadResponse> => {
+export const postText = async (text: string, language?: string, title?: string, difficultyLevel?: string, author?: string, category?: string, filteringMethod: "spacy" | "llm" = "spacy"): Promise<UploadResponse> => {
   const trimmed = text.trim();
   if (!trimmed) {
     throw new Error("Text cannot be empty");
   }
   return postJson<UploadResponse>("/api/texts", { 
     text: trimmed,
-    language,
+    language: language?.trim() || undefined,
     title: title?.trim() || undefined,
     difficulty_level: difficultyLevel?.trim() || undefined,
     author: author?.trim() || undefined,
@@ -61,8 +70,9 @@ export const regenerateTopWords = async (id: string, filteringMethod: "spacy" | 
   return response.data;
 };
 
-export const updateTextMetadata = async (id: string, language?: string, difficultyLevel?: string, author?: string, category?: string): Promise<TextResponse> => {
+export const updateTextMetadata = async (id: string, language?: string, difficultyLevel?: string, author?: string, category?: string, title?: string): Promise<TextResponse> => {
   const payload: Record<string, string> = {};
+  if (title !== undefined) payload.title = title;
   if (language) payload.language = language;
   if (difficultyLevel) payload.difficulty_level = difficultyLevel;
   if (author !== undefined) payload.author = author;

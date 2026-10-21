@@ -1,5 +1,6 @@
 from models.analytics import PracticeSessionRecord, WeakWordRecord
 from models.cache import TokenUsageRecord, TranslationCacheRecord, compute_sentence_hash
+from models.providers import ProviderCallRecord, ProviderGateRecord
 from models.jobs import BackgroundJobRecord
 from models.texts import (
     PracticeSentenceRecord,
@@ -9,6 +10,8 @@ from models.texts import (
 )
 
 __all__ = [
+    "ProviderCallRecord",
+    "ProviderGateRecord",
     "BackgroundJobRecord",
     "TextRecord",
     "SentenceRecord",

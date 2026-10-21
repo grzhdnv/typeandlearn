@@ -1,0 +1,84 @@
+[
+  {
+    "model": "openrouter:minimax/minimax-m3.1-flash:free",
+    "task": "translation",
+    "language": "German",
+    "sentence_index": 0,
+    "words": 11,
+    "unavailable_ui_hints": []
+  },
+  {
+    "model": "openrouter:minimax/minimax-m3.1-flash:free",
+    "task": "translation",
+    "language": "French",
+    "sentence_index": 0,
+    "words": 8,
+    "unavailable_ui_hints": []
+  },
+  {
+    "model": "openrouter:minimax/minimax-m3.1-flash:free",
+    "task": "translation",
+    "language": "Italian",
+    "sentence_index": 0,
+    "words": 5,
+    "unavailable_ui_hints": []
+  },
+  {
+    "model": "openrouter:minimax/minimax-m3.1-flash:free",
+    "task": "translation",
+    "language": "Spanish",
+    "sentence_index": 0,
+    "words": 7,
+    "unavailable_ui_hints": []
+  },
+  {
+    "model": "openrouter:minimax/minimax-m3.1-flash:free",
+    "task": "translation",
+    "language": "English",
+    "sentence_index": 0,
+    "words": 12,
+    "unavailable_ui_hints": []
+  },
+  {
+    "model": "openrouter:minimax/minimax-m3.1-flash:free",
+    "task": "practice",
+    "language": "Spanish",
+    "sentence_index": 0,
+    "words": 7,
+    "unavailable_ui_hints": []
+  },
+  {
+    "model": "openrouter:minimax/minimax-m3.1-flash:free",
+    "task": "practice",
+    "language": "Spanish",
+    "sentence_index": 1,
+    "words": 9,
+    "unavailable_ui_hints": []
+  },
+  {
+    "model": "openrouter:minimax/minimax-m3.1-flash:free",
+    "task": "practice",
+    "language": "Spanish",
+    "sentence_index": 2,
+    "words": 7,
+    "unavailable_ui_hints": []
+  },
+  {
+    "model": "openrouter:minimax/minimax-m3.1-flash:free",
+    "task": "practice",
+    "language": "Spanish",
+    "sentence_index": 3,
+    "words": 7,
+    "unavailable_ui_hints": [
+      "¿Dónde"
+    ]
+  },
+  {
+    "model": "openrouter:minimax/minimax-m3.1-flash:free",
+    "task": "practice",
+    "language": "Spanish",
+    "sentence_index": 4,
+    "words": 12,
+    "unavailable_ui_hints": []
+  }
+]

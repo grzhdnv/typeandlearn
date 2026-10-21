@@ -1,0 +1,722 @@
+[
+  {
+    "model": "openrouter:minimax/minimax-m3.1-flash:free",
+    "task": "translation",
+    "language": "German",
+    "source": "Ich stehe früh auf, weil der Zug um sieben Uhr abfährt.",
+    "error": "UnexpectedModelBehavior: Exceeded maximum retries (1) for output validation",
+    "responses": [
+      {
+        "status_code": 200,
+        "model": "minimax/minimax-m3.1-flash:free",
+        "provider": "Minimax",
+        "usage": {
+          "prompt_tokens": 1272,
+          "completion_tokens": 410,
+          "total_tokens": 1682,
+          "cost": 0,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 174,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0,
+            "upstream_inference_prompt_cost": 0,
+            "upstream_inference_completions_cost": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "choices": [
+          {
+            "finish_reason": "tool_calls",
+            "content": null,
+            "tool_calls": [
+              {
+                "type": "function",
+                "index": 0,
+                "id": "call_function_q7lkb6xvjvzt_1",
+                "function": {
+                  "name": "final_result",
+                  "arguments": "{\"translation\": \"I get up early because the train leaves at seven o'clock.\", \"translation_hints\": [{\"words\": {\"item\": \"Ich\"}, \"hint\": \"I\"}, {\"words\": {\"item\": [\"stehe\", \"auf\"]}, \"hint\": \"get up\"}, {\"words\": {\"item\": \"früh\"}, \"hint\": \"early\"}, {\"words\": {\"item\": \"weil\"}, \"hint\": \"because\"}, {\"words\": {\"item\": \"der\"}, \"hint\": \"the\"}, {\"words\": {\"item\": \"Zug\"}, \"hint\": \"train\"}, {\"words\": {\"item\": \"um\"}, \"hint\": \"at\"}, {\"words\": {\"item\": \"sieben\"}, \"hint\": \"seven\"}, {\"words\": {\"item\": \"Uhr\"}, \"hint\": \"o'clock\"}, {\"words\": {\"item\": \"abfährt\"}, \"hint\": \"departs / leaves\"}]}"
+                }
+              }
+            ]
+          }
+        ],
+        "error": null
+      },
+      {
+        "status_code": 200,
+        "model": "minimax/minimax-m3.1-flash:free",
+        "provider": "Minimax",
+        "usage": {
+          "prompt_tokens": 2328,
+          "completion_tokens": 410,
+          "total_tokens": 2738,
+          "cost": 0,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 1353,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0,
+            "upstream_inference_prompt_cost": 0,
+            "upstream_inference_completions_cost": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "choices": [
+          {
+            "finish_reason": "tool_calls",
+            "content": null,
+            "tool_calls": [
+              {
+                "type": "function",
+                "index": 0,
+                "id": "call_function_k8ksfzma9q7c_1",
+                "function": {
+                  "name": "final_result",
+                  "arguments": "{\"translation\": \"I get up early because the train leaves at seven o'clock.\", \"translation_hints\": [{\"hint\": \"I\", \"words\": {\"item\": \"Ich\"}}, {\"hint\": \"get up\", \"words\": {\"item\": [\"stehe\", \"auf\"]}}, {\"hint\": \"early\", \"words\": {\"item\": \"früh\"}}, {\"hint\": \"because\", \"words\": {\"item\": \"weil\"}}, {\"hint\": \"the\", \"words\": {\"item\": \"der\"}}, {\"hint\": \"train\", \"words\": {\"item\": \"Zug\"}}, {\"hint\": \"at\", \"words\": {\"item\": \"um\"}}, {\"hint\": \"seven\", \"words\": {\"item\": \"sieben\"}}, {\"hint\": \"o'clock\", \"words\": {\"item\": \"Uhr\"}}, {\"hint\": \"departs / leaves\", \"words\": {\"item\": \"abfährt\"}}]}"
+                }
+              }
+            ]
+          }
+        ],
+        "error": null
+      }
+    ],
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "minimax/minimax-m3.1-flash:free",
+        "returned_model": "minimax/minimax-m3.1-flash:free",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 1682,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.42
+      },
+      {
+        "provider": "openrouter",
+        "requested_model": "minimax/minimax-m3.1-flash:free",
+        "returned_model": "minimax/minimax-m3.1-flash:free",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 2738,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 3.25
+      }
+    ],
+    "seconds": 5.15
+  },
+  {
+    "model": "openrouter:minimax/minimax-m3.1-flash:free",
+    "task": "translation",
+    "language": "French",
+    "source": "Si j'avais su, je serais venu plus tôt.",
+    "output": {
+      "translation": "If I had known, I would have come earlier.",
+      "translation_hints": [
+        {
+          "words": [
+            "Si"
+          ],
+          "hint": "if"
+        },
+        {
+          "words": [
+            "j'avais",
+            "su"
+          ],
+          "hint": "had known"
+        },
+        {
+          "words": [
+            "je"
+          ],
+          "hint": "I"
+        },
+        {
+          "words": [
+            "serais",
+            "venu"
+          ],
+          "hint": "would have come"
+        },
+        {
+          "words": [
+            "plus",
+            "tôt"
+          ],
+          "hint": "earlier"
+        }
+      ]
+    },
+    "responses": [
+      {
+        "status_code": 200,
+        "model": "minimax/minimax-m3.1-flash:free",
+        "provider": "Minimax",
+        "usage": {
+          "prompt_tokens": 1266,
+          "completion_tokens": 138,
+          "total_tokens": 1404,
+          "cost": 0,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 174,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0,
+            "upstream_inference_prompt_cost": 0,
+            "upstream_inference_completions_cost": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 16,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "content": "```json\n{\n  \"translation\": \"If I had known, I would have come earlier.\",\n  \"translation_hints\": [\n    { \"words\": [\"Si\"], \"hint\": \"if\" },\n    { \"words\": [\"j'avais\", \"su\"], \"hint\": \"had known\" },\n    { \"words\": [\"je\"], \"hint\": \"I\" },\n    { \"words\": [\"serais\", \"venu\"], \"hint\": \"would have come\" },\n    { \"words\": [\"plus\", \"tôt\"], \"hint\": \"earlier\" }\n  ]\n}\n```",
+            "tool_calls": null
+          }
+        ],
+        "error": null
+      }
+    ],
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "minimax/minimax-m3.1-flash:free",
+        "returned_model": "minimax/minimax-m3.1-flash:free",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 1404,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.09
+      }
+    ],
+    "seconds": 1.38
+  },
+  {
+    "model": "openrouter:minimax/minimax-m3.1-flash:free",
+    "task": "translation",
+    "language": "Italian",
+    "source": "Non vedo l'ora di rivederti.",
+    "output": {
+      "translation": "I can't wait to see you again.",
+      "translation_hints": [
+        {
+          "words": [
+            "Non"
+          ],
+          "hint": "not"
+        },
+        {
+          "words": [
+            "vedo"
+          ],
+          "hint": "see"
+        },
+        {
+          "words": [
+            "l'ora"
+          ],
+          "hint": "the time"
+        },
+        {
+          "words": [
+            "di"
+          ],
+          "hint": "to"
+        },
+        {
+          "words": [
+            "rivederti"
+          ],
+          "hint": "see you again"
+        }
+      ]
+    },
+    "responses": [
+      {
+        "status_code": 200,
+        "model": "minimax/minimax-m3.1-flash:free",
+        "provider": "Minimax",
+        "usage": {
+          "prompt_tokens": 1265,
+          "completion_tokens": 153,
+          "total_tokens": 1418,
+          "cost": 0,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 1231,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0,
+            "upstream_inference_prompt_cost": 0,
+            "upstream_inference_completions_cost": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 43,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "content": "```json\n{\n  \"translation\": \"I can't wait to see you again.\",\n  \"translation_hints\": [\n    { \"words\": [\"Non\"], \"hint\": \"not\" },\n    { \"words\": [\"vedo\"], \"hint\": \"see\" },\n    { \"words\": [\"l'ora\"], \"hint\": \"the time\" },\n    { \"words\": [\"di\"], \"hint\": \"to\" },\n    { \"words\": [\"rivederti\"], \"hint\": \"see you again\" }\n  ]\n}\n```",
+            "tool_calls": null
+          }
+        ],
+        "error": null
+      }
+    ],
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "minimax/minimax-m3.1-flash:free",
+        "returned_model": "minimax/minimax-m3.1-flash:free",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 1418,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.1
+      }
+    ],
+    "seconds": 2.15
+  },
+  {
+    "model": "openrouter:minimax/minimax-m3.1-flash:free",
+    "task": "translation",
+    "language": "Spanish",
+    "source": "Se me olvidaron las llaves en casa.",
+    "error": "UnexpectedModelBehavior: Exceeded maximum retries (1) for output validation",
+    "responses": [
+      {
+        "status_code": 200,
+        "model": "minimax/minimax-m3.1-flash:free",
+        "provider": "Minimax",
+        "usage": {
+          "prompt_tokens": 1263,
+          "completion_tokens": 330,
+          "total_tokens": 1593,
+          "cost": 0,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 1231,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0,
+            "upstream_inference_prompt_cost": 0,
+            "upstream_inference_completions_cost": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 37,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "choices": [
+          {
+            "finish_reason": "tool_calls",
+            "content": null,
+            "tool_calls": [
+              {
+                "type": "function",
+                "index": 0,
+                "id": "call_function_utr0dbsg7wxk_1",
+                "function": {
+                  "name": "final_result",
+                  "arguments": "{\"translation\": \"I left my keys at home.\", \"translation_hints\": [{\"words\": {\"item\": \"Se\"}, \"hint\": \"(reflexive marker, unstressed)\"}, {\"words\": {\"item\": \"me\"}, \"hint\": \"myself\"}, {\"words\": {\"item\": \"olvidaron\"}, \"hint\": \"forgot\"}, {\"words\": {\"item\": \"las\"}, \"hint\": \"my\"}, {\"words\": {\"item\": \"llaves\"}, \"hint\": \"keys\"}, {\"words\": {\"item\": \"en\"}, \"hint\": \"at\"}, {\"words\": {\"item\": \"casa\"}, \"hint\": \"home\"}]}"
+                }
+              }
+            ]
+          }
+        ],
+        "error": null
+      },
+      {
+        "status_code": 200,
+        "model": "minimax/minimax-m3.1-flash:free",
+        "provider": "Minimax",
+        "usage": {
+          "prompt_tokens": 2042,
+          "completion_tokens": 290,
+          "total_tokens": 2332,
+          "cost": 0,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 1231,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0,
+            "upstream_inference_prompt_cost": 0,
+            "upstream_inference_completions_cost": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "choices": [
+          {
+            "finish_reason": "tool_calls",
+            "content": null,
+            "tool_calls": [
+              {
+                "type": "function",
+                "index": 0,
+                "id": "call_function_njaf9n9wppbp_1",
+                "function": {
+                  "name": "final_result",
+                  "arguments": "{\"translation\": \"I left my keys at home.\", \"translation_hints\": [{\"words\": {\"item\": \"Se\"}, \"hint\": \"(reflexive marker)\"}, {\"words\": {\"item\": \"me\"}, \"hint\": \"myself\"}, {\"words\": {\"item\": \"olvidaron\"}, \"hint\": \"forgot\"}, {\"words\": {\"item\": \"las\"}, \"hint\": \"my\"}, {\"words\": {\"item\": \"llaves\"}, \"hint\": \"keys\"}, {\"words\": {\"item\": \"en\"}, \"hint\": \"at\"}, {\"words\": {\"item\": \"casa\"}, \"hint\": \"home\"}]}"
+                }
+              }
+            ]
+          }
+        ],
+        "error": null
+      }
+    ],
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "minimax/minimax-m3.1-flash:free",
+        "returned_model": "minimax/minimax-m3.1-flash:free",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 1593,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.17
+      },
+      {
+        "provider": "openrouter",
+        "requested_model": "minimax/minimax-m3.1-flash:free",
+        "returned_model": "minimax/minimax-m3.1-flash:free",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 2332,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 2.62
+      }
+    ],
+    "seconds": 4.33
+  },
+  {
+    "model": "openrouter:minimax/minimax-m3.1-flash:free",
+    "task": "translation",
+    "language": "English",
+    "source": "She had been waiting for an hour when the train finally arrived.",
+    "output": {
+      "translation": "She had been waiting for an hour when the train finally arrived.",
+      "translation_hints": [
+        {
+          "words": [
+            "She"
+          ],
+          "hint": "she"
+        },
+        {
+          "words": [
+            "had",
+            "been"
+          ],
+          "hint": "had been (past perfect continuous)"
+        },
+        {
+          "words": [
+            "waiting"
+          ],
+          "hint": "waiting"
+        },
+        {
+          "words": [
+            "for"
+          ],
+          "hint": "for"
+        },
+        {
+          "words": [
+            "an"
+          ],
+          "hint": "an"
+        },
+        {
+          "words": [
+            "hour"
+          ],
+          "hint": "hour"
+        },
+        {
+          "words": [
+            "when"
+          ],
+          "hint": "when"
+        },
+        {
+          "words": [
+            "the"
+          ],
+          "hint": "the"
+        },
+        {
+          "words": [
+            "train"
+          ],
+          "hint": "train"
+        },
+        {
+          "words": [
+            "finally"
+          ],
+          "hint": "finally"
+        },
+        {
+          "words": [
+            "arrived"
+          ],
+          "hint": "arrived"
+        }
+      ]
+    },
+    "responses": [
+      {
+        "status_code": 200,
+        "model": "minimax/minimax-m3.1-flash:free",
+        "provider": "Minimax",
+        "usage": {
+          "prompt_tokens": 1263,
+          "completion_tokens": 447,
+          "total_tokens": 1710,
+          "cost": 0,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 128,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0,
+            "upstream_inference_prompt_cost": 0,
+            "upstream_inference_completions_cost": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 3,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "choices": [
+          {
+            "finish_reason": "tool_calls",
+            "content": null,
+            "tool_calls": [
+              {
+                "type": "function",
+                "index": 0,
+                "id": "call_01a159ab2e4c7305bc337468",
+                "function": {
+                  "name": "final_result",
+                  "arguments": "{\"translation\":\"She had been waiting for an hour when the train finally arrived.\",\"translation_hints\":[{\"words\":[\"She\"],\"hint\":\"she\"},{\"words\":[\"had\",\"been\"],\"hint\":\"had been (past perfect continuous)\"},{\"words\":[\"waiting\"],\"hint\":\"waiting\"},{\"words\":[\"for\"],\"hint\":\"for\"},{\"words\":[\"an\"],\"hint\":\"an\"},{\"words\":[\"hour\"],\"hint\":\"hour\"},{\"words\":[\"when\"],\"hint\":\"when\"},{\"words\":[\"the\"],\"hint\":\"the\"},{\"words\":[\"train\"],\"hint\":\"train\"},{\"words\":[\"finally\"],\"hint\":\"finally\"},{\"words\":[\"arrived\"],\"hint\":\"arrived\"}]}"
+                }
+              }
+            ]
+          }
+        ],
+        "error": null
+      }
+    ],
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "minimax/minimax-m3.1-flash:free",
+        "returned_model": "minimax/minimax-m3.1-flash:free",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 1710,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.1
+      }
+    ],
+    "seconds": 3.88
+  },
+  {
+    "model": "openrouter:minimax/minimax-m3.1-flash:free",
+    "task": "metadata",
+    "language": "French",
+    "source": "Si j'avais su, je serais venu plus tôt.",
+    "output": {
+      "title": "Si j'avais su, je serais venu plus tôt",
+      "difficulty_level": "B1",
+      "language": "French",
+      "author": null,
+      "category": "Grammar Exercise"
+    },
+    "responses": [
+      {
+        "status_code": 200,
+        "model": "minimax/minimax-m3.1-flash:free",
+        "provider": "Minimax",
+        "usage": {
+          "prompt_tokens": 735,
+          "completion_tokens": 95,
+          "total_tokens": 830,
+          "cost": 0,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0,
+            "upstream_inference_prompt_cost": 0,
+            "upstream_inference_completions_cost": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 24,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "choices": [
+          {
+            "finish_reason": "tool_calls",
+            "content": null,
+            "tool_calls": [
+              {
+                "type": "function",
+                "index": 0,
+                "id": "call_52d78ecc13e84cfcb591e5a0",
+                "function": {
+                  "name": "final_result",
+                  "arguments": "{\"title\":\"Si j'avais su, je serais venu plus tôt\",\"difficulty_level\":\"B1\",\"language\":\"French\",\"category\":\"Grammar Exercise\"}"
+                }
+              }
+            ]
+          }
+        ],
+        "error": null
+      }
+    ],
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "minimax/minimax-m3.1-flash:free",
+        "returned_model": "minimax/minimax-m3.1-flash:free",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 830,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.19
+      }
+    ],
+    "seconds": 1.63
+  },
+  {
+    "model": "openrouter:minimax/minimax-m3.1-flash:free",
+    "task": "practice",
+    "language": "Spanish",
+    "source": [
+      "llave",
+      "casa",
+      "olvidar"
+    ],
+    "error": "ModelHTTPError: status_code: 400, model_name: minimax/minimax-m3.1-flash:free, error: {'code': None, 'message': 'LLM request exceeds the configured input size limit', 'provider': None}",
+    "responses": [
+      {
+        "status_code": 200,
+        "model": "minimax/minimax-m3.1-flash:free",
+        "provider": "Minimax",
+        "usage": {
+          "prompt_tokens": 1139,
+          "completion_tokens": 1586,
+          "total_tokens": 2725,
+          "cost": 0,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 184,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0,
+            "upstream_inference_prompt_cost": 0,
+            "upstream_inference_completions_cost": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 11,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "choices": [
+          {
+            "finish_reason": "tool_calls",
+            "content": null,
+            "tool_calls": [
+              {
+                "type": "function",
+                "index": 0,
+                "id": "call_function_yyktzug988r1_1",
+                "function": {
+                  "name": "final_result",
+                  "arguments": "{\"sentences\": [{\"hint\": \"key\", \"translation\": \"The key is on the table.\", \"translation_hints\": {\"item\": [{\"hint\": \"key\", \"words\": {\"item\": [\"La\", \"llave\"]}}, {\"hint\": \"is\", \"words\": {\"item\": \"está\"}}, {\"hint\": \"on\", \"words\": {\"item\": \"en\"}}, {\"hint\": \"the\", \"words\": {\"item\": \"la\"}}, {\"hint\": \"table\", \"words\": {\"item\": \"mesa\"}}]}, \"sentence\": \"La llave está en la mesa.\"}, {\"hint\": \"Don't\", \"words\": {\"item\": \"No\"}}, {\"hint\": \"forget\", \"words\": {\"item\": \"olvides\"}}, {\"hint\": \"your\", \"words\": {\"item\": \"tu\"}}, {\"hint\": \"keys\", \"words\": {\"item\": \"llaves\"}}, {\"hint\": \"at\", \"words\": {\"item\": \"en\"}}, {\"hint\": \"the\", \"words\": {\"item\": \"la\"}}, {\"hint\": \"door\", \"words\": {\"item\": \"puerta\"}}, \"No olvides tus llaves en la puerta.\", {\"hint\": \"I\", \"words\": {\"item\": \"Yo\"}}, {\"hint\": \"forget\", \"words\": {\"item\": \"olvido\"}}, {\"hint\": \"the\", \"words\": {\"item\": \"la\"}}, {\"hint\": \"key\", \"words\": {\"item\": \"llave\"}}, {\"hint\": \"inside\", \"words\": {\"item\": \"dentro\"}}, {\"hint\": \"the\", \"words\": {\"item\": \"de\"}}, {\"hint\": \"house\", \"words\": {\"item\": [\"la\", \"casa\"]}}, \"Yo olvidé la llave dentro de la casa.\", {\"hint\": \"The\", \"words\": {\"item\": \"El\"}}, {\"hint\": \"child\", \"words\": {\"item\": \"niño\"}}, {\"hint\": \"found\", \"words\": {\"item\": \"encontró\"}}, {\"hint\": \"the\", \"words\": {\"item\": \"la\"}}, {\"hint\": \"key\", \"words\": {\"item\": \"llave\"}}, {\"hint\": \"under\", \"words\": {\"item\": \"bajo\"}}, {\"hint\": \"the\", \"words\": {\"item\": \"el\"}}, {\"hint\": \"cushion\", \"words\": {\"item\": \"cojín\"}}, {\"hint\": \"of\", \"words\": {\"item\": \"de\"}}, {\"hint\": \"the\", \"words\": {\"item\": \"la\"}}, {\"hint\": \"sofa\", \"words\": {\"item\": \"sofá\"}}, \"El niño encontró la llave bajo el cojín del sofá.\", {\"hint\": \"Every morning\", \"words\": {\"item\": [\"Cada\", \"mañana\"]}}, {\"hint\": \"she\", \"words\": {\"item\": \"ella\"}}, {\"hint\": \"forgets\", \"words\": {\"item\": \"olvida\"}}, {\"hint\": \"the\", \"words\": {\"item\": \"la\"}}, {\"hint\": \"key\", \"words\": {\"item\": \"llave\"}}, {\"hint\": \"to\", \"words\": {\"item\": \"para\"}}, {\"hint\": \"open\", \"words\": {\"item\": \"abrir\"}}, {\"hint\": \"the\", \"words\": {\"item\": \"la\"}}, {\"hint\": \"house\", \"words\": {\"item\": \"casa\"}}, \"Cada mañana ella olvida la llave para abrir la casa.\"]}"
+                }
+              }
+            ]
+          }
+        ],
+        "error": null
+      }
+    ],
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "minimax/minimax-m3.1-flash:free",
+        "returned_model": "minimax/minimax-m3.1-flash:free",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 2725,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.1
+      }
+    ],
+    "seconds": 7.82
+  }
+]

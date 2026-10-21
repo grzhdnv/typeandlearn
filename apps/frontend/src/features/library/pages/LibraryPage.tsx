@@ -2,7 +2,7 @@ import { Component, createResource, createSignal, createMemo, Show, For, createE
 import { fetchTextTitles, postText, updateTextMetadata, deleteText, resetProgress, retryEnrichment } from '../../../features/texts/api/textsApi';
 import { StatusBadge } from '../../../features/texts/components/StatusBadge';
 
-const LANGUAGES = ["German", "French", "Italian", "Spanish"];
+const LANGUAGES = ["German", "French", "Italian", "Spanish", "English"];
 const LEVELS = ["A1", "A2", "B1", "B2", "C1", "C2", "Unrated"];
 
 const LibraryPage: Component = () => {
@@ -31,15 +31,17 @@ const LibraryPage: Component = () => {
       if (intervalId) window.clearInterval(intervalId);
     });
   });
-  
+
   const [customText, setCustomText] = createSignal("");
-  const [customTitle, setCustomTitle] = createSignal("");
-  const [customAuthor, setCustomAuthor] = createSignal("");
-  const [customCategory, setCustomCategory] = createSignal("");
-  const [customLanguage, setCustomLanguage] = createSignal("German");
-  const [customDifficulty, setCustomDifficulty] = createSignal("");
+  const [intakeLanguage, setIntakeLanguage] = createSignal("");
+  const [submitError, setSubmitError] = createSignal("");
+  const [isSavingMetadata, setIsSavingMetadata] = createSignal(false);
   const [isSubmitting, setIsSubmitting] = createSignal(false);
   const [isAdding, setIsAdding] = createSignal(false);
+  const [editingId, setEditingId] = createSignal<string | null>(null);
+  const [editTitle, setEditTitle] = createSignal("");
+  const [editAuthor, setEditAuthor] = createSignal("");
+  const [editCategory, setEditCategory] = createSignal("");
 
   const [filterLanguage, setFilterLanguage] = createSignal("ALL LANGUAGES");
   const [filterLevel, setFilterLevel] = createSignal("ANY LEVEL");
@@ -54,7 +56,7 @@ const LibraryPage: Component = () => {
       const matchSearch = !query || text.title.toLowerCase().includes(query);
       const matchLevel = filterLevel() === "ANY LEVEL" || text.difficulty_level === filterLevel();
       if (!matchSearch || !matchLevel) continue;
-      
+
       if (counts[text.language] !== undefined) {
         counts[text.language]++;
       }
@@ -71,7 +73,7 @@ const LibraryPage: Component = () => {
       const matchSearch = !query || text.title.toLowerCase().includes(query);
       const matchLang = filterLanguage() === "ALL LANGUAGES" || text.language === filterLanguage();
       if (!matchSearch || !matchLang) continue;
-      
+
       if (counts[text.difficulty_level] !== undefined) {
         counts[text.difficulty_level]++;
       }
@@ -93,11 +95,11 @@ const LibraryPage: Component = () => {
   const recentlyPracticed = createMemo(() => {
     const texts = availableTexts() || [];
     if (texts.length === 0) return null;
-    
+
     // Find first text in progress
     const inProgress = texts.find(t => t.completed_sentences > 0 && t.completed_sentences < t.total_sentences);
     if (inProgress) return inProgress;
-    
+
     // Otherwise return the first text
     return texts[0];
   });
@@ -108,29 +110,54 @@ const LibraryPage: Component = () => {
 
     try {
       setIsSubmitting(true);
-      await postText(text, customLanguage(), customTitle(), customDifficulty(), customAuthor(), customCategory());
+      setSubmitError("");
+      await postText(text, intakeLanguage());
       setCustomText("");
-      setCustomTitle("");
-      setCustomAuthor("");
-      setCustomCategory("");
-      setCustomDifficulty("");
       setIsAdding(false);
       refetch();
     } catch (error) {
       console.error("Failed to submit text:", error);
-      alert(error instanceof Error ? error.message : "Failed to submit text.");
+      setSubmitError(error instanceof Error ? error.message : "Failed to submit text.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleUpdateMetadata = async (id: string, updates: { language?: string; difficultyLevel?: string; author?: string; category?: string }) => {
+  const applyMetadata = async (id: string, updates: { title?: string; language?: string; difficultyLevel?: string; author?: string; category?: string }) => {
     try {
-      await updateTextMetadata(id, updates.language, updates.difficultyLevel, updates.author, updates.category);
-      refetch();
+      await updateTextMetadata(id, updates.language, updates.difficultyLevel, updates.author, updates.category, updates.title);
+      return true;
     } catch (error) {
       console.error("Failed to update metadata:", error);
       alert(error instanceof Error ? error.message : "Failed to update metadata.");
+      return false;
+    }
+  };
+
+  const handleUpdateMetadata = async (id: string, updates: { language?: string; difficultyLevel?: string; author?: string; category?: string }) => {
+    await applyMetadata(id, updates);
+    refetch();
+  };
+
+  const startEditing = (text: { id: string; title: string; author?: string; category?: string }) => {
+    setEditingId(text.id);
+    setEditTitle(text.title);
+    setEditAuthor(text.author ?? "");
+    setEditCategory(text.category ?? "");
+  };
+
+  const stopEditing = async () => {
+    const id = editingId();
+    const title = editTitle().trim();
+    if (!id || !title || isSavingMetadata()) return;
+    setIsSavingMetadata(true);
+    try {
+      if (await applyMetadata(id, { title, author: editAuthor().trim(), category: editCategory().trim() })) {
+        setEditingId(null);
+        await refetch();
+      }
+    } finally {
+      setIsSavingMetadata(false);
     }
   };
 
@@ -179,7 +206,7 @@ const LibraryPage: Component = () => {
             <div class="flex justify-between items-end mb-6">
               <h2 class="font-headline-md text-headline-md text-primary">Recently Practiced</h2>
               <span class="font-mono-sm text-mono-sm text-on-surface-variant opacity-60 uppercase">
-                History (Planned for M4)
+                Progress
               </span>
             </div>
             <div class="bg-surface-container-lowest border border-outline-variant p-gutter flex flex-col md:flex-row gap-6 items-center">
@@ -216,19 +243,19 @@ const LibraryPage: Component = () => {
 
       {/* Search & Filters & Add */}
       <section class="space-y-6" aria-label="Library Controls">
-        <div class="flex justify-between gap-4">
-          <div class="relative group flex-grow">
+        <div class="flex flex-col sm:flex-row justify-between gap-4">
+          <div class="relative group flex-grow min-w-0">
             <span class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-on-surface-variant">search</span>
-            <input 
-              class="w-full pl-12 pr-4 py-4 bg-surface border border-outline-variant font-mono-input text-[18px] focus:ring-0 focus:border-primary focus:border-2 outline-none transition-all placeholder:text-outline-variant" 
-              placeholder="SEARCH LIBRARY..." 
+            <input
+              class="w-full pl-12 pr-4 py-4 bg-surface border border-outline-variant font-mono-input text-[18px] focus:ring-0 focus:border-primary focus:border-2 outline-none transition-all placeholder:text-outline-variant"
+              placeholder="SEARCH LIBRARY..."
               type="text"
               aria-label="Search library texts"
               value={searchQuery()}
               onInput={(e) => setSearchQuery(e.currentTarget.value)}
             />
           </div>
-          <button 
+          <button
             id="btn-add-text"
             onClick={() => setIsAdding(!isAdding())}
             aria-expanded={isAdding() ? "true" : "false"}
@@ -241,71 +268,36 @@ const LibraryPage: Component = () => {
 
         <Show when={isAdding()}>
           <div class="bg-surface-container-low border border-outline-variant p-4 space-y-4">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <select
-                class="w-full p-3 bg-surface border border-outline-variant focus:border-primary focus:ring-0 font-mono-input outline-none cursor-pointer"
-                value={customLanguage()}
-                aria-label="Target language"
-                onChange={(e) => setCustomLanguage(e.currentTarget.value)}
-              >
-                <option value="" disabled>Select Language</option>
-                <option value="German">German</option>
-                <option value="French">French</option>
-                <option value="Italian">Italian</option>
-                <option value="Spanish">Spanish</option>
+            <label class="block font-mono-label">
+              Text language
+              <select aria-label="Text language" value={intakeLanguage()} onChange={e => setIntakeLanguage(e.currentTarget.value)} class="ml-3 p-2 border border-outline-variant bg-surface">
+                <option value="">Detect automatically with AI</option>
+                <For each={LANGUAGES}>{language => <option value={language}>{language}</option>}</For>
               </select>
-              <input
-                class="w-full p-3 bg-surface border border-outline-variant focus:border-primary focus:ring-0 font-mono-input outline-none"
-                placeholder="Title (Optional)"
-                aria-label="Text title (Optional)"
-                value={customTitle()}
-                onInput={(e) => setCustomTitle(e.currentTarget.value)}
-              />
-              <select
-                class="w-full p-3 bg-surface border border-outline-variant focus:border-primary focus:ring-0 font-mono-input outline-none cursor-pointer"
-                value={customDifficulty()}
-                aria-label="Difficulty level (Optional)"
-                onChange={(e) => setCustomDifficulty(e.currentTarget.value)}
-              >
-                <option value="">Difficulty (Optional)</option>
-                <option value="A1">A1 (Beginner)</option>
-                <option value="A2">A2 (Elementary)</option>
-                <option value="B1">B1 (Intermediate)</option>
-                <option value="B2">B2 (Upper Intermediate)</option>
-                <option value="C1">C1 (Advanced)</option>
-                <option value="C2">C2 (Mastery)</option>
-              </select>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <input
-                class="w-full p-3 bg-surface border border-outline-variant focus:border-primary focus:ring-0 font-mono-input outline-none"
-                placeholder="Author (Optional)"
-                value={customAuthor()}
-                onInput={(e) => setCustomAuthor(e.currentTarget.value)}
-              />
-              <input
-                class="w-full p-3 bg-surface border border-outline-variant focus:border-primary focus:ring-0 font-mono-input outline-none"
-                placeholder="Category (Optional)"
-                value={customCategory()}
-                onInput={(e) => setCustomCategory(e.currentTarget.value)}
-              />
-            </div>
+            </label>
             <textarea
+              aria-label="Source text"
               class="w-full p-4 border border-outline-variant focus:border-primary focus:ring-0 font-mono-input text-[18px] outline-none"
-              rows={4}
+              rows={6}
               placeholder="Paste new text here..."
               value={customText()}
               onInput={(e) => setCustomText(e.currentTarget.value)}
             />
-            <div class="flex justify-end gap-2">
-              <button onClick={() => setIsAdding(false)} class="px-4 py-2 font-mono-label text-on-surface-variant hover:text-primary">CANCEL</button>
-              <button 
-                onClick={handleSubmitText}
-                disabled={isSubmitting() || !customText().trim() || !customLanguage().trim()}
-                class="px-6 py-2 bg-primary text-on-primary font-mono-label disabled:opacity-50"
-              >
-                {isSubmitting() ? "SUBMITTING..." : "SUBMIT"}
-              </button>
+            <Show when={submitError()}><p role="alert" class="text-error">{submitError()}</p></Show>
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <span class="font-mono-sm text-mono-sm text-on-surface-variant opacity-70">
+                Metadata is detected automatically when AI is available. Select a language to add text without AI; you can edit metadata afterward.
+              </span>
+              <div class="flex justify-end gap-2">
+                <button onClick={() => setIsAdding(false)} class="px-4 py-2 font-mono-label text-on-surface-variant hover:text-primary">CANCEL</button>
+                <button
+                  onClick={handleSubmitText}
+                  disabled={isSubmitting() || !customText().trim()}
+                  class="px-6 py-2 bg-primary text-on-primary font-mono-label disabled:opacity-50"
+                >
+                  {isSubmitting() ? "ANALYZING..." : "SUBMIT"}
+                </button>
+              </div>
             </div>
           </div>
         </Show>
@@ -313,7 +305,7 @@ const LibraryPage: Component = () => {
         <div class="flex flex-wrap gap-4 items-center border-b border-outline-variant pb-6">
           <div class="flex items-center gap-2">
             <span class="font-mono-label text-mono-label text-on-surface-variant">LANGUAGE:</span>
-            <select 
+            <select
               class="bg-transparent border-none font-mono-label text-mono-label text-primary focus:ring-0 cursor-pointer"
               value={filterLanguage()}
               onChange={(e) => setFilterLanguage(e.currentTarget.value)}
@@ -331,7 +323,7 @@ const LibraryPage: Component = () => {
           <div class="h-4 w-px bg-outline-variant mx-2"></div>
           <div class="flex items-center gap-2">
             <span class="font-mono-label text-mono-label text-on-surface-variant">LEVEL:</span>
-            <select 
+            <select
               class="bg-transparent border-none font-mono-label text-mono-label text-primary focus:ring-0 cursor-pointer"
               value={filterLevel()}
               onChange={(e) => setFilterLevel(e.currentTarget.value)}
@@ -365,14 +357,14 @@ const LibraryPage: Component = () => {
                   <div class="space-y-4">
                     <div class="flex justify-between items-start">
                       <div class="flex gap-2">
-                        <select 
+                        <select
                           class="appearance-none bg-none px-2 py-0.5 bg-surface-container-high border border-outline-variant font-mono-sm text-mono-sm uppercase cursor-pointer outline-none focus:border-primary hover:bg-surface-container text-center"
                           value={text.language}
                           onChange={(e) => handleUpdateMetadata(text.id, { language: e.currentTarget.value })}
                         >
                           <For each={LANGUAGES}>{(l) => <option value={l}>{l.toUpperCase()}</option>}</For>
                         </select>
-                        <select 
+                        <select
                           class="appearance-none bg-none px-2 py-0.5 bg-surface-container-high border border-outline-variant font-mono-sm text-mono-sm uppercase cursor-pointer outline-none focus:border-primary hover:bg-surface-container text-center"
                           value={text.difficulty_level}
                           onChange={(e) => handleUpdateMetadata(text.id, { difficultyLevel: e.currentTarget.value })}
@@ -391,8 +383,8 @@ const LibraryPage: Component = () => {
                           isRetrying={retryingId() === text.id}
                         />
                         <Show when={text.completed_sentences > 0}>
-                          <button 
-                            class="text-outline-variant hover:text-primary transition-colors flex items-center justify-center" 
+                          <button
+                            class="text-outline-variant hover:text-primary transition-colors flex items-center justify-center"
                             onClick={() => handleResetProgress(text.id)}
                             title="Reset Progress"
                             aria-label={`Reset progress for ${text.title}`}
@@ -400,8 +392,17 @@ const LibraryPage: Component = () => {
                             <span class="material-symbols-outlined text-[20px]">restart_alt</span>
                           </button>
                         </Show>
-                        <button 
-                          class="text-outline-variant hover:text-error transition-colors flex items-center justify-center" 
+                        <button
+                          class="text-outline-variant hover:text-primary transition-colors flex items-center justify-center"
+                          disabled={isSavingMetadata() || (editingId() === text.id && !editTitle().trim())}
+                          onClick={() => editingId() === text.id ? stopEditing() : startEditing(text)}
+                          title={editingId() === text.id ? "Done editing" : "Edit metadata"}
+                          aria-label={`${editingId() === text.id ? "Done editing" : "Edit metadata for"} ${text.title}`}
+                        >
+                          <span class="material-symbols-outlined text-[20px]">{editingId() === text.id ? "check" : "edit"}</span>
+                        </button>
+                        <button
+                          class="text-outline-variant hover:text-error transition-colors flex items-center justify-center"
                           onClick={() => handleDeleteText(text.id)}
                           title="Delete Text"
                           aria-label={`Delete text: ${text.title}`}
@@ -411,19 +412,47 @@ const LibraryPage: Component = () => {
                       </div>
                     </div>
                     <div>
-                      <h4 class="font-headline-md text-headline-md text-primary mb-1">{text.title}</h4>
-                      <div class="flex gap-4 font-mono-sm text-mono-sm text-on-surface-variant">
-                        <Show when={text.author}>
-                          <span>By {text.author}</span>
-                        </Show>
-                        <Show when={text.category}>
-                          <span class="px-2 bg-surface-container-high">{text.category}</span>
-                        </Show>
-                      </div>
-                      
+                      <Show when={editingId() === text.id} fallback={
+                        <>
+                          <h4 class="font-headline-md text-headline-md text-primary mb-1">{text.title}</h4>
+                          <div class="flex gap-4 font-mono-sm text-mono-sm text-on-surface-variant">
+                            <Show when={text.author}>
+                              <span>By {text.author}</span>
+                            </Show>
+                            <Show when={text.category}>
+                              <span class="px-2 bg-surface-container-high">{text.category}</span>
+                            </Show>
+                          </div>
+                        </>
+                      }>
+                        <div class="space-y-2">
+                          <input
+                            class="w-full p-2 bg-surface border border-outline-variant focus:border-primary focus:ring-0 font-mono-input outline-none"
+                            aria-label={`Title for ${text.title}`}
+                            placeholder="Title"
+                            value={editTitle()}
+                            onInput={(e) => setEditTitle(e.currentTarget.value)}
+                          />
+                          <input
+                            class="w-full p-2 bg-surface border border-outline-variant focus:border-primary focus:ring-0 font-mono-input outline-none"
+                            aria-label={`Author for ${text.title}`}
+                            placeholder="Author"
+                            value={editAuthor()}
+                            onInput={(e) => setEditAuthor(e.currentTarget.value)}
+                          />
+                          <input
+                            class="w-full p-2 bg-surface border border-outline-variant focus:border-primary focus:ring-0 font-mono-input outline-none"
+                            aria-label={`Category for ${text.title}`}
+                            placeholder="Category"
+                            value={editCategory()}
+                            onInput={(e) => setEditCategory(e.currentTarget.value)}
+                          />
+                        </div>
+                      </Show>
+
                       <div class="w-full bg-surface-container h-1 mt-4">
-                        <div 
-                          class="bg-secondary h-1" 
+                        <div
+                          class="bg-secondary h-1"
                           style={{ width: `${text.total_sentences > 0 ? (text.completed_sentences / text.total_sentences) * 100 : 0}%` }}
                         ></div>
                       </div>

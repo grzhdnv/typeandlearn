@@ -1,0 +1,244 @@
+[
+  {
+    "model": "openrouter:minimax/minimax-m3.1-flash:free",
+    "task": "translation",
+    "language": "German",
+    "source": "Ich stehe früh auf, weil der Zug um sieben Uhr abfährt.",
+    "error": "ModelHTTPError: status_code: 404, model_name: minimax/minimax-m3.1-flash:free, error: {'code': 404, 'message': \"No endpoints found that support the provided 'tool_choice' value. To learn more about provider routing, visit: https://openrouter.ai/docs/guides/routing/provider-selection\", 'provider': None}",
+    "responses": [
+      {
+        "status_code": 404,
+        "model": null,
+        "provider": null,
+        "usage": null,
+        "choices": [],
+        "error": {
+          "code": 404,
+          "message": "No endpoints found that support the provided 'tool_choice' value. To learn more about provider routing, visit: https://openrouter.ai/docs/guides/routing/provider-selection",
+          "provider": null
+        }
+      }
+    ],
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "minimax/minimax-m3.1-flash:free",
+        "returned_model": null,
+        "status": "failed",
+        "status_code": 404,
+        "tokens": 0,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.43
+      }
+    ],
+    "seconds": 0.54
+  },
+  {
+    "model": "openrouter:minimax/minimax-m3.1-flash:free",
+    "task": "translation",
+    "language": "French",
+    "source": "Si j'avais su, je serais venu plus tôt.",
+    "error": "ModelHTTPError: status_code: 404, model_name: minimax/minimax-m3.1-flash:free, error: {'code': 404, 'message': \"No endpoints found that support the provided 'tool_choice' value. To learn more about provider routing, visit: https://openrouter.ai/docs/guides/routing/provider-selection\", 'provider': None}",
+    "responses": [
+      {
+        "status_code": 404,
+        "model": null,
+        "provider": null,
+        "usage": null,
+        "choices": [],
+        "error": {
+          "code": 404,
+          "message": "No endpoints found that support the provided 'tool_choice' value. To learn more about provider routing, visit: https://openrouter.ai/docs/guides/routing/provider-selection",
+          "provider": null
+        }
+      }
+    ],
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "minimax/minimax-m3.1-flash:free",
+        "returned_model": null,
+        "status": "failed",
+        "status_code": 404,
+        "tokens": 0,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.21
+      }
+    ],
+    "seconds": 0.41
+  },
+  {
+    "model": "openrouter:minimax/minimax-m3.1-flash:free",
+    "task": "translation",
+    "language": "Italian",
+    "source": "Non vedo l'ora di rivederti.",
+    "error": "ModelHTTPError: status_code: 404, model_name: minimax/minimax-m3.1-flash:free, error: {'code': 404, 'message': \"No endpoints found that support the provided 'tool_choice' value. To learn more about provider routing, visit: https://openrouter.ai/docs/guides/routing/provider-selection\", 'provider': None}",
+    "responses": [
+      {
+        "status_code": 404,
+        "model": null,
+        "provider": null,
+        "usage": null,
+        "choices": [],
+        "error": {
+          "code": 404,
+          "message": "No endpoints found that support the provided 'tool_choice' value. To learn more about provider routing, visit: https://openrouter.ai/docs/guides/routing/provider-selection",
+          "provider": null
+        }
+      }
+    ],
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "minimax/minimax-m3.1-flash:free",
+        "returned_model": null,
+        "status": "failed",
+        "status_code": 404,
+        "tokens": 0,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.09
+      }
+    ],
+    "seconds": 0.19
+  },
+  {
+    "model": "openrouter:minimax/minimax-m3.1-flash:free",
+    "task": "translation",
+    "language": "Spanish",
+    "source": "Se me olvidaron las llaves en casa.",
+    "error": "ModelHTTPError: status_code: 404, model_name: minimax/minimax-m3.1-flash:free, error: {'code': 404, 'message': \"No endpoints found that support the provided 'tool_choice' value. To learn more about provider routing, visit: https://openrouter.ai/docs/guides/routing/provider-selection\", 'provider': None}",
+    "responses": [
+      {
+        "status_code": 404,
+        "model": null,
+        "provider": null,
+        "usage": null,
+        "choices": [],
+        "error": {
+          "code": 404,
+          "message": "No endpoints found that support the provided 'tool_choice' value. To learn more about provider routing, visit: https://openrouter.ai/docs/guides/routing/provider-selection",
+          "provider": null
+        }
+      }
+    ],
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "minimax/minimax-m3.1-flash:free",
+        "returned_model": null,
+        "status": "failed",
+        "status_code": 404,
+        "tokens": 0,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.1
+      }
+    ],
+    "seconds": 0.18
+  },
+  {
+    "model": "openrouter:minimax/minimax-m3.1-flash:free",
+    "task": "translation",
+    "language": "English",
+    "source": "She had been waiting for an hour when the train finally arrived.",
+    "error": "ModelHTTPError: status_code: 404, model_name: minimax/minimax-m3.1-flash:free, error: {'code': 404, 'message': \"No endpoints found that support the provided 'tool_choice' value. To learn more about provider routing, visit: https://openrouter.ai/docs/guides/routing/provider-selection\", 'provider': None}",
+    "responses": [
+      {
+        "status_code": 404,
+        "model": null,
+        "provider": null,
+        "usage": null,
+        "choices": [],
+        "error": {
+          "code": 404,
+          "message": "No endpoints found that support the provided 'tool_choice' value. To learn more about provider routing, visit: https://openrouter.ai/docs/guides/routing/provider-selection",
+          "provider": null
+        }
+      }
+    ],
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "minimax/minimax-m3.1-flash:free",
+        "returned_model": null,
+        "status": "failed",
+        "status_code": 404,
+        "tokens": 0,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.18
+      }
+    ],
+    "seconds": 0.28
+  },
+  {
+    "model": "openrouter:minimax/minimax-m3.1-flash:free",
+    "task": "metadata",
+    "language": "French",
+    "source": "Si j'avais su, je serais venu plus tôt.",
+    "error": "ModelHTTPError: status_code: 404, model_name: minimax/minimax-m3.1-flash:free, error: {'code': 404, 'message': \"No endpoints found that support the provided 'tool_choice' value. To learn more about provider routing, visit: https://openrouter.ai/docs/guides/routing/provider-selection\", 'provider': None}",
+    "responses": [
+      {
+        "status_code": 404,
+        "model": null,
+        "provider": null,
+        "usage": null,
+        "choices": [],
+        "error": {
+          "code": 404,
+          "message": "No endpoints found that support the provided 'tool_choice' value. To learn more about provider routing, visit: https://openrouter.ai/docs/guides/routing/provider-selection",
+          "provider": null
+        }
+      }
+    ],
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "minimax/minimax-m3.1-flash:free",
+        "returned_model": null,
+        "status": "failed",
+        "status_code": 404,
+        "tokens": 0,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.1
+      }
+    ],
+    "seconds": 0.18
+  },
+  {
+    "model": "openrouter:minimax/minimax-m3.1-flash:free",
+    "task": "practice",
+    "language": "Spanish",
+    "source": [
+      "llave",
+      "casa",
+      "olvidar"
+    ],
+    "error": "ModelHTTPError: status_code: 404, model_name: minimax/minimax-m3.1-flash:free, error: {'code': 404, 'message': \"No endpoints found that support the provided 'tool_choice' value. To learn more about provider routing, visit: https://openrouter.ai/docs/guides/routing/provider-selection\", 'provider': None}",
+    "responses": [
+      {
+        "status_code": 404,
+        "model": null,
+        "provider": null,
+        "usage": null,
+        "choices": [],
+        "error": {
+          "code": 404,
+          "message": "No endpoints found that support the provided 'tool_choice' value. To learn more about provider routing, visit: https://openrouter.ai/docs/guides/routing/provider-selection",
+          "provider": null
+        }
+      }
+    ],
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "minimax/minimax-m3.1-flash:free",
+        "returned_model": null,
+        "status": "failed",
+        "status_code": 404,
+        "tokens": 0,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.1
+      }
+    ],
+    "seconds": 0.22
+  }
+]

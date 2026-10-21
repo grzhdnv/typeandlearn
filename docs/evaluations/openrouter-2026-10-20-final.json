@@ -1,0 +1,2117 @@
+[
+  {
+    "model": "openrouter:nvidia/nemotron-3-ultra-550b-a55b:free",
+    "task": "translation",
+    "language": "German",
+    "source": "Ich stehe früh auf, weil der Zug um sieben Uhr abfährt.",
+    "output": {
+      "translation": "I get up early because the train departs at seven o'clock.",
+      "translation_hints": [
+        {
+          "words": [
+            "Ich"
+          ],
+          "hint": "I"
+        },
+        {
+          "words": [
+            "stehe",
+            "auf"
+          ],
+          "hint": "get up"
+        },
+        {
+          "words": [
+            "früh"
+          ],
+          "hint": "early"
+        },
+        {
+          "words": [
+            "weil"
+          ],
+          "hint": "because"
+        },
+        {
+          "words": [
+            "der"
+          ],
+          "hint": "the"
+        },
+        {
+          "words": [
+            "Zug"
+          ],
+          "hint": "train"
+        },
+        {
+          "words": [
+            "um"
+          ],
+          "hint": "at"
+        },
+        {
+          "words": [
+            "sieben"
+          ],
+          "hint": "seven"
+        },
+        {
+          "words": [
+            "Uhr"
+          ],
+          "hint": "o'clock"
+        },
+        {
+          "words": [
+            "abfährt"
+          ],
+          "hint": "departs"
+        }
+      ]
+    },
+    "responses": [
+      {
+        "status_code": 200,
+        "model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "provider": "Nvidia",
+        "usage": {
+          "prompt_tokens": 1151,
+          "completion_tokens": 296,
+          "total_tokens": 1447,
+          "cost": 0,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0,
+            "upstream_inference_prompt_cost": 0,
+            "upstream_inference_completions_cost": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "choices": [
+          {
+            "finish_reason": "tool_calls",
+            "content": null,
+            "tool_calls": [
+              {
+                "type": "function",
+                "index": 0,
+                "id": "call-e747277e-971b-45e2-b2af-5a0c61ed4c72",
+                "function": {
+                  "name": "final_result",
+                  "arguments": "{\n      \"translation\": \"I get up early because the train departs at seven o'clock.\",\n      \"translation_hints\": [\n        {\n          \"words\": [\n            \"Ich\"\n          ],\n          \"hint\": \"I\"\n        },\n        {\n          \"words\": [\n            \"stehe\",\n            \"auf\"\n          ],\n          \"hint\": \"get up\"\n        },\n        {\n          \"words\": [\n            \"früh\"\n          ],\n          \"hint\": \"early\"\n        },\n        {\n          \"words\": [\n            \"weil\"\n          ],\n          \"hint\": \"because\"\n        },\n        {\n          \"words\": [\n            \"der\"\n          ],\n          \"hint\": \"the\"\n        },\n        {\n          \"words\": [\n            \"Zug\"\n          ],\n          \"hint\": \"train\"\n        },\n        {\n          \"words\": [\n            \"um\"\n          ],\n          \"hint\": \"at\"\n        },\n        {\n          \"words\": [\n            \"sieben\"\n          ],\n          \"hint\": \"seven\"\n        },\n        {\n          \"words\": [\n            \"Uhr\"\n          ],\n          \"hint\": \"o'clock\"\n        },\n        {\n          \"words\": [\n            \"abfährt\"\n          ],\n          \"hint\": \"departs\"\n        }\n      ]\n    }"
+                }
+              }
+            ]
+          }
+        ],
+        "error": null
+      }
+    ],
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "returned_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 1447,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.44
+      }
+    ],
+    "seconds": 5.46
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-ultra-550b-a55b:free",
+    "task": "translation",
+    "language": "French",
+    "source": "Si j'avais su, je serais venu plus tôt.",
+    "output": {
+      "translation": "If I had known, I would have come earlier.",
+      "translation_hints": [
+        {
+          "words": [
+            "Si"
+          ],
+          "hint": "If"
+        },
+        {
+          "words": [
+            "j'"
+          ],
+          "hint": "I"
+        },
+        {
+          "words": [
+            "avais"
+          ],
+          "hint": "had"
+        },
+        {
+          "words": [
+            "su"
+          ],
+          "hint": "known"
+        },
+        {
+          "words": [
+            "je"
+          ],
+          "hint": "I"
+        },
+        {
+          "words": [
+            "serais"
+          ],
+          "hint": "would have"
+        },
+        {
+          "words": [
+            "venu"
+          ],
+          "hint": "come"
+        },
+        {
+          "words": [
+            "plus"
+          ],
+          "hint": "earlier"
+        },
+        {
+          "words": [
+            "tôt"
+          ],
+          "hint": ""
+        }
+      ]
+    },
+    "responses": [
+      {
+        "status_code": 200,
+        "model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "provider": "Nvidia",
+        "usage": {
+          "prompt_tokens": 1146,
+          "completion_tokens": 157,
+          "total_tokens": 1303,
+          "cost": 0,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0,
+            "upstream_inference_prompt_cost": 0,
+            "upstream_inference_completions_cost": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "choices": [
+          {
+            "finish_reason": "tool_calls",
+            "content": null,
+            "tool_calls": [
+              {
+                "type": "function",
+                "index": 0,
+                "id": "call-6e64d996-ec15-4c31-8435-48dd6189d94a",
+                "function": {
+                  "name": "final_result",
+                  "arguments": "{\"translation\": \"If I had known, I would have come earlier.\", \"translation_hints\": [{\"words\": [\"Si\"], \"hint\": \"If\"}, {\"words\": [\"j'\"], \"hint\": \"I\"}, {\"words\": [\"avais\"], \"hint\": \"had\"}, {\"words\": [\"su\"], \"hint\": \"known\"}, {\"words\": [\"je\"], \"hint\": \"I\"}, {\"words\": [\"serais\"], \"hint\": \"would have\"}, {\"words\": [\"venu\"], \"hint\": \"come\"}, {\"words\": [\"plus\"], \"hint\": \"earlier\"}, {\"words\": [\"tôt\"], \"hint\": \"\"}]}"
+                }
+              }
+            ]
+          }
+        ],
+        "error": null
+      }
+    ],
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "returned_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 1303,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.16
+      }
+    ],
+    "seconds": 3.83
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-ultra-550b-a55b:free",
+    "task": "translation",
+    "language": "Italian",
+    "source": "Non vedo l'ora di rivederti.",
+    "output": {
+      "translation": "I can't wait to see you again.",
+      "translation_hints": [
+        {
+          "words": [
+            "Non",
+            "vedo",
+            "l'",
+            "ora"
+          ],
+          "hint": "I can't wait"
+        },
+        {
+          "words": [
+            "di"
+          ],
+          "hint": "to"
+        },
+        {
+          "words": [
+            "rivederti"
+          ],
+          "hint": "see you again"
+        }
+      ]
+    },
+    "responses": [
+      {
+        "status_code": 200,
+        "model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "provider": "Nvidia",
+        "usage": {
+          "prompt_tokens": 1146,
+          "completion_tokens": 106,
+          "total_tokens": 1252,
+          "cost": 0,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0,
+            "upstream_inference_prompt_cost": 0,
+            "upstream_inference_completions_cost": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "choices": [
+          {
+            "finish_reason": "tool_calls",
+            "content": null,
+            "tool_calls": [
+              {
+                "type": "function",
+                "index": 0,
+                "id": "call-6e43d475-f935-4040-a8ae-c0e4b23b46cc",
+                "function": {
+                  "name": "final_result",
+                  "arguments": "{\n    \"translation\": \"I can't wait to see you again.\",\n    \"translation_hints\": [\n      { \"words\": [\"Non\", \"vedo\", \"l'\", \"ora\"], \"hint\": \"I can't wait\" },\n      { \"words\": [\"di\"], \"hint\": \"to\" },\n      { \"words\": [\"rivederti\"], \"hint\": \"see you again\" }\n    ]\n  }"
+                }
+              }
+            ]
+          }
+        ],
+        "error": null
+      }
+    ],
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "returned_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 1252,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.11
+      }
+    ],
+    "seconds": 3.19
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-ultra-550b-a55b:free",
+    "task": "translation",
+    "language": "Spanish",
+    "source": "Se me olvidaron las llaves en casa.",
+    "output": {
+      "translation": "I forgot the keys at home.",
+      "translation_hints": [
+        {
+          "words": [
+            "Se",
+            "me",
+            "olvidaron"
+          ],
+          "hint": "I forgot"
+        },
+        {
+          "words": [
+            "las",
+            "llaves"
+          ],
+          "hint": "the keys"
+        },
+        {
+          "words": [
+            "en"
+          ],
+          "hint": "at"
+        },
+        {
+          "words": [
+            "casa"
+          ],
+          "hint": "home"
+        }
+      ]
+    },
+    "responses": [
+      {
+        "status_code": 200,
+        "model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "provider": "Nvidia",
+        "usage": {
+          "prompt_tokens": 1145,
+          "completion_tokens": 99,
+          "total_tokens": 1244,
+          "cost": 0,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0,
+            "upstream_inference_prompt_cost": 0,
+            "upstream_inference_completions_cost": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "choices": [
+          {
+            "finish_reason": "tool_calls",
+            "content": null,
+            "tool_calls": [
+              {
+                "type": "function",
+                "index": 0,
+                "id": "call-49574a48-a61d-4446-832d-1c3f81a24daa",
+                "function": {
+                  "name": "final_result",
+                  "arguments": "{\"translation\": \"I forgot the keys at home.\", \"translation_hints\": [{\"words\": [\"Se\", \"me\", \"olvidaron\"], \"hint\": \"I forgot\"}, {\"words\": [\"las\", \"llaves\"], \"hint\": \"the keys\"}, {\"words\": [\"en\"], \"hint\": \"at\"}, {\"words\": [\"casa\"], \"hint\": \"home\"}]}"
+                }
+              }
+            ]
+          }
+        ],
+        "error": null
+      }
+    ],
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "returned_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 1244,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.1
+      }
+    ],
+    "seconds": 3.71
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-ultra-550b-a55b:free",
+    "task": "translation",
+    "language": "English",
+    "source": "She had been waiting for an hour when the train finally arrived.",
+    "output": {
+      "translation": "She had been waiting for an hour when the train finally arrived.",
+      "translation_hints": [
+        {
+          "words": [
+            "She"
+          ],
+          "hint": "She"
+        },
+        {
+          "words": [
+            "had",
+            "been",
+            "waiting"
+          ],
+          "hint": "had been waiting"
+        },
+        {
+          "words": [
+            "for"
+          ],
+          "hint": "for"
+        },
+        {
+          "words": [
+            "an"
+          ],
+          "hint": "an"
+        },
+        {
+          "words": [
+            "hour"
+          ],
+          "hint": "hour"
+        },
+        {
+          "words": [
+            "when"
+          ],
+          "hint": "when"
+        },
+        {
+          "words": [
+            "the"
+          ],
+          "hint": "the"
+        },
+        {
+          "words": [
+            "train"
+          ],
+          "hint": "train"
+        },
+        {
+          "words": [
+            "finally"
+          ],
+          "hint": "finally"
+        },
+        {
+          "words": [
+            "arrived"
+          ],
+          "hint": "arrived"
+        }
+      ],
+      "context_influence": "No surrounding context provided; the sentence stands alone as a complete narrative clause.",
+      "error_flag": false
+    },
+    "responses": [
+      {
+        "status_code": 200,
+        "model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "provider": "Nvidia",
+        "usage": {
+          "prompt_tokens": 1148,
+          "completion_tokens": 205,
+          "total_tokens": 1353,
+          "cost": 0,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0,
+            "upstream_inference_prompt_cost": 0,
+            "upstream_inference_completions_cost": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "choices": [
+          {
+            "finish_reason": "tool_calls",
+            "content": null,
+            "tool_calls": [
+              {
+                "type": "function",
+                "index": 0,
+                "id": "call-068c61c0-83d7-4815-8369-62d50d09a646",
+                "function": {
+                  "name": "final_result",
+                  "arguments": "{\"translation\": \"She had been waiting for an hour when the train finally arrived.\", \"translation_hints\": [{\"words\": [\"She\"], \"hint\": \"She\"}, {\"words\": [\"had\", \"been\", \"waiting\"], \"hint\": \"had been waiting\"}, {\"words\": [\"for\"], \"hint\": \"for\"}, {\"words\": [\"an\"], \"hint\": \"an\"}, {\"words\": [\"hour\"], \"hint\": \"hour\"}, {\"words\": [\"when\"], \"hint\": \"when\"}, {\"words\": [\"the\"], \"hint\": \"the\"}, {\"words\": [\"train\"], \"hint\": \"train\"}, {\"words\": [\"finally\"], \"hint\": \"finally\"}, {\"words\": [\"arrived\"], \"hint\": \"arrived\"}], \"context_influence\": \"No surrounding context provided; the sentence stands alone as a complete narrative clause.\", \"error_flag\": false}"
+                }
+              }
+            ]
+          }
+        ],
+        "error": null
+      }
+    ],
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "returned_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 1353,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.1
+      }
+    ],
+    "seconds": 4.76
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-ultra-550b-a55b:free",
+    "task": "metadata",
+    "language": "French",
+    "source": "Si j'avais su, je serais venu plus tôt.",
+    "output": {
+      "title": "Si j'avais su, je serais venu plus tôt.",
+      "difficulty_level": "B2",
+      "language": "French",
+      "author": null,
+      "category": null
+    },
+    "responses": [
+      {
+        "status_code": 200,
+        "model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "provider": "Nvidia",
+        "usage": {
+          "prompt_tokens": 637,
+          "completion_tokens": 67,
+          "total_tokens": 704,
+          "cost": 0,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0,
+            "upstream_inference_prompt_cost": 0,
+            "upstream_inference_completions_cost": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "choices": [
+          {
+            "finish_reason": "tool_calls",
+            "content": null,
+            "tool_calls": [
+              {
+                "type": "function",
+                "index": 0,
+                "id": "call-9e59e0ee-2ecb-4994-9c3c-8c16294af1a0",
+                "function": {
+                  "name": "final_result",
+                  "arguments": "{\n      \"title\": \"Si j'avais su, je serais venu plus tôt.\",\n      \"difficulty_level\": \"B2\",\n      \"language\": \"French\",\n      \"author\": null,\n      \"category\": null\n    }"
+                }
+              }
+            ]
+          }
+        ],
+        "error": null
+      }
+    ],
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "returned_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 704,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.1
+      }
+    ],
+    "seconds": 2.04
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-ultra-550b-a55b:free",
+    "task": "practice",
+    "language": "Spanish",
+    "source": [
+      "llave",
+      "casa",
+      "olvidar"
+    ],
+    "output": {
+      "sentences": [
+        {
+          "sentence": "Olvidé mi llave dentro de la casa.",
+          "translation": "I forgot my key inside the house.",
+          "translation_hints": [
+            {
+              "words": [
+                "Olvidé"
+              ],
+              "hint": "I forgot"
+            },
+            {
+              "words": [
+                "mi"
+              ],
+              "hint": "my"
+            },
+            {
+              "words": [
+                "llave"
+              ],
+              "hint": "key"
+            },
+            {
+              "words": [
+                "dentro"
+              ],
+              "hint": "inside"
+            },
+            {
+              "words": [
+                "de"
+              ],
+              "hint": "of"
+            },
+            {
+              "words": [
+                "la"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "casa"
+              ],
+              "hint": "house"
+            }
+          ]
+        },
+        {
+          "sentence": "No quiero olvidar la llave de la casa.",
+          "translation": "I don't want to forget the house key.",
+          "translation_hints": [
+            {
+              "words": [
+                "No"
+              ],
+              "hint": "Not"
+            },
+            {
+              "words": [
+                "quiero"
+              ],
+              "hint": "I want"
+            },
+            {
+              "words": [
+                "olvidar"
+              ],
+              "hint": "to forget"
+            },
+            {
+              "words": [
+                "la"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "llave"
+              ],
+              "hint": "key"
+            },
+            {
+              "words": [
+                "de"
+              ],
+              "hint": "of"
+            },
+            {
+              "words": [
+                "la"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "casa"
+              ],
+              "hint": "house"
+            }
+          ]
+        },
+        {
+          "sentence": "La llave de la casa es antigua.",
+          "translation": "The house key is old.",
+          "translation_hints": [
+            {
+              "words": [
+                "La"
+              ],
+              "hint": "The"
+            },
+            {
+              "words": [
+                "llave"
+              ],
+              "hint": "key"
+            },
+            {
+              "words": [
+                "de"
+              ],
+              "hint": "of"
+            },
+            {
+              "words": [
+                "la"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "casa"
+              ],
+              "hint": "house"
+            },
+            {
+              "words": [
+                "es"
+              ],
+              "hint": "is"
+            },
+            {
+              "words": [
+                "antigua"
+              ],
+              "hint": "old"
+            }
+          ]
+        },
+        {
+          "sentence": "Tengo una llave nueva para la casa.",
+          "translation": "I have a new key for the house.",
+          "translation_hints": [
+            {
+              "words": [
+                "Tengo"
+              ],
+              "hint": "I have"
+            },
+            {
+              "words": [
+                "una"
+              ],
+              "hint": "a"
+            },
+            {
+              "words": [
+                "llave"
+              ],
+              "hint": "key"
+            },
+            {
+              "words": [
+                "nueva"
+              ],
+              "hint": "new"
+            },
+            {
+              "words": [
+                "para"
+              ],
+              "hint": "for"
+            },
+            {
+              "words": [
+                "la"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "casa"
+              ],
+              "hint": "house"
+            }
+          ]
+        },
+        {
+          "sentence": "Si olvido la llave, no puedo entrar a la casa.",
+          "translation": "If I forget the key, I cannot enter the house.",
+          "translation_hints": [
+            {
+              "words": [
+                "Si"
+              ],
+              "hint": "If"
+            },
+            {
+              "words": [
+                "olvido"
+              ],
+              "hint": "I forget"
+            },
+            {
+              "words": [
+                "la"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "llave"
+              ],
+              "hint": "key"
+            },
+            {
+              "words": [
+                "no"
+              ],
+              "hint": "not"
+            },
+            {
+              "words": [
+                "puedo"
+              ],
+              "hint": "I can"
+            },
+            {
+              "words": [
+                "entrar"
+              ],
+              "hint": "enter"
+            },
+            {
+              "words": [
+                "a"
+              ],
+              "hint": "to"
+            },
+            {
+              "words": [
+                "la"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "casa"
+              ],
+              "hint": "house"
+            }
+          ]
+        }
+      ]
+    },
+    "responses": [
+      {
+        "status_code": 200,
+        "model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "provider": "Nvidia",
+        "usage": {
+          "prompt_tokens": 1011,
+          "completion_tokens": 739,
+          "total_tokens": 1750,
+          "cost": 0,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0,
+            "upstream_inference_prompt_cost": 0,
+            "upstream_inference_completions_cost": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "choices": [
+          {
+            "finish_reason": "tool_calls",
+            "content": null,
+            "tool_calls": [
+              {
+                "type": "function",
+                "index": 0,
+                "id": "call-789714ec-7842-449c-9546-068fffcf6db4",
+                "function": {
+                  "name": "final_result",
+                  "arguments": "{\"sentences\": [{\"sentence\": \"Olvidé mi llave dentro de la casa.\", \"translation\": \"I forgot my key inside the house.\", \"translation_hints\": [{\"words\": [\"Olvidé\"], \"hint\": \"I forgot\"}, {\"words\": [\"mi\"], \"hint\": \"my\"}, {\"words\": [\"llave\"], \"hint\": \"key\"}, {\"words\": [\"dentro\"], \"hint\": \"inside\"}, {\"words\": [\"de\"], \"hint\": \"of\"}, {\"words\": [\"la\"], \"hint\": \"the\"}, {\"words\": [\"casa\"], \"hint\": \"house\"}]}, {\"sentence\": \"No quiero olvidar la llave de la casa.\", \"translation\": \"I don't want to forget the house key.\", \"translation_hints\": [{\"words\": [\"No\"], \"hint\": \"Not\"}, {\"words\": [\"quiero\"], \"hint\": \"I want\"}, {\"words\": [\"olvidar\"], \"hint\": \"to forget\"}, {\"words\": [\"la\"], \"hint\": \"the\"}, {\"words\": [\"llave\"], \"hint\": \"key\"}, {\"words\": [\"de\"], \"hint\": \"of\"}, {\"words\": [\"la\"], \"hint\": \"the\"}, {\"words\": [\"casa\"], \"hint\": \"house\"}]}, {\"sentence\": \"La llave de la casa es antigua.\", \"translation\": \"The house key is old.\", \"translation_hints\": [{\"words\": [\"La\"], \"hint\": \"The\"}, {\"words\": [\"llave\"], \"hint\": \"key\"}, {\"words\": [\"de\"], \"hint\": \"of\"}, {\"words\": [\"la\"], \"hint\": \"the\"}, {\"words\": [\"casa\"], \"hint\": \"house\"}, {\"words\": [\"es\"], \"hint\": \"is\"}, {\"words\": [\"antigua\"], \"hint\": \"old\"}]}, {\"sentence\": \"Tengo una llave nueva para la casa.\", \"translation\": \"I have a new key for the house.\", \"translation_hints\": [{\"words\": [\"Tengo\"], \"hint\": \"I have\"}, {\"words\": [\"una\"], \"hint\": \"a\"}, {\"words\": [\"llave\"], \"hint\": \"key\"}, {\"words\": [\"nueva\"], \"hint\": \"new\"}, {\"words\": [\"para\"], \"hint\": \"for\"}, {\"words\": [\"la\"], \"hint\": \"the\"}, {\"words\": [\"casa\"], \"hint\": \"house\"}]}, {\"sentence\": \"Si olvido la llave, no puedo entrar a la casa.\", \"translation\": \"If I forget the key, I cannot enter the house.\", \"translation_hints\": [{\"words\": [\"Si\"], \"hint\": \"If\"}, {\"words\": [\"olvido\"], \"hint\": \"I forget\"}, {\"words\": [\"la\"], \"hint\": \"the\"}, {\"words\": [\"llave\"], \"hint\": \"key\"}, {\"words\": [\"no\"], \"hint\": \"not\"}, {\"words\": [\"puedo\"], \"hint\": \"I can\"}, {\"words\": [\"entrar\"], \"hint\": \"enter\"}, {\"words\": [\"a\"], \"hint\": \"to\"}, {\"words\": [\"la\"], \"hint\": \"the\"}, {\"words\": [\"casa\"], \"hint\": \"house\"}]}]}"
+                }
+              }
+            ]
+          }
+        ],
+        "error": null
+      }
+    ],
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "returned_model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 1750,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.11
+      }
+    ],
+    "seconds": 25.29
+  },
+  {
+    "model": "openrouter:dots-studio/dots-3-note-preview:free",
+    "task": "translation",
+    "language": "German",
+    "source": "Ich stehe früh auf, weil der Zug um sieben Uhr abfährt.",
+    "output": {
+      "translation": "I get up early because the train leaves at seven o'clock.",
+      "translation_hints": [
+        {
+          "words": [
+            "Ich"
+          ],
+          "hint": "I"
+        },
+        {
+          "words": [
+            "stehe",
+            "früh",
+            "auf"
+          ],
+          "hint": "get up"
+        },
+        {
+          "words": [
+            "weil"
+          ],
+          "hint": "because"
+        },
+        {
+          "words": [
+            "der",
+            "Zug"
+          ],
+          "hint": "the train"
+        },
+        {
+          "words": [
+            "abfährt"
+          ],
+          "hint": "leaves"
+        },
+        {
+          "words": [
+            "um"
+          ],
+          "hint": "at"
+        },
+        {
+          "words": [
+            "sieben"
+          ],
+          "hint": "seven"
+        },
+        {
+          "words": [
+            "Uhr"
+          ],
+          "hint": "o'clock"
+        }
+      ]
+    },
+    "responses": [
+      {
+        "status_code": 200,
+        "model": "dots-studio/dots-3-note-preview:free",
+        "provider": "AtlasCloud",
+        "usage": {
+          "prompt_tokens": 730,
+          "completion_tokens": 171,
+          "total_tokens": 901,
+          "cost": 0,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0,
+            "upstream_inference_prompt_cost": 0,
+            "upstream_inference_completions_cost": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "content": "{\n  \"translation\": \"I get up early because the train leaves at seven o'clock.\",\n  \"translation_hints\": [\n    { \"hint\": \"I\", \"words\": [\"Ich\"] },\n    { \"hint\": \"get up\", \"words\": [\"stehe\", \"früh\", \"auf\"] },\n    { \"hint\": \"because\", \"words\": [\"weil\"] },\n    { \"hint\": \"the train\", \"words\": [\"der\", \"Zug\"] },\n    { \"hint\": \"leaves\", \"words\": [\"abfährt\"] },\n    { \"hint\": \"at\", \"words\": [\"um\"] },\n    { \"hint\": \"seven\", \"words\": [\"sieben\"] },\n    { \"hint\": \"o'clock\", \"words\": [\"Uhr\"] }\n  ]\n}",
+            "tool_calls": null
+          }
+        ],
+        "error": null
+      }
+    ],
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "dots-studio/dots-3-note-preview:free",
+        "returned_model": "dots-studio/dots-3-note-preview:free",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 901,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.22
+      }
+    ],
+    "seconds": 3.01
+  },
+  {
+    "model": "openrouter:dots-studio/dots-3-note-preview:free",
+    "task": "translation",
+    "language": "French",
+    "source": "Si j'avais su, je serais venu plus tôt.",
+    "output": {
+      "translation": "If I had known, I would have come earlier.",
+      "translation_hints": [
+        {
+          "words": [
+            "Si"
+          ],
+          "hint": "If"
+        },
+        {
+          "words": [
+            "j'avais",
+            "su"
+          ],
+          "hint": "I had known"
+        },
+        {
+          "words": [
+            "je",
+            "serais",
+            "venu"
+          ],
+          "hint": "I would have come"
+        },
+        {
+          "words": [
+            "plus",
+            "tôt"
+          ],
+          "hint": "earlier"
+        }
+      ]
+    },
+    "responses": [
+      {
+        "status_code": 200,
+        "model": "dots-studio/dots-3-note-preview:free",
+        "provider": "AtlasCloud",
+        "usage": {
+          "prompt_tokens": 728,
+          "completion_tokens": 111,
+          "total_tokens": 839,
+          "cost": 0,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 512,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0,
+            "upstream_inference_prompt_cost": 0,
+            "upstream_inference_completions_cost": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "content": "{\n  \"translation\": \"If I had known, I would have come earlier.\",\n  \"translation_hints\": [\n    { \"hint\": \"If\", \"words\": [\"Si\"] },\n    { \"hint\": \"I had known\", \"words\": [\"j'avais\", \"su\"] },\n    { \"hint\": \"I would have come\", \"words\": [\"je\", \"serais\", \"venu\"] },\n    { \"hint\": \"earlier\", \"words\": [\"plus\", \"tôt\"] }\n  ]\n}",
+            "tool_calls": null
+          }
+        ],
+        "error": null
+      }
+    ],
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "dots-studio/dots-3-note-preview:free",
+        "returned_model": "dots-studio/dots-3-note-preview:free",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 839,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.1
+      }
+    ],
+    "seconds": 2.19
+  },
+  {
+    "model": "openrouter:dots-studio/dots-3-note-preview:free",
+    "task": "translation",
+    "language": "Italian",
+    "source": "Non vedo l'ora di rivederti.",
+    "output": {
+      "translation": "I can't wait to see you again.",
+      "translation_hints": [
+        {
+          "words": [
+            "Non"
+          ],
+          "hint": "I"
+        },
+        {
+          "words": [
+            "vedo",
+            "l'ora"
+          ],
+          "hint": "can't wait"
+        },
+        {
+          "words": [
+            "di"
+          ],
+          "hint": "to"
+        },
+        {
+          "words": [
+            "rivederti"
+          ],
+          "hint": "see"
+        }
+      ]
+    },
+    "responses": [
+      {
+        "status_code": 200,
+        "model": "dots-studio/dots-3-note-preview:free",
+        "provider": "AtlasCloud",
+        "usage": {
+          "prompt_tokens": 724,
+          "completion_tokens": 96,
+          "total_tokens": 820,
+          "cost": 0,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 512,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0,
+            "upstream_inference_prompt_cost": 0,
+            "upstream_inference_completions_cost": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "content": "{\n  \"translation\": \"I can't wait to see you again.\",\n  \"translation_hints\": [\n    { \"hint\": \"I\", \"words\": [\"Non\"] },\n    { \"hint\": \"can't wait\", \"words\": [\"vedo\", \"l'ora\"] },\n    { \"hint\": \"to\", \"words\": [\"di\"] },\n    { \"hint\": \"see\", \"words\": [\"rivederti\"] }\n  ]\n}",
+            "tool_calls": null
+          }
+        ],
+        "error": null
+      }
+    ],
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "dots-studio/dots-3-note-preview:free",
+        "returned_model": "dots-studio/dots-3-note-preview:free",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 820,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.1
+      }
+    ],
+    "seconds": 2.17
+  },
+  {
+    "model": "openrouter:dots-studio/dots-3-note-preview:free",
+    "task": "translation",
+    "language": "Spanish",
+    "source": "Se me olvidaron las llaves en casa.",
+    "output": {
+      "translation": "I forgot the keys at home.",
+      "translation_hints": [
+        {
+          "words": [
+            "Se"
+          ],
+          "hint": "I"
+        },
+        {
+          "words": [
+            "olvidaron"
+          ],
+          "hint": "forgot"
+        },
+        {
+          "words": [
+            "las"
+          ],
+          "hint": "the"
+        },
+        {
+          "words": [
+            "llaves"
+          ],
+          "hint": "keys"
+        },
+        {
+          "words": [
+            "en"
+          ],
+          "hint": "at"
+        },
+        {
+          "words": [
+            "casa"
+          ],
+          "hint": "home"
+        }
+      ]
+    },
+    "responses": [
+      {
+        "status_code": 200,
+        "model": "dots-studio/dots-3-note-preview:free",
+        "provider": "AtlasCloud",
+        "usage": {
+          "prompt_tokens": 724,
+          "completion_tokens": 118,
+          "total_tokens": 842,
+          "cost": 0,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0,
+            "upstream_inference_prompt_cost": 0,
+            "upstream_inference_completions_cost": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "content": "{\n  \"translation\": \"I forgot the keys at home.\",\n  \"translation_hints\": [\n    { \"hint\": \"I\", \"words\": [\"Se\"] },\n    { \"hint\": \"forgot\", \"words\": [\"olvidaron\"] },\n    { \"hint\": \"the\", \"words\": [\"las\"] },\n    { \"hint\": \"keys\", \"words\": [\"llaves\"] },\n    { \"hint\": \"at\", \"words\": [\"en\"] },\n    { \"hint\": \"home\", \"words\": [\"casa\"] }\n  ]\n}",
+            "tool_calls": null
+          }
+        ],
+        "error": null
+      }
+    ],
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "dots-studio/dots-3-note-preview:free",
+        "returned_model": "dots-studio/dots-3-note-preview:free",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 842,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.1
+      }
+    ],
+    "seconds": 2.42
+  },
+  {
+    "model": "openrouter:dots-studio/dots-3-note-preview:free",
+    "task": "translation",
+    "language": "English",
+    "source": "She had been waiting for an hour when the train finally arrived.",
+    "output": {
+      "translation": "She had been waiting for an hour when the train finally arrived.",
+      "translation_hints": [
+        {
+          "words": [
+            "She"
+          ],
+          "hint": "She"
+        },
+        {
+          "words": [
+            "had",
+            "been",
+            "waiting"
+          ],
+          "hint": "had been waiting"
+        },
+        {
+          "words": [
+            "for"
+          ],
+          "hint": "for"
+        },
+        {
+          "words": [
+            "an",
+            "hour"
+          ],
+          "hint": "an hour"
+        },
+        {
+          "words": [
+            "when"
+          ],
+          "hint": "when"
+        },
+        {
+          "words": [
+            "the",
+            "train",
+            "finally",
+            "arrived"
+          ],
+          "hint": "the train finally arrived"
+        }
+      ]
+    },
+    "responses": [
+      {
+        "status_code": 200,
+        "model": "dots-studio/dots-3-note-preview:free",
+        "provider": "AtlasCloud",
+        "usage": {
+          "prompt_tokens": 726,
+          "completion_tokens": 145,
+          "total_tokens": 871,
+          "cost": 0,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0,
+            "upstream_inference_prompt_cost": 0,
+            "upstream_inference_completions_cost": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "content": "{\n  \"translation\": \"She had been waiting for an hour when the train finally arrived.\",\n  \"translation_hints\": [\n    { \"hint\": \"She\", \"words\": [\"She\"] },\n    { \"hint\": \"had been waiting\", \"words\": [\"had\", \"been\", \"waiting\"] },\n    { \"hint\": \"for\", \"words\": [\"for\"] },\n    { \"hint\": \"an hour\", \"words\": [\"an\", \"hour\"] },\n    { \"hint\": \"when\", \"words\": [\"when\"] },\n    { \"hint\": \"the train finally arrived\", \"words\": [\"the\", \"train\", \"finally\", \"arrived\"] }\n  ]\n}",
+            "tool_calls": null
+          }
+        ],
+        "error": null
+      }
+    ],
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "dots-studio/dots-3-note-preview:free",
+        "returned_model": "dots-studio/dots-3-note-preview:free",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 871,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.1
+      }
+    ],
+    "seconds": 2.89
+  },
+  {
+    "model": "openrouter:dots-studio/dots-3-note-preview:free",
+    "task": "metadata",
+    "language": "French",
+    "source": "Si j'avais su, je serais venu plus tôt.",
+    "output": {
+      "title": "If I Had Known",
+      "difficulty_level": "A2",
+      "language": "French",
+      "author": null,
+      "category": null
+    },
+    "responses": [
+      {
+        "status_code": 200,
+        "model": "dots-studio/dots-3-note-preview:free",
+        "provider": "AtlasCloud",
+        "usage": {
+          "prompt_tokens": 238,
+          "completion_tokens": 41,
+          "total_tokens": 279,
+          "cost": 0,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0,
+            "upstream_inference_prompt_cost": 0,
+            "upstream_inference_completions_cost": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "content": "{\n  \"author\": null,\n  \"category\": null,\n  \"difficulty_level\": \"A2\",\n  \"language\": \"French\",\n  \"title\": \"If I Had Known\"\n}",
+            "tool_calls": null
+          }
+        ],
+        "error": null
+      }
+    ],
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "dots-studio/dots-3-note-preview:free",
+        "returned_model": "dots-studio/dots-3-note-preview:free",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 279,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.1
+      }
+    ],
+    "seconds": 1.78
+  },
+  {
+    "model": "openrouter:dots-studio/dots-3-note-preview:free",
+    "task": "practice",
+    "language": "Spanish",
+    "source": [
+      "llave",
+      "casa",
+      "olvidar"
+    ],
+    "output": {
+      "sentences": [
+        {
+          "sentence": "No quiero olvidar mi llave de la casa.",
+          "translation": "I don't want to forget my key to the house.",
+          "translation_hints": [
+            {
+              "words": [
+                "No"
+              ],
+              "hint": "No"
+            },
+            {
+              "words": [
+                "quiero"
+              ],
+              "hint": "quiero"
+            },
+            {
+              "words": [
+                "olvidar"
+              ],
+              "hint": "want to"
+            },
+            {
+              "words": [
+                "mi"
+              ],
+              "hint": "my"
+            },
+            {
+              "words": [
+                "llave"
+              ],
+              "hint": "key"
+            },
+            {
+              "words": [
+                "de la"
+              ],
+              "hint": "to the"
+            },
+            {
+              "words": [
+                "casa"
+              ],
+              "hint": "house"
+            }
+          ]
+        },
+        {
+          "sentence": "La llave de la casa está bajo la alfombra.",
+          "translation": "The key to the house is under the rug.",
+          "translation_hints": [
+            {
+              "words": [
+                "La"
+              ],
+              "hint": "The"
+            },
+            {
+              "words": [
+                "llave"
+              ],
+              "hint": "key"
+            },
+            {
+              "words": [
+                "de la"
+              ],
+              "hint": "to the"
+            },
+            {
+              "words": [
+                "casa"
+              ],
+              "hint": "house"
+            },
+            {
+              "words": [
+                "está"
+              ],
+              "hint": "is"
+            },
+            {
+              "words": [
+                "bajo la"
+              ],
+              "hint": "under the"
+            },
+            {
+              "words": [
+                "alfombra"
+              ],
+              "hint": "rug"
+            }
+          ]
+        },
+        {
+          "sentence": "Si olvidas la llave, no podrás entrar a la casa.",
+          "translation": "If you forget the key, you won't be able to enter the house.",
+          "translation_hints": [
+            {
+              "words": [
+                "Si"
+              ],
+              "hint": "If"
+            },
+            {
+              "words": [
+                "olvidas"
+              ],
+              "hint": "you forget"
+            },
+            {
+              "words": [
+                "la"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "llave"
+              ],
+              "hint": "key"
+            },
+            {
+              "words": [
+                "no podrás"
+              ],
+              "hint": "you won't be able to"
+            },
+            {
+              "words": [
+                "entrar"
+              ],
+              "hint": "enter"
+            },
+            {
+              "words": [
+                "a la"
+              ],
+              "hint": "to the"
+            },
+            {
+              "words": [
+                "casa"
+              ],
+              "hint": "house"
+            }
+          ]
+        },
+        {
+          "sentence": "Mi hermana siempre olvida su llave en la casa.",
+          "translation": "My sister always forgets her key in the house.",
+          "translation_hints": [
+            {
+              "words": [
+                "Mi"
+              ],
+              "hint": "My"
+            },
+            {
+              "words": [
+                "hermana"
+              ],
+              "hint": "sister"
+            },
+            {
+              "words": [
+                "siempre"
+              ],
+              "hint": "always"
+            },
+            {
+              "words": [
+                "olvida"
+              ],
+              "hint": "forgets"
+            },
+            {
+              "words": [
+                "su"
+              ],
+              "hint": "her"
+            },
+            {
+              "words": [
+                "llave"
+              ],
+              "hint": "key"
+            },
+            {
+              "words": [
+                "en la"
+              ],
+              "hint": "in the"
+            },
+            {
+              "words": [
+                "casa"
+              ],
+              "hint": "house"
+            }
+          ]
+        },
+        {
+          "sentence": "Encuentra la llave y abre la puerta de la casa.",
+          "translation": "Find the key and open the door of the house.",
+          "translation_hints": [
+            {
+              "words": [
+                "Encuentra"
+              ],
+              "hint": "Find"
+            },
+            {
+              "words": [
+                "la"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "llave"
+              ],
+              "hint": "key"
+            },
+            {
+              "words": [
+                "y"
+              ],
+              "hint": "and"
+            },
+            {
+              "words": [
+                "abre"
+              ],
+              "hint": "open"
+            },
+            {
+              "words": [
+                "puerta de la"
+              ],
+              "hint": "the door of the"
+            },
+            {
+              "words": [
+                "casa"
+              ],
+              "hint": "house"
+            }
+          ]
+        }
+      ]
+    },
+    "responses": [
+      {
+        "status_code": 200,
+        "model": "dots-studio/dots-3-note-preview:free",
+        "provider": "AtlasCloud",
+        "usage": {
+          "prompt_tokens": 541,
+          "completion_tokens": 864,
+          "total_tokens": 1405,
+          "cost": 0,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0,
+            "upstream_inference_prompt_cost": 0,
+            "upstream_inference_completions_cost": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "content": "{\n  \"sentences\": [\n    {\n      \"sentence\": \"No quiero olvidar mi llave de la casa.\",\n      \"translation\": \"I don't want to forget my key to the house.\",\n      \"translation_hints\": [\n        { \"hint\": \"No\", \"words\": [\"No\"] },\n        { \"hint\": \"quiero\", \"words\": [\"quiero\"] },\n        { \"hint\": \"want to\", \"words\": [\"olvidar\"] },\n        { \"hint\": \"my\", \"words\": [\"mi\"] },\n        { \"hint\": \"key\", \"words\": [\"llave\"] },\n        { \"hint\": \"to the\", \"words\": [\"de la\"] },\n        { \"hint\": \"house\", \"words\": [\"casa\"] }\n      ]\n    },\n    {\n      \"sentence\": \"La llave de la casa está bajo la alfombra.\",\n      \"translation\": \"The key to the house is under the rug.\",\n      \"translation_hints\": [\n        { \"hint\": \"The\", \"words\": [\"La\"] },\n        { \"hint\": \"key\", \"words\": [\"llave\"] },\n        { \"hint\": \"to the\", \"words\": [\"de la\"] },\n        { \"hint\": \"house\", \"words\": [\"casa\"] },\n        { \"hint\": \"is\", \"words\": [\"está\"] },\n        { \"hint\": \"under the\", \"words\": [\"bajo la\"] },\n        { \"hint\": \"rug\", \"words\": [\"alfombra\"] }\n      ]\n    },\n    {\n      \"sentence\": \"Si olvidas la llave, no podrás entrar a la casa.\",\n      \"translation\": \"If you forget the key, you won't be able to enter the house.\",\n      \"translation_hints\": [\n        { \"hint\": \"If\", \"words\": [\"Si\"] },\n        { \"hint\": \"you forget\", \"words\": [\"olvidas\"] },\n        { \"hint\": \"the\", \"words\": [\"la\"] },\n        { \"hint\": \"key\", \"words\": [\"llave\"] },\n        { \"hint\": \"you won't be able to\", \"words\": [\"no podrás\"] },\n        { \"hint\": \"enter\", \"words\": [\"entrar\"] },\n        { \"hint\": \"to the\", \"words\": [\"a la\"] },\n        { \"hint\": \"house\", \"words\": [\"casa\"] }\n      ]\n    },\n    {\n      \"sentence\": \"Mi hermana siempre olvida su llave en la casa.\",\n      \"translation\": \"My sister always forgets her key in the house.\",\n      \"translation_hints\": [\n        { \"hint\": \"My\", \"words\": [\"Mi\"] },\n        { \"hint\": \"sister\", \"words\": [\"hermana\"] },\n        { \"hint\": \"always\", \"words\": [\"siempre\"] },\n        { \"hint\": \"forgets\", \"words\": [\"olvida\"] },\n        { \"hint\": \"her\", \"words\": [\"su\"] },\n        { \"hint\": \"key\", \"words\": [\"llave\"] },\n        { \"hint\": \"in the\", \"words\": [\"en la\"] },\n        { \"hint\": \"house\", \"words\": [\"casa\"] }\n      ]\n    },\n    {\n      \"sentence\": \"Encuentra la llave y abre la puerta de la casa.\",\n      \"translation\": \"Find the key and open the door of the house.\",\n      \"translation_hints\": [\n        { \"hint\": \"Find\", \"words\": [\"Encuentra\"] },\n        { \"hint\": \"the\", \"words\": [\"la\"] },\n        { \"hint\": \"key\", \"words\": [\"llave\"] },\n        { \"hint\": \"and\", \"words\": [\"y\"] },\n        { \"hint\": \"open\", \"words\": [\"abre\"] },\n        { \"hint\": \"the door of the\", \"words\": [\"puerta de la\"] },\n        { \"hint\": \"house\", \"words\": [\"casa\"] }\n      ]\n    }\n  ]\n}",
+            "tool_calls": null
+          }
+        ],
+        "error": null
+      }
+    ],
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "dots-studio/dots-3-note-preview:free",
+        "returned_model": "dots-studio/dots-3-note-preview:free",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 1405,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.09
+      }
+    ],
+    "seconds": 9.55
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-super-120b-a12b:free",
+    "task": "translation",
+    "language": "German",
+    "source": "Ich stehe früh auf, weil der Zug um sieben Uhr abfährt.",
+    "error": "ModelHTTPError: status_code: 404, model_name: nvidia/nemotron-3-super-120b-a12b:free, error: {'code': 404, 'message': 'Provider returned error', 'provider': 'Nvidia'}",
+    "responses": [
+      {
+        "status_code": 404,
+        "model": null,
+        "provider": null,
+        "usage": null,
+        "choices": [],
+        "error": {
+          "code": 404,
+          "message": "Provider returned error",
+          "provider": "Nvidia"
+        }
+      }
+    ],
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "nvidia/nemotron-3-super-120b-a12b:free",
+        "returned_model": null,
+        "status": "failed",
+        "status_code": 404,
+        "tokens": 0,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.2
+      }
+    ],
+    "seconds": 0.41
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-super-120b-a12b:free",
+    "task": "translation",
+    "language": "French",
+    "source": "Si j'avais su, je serais venu plus tôt.",
+    "error": "ModelHTTPError: status_code: 404, model_name: nvidia/nemotron-3-super-120b-a12b:free, error: {'code': 404, 'message': 'Provider returned error', 'provider': 'Nvidia'}",
+    "responses": [
+      {
+        "status_code": 404,
+        "model": null,
+        "provider": null,
+        "usage": null,
+        "choices": [],
+        "error": {
+          "code": 404,
+          "message": "Provider returned error",
+          "provider": "Nvidia"
+        }
+      }
+    ],
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "nvidia/nemotron-3-super-120b-a12b:free",
+        "returned_model": null,
+        "status": "failed",
+        "status_code": 404,
+        "tokens": 0,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.09
+      }
+    ],
+    "seconds": 0.25
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-super-120b-a12b:free",
+    "task": "translation",
+    "language": "Italian",
+    "source": "Non vedo l'ora di rivederti.",
+    "error": "ModelHTTPError: status_code: 404, model_name: nvidia/nemotron-3-super-120b-a12b:free, error: {'code': 404, 'message': 'Provider returned error', 'provider': 'Nvidia'}",
+    "responses": [
+      {
+        "status_code": 404,
+        "model": null,
+        "provider": null,
+        "usage": null,
+        "choices": [],
+        "error": {
+          "code": 404,
+          "message": "Provider returned error",
+          "provider": "Nvidia"
+        }
+      }
+    ],
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "nvidia/nemotron-3-super-120b-a12b:free",
+        "returned_model": null,
+        "status": "failed",
+        "status_code": 404,
+        "tokens": 0,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.09
+      }
+    ],
+    "seconds": 0.27
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-super-120b-a12b:free",
+    "task": "translation",
+    "language": "Spanish",
+    "source": "Se me olvidaron las llaves en casa.",
+    "error": "ModelHTTPError: status_code: 404, model_name: nvidia/nemotron-3-super-120b-a12b:free, error: {'code': 404, 'message': 'Provider returned error', 'provider': 'Nvidia'}",
+    "responses": [
+      {
+        "status_code": 404,
+        "model": null,
+        "provider": null,
+        "usage": null,
+        "choices": [],
+        "error": {
+          "code": 404,
+          "message": "Provider returned error",
+          "provider": "Nvidia"
+        }
+      }
+    ],
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "nvidia/nemotron-3-super-120b-a12b:free",
+        "returned_model": null,
+        "status": "failed",
+        "status_code": 404,
+        "tokens": 0,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.09
+      }
+    ],
+    "seconds": 0.24
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-super-120b-a12b:free",
+    "task": "translation",
+    "language": "English",
+    "source": "She had been waiting for an hour when the train finally arrived.",
+    "error": "ModelHTTPError: status_code: 404, model_name: nvidia/nemotron-3-super-120b-a12b:free, error: {'code': 404, 'message': 'Provider returned error', 'provider': 'Nvidia'}",
+    "responses": [
+      {
+        "status_code": 404,
+        "model": null,
+        "provider": null,
+        "usage": null,
+        "choices": [],
+        "error": {
+          "code": 404,
+          "message": "Provider returned error",
+          "provider": "Nvidia"
+        }
+      }
+    ],
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "nvidia/nemotron-3-super-120b-a12b:free",
+        "returned_model": null,
+        "status": "failed",
+        "status_code": 404,
+        "tokens": 0,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.1
+      }
+    ],
+    "seconds": 0.29
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-super-120b-a12b:free",
+    "task": "metadata",
+    "language": "French",
+    "source": "Si j'avais su, je serais venu plus tôt.",
+    "error": "ModelHTTPError: status_code: 404, model_name: nvidia/nemotron-3-super-120b-a12b:free, error: {'code': 404, 'message': 'Provider returned error', 'provider': 'Nvidia'}",
+    "responses": [
+      {
+        "status_code": 404,
+        "model": null,
+        "provider": null,
+        "usage": null,
+        "choices": [],
+        "error": {
+          "code": 404,
+          "message": "Provider returned error",
+          "provider": "Nvidia"
+        }
+      }
+    ],
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "nvidia/nemotron-3-super-120b-a12b:free",
+        "returned_model": null,
+        "status": "failed",
+        "status_code": 404,
+        "tokens": 0,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.09
+      }
+    ],
+    "seconds": 0.24
+  },
+  {
+    "model": "openrouter:nvidia/nemotron-3-super-120b-a12b:free",
+    "task": "practice",
+    "language": "Spanish",
+    "source": [
+      "llave",
+      "casa",
+      "olvidar"
+    ],
+    "error": "ModelHTTPError: status_code: 404, model_name: nvidia/nemotron-3-super-120b-a12b:free, error: {'code': 404, 'message': 'Provider returned error', 'provider': 'Nvidia'}",
+    "responses": [
+      {
+        "status_code": 404,
+        "model": null,
+        "provider": null,
+        "usage": null,
+        "choices": [],
+        "error": {
+          "code": 404,
+          "message": "Provider returned error",
+          "provider": "Nvidia"
+        }
+      }
+    ],
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "nvidia/nemotron-3-super-120b-a12b:free",
+        "returned_model": null,
+        "status": "failed",
+        "status_code": 404,
+        "tokens": 0,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 3.19
+      }
+    ],
+    "seconds": 3.42
+  }
+]

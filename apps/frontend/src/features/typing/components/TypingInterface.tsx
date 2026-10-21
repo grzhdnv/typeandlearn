@@ -3,6 +3,7 @@ import {
   For,
   Show,
   createEffect,
+  createMemo,
   createSignal,
   onCleanup,
   onMount,
@@ -18,44 +19,20 @@ import type {
   TypingState,
 } from "../core/types.ts";
 
+import { buildHintSpans, hintAt } from "../core/hints.ts";
+
 interface TypingInterfaceProps {
   targetText: string;
+  sessionKey?: string;
+  disabled?: boolean;
   hints?: { words: string[]; hint: string }[];
   fullTranslation?: string;
+  onContinue?: () => void;
+  continueLabel?: string;
+  onNavigate?: (direction: "previous" | "next") => void;
   onComplete?: (metrics: TypingMetrics) => void;
-  onMetricsUpdate?: (metrics: TypingMetrics) => void;
+  onMetricsUpdate?: (metrics: TypingMetrics | null) => void;
 }
-
-/**
- * Resolves the active word from a cursor offset in the target text.
- */
-const getCurrentWord = (target: string, cursor: number): string => {
-  if (target.length === 0) return "";
-  const isSpace = (char: string) => /\s/.test(char);
-
-  let lastWord = "";
-  let i = 0;
-  while (i < target.length) {
-    while (i < target.length && isSpace(target[i])) {
-      i++;
-    }
-    if (i >= target.length) break;
-
-    const wordStart = i;
-    while (i < target.length && !isSpace(target[i])) {
-      i++;
-    }
-    const wordEnd = i;
-
-    if (wordStart <= cursor) {
-      lastWord = target.slice(wordStart, wordEnd);
-    } else {
-      break;
-    }
-  }
-
-  return lastWord;
-};
 
 /**
  * Keyboard-driven typing surface powered by the pure typing state reducer.
@@ -69,36 +46,42 @@ export const TypingInterface: Component<TypingInterfaceProps> = (props) => {
   let inputRef: HTMLInputElement | undefined;
 
   const dispatch = (action: TypingAction) => {
-    setTypingState((prev) => {
-      const next = typingReducer(prev, action);
-      const metrics = computeSessionMetrics(next);
-      props.onMetricsUpdate?.(metrics);
-
-      if (next.status === "completed" && prev.status !== "completed") {
-        props.onComplete?.(metrics);
-      }
-      return next;
-    });
+    if (props.disabled) return;
+    const previous = typingState();
+    const next = typingReducer(previous, action);
+    if (next === previous) return;
+    setTypingState(next);
+    const metrics = computeSessionMetrics(next);
+    props.onMetricsUpdate?.(action.type === "RESTART" ? null : metrics);
+    if (next.status === "completed" && previous.status !== "completed") {
+      props.onComplete?.(metrics);
+    }
   };
 
+  let lastTargetText = props.targetText;
+  let lastSessionKey = props.sessionKey;
   createEffect(() => {
-    setTypingState(createInitialTypingState(props.targetText));
+    const targetText = props.targetText;
+    const sessionKey = props.sessionKey;
+    if (targetText === lastTargetText && sessionKey === lastSessionKey) return;
+    lastTargetText = targetText;
+    lastSessionKey = sessionKey;
+    setTypingState(createInitialTypingState(targetText));
+    props.onMetricsUpdate?.(null);
     if (inputRef) {
       inputRef.value = "";
       inputRef.focus();
     }
   });
 
-  const currentWord = () =>
-    getCurrentWord(props.targetText, typingState().cursorIndex);
+  createEffect(() => {
+    if (!props.disabled) inputRef?.focus();
+  });
 
-  const currentHintGroup = () => {
-    const word = currentWord();
-    if (!word) return null;
-    const clean = word.replace(/[.,;:!?"'`„“»«]/g, "");
-    const hints = props.hints ?? [];
-    return hints.find((h) => h.words.includes(clean) || h.words.includes(word)) ?? null;
-  };
+  const hintSpans = createMemo(() => buildHintSpans(props.targetText, props.hints ?? []));
+  const currentSpan = () => hintAt(hintSpans(), typingState().cursorIndex);
+  const currentWord = () => currentSpan()?.word ?? "";
+  const currentHintGroup = () => currentSpan()?.group ?? null;
 
   const currentHint = () => {
     const group = currentHintGroup();
@@ -113,16 +96,18 @@ export const TypingInterface: Component<TypingInterfaceProps> = (props) => {
     const group = currentHintGroup();
     if (!group) return false;
 
-    const wordAtIndex = getCurrentWord(props.targetText, index);
-    if (!wordAtIndex) return false;
-    const cleanWordAtIndex = wordAtIndex.replace(/[.,;:!?"'`„“»«]/g, "");
-    return group.words.includes(cleanWordAtIndex) || group.words.includes(wordAtIndex);
+    const span = hintAt(hintSpans(), index);
+    return !!span && index < span.end && span.group === group;
   };
 
   /**
    * Track modifier keys and global shortcuts
    */
   const handleKeyDown = (event: KeyboardEvent) => {
+    if (props.disabled || event.defaultPrevented || event.isComposing) return;
+    const target = event.target;
+    if (target instanceof HTMLElement && target !== inputRef &&
+        target.closest("input, textarea, select, button, a, [contenteditable=true], [role=dialog]")) return;
     if (event.key === "Alt") setOptionPressed(true);
     if (event.key === "Meta") setCommandPressed(true);
 
@@ -194,12 +179,23 @@ export const TypingInterface: Component<TypingInterfaceProps> = (props) => {
         <div class="absolute -inset-4 border-2 border-primary opacity-0 group-focus-within:opacity-10 transition-opacity pointer-events-none"></div>
         {/* The Typing Canvas */}
         <div
-          class="bg-surface-container-lowest border border-outline-variant p-10 min-h-[320px] shadow-sm relative focus-within:border-primary transition-colors cursor-text"
+          class="bg-surface-container-lowest border border-outline-variant p-4 sm:p-10 min-h-[240px] sm:min-h-[320px] shadow-sm relative focus-within:border-primary transition-colors cursor-text"
           id="typing-canvas"
         >
-          <div class="mb-4 pb-2 border-b border-outline-variant/30 text-on-surface-variant font-mono-sm text-mono-sm opacity-60 flex justify-between items-center">
-            <span>Type the text as it appears.</span>
-            <span class="uppercase tracking-tighter">CTRL+R or ESC to restart</span>
+          <div class="mb-4 pb-2 min-h-10 border-b border-outline-variant/30 text-on-surface-variant font-mono-sm text-mono-sm grid grid-cols-[1fr_auto_1fr] gap-2 items-center">
+            <span class="opacity-60">Type the text as it appears.</span>
+            <div class="text-center">
+              <Show when={typingState().status === "completed" && !props.disabled && props.onContinue}>
+                <button
+                  id="sentence-review"
+                  onClick={() => props.onContinue?.()}
+                  class="relative z-20 whitespace-nowrap text-primary border-b border-primary cursor-pointer"
+                >
+                  {props.continueLabel ?? "Enter to continue"}
+                </button>
+              </Show>
+            </div>
+            <span class="uppercase tracking-tighter text-right opacity-60">CTRL+R or ESC to restart</span>
           </div>
 
           {/* Target Text Container */}
@@ -246,6 +242,13 @@ export const TypingInterface: Component<TypingInterfaceProps> = (props) => {
           {/* Hidden Input to capture keystrokes and IME composition */}
           <input
             ref={inputRef}
+            aria-label="Type the displayed text"
+            disabled={props.disabled}
+            onPaste={(e) => e.preventDefault()}
+            onDrop={(e) => e.preventDefault()}
+            onBeforeInput={(e) => {
+              if (e.inputType === "insertFromPaste" || e.inputType === "insertFromDrop") e.preventDefault();
+            }}
             onInput={(e) => {
               const val = e.currentTarget.value;
               if (val.length > 0 && !typingState().isComposing) {
@@ -258,6 +261,23 @@ export const TypingInterface: Component<TypingInterfaceProps> = (props) => {
               }
             }}
             onKeyDown={(e) => {
+              if ((e.key === "[" || e.key === "]") && props.onNavigate &&
+                  !e.isComposing && !e.ctrlKey && !e.metaKey && !e.altKey &&
+                  typingState().targetGraphemes[typingState().cursorIndex] !== e.key) {
+                e.preventDefault();
+                e.stopPropagation();
+                if (!e.repeat) props.onNavigate(e.key === "[" ? "previous" : "next");
+                return;
+              }
+              if (e.key === "Enter" && !e.isComposing) {
+                e.preventDefault();
+                if (typingState().status === "completed" && props.onContinue) {
+                  e.stopPropagation();
+                  if (!e.repeat) props.onContinue();
+                  return;
+                }
+                dispatch({ type: "KEY_DOWN", char: "\n", timestampMs: Date.now() });
+              }
               if (e.key === "Backspace") {
                 e.preventDefault();
                 dispatch({

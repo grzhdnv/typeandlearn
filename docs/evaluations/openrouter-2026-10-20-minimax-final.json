@@ -1,0 +1,911 @@
+[
+  {
+    "model": "openrouter:minimax/minimax-m3.1-flash:free",
+    "task": "translation",
+    "language": "German",
+    "source": "Ich stehe früh auf, weil der Zug um sieben Uhr abfährt.",
+    "output": {
+      "translation": "I get up early because the train leaves at seven o'clock.",
+      "translation_hints": [
+        {
+          "words": [
+            "Ich"
+          ],
+          "hint": "I"
+        },
+        {
+          "words": [
+            "stehe",
+            "auf"
+          ],
+          "hint": "get up"
+        },
+        {
+          "words": [
+            "früh"
+          ],
+          "hint": "early"
+        },
+        {
+          "words": [
+            "weil"
+          ],
+          "hint": "because"
+        },
+        {
+          "words": [
+            "der",
+            "Zug"
+          ],
+          "hint": "the train"
+        },
+        {
+          "words": [
+            "um"
+          ],
+          "hint": "at"
+        },
+        {
+          "words": [
+            "sieben",
+            "Uhr"
+          ],
+          "hint": "seven o'clock"
+        },
+        {
+          "words": [
+            "abfährt"
+          ],
+          "hint": "leaves"
+        }
+      ]
+    },
+    "responses": [
+      {
+        "status_code": 200,
+        "model": "minimax/minimax-m3.1-flash:free",
+        "provider": "Minimax",
+        "usage": {
+          "prompt_tokens": 1109,
+          "completion_tokens": 184,
+          "total_tokens": 1293,
+          "cost": 0,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 184,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0,
+            "upstream_inference_prompt_cost": 0,
+            "upstream_inference_completions_cost": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 80,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "content": "{\"translation\":\"I get up early because the train leaves at seven o'clock.\",\"translation_hints\":[{\"words\":[\"Ich\"],\"hint\":\"I\"},{\"words\":[\"stehe\",\"auf\"],\"hint\":\"get up\"},{\"words\":[\"früh\"],\"hint\":\"early\"},{\"words\":[\"weil\"],\"hint\":\"because\"},{\"words\":[\"der\",\"Zug\"],\"hint\":\"the train\"},{\"words\":[\"um\"],\"hint\":\"at\"},{\"words\":[\"sieben\",\"Uhr\"],\"hint\":\"seven o'clock\"},{\"words\":[\"abfährt\"],\"hint\":\"leaves\"}]}",
+            "tool_calls": null
+          }
+        ],
+        "error": null
+      }
+    ],
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "minimax/minimax-m3.1-flash:free",
+        "returned_model": "minimax/minimax-m3.1-flash:free",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 1293,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.35
+      }
+    ],
+    "seconds": 2.19
+  },
+  {
+    "model": "openrouter:minimax/minimax-m3.1-flash:free",
+    "task": "translation",
+    "language": "French",
+    "source": "Si j'avais su, je serais venu plus tôt.",
+    "output": {
+      "translation": "If I had known, I would have come earlier.",
+      "translation_hints": [
+        {
+          "words": [
+            "Si"
+          ],
+          "hint": "If"
+        },
+        {
+          "words": [
+            "j'avais",
+            "su"
+          ],
+          "hint": "had known"
+        },
+        {
+          "words": [
+            "je"
+          ],
+          "hint": "I"
+        },
+        {
+          "words": [
+            "serais",
+            "venu"
+          ],
+          "hint": "would have come"
+        },
+        {
+          "words": [
+            "plus",
+            "tôt"
+          ],
+          "hint": "earlier"
+        }
+      ]
+    },
+    "responses": [
+      {
+        "status_code": 200,
+        "model": "minimax/minimax-m3.1-flash:free",
+        "provider": "Minimax",
+        "usage": {
+          "prompt_tokens": 1103,
+          "completion_tokens": 178,
+          "total_tokens": 1281,
+          "cost": 0,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 1068,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0,
+            "upstream_inference_prompt_cost": 0,
+            "upstream_inference_completions_cost": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 106,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "content": "{\"translation\":\"If I had known, I would have come earlier.\",\"translation_hints\":[{\"words\":[\"Si\"],\"hint\":\"If\"},{\"words\":[\"j'avais\",\"su\"],\"hint\":\"had known\"},{\"words\":[\"je\"],\"hint\":\"I\"},{\"words\":[\"serais\",\"venu\"],\"hint\":\"would have come\"},{\"words\":[\"plus\",\"tôt\"],\"hint\":\"earlier\"}]}",
+            "tool_calls": null
+          }
+        ],
+        "error": null
+      }
+    ],
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "minimax/minimax-m3.1-flash:free",
+        "returned_model": "minimax/minimax-m3.1-flash:free",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 1281,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.09
+      }
+    ],
+    "seconds": 2.14
+  },
+  {
+    "model": "openrouter:minimax/minimax-m3.1-flash:free",
+    "task": "translation",
+    "language": "Italian",
+    "source": "Non vedo l'ora di rivederti.",
+    "output": {
+      "translation": "I can't wait to see you again.",
+      "translation_hints": [
+        {
+          "words": [
+            "Non",
+            "vedo",
+            "l'ora",
+            "di"
+          ],
+          "hint": "can't wait"
+        },
+        {
+          "words": [
+            "rivederti"
+          ],
+          "hint": "to see you again"
+        }
+      ]
+    },
+    "responses": [
+      {
+        "status_code": 200,
+        "model": "minimax/minimax-m3.1-flash:free",
+        "provider": "Minimax",
+        "usage": {
+          "prompt_tokens": 1102,
+          "completion_tokens": 134,
+          "total_tokens": 1236,
+          "cost": 0,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 1068,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0,
+            "upstream_inference_prompt_cost": 0,
+            "upstream_inference_completions_cost": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 88,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "content": "{\"translation\":\"I can't wait to see you again.\",\"translation_hints\":[{\"words\":[\"Non\",\"vedo\",\"l'ora\",\"di\"],\"hint\":\"can't wait\"},{\"words\":[\"rivederti\"],\"hint\":\"to see you again\"}]}",
+            "tool_calls": null
+          }
+        ],
+        "error": null
+      }
+    ],
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "minimax/minimax-m3.1-flash:free",
+        "returned_model": "minimax/minimax-m3.1-flash:free",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 1236,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.1
+      }
+    ],
+    "seconds": 1.63
+  },
+  {
+    "model": "openrouter:minimax/minimax-m3.1-flash:free",
+    "task": "translation",
+    "language": "Spanish",
+    "source": "Se me olvidaron las llaves en casa.",
+    "output": {
+      "translation": "I forgot the keys at home.",
+      "translation_hints": [
+        {
+          "words": [
+            "Se",
+            "me"
+          ],
+          "hint": "I (reflexive construction)"
+        },
+        {
+          "words": [
+            "olvidaron"
+          ],
+          "hint": "forgot"
+        },
+        {
+          "words": [
+            "las",
+            "llaves"
+          ],
+          "hint": "the keys"
+        },
+        {
+          "words": [
+            "en",
+            "casa"
+          ],
+          "hint": "at home"
+        }
+      ]
+    },
+    "responses": [
+      {
+        "status_code": 200,
+        "model": "minimax/minimax-m3.1-flash:free",
+        "provider": "Minimax",
+        "usage": {
+          "prompt_tokens": 1100,
+          "completion_tokens": 159,
+          "total_tokens": 1259,
+          "cost": 0,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 184,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0,
+            "upstream_inference_prompt_cost": 0,
+            "upstream_inference_completions_cost": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 92,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "content": "{\"translation\":\"I forgot the keys at home.\",\"translation_hints\":[{\"words\":[\"Se\",\"me\"],\"hint\":\"I (reflexive construction)\"},{\"words\":[\"olvidaron\"],\"hint\":\"forgot\"},{\"words\":[\"las\",\"llaves\"],\"hint\":\"the keys\"},{\"words\":[\"en\",\"casa\"],\"hint\":\"at home\"}]}",
+            "tool_calls": null
+          }
+        ],
+        "error": null
+      }
+    ],
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "minimax/minimax-m3.1-flash:free",
+        "returned_model": "minimax/minimax-m3.1-flash:free",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 1259,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.1
+      }
+    ],
+    "seconds": 2.79
+  },
+  {
+    "model": "openrouter:minimax/minimax-m3.1-flash:free",
+    "task": "translation",
+    "language": "English",
+    "source": "She had been waiting for an hour when the train finally arrived.",
+    "output": {
+      "translation": "She had been waiting for an hour when the train finally arrived.",
+      "translation_hints": [
+        {
+          "words": [
+            "She"
+          ],
+          "hint": "She"
+        },
+        {
+          "words": [
+            "had",
+            "been",
+            "waiting"
+          ],
+          "hint": "had been waiting"
+        },
+        {
+          "words": [
+            "for"
+          ],
+          "hint": "for"
+        },
+        {
+          "words": [
+            "an"
+          ],
+          "hint": "an"
+        },
+        {
+          "words": [
+            "hour"
+          ],
+          "hint": "hour"
+        },
+        {
+          "words": [
+            "when"
+          ],
+          "hint": "when"
+        },
+        {
+          "words": [
+            "the"
+          ],
+          "hint": "the"
+        },
+        {
+          "words": [
+            "train"
+          ],
+          "hint": "train"
+        },
+        {
+          "words": [
+            "finally"
+          ],
+          "hint": "finally"
+        },
+        {
+          "words": [
+            "arrived"
+          ],
+          "hint": "arrived"
+        }
+      ]
+    },
+    "responses": [
+      {
+        "status_code": 200,
+        "model": "minimax/minimax-m3.1-flash:free",
+        "provider": "Minimax",
+        "usage": {
+          "prompt_tokens": 1104,
+          "completion_tokens": 158,
+          "total_tokens": 1262,
+          "cost": 0,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 1068,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0,
+            "upstream_inference_prompt_cost": 0,
+            "upstream_inference_completions_cost": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 49,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "content": "{\"translation\":\"She had been waiting for an hour when the train finally arrived.\",\"translation_hints\":[{\"words\":[\"She\"],\"hint\":\"She\"},{\"words\":[\"had\",\"been\",\"waiting\"],\"hint\":\"had been waiting\"},{\"words\":[\"for\"],\"hint\":\"for\"},{\"words\":[\"an\"],\"hint\":\"an\"},{\"words\":[\"hour\"],\"hint\":\"hour\"},{\"words\":[\"when\"],\"hint\":\"when\"},{\"words\":[\"the\"],\"hint\":\"the\"},{\"words\":[\"train\"],\"hint\":\"train\"},{\"words\":[\"finally\"],\"hint\":\"finally\"},{\"words\":[\"arrived\"],\"hint\":\"arrived\"}]}",
+            "tool_calls": null
+          }
+        ],
+        "error": null
+      }
+    ],
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "minimax/minimax-m3.1-flash:free",
+        "returned_model": "minimax/minimax-m3.1-flash:free",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 1262,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.18
+      }
+    ],
+    "seconds": 1.96
+  },
+  {
+    "model": "openrouter:minimax/minimax-m3.1-flash:free",
+    "task": "metadata",
+    "language": "French",
+    "source": "Si j'avais su, je serais venu plus tôt.",
+    "output": {
+      "title": "Un regret",
+      "difficulty_level": "A1",
+      "language": "French",
+      "author": null,
+      "category": null
+    },
+    "responses": [
+      {
+        "status_code": 200,
+        "model": "minimax/minimax-m3.1-flash:free",
+        "provider": "Minimax",
+        "usage": {
+          "prompt_tokens": 577,
+          "completion_tokens": 75,
+          "total_tokens": 652,
+          "cost": 0,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 186,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0,
+            "upstream_inference_prompt_cost": 0,
+            "upstream_inference_completions_cost": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 50,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "content": "{\"title\":\"Un regret\",\"difficulty_level\":\"A1\",\"language\":\"French\",\"author\":null,\"category\":null}",
+            "tool_calls": null
+          }
+        ],
+        "error": null
+      }
+    ],
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "minimax/minimax-m3.1-flash:free",
+        "returned_model": "minimax/minimax-m3.1-flash:free",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 652,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.1
+      }
+    ],
+    "seconds": 1.53
+  },
+  {
+    "model": "openrouter:minimax/minimax-m3.1-flash:free",
+    "task": "practice",
+    "language": "Spanish",
+    "source": [
+      "llave",
+      "casa",
+      "olvidar"
+    ],
+    "output": {
+      "sentences": [
+        {
+          "sentence": "No puedo entrar porque olvidé la llave.",
+          "translation": "I cannot enter because I forgot the key.",
+          "translation_hints": [
+            {
+              "words": [
+                "No"
+              ],
+              "hint": "not"
+            },
+            {
+              "words": [
+                "puedo"
+              ],
+              "hint": "can"
+            },
+            {
+              "words": [
+                "entrar"
+              ],
+              "hint": "to enter"
+            },
+            {
+              "words": [
+                "porque"
+              ],
+              "hint": "because"
+            },
+            {
+              "words": [
+                "olvidé"
+              ],
+              "hint": "I forgot"
+            },
+            {
+              "words": [
+                "la"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "llave"
+              ],
+              "hint": "key"
+            }
+          ]
+        },
+        {
+          "sentence": "La llave de la casa está sobre la mesa.",
+          "translation": "The house key is on the table.",
+          "translation_hints": [
+            {
+              "words": [
+                "La"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "llave"
+              ],
+              "hint": "key"
+            },
+            {
+              "words": [
+                "de"
+              ],
+              "hint": "of"
+            },
+            {
+              "words": [
+                "la"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "casa"
+              ],
+              "hint": "house"
+            },
+            {
+              "words": [
+                "está"
+              ],
+              "hint": "is"
+            },
+            {
+              "words": [
+                "sobre"
+              ],
+              "hint": "on"
+            },
+            {
+              "words": [
+                "la"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "mesa"
+              ],
+              "hint": "table"
+            }
+          ]
+        },
+        {
+          "sentence": "Mi hermana siempre olvida llevar la llave.",
+          "translation": "My sister always forgets to bring the key.",
+          "translation_hints": [
+            {
+              "words": [
+                "Mi"
+              ],
+              "hint": "my"
+            },
+            {
+              "words": [
+                "hermana"
+              ],
+              "hint": "sister"
+            },
+            {
+              "words": [
+                "siempre"
+              ],
+              "hint": "always"
+            },
+            {
+              "words": [
+                "olvida"
+              ],
+              "hint": "forgets"
+            },
+            {
+              "words": [
+                "llevar"
+              ],
+              "hint": "to bring"
+            },
+            {
+              "words": [
+                "la"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "llave"
+              ],
+              "hint": "key"
+            }
+          ]
+        },
+        {
+          "sentence": "¿Dónde guardaste la llave de la casa?",
+          "translation": "Where did you put the house key?",
+          "translation_hints": [
+            {
+              "words": [
+                "Dónde"
+              ],
+              "hint": "where"
+            },
+            {
+              "words": [
+                "guardaste"
+              ],
+              "hint": "you put"
+            },
+            {
+              "words": [
+                "la"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "llave"
+              ],
+              "hint": "key"
+            },
+            {
+              "words": [
+                "de"
+              ],
+              "hint": "of"
+            },
+            {
+              "words": [
+                "la"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "casa"
+              ],
+              "hint": "house"
+            }
+          ]
+        },
+        {
+          "sentence": "Los niños no pueden salir de la casa porque olvidaron la llave.",
+          "translation": "The children cannot leave the house because they forgot the key.",
+          "translation_hints": [
+            {
+              "words": [
+                "Los"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "niños"
+              ],
+              "hint": "children"
+            },
+            {
+              "words": [
+                "no"
+              ],
+              "hint": "not"
+            },
+            {
+              "words": [
+                "pueden"
+              ],
+              "hint": "can"
+            },
+            {
+              "words": [
+                "salir"
+              ],
+              "hint": "to leave"
+            },
+            {
+              "words": [
+                "de"
+              ],
+              "hint": "from"
+            },
+            {
+              "words": [
+                "la"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "casa"
+              ],
+              "hint": "house"
+            },
+            {
+              "words": [
+                "porque"
+              ],
+              "hint": "because"
+            },
+            {
+              "words": [
+                "olvidaron"
+              ],
+              "hint": "they forgot"
+            },
+            {
+              "words": [
+                "la"
+              ],
+              "hint": "the"
+            },
+            {
+              "words": [
+                "llave"
+              ],
+              "hint": "key"
+            }
+          ]
+        }
+      ]
+    },
+    "responses": [
+      {
+        "status_code": 200,
+        "model": "minimax/minimax-m3.1-flash:free",
+        "provider": "Minimax",
+        "usage": {
+          "prompt_tokens": 978,
+          "completion_tokens": 1051,
+          "total_tokens": 2029,
+          "cost": 0,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 184,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0,
+            "upstream_inference_prompt_cost": 0,
+            "upstream_inference_completions_cost": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 41,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "content": "{\n  \"sentences\": [\n    {\n      \"sentence\": \"No puedo entrar porque olvidé la llave.\",\n      \"translation\": \"I cannot enter because I forgot the key.\",\n      \"translation_hints\": [\n        {\n          \"words\": [\"No\"],\n          \"hint\": \"not\"\n        },\n        {\n          \"words\": [\"puedo\"],\n          \"hint\": \"can\"\n        },\n        {\n          \"words\": [\"entrar\"],\n          \"hint\": \"to enter\"\n        },\n        {\n          \"words\": [\"porque\"],\n          \"hint\": \"because\"\n        },\n        {\n          \"words\": [\"olvidé\"],\n          \"hint\": \"I forgot\"\n        },\n        {\n          \"words\": [\"la\"],\n          \"hint\": \"the\"\n        },\n        {\n          \"words\": [\"llave\"],\n          \"hint\": \"key\"\n        }\n      ]\n    },\n    {\n      \"sentence\": \"La llave de la casa está sobre la mesa.\",\n      \"translation\": \"The house key is on the table.\",\n      \"translation_hints\": [\n        {\n          \"words\": [\"La\"],\n          \"hint\": \"the\"\n        },\n        {\n          \"words\": [\"llave\"],\n          \"hint\": \"key\"\n        },\n        {\n          \"words\": [\"de\"],\n          \"hint\": \"of\"\n        },\n        {\n          \"words\": [\"la\"],\n          \"hint\": \"the\"\n        },\n        {\n          \"words\": [\"casa\"],\n          \"hint\": \"house\"\n        },\n        {\n          \"words\": [\"está\"],\n          \"hint\": \"is\"\n        },\n        {\n          \"words\": [\"sobre\"],\n          \"hint\": \"on\"\n        },\n        {\n          \"words\": [\"la\"],\n          \"hint\": \"the\"\n        },\n        {\n          \"words\": [\"mesa\"],\n          \"hint\": \"table\"\n        }\n      ]\n    },\n    {\n      \"sentence\": \"Mi hermana siempre olvida llevar la llave.\",\n      \"translation\": \"My sister always forgets to bring the key.\",\n      \"translation_hints\": [\n        {\n          \"words\": [\"Mi\"],\n          \"hint\": \"my\"\n        },\n        {\n          \"words\": [\"hermana\"],\n          \"hint\": \"sister\"\n        },\n        {\n          \"words\": [\"siempre\"],\n          \"hint\": \"always\"\n        },\n        {\n          \"words\": [\"olvida\"],\n          \"hint\": \"forgets\"\n        },\n        {\n          \"words\": [\"llevar\"],\n          \"hint\": \"to bring\"\n        },\n        {\n          \"words\": [\"la\"],\n          \"hint\": \"the\"\n        },\n        {\n          \"words\": [\"llave\"],\n          \"hint\": \"key\"\n        }\n      ]\n    },\n    {\n      \"sentence\": \"¿Dónde guardaste la llave de la casa?\",\n      \"translation\": \"Where did you put the house key?\",\n      \"translation_hints\": [\n        {\n          \"words\": [\"Dónde\"],\n          \"hint\": \"where\"\n        },\n        {\n          \"words\": [\"guardaste\"],\n          \"hint\": \"you put\"\n        },\n        {\n          \"words\": [\"la\"],\n          \"hint\": \"the\"\n        },\n        {\n          \"words\": [\"llave\"],\n          \"hint\": \"key\"\n        },\n        {\n          \"words\": [\"de\"],\n          \"hint\": \"of\"\n        },\n        {\n          \"words\": [\"la\"],\n          \"hint\": \"the\"\n        },\n        {\n          \"words\": [\"casa\"],\n          \"hint\": \"house\"\n        }\n      ]\n    },\n    {\n      \"sentence\": \"Los niños no pueden salir de la casa porque olvidaron la llave.\",\n      \"translation\": \"The children cannot leave the house because they forgot the key.\",\n      \"translation_hints\": [\n        {\n          \"words\": [\"Los\"],\n          \"hint\": \"the\"\n        },\n        {\n          \"words\": [\"niños\"],\n          \"hint\": \"children\"\n        },\n        {\n          \"words\": [\"no\"],\n          \"hint\": \"not\"\n        },\n        {\n          \"words\": [\"pueden\"],\n          \"hint\": \"can\"\n        },\n        {\n          \"words\": [\"salir\"],\n          \"hint\": \"to leave\"\n        },\n        {\n          \"words\": [\"de\"],\n          \"hint\": \"from\"\n        },\n        {\n          \"words\": [\"la\"],\n          \"hint\": \"the\"\n        },\n        {\n          \"words\": [\"casa\"],\n          \"hint\": \"house\"\n        },\n        {\n          \"words\": [\"porque\"],\n          \"hint\": \"because\"\n        },\n        {\n          \"words\": [\"olvidaron\"],\n          \"hint\": \"they forgot\"\n        },\n        {\n          \"words\": [\"la\"],\n          \"hint\": \"the\"\n        },\n        {\n          \"words\": [\"llave\"],\n          \"hint\": \"key\"\n        }\n      ]\n    }\n  ]\n}",
+            "tool_calls": null
+          }
+        ],
+        "error": null
+      }
+    ],
+    "calls": [
+      {
+        "provider": "openrouter",
+        "requested_model": "minimax/minimax-m3.1-flash:free",
+        "returned_model": "minimax/minimax-m3.1-flash:free",
+        "status": "succeeded",
+        "status_code": 200,
+        "tokens": 2029,
+        "cost_usd": 0.0,
+        "dispatch_delay_seconds": 0.1
+      }
+    ],
+    "seconds": 6.1
+  }
+]

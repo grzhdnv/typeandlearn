@@ -2,6 +2,9 @@
 
 from typing import Any, Dict, List, Optional
 
+from core.metadata import normalize_optional_metadata
+
+from models.analytics import PracticeSessionRecord
 from models.jobs import BackgroundJobRecord, utc_now
 from models.texts import (
     PracticeSentenceRecord,
@@ -9,8 +12,8 @@ from models.texts import (
     TextRecord,
     WordFrequencyRecord,
 )
-from sqlalchemy import Engine
-from sqlmodel import Session, select
+from sqlalchemy import Engine, delete, text
+from sqlmodel import Session, col, select
 
 
 class TextRepository:
@@ -135,6 +138,239 @@ class TextRepository:
             session.refresh(job)
             return record, job
 
+    def queue_enrichment(
+        self,
+        text_id: int,
+        owner_id: str,
+        *,
+        frequencies: Optional[List[WordFrequencyRecord]] = None,
+        filtering_method: Optional[str] = None,
+    ) -> None:
+        """Commit a text reset and its queue entry together; never duplicate live work."""
+        with Session(self._engine) as session:
+            if self._engine.dialect.name == "sqlite":
+                session.connection().exec_driver_sql("BEGIN IMMEDIATE")
+            elif self._engine.dialect.name == "postgresql":
+                session.execute(
+                    text("SELECT pg_advisory_xact_lock(:text_id)"), {"text_id": text_id}
+                )
+            record = session.exec(
+                select(TextRecord)
+                .where(
+                    TextRecord.id == text_id,
+                    TextRecord.owner_id == owner_id,
+                )
+                .with_for_update()
+            ).first()
+            if record is None:
+                raise IndexError("Text not found")
+            jobs = session.exec(
+                select(BackgroundJobRecord)
+                .where(
+                    BackgroundJobRecord.owner_id == owner_id,
+                    BackgroundJobRecord.text_id == text_id,
+                    BackgroundJobRecord.task_type == "process_text",
+                    BackgroundJobRecord.status.in_(["pending", "leased"]),  # pyright: ignore
+                )
+                .with_for_update()
+            ).all()
+            if any(job.status == "leased" for job in jobs):
+                raise ValueError("Enrichment is already running; wait for it to finish")
+            if frequencies is not None:
+                session.exec(
+                    delete(WordFrequencyRecord).where(
+                        col(WordFrequencyRecord.owner_id) == owner_id,
+                        col(WordFrequencyRecord.text_id) == text_id,
+                    )
+                )
+                session.add_all(frequencies)
+            if filtering_method is not None:
+                options: Dict[str, Any] = dict(
+                    record.intake_options or {"prepared": True, "metadata_done": True}
+                )
+                options.update(
+                    filtering_method=filtering_method,
+                    words_pending=True,
+                    strict_filtering=filtering_method == "llm",
+                )
+                record.intake_options = options
+            record.status = "processing"
+            record.enrichment_stage = "queued"
+            record.error_message = None
+            session.add(record)
+            if jobs:
+                # A manual retry can wake the existing backoff, but keeps its budget.
+                for job in jobs:
+                    job.leased_until = None
+                    session.add(job)
+            else:
+                session.add(
+                    BackgroundJobRecord(
+                        owner_id=owner_id,
+                        text_id=text_id,
+                        task_type="process_text",
+                        payload={"text_id": text_id},
+                    )
+                )
+            session.commit()
+
+    def update_progress(
+        self, text_id: int, owner_id: str, sentence_index: Optional[int] = None
+    ) -> TextRecord:
+        """Update only progress, without overwriting concurrent preparation or metadata."""
+        with Session(self._engine) as session:
+            if self._engine.dialect.name == "sqlite":
+                session.connection().exec_driver_sql("BEGIN IMMEDIATE")
+            record = session.exec(
+                select(TextRecord)
+                .where(
+                    TextRecord.id == text_id,
+                    TextRecord.owner_id == owner_id,
+                )
+                .with_for_update()
+            ).first()
+            if record is None:
+                raise IndexError("Text not found")
+            indices = set(record.completed_sentence_indices or [])
+            if sentence_index is None:
+                indices.clear()
+            elif sentence_index < 0 or sentence_index >= record.total_sentences:
+                raise ValueError("Sentence index is outside the original text")
+            else:
+                indices.add(sentence_index)
+            record.completed_sentence_indices = sorted(indices)
+            record.completed_sentences = len(indices)
+            session.add(record)
+            session.commit()
+            session.refresh(record)
+            return record
+
+    def update_processing_state(
+        self,
+        text_id: int,
+        owner_id: str,
+        status: str,
+        stage: str,
+        error: Optional[str] = None,
+    ) -> TextRecord:
+        with Session(self._engine) as session:
+            record = session.exec(
+                select(TextRecord)
+                .where(
+                    TextRecord.id == text_id,
+                    TextRecord.owner_id == owner_id,
+                )
+                .with_for_update()
+            ).one()
+            record.status, record.enrichment_stage, record.error_message = (
+                status,
+                stage,
+                error,
+            )
+            session.add(record)
+            session.commit()
+            session.refresh(record)
+            return record
+
+    def apply_metadata(
+        self, text_id: int, owner_id: str, values: Dict[str, Any], *, inferred: bool = False
+    ) -> TextRecord:
+        with Session(self._engine) as session:
+            if self._engine.dialect.name == "sqlite":
+                session.connection().exec_driver_sql("BEGIN IMMEDIATE")
+            record = session.exec(
+                select(TextRecord)
+                .where(
+                    TextRecord.id == text_id,
+                    TextRecord.owner_id == owner_id,
+                )
+                .with_for_update()
+            ).one()
+            defaults = {
+                "title": "[Untitled]",
+                "language": "Unknown",
+                "difficulty_level": "Unrated",
+                "author": None,
+                "category": None,
+            }
+            options = dict(record.intake_options or {})
+            missing = options.get("missing_metadata", [])
+            for name in defaults:
+                if name not in values:
+                    continue
+                value = values[name]
+                current = getattr(record, name)
+                if name in {"author", "category"}:
+                    value = normalize_optional_metadata(value)
+                    current = normalize_optional_metadata(current)
+                elif value is None:
+                    continue
+                if not inferred or (name in missing and current == defaults[name]):
+                    setattr(record, name, value)
+            if inferred:
+                options["metadata_done"] = True
+                record.intake_options = options
+            else:
+                # Even explicit edits matching a placeholder must beat inference.
+                options["missing_metadata"] = [
+                    name for name in missing if name not in values
+                ]
+                if record.intake_options is not None:
+                    record.intake_options = options
+            session.add(record)
+            session.commit()
+            session.refresh(record)
+            return record
+
+    def save_preparation(
+        self,
+        text_id: int,
+        owner_id: str,
+        language: str,
+        frequencies: List[WordFrequencyRecord],
+        *,
+        sentences: Optional[List[SentenceRecord]] = None,
+        words_pending: bool = False,
+    ) -> TextRecord:
+        """Commit sentence boundaries and vocabulary checkpoints without replacing progress."""
+        with Session(self._engine) as session:
+            if self._engine.dialect.name == "sqlite":
+                session.connection().exec_driver_sql("BEGIN IMMEDIATE")
+            record = session.exec(
+                select(TextRecord)
+                .where(
+                    TextRecord.id == text_id,
+                    TextRecord.owner_id == owner_id,
+                )
+                .with_for_update()
+            ).one()
+            if record.language != language:
+                raise ValueError("Language changed during preparation; retry enrichment")
+            options = dict(record.intake_options or {})
+            if sentences is not None:
+                if options.get("prepared"):
+                    return record
+                session.add_all(sentences)
+                record.total_sentences = len(sentences)
+                record.word_count = sum(
+                    len(sentence.original_text.split()) for sentence in sentences
+                )
+                record.estimated_time_minutes = max(1, record.word_count // 40)
+                options["prepared"] = True
+            session.exec(
+                delete(WordFrequencyRecord).where(
+                    col(WordFrequencyRecord.owner_id) == owner_id,
+                    col(WordFrequencyRecord.text_id) == text_id,
+                )
+            )
+            session.add_all(frequencies)
+            options["words_pending"] = words_pending
+            record.intake_options = options
+            session.add(record)
+            session.commit()
+            session.refresh(record)
+            return record
+
     def update_text(self, record: TextRecord) -> TextRecord:
         """Update an existing text record in the database."""
         with Session(self._engine) as session:
@@ -202,10 +438,18 @@ class TextRepository:
             session.commit()
 
     def delete_text(self, text_id: int, owner_id: str) -> Optional[TextRecord]:
-        """Delete one text entry from the database by ID and owner ID (SQL cascades sentences)."""
+        """Delete one text entry and its dependent records by ID and owner ID."""
         with Session(self._engine) as session:
             record = self.load_one_text(text_id, owner_id)
             if record is not None:
+                for table in (
+                    SentenceRecord,
+                    PracticeSentenceRecord,
+                    WordFrequencyRecord,
+                    PracticeSessionRecord,
+                    BackgroundJobRecord,
+                ):
+                    session.exec(delete(table).where(col(table.text_id) == text_id, col(table.owner_id) == owner_id))
                 session.delete(record)
                 session.commit()
             return record

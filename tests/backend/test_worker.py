@@ -5,6 +5,8 @@ import sys
 import tempfile
 import unittest
 from unittest import mock
+import threading
+import time
 
 import sqlmodel
 from sqlmodel import Session
@@ -37,6 +39,33 @@ class WorkerTests(unittest.TestCase):
             lease_duration=10,
         )
 
+    def test_heartbeat_prevents_reclaim_during_slow_processing(self):
+        with Session(self.engine) as session:
+            job = self.job_repo.enqueue(session, "owner_1", "process_text", {}, text_id=101)
+            session.commit()
+            job_id = job.id
+            assert job_id is not None
+        worker = Worker(self.job_repo, self.text_service, lease_duration=1)
+        entered, release = threading.Event(), threading.Event()
+        def slow(*args, **kwargs):
+            entered.set()
+            release.wait(5)
+            kwargs["ensure_lease"]()
+        self.text_service.process_pending_text.side_effect = slow
+        thread = threading.Thread(target=worker.process_one_job)
+        thread.start()
+        try:
+            self.assertTrue(entered.wait(5))
+            time.sleep(1.2)
+            self.assertIsNone(self.job_repo.claim_next_job("competitor"))
+        finally:
+            release.set()
+            thread.join(5)
+        self.assertFalse(thread.is_alive())
+        completed = self.job_repo.load_job(job_id)
+        assert completed is not None
+        self.assertEqual(completed.status, "completed")
+
     def test_process_no_job(self) -> None:
         """When queue is empty, process_one_job returns False."""
         processed = self.worker.process_one_job()
@@ -60,7 +89,10 @@ class WorkerTests(unittest.TestCase):
         self.assertTrue(processed)
 
         # Verify text_service was called
-        self.text_service.process_pending_text.assert_called_once_with(101, "owner_1")
+        self.text_service.process_pending_text.assert_called_once()
+        args, kwargs = self.text_service.process_pending_text.call_args
+        self.assertEqual(args, (101, "owner_1"))
+        self.assertIn("ensure_lease", kwargs)
 
         # Verify job is completed
         completed_job = self.job_repo.load_job(job_id)
@@ -87,7 +119,7 @@ class WorkerTests(unittest.TestCase):
         failed_job = self.job_repo.load_job(job_id)
         assert failed_job is not None
         self.assertEqual(failed_job.status, "pending")  # in retry backoff
-        self.assertIn("Unknown task type", failed_job.error_message or "")
+        self.assertIn("ValueError", failed_job.error_message or "")
 
     def test_process_job_exception_handling(self) -> None:
         """Worker catches service exceptions, logs them, and fails the job with backoff."""
@@ -111,7 +143,8 @@ class WorkerTests(unittest.TestCase):
         failed_job = self.job_repo.load_job(job_id)
         assert failed_job is not None
         self.assertEqual(failed_job.status, "pending")  # in retry backoff
-        self.assertIn("NLP pipeline crashed", failed_job.error_message or "")
+        self.assertIn("RuntimeError", failed_job.error_message or "")
+        self.assertNotIn("NLP pipeline crashed", failed_job.error_message or "")
 
     def test_worker_run_single_run(self) -> None:
         """Worker run with single_run=True terminates immediately after loop pass."""

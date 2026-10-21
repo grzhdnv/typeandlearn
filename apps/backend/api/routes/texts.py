@@ -1,6 +1,6 @@
 """HTTP routes for text CRUD and processing workflows with owner scoping."""
 
-from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 
 from app_state import text_service
 from core.auth import get_current_owner_id
@@ -18,8 +18,6 @@ from schemas.texts import (
 from services import preprocessing_service
 
 router = APIRouter(prefix="/texts", tags=["texts"])
-
-
 @router.get("", response_model=TextsResponse)
 def get_texts(owner_id: str = Depends(get_current_owner_id)) -> TextsResponse:
     """Return all stored text entries for the authenticated owner."""
@@ -76,7 +74,6 @@ def get_text(
 @router.post("", response_model=UploadResponse)
 def upload_text(
     payload: TextUploadRequest,
-    background_tasks: BackgroundTasks,
     owner_id: str = Depends(get_current_owner_id),
 ) -> UploadResponse:
     """Generate and persist structured text content from raw input."""
@@ -95,14 +92,14 @@ def upload_text(
             category=payload.category,
             filtering_method=payload.filtering_method,
         )
-        if record.id is not None:
-            background_tasks.add_task(
-                text_service.process_pending_text, record.id, owner_id
-            )
 
-        return UploadResponse(message="Text uploaded successfully", text=text)
+        return UploadResponse(
+            message="Text uploaded successfully", text=text, id=record.id
+        )
     except preprocessing_service.MissingLanguageModelError as error:
         raise HTTPException(status_code=503, detail=str(error)) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
     except HTTPException:
         raise
     except Exception as error:
@@ -208,7 +205,6 @@ def reset_progress(
 @router.post("/{text_id}/regenerate-words", response_model=TextResponse)
 def regenerate_words(
     text_id: str,
-    background_tasks: BackgroundTasks,
     payload: RegenerateWordsRequest | None = None,
     owner_id: str = Depends(get_current_owner_id),
 ) -> TextResponse:
@@ -218,10 +214,6 @@ def regenerate_words(
         data = text_service.regenerate_words(
             text_id, owner_id, filtering_method=method
         )
-        if data.id is not None:
-            background_tasks.add_task(
-                text_service.process_pending_text, data.id, owner_id
-            )
 
         return TextResponse(
             message="Regenerating words and practice sentences...",
@@ -242,16 +234,11 @@ def regenerate_words(
 @router.post("/{text_id}/retry", response_model=TextResponse)
 def retry_enrichment(
     text_id: str,
-    background_tasks: BackgroundTasks,
     owner_id: str = Depends(get_current_owner_id),
 ) -> TextResponse:
     """Retry enrichment processing for a failed or stalled text."""
     try:
         data = text_service.retry_enrichment(text_id, owner_id)
-        if data.id is not None:
-            background_tasks.add_task(
-                text_service.process_pending_text, data.id, owner_id
-            )
         return TextResponse(
             message="Retrying enrichment...",
             data=data,

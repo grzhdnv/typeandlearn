@@ -31,6 +31,16 @@ export function getStatusBadgeInfo(
     };
   }
 
+  if (["preprocessing", "analyzing_metadata", "filtering_words"].includes(normStage)) {
+    return {
+      label: normStage === "preprocessing" ? "PREPARING TEXT..." : normStage === "analyzing_metadata" ? "READING METADATA..." : "FILTERING WORDS...",
+      variant: "queue",
+      isSpinning: true,
+      canRetry: false,
+      description: "Your source is saved. Preparing sentences and vocabulary in the background.",
+    };
+  }
+
   if (normStage === "generating_practice") {
     return {
       label: "GENERATING VOCAB...",
