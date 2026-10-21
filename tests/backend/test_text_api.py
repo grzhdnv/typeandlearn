@@ -341,6 +341,79 @@ class TextApiTests(unittest.TestCase):
         self.assertEqual(self.client.get(path).status_code, 404)
         self.assertEqual(self.client.get("/texts/titles").json()["titles"], [])
 
+    def test_absent_inferred_metadata_is_stored_as_null(self) -> None:
+        self.llm.extract_metadata.return_value = schemas.GeneratedMetadata(
+            title="Test garden", language="German", difficulty_level="A1",
+            author=" None ", category="null",
+        )
+        text_id = self._upload()
+        with sqlmodel.Session(self.engine) as session:
+            record = session.get(text_repository.TextRecord, int(text_id))
+            assert record is not None
+            self.assertIsNone(record.author)
+            self.assertIsNone(record.category)
+        data = self.client.get(f"/texts/{text_id}").json()["data"]
+        self.assertIsNone(data["author"])
+        self.assertIsNone(data["category"])
+
+    def test_legacy_null_metadata_readback_and_explicit_clearing(self) -> None:
+        text_id = self._upload()
+        with sqlmodel.Session(self.engine) as session:
+            record = session.get(text_repository.TextRecord, int(text_id))
+            assert record is not None
+            record.author, record.category = "undefined", "null"
+            session.add(record)
+            session.commit()
+        for data in (
+            self.client.get(f"/texts/{text_id}").json()["data"],
+            self.client.get("/texts/titles").json()["titles"][0],
+            self.client.get("/texts").json()["data"][0],
+        ):
+            self.assertIsNone(data["author"])
+            self.assertIsNone(data["category"])
+        path = f"/texts/{text_id}"
+        response = self.client.patch(path, json={"author": "Anna Null", "category": "Null hypothesis"})
+        self.assertEqual(response.status_code, 200)
+        self.client.patch(path, json={"title": "Edited"})
+        data = self.client.get(path).json()["data"]
+        self.assertEqual(data["author"], "Anna Null")
+        self.assertEqual(data["category"], "Null hypothesis")
+        invalid = self.client.patch(path, json={"category": 123})
+        self.assertEqual(invalid.status_code, 422)
+        for value in ("", " null ", "NONE", "undefined", None):
+            with self.subTest(value=value):
+                self.client.patch(path, json={"author": "Anna", "category": "Story"})
+                response = self.client.patch(path, json={"author": value, "category": value})
+                self.assertEqual(response.status_code, 200)
+                with sqlmodel.Session(self.engine) as session:
+                    record = session.get(text_repository.TextRecord, int(text_id))
+                    assert record is not None
+                    self.assertIsNone(record.author)
+                    self.assertIsNone(record.category)
+
+    def test_placeholder_upload_metadata_remains_eligible_for_inference(self) -> None:
+        response = self.client.post("/texts", json={
+            "text": "Hallo Welt.", "language": "German",
+            "author": "null", "category": " undefined ",
+        })
+        self.assertEqual(response.status_code, 200)
+        text_id = response.json()["id"]
+        with sqlmodel.Session(self.engine) as session:
+            record = session.get(text_repository.TextRecord, text_id)
+            assert record is not None
+            self.assertIsNone(record.category)
+            self.assertIn("category", (record.intake_options or {})["missing_metadata"])
+        self.llm.extract_metadata.return_value = schemas.GeneratedMetadata(
+            title="Garden", language="German", difficulty_level="A1",
+            author="Inferred author", category="Story",
+        )
+        # Explicitly clearing author must still beat later inference.
+        self.client.patch(f"/texts/{text_id}", json={"author": None})
+        self.worker.process_one_job()
+        data = self.client.get(f"/texts/{text_id}").json()["data"]
+        self.assertIsNone(data["author"])
+        self.assertEqual(data["category"], "Story")
+
     def test_failed_translation_is_visible_and_retry_preserves_original(self) -> None:
         self.llm.translate_sentence_async.side_effect = RuntimeError("Provider unavailable")
         text_id = self._upload()

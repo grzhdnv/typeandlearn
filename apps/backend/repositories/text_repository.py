@@ -2,6 +2,8 @@
 
 from typing import Any, Dict, List, Optional
 
+from core.metadata import normalize_optional_metadata
+
 from models.analytics import PracticeSessionRecord
 from models.jobs import BackgroundJobRecord, utc_now
 from models.texts import (
@@ -294,11 +296,17 @@ class TextRepository:
             options = dict(record.intake_options or {})
             missing = options.get("missing_metadata", [])
             for name in defaults:
-                if name in values and values[name] is not None:
-                    if not inferred or (
-                        name in missing and getattr(record, name) == defaults[name]
-                    ):
-                        setattr(record, name, values[name])
+                if name not in values:
+                    continue
+                value = values[name]
+                current = getattr(record, name)
+                if name in {"author", "category"}:
+                    value = normalize_optional_metadata(value)
+                    current = normalize_optional_metadata(current)
+                elif value is None:
+                    continue
+                if not inferred or (name in missing and current == defaults[name]):
+                    setattr(record, name, value)
             if inferred:
                 options["metadata_done"] = True
                 record.intake_options = options

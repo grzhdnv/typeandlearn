@@ -65,3 +65,45 @@ test("saved source stays visible while preparation waits and practice appears on
   await expect(page.locator("#typing-canvas")).toContainText("Le petit chat dort.");
   await expect(page.getByText("Preparing text for practice...", { exact: true })).not.toBeVisible();
 });
+
+
+test("legacy null badges stay hidden and optional metadata can be cleared", async ({ page, request }) => {
+  const upload = await request.post("http://127.0.0.1:18000/texts", {
+    data: { text: "Hallo Welt. Das ist ein Test.", language: "German", title: "Metadata regression" },
+  });
+  expect(upload.ok()).toBe(true);
+  const { id } = await upload.json();
+  await page.route("**/api/texts/titles", async route => {
+    const response = await route.fetch();
+    const payload = await response.json();
+    payload.titles = payload.titles.map((text: { id: string }) =>
+      String(text.id) === String(id) ? { ...text, author: " undefined ", category: "null" } : text);
+    await route.fulfill({ response, json: payload });
+  });
+  await page.goto("/");
+  const card = page.locator(`.text-card-hover:has(a[href="/practice/${id}"])`);
+  await expect(card).toBeVisible();
+  await expect(card.getByText("null", { exact: true })).not.toBeVisible();
+  await expect(card.getByText(/By.*undefined/)).not.toBeVisible();
+  await card.getByTitle("Edit metadata", { exact: true }).click();
+  await expect(card.getByPlaceholder("Author", { exact: true })).toHaveValue("");
+  await expect(card.getByPlaceholder("Category", { exact: true })).toHaveValue("");
+  await page.unroute("**/api/texts/titles");
+  await card.getByPlaceholder("Author", { exact: true }).fill("Anna Null");
+  await card.getByPlaceholder("Category", { exact: true }).fill("Null hypothesis");
+  await card.getByTitle("Done editing", { exact: true }).click();
+  await page.reload();
+  await expect(card).toContainText("Anna Null");
+  await expect(card).toContainText("Null hypothesis");
+  await card.getByTitle("Edit metadata", { exact: true }).click();
+  await card.getByPlaceholder("Author", { exact: true }).fill("");
+  await card.getByPlaceholder("Category", { exact: true }).fill("");
+  await card.getByTitle("Done editing", { exact: true }).click();
+  await page.reload();
+  await expect(card).not.toContainText("Anna Null");
+  await expect(card).not.toContainText("Null hypothesis");
+  const saved = await request.get(`http://127.0.0.1:18000/texts/${id}`);
+  const { data } = await saved.json();
+  expect(data.author).toBeNull();
+  expect(data.category).toBeNull();
+});

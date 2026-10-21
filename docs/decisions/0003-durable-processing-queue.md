@@ -77,3 +77,10 @@ The additive `0006_durable_intake` migration preserves existing rows and sources
 Compatibility rollback retains its nullable columns and refuses downgrade while
 source-only uploads remain unprepared. It does not silently discard queued content.
 See [intake verification](../intake-acceptance-2026-10-20.md).
+
+## PostgreSQL 18 verification — 21 October 2026
+
+Local PostgreSQL 18.6 migrations, concurrent startup, durable queue/recovery and
+provider-reservation concurrency now pass live acceptance. Startup migrations
+serialize with an advisory lock and widen the Alembic version column for existing
+revision IDs. See [acceptance and remaining staging gates](../postgresql-acceptance-2026-10-21.md).

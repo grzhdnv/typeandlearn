@@ -1,6 +1,6 @@
 # TypeAndLearn Roadmap
 
-Updated: 20 October 2026
+Updated: 21 October 2026
 
 This is the current backlog. The production plan records the target architecture;
 checkmarks in the historical issue map do not establish production readiness.
@@ -14,8 +14,8 @@ checkmarks in the historical issue map do not establish production readiness.
   controls, saved original-text completion progress, results, and practice history.
 - Provider routing, owner scoping, backend JWT validation, analytics, and export/delete
   implementations with automated backend coverage.
-- Ruff, Python type checking, frontend type checking and build, 118 backend tests,
-  32 frontend unit tests, and 28 isolated Chromium browser regressions.
+- Ruff, Python type checking, frontend type checking and build, 121 backend tests,
+  32 frontend unit tests, and 29 isolated Chromium browser regressions.
 - Live synthetic comparison across five languages, metadata, exercises, and a real
   DeepSeek fallback flow; shared quotas and approved $0.50/day and $5/month limits.
 
@@ -37,26 +37,33 @@ checkmarks in the historical issue map do not establish production readiness.
 
 - [x] Unify API and standalone worker dispatch through durable leases. SQLite
   concurrency, expired-worker fencing, crash budgets, and queue resumption across
-  owners are verified; live PostgreSQL acceptance remains below. See
-  `queue-acceptance-2026-10-20.md`.
+  owners are verified; local PostgreSQL 18 acceptance is now verified. See
+  `queue-acceptance-2026-10-20.md` and `postgresql-acceptance-2026-10-21.md`.
 - [x] Move intake preprocessing, metadata, and vocabulary filtering off the HTTP
   fast path. Source/job persistence precedes all NLP/provider work; preparation
   checkpoints, user edits/progress, missing-model recovery and browser polling are
   verified. See `intake-acceptance-2026-10-20.md`.
 - [x] Verify local Groq/DeepSeek retry classification, quota reservations, actual-model
-  usage accounting, and daily/monthly spend caps; PostgreSQL acceptance remains below.
+  usage accounting, and daily/monthly spend caps; PostgreSQL reservation concurrency
+  is also verified.
 - [ ] Exercise longer multilingual texts, mobile keyboards, real IME/dead keys,
   screen readers, and more browsers; broaden accessibility checks beyond the
   tested results-dialog focus containment.
 - [ ] Repair and validate shared contract artifacts against the runtime API.
+- [x] Normalize absent author/category metadata, hide legacy null badges and persist
+  explicit clearing without allowing inference to overwrite user edits.
 - [ ] Replace remaining placeholder product copy and clarify empty legacy records.
+- [x] Verify local PostgreSQL 18.6 migrations, startup serialization, queue concurrency,
+  expiry/heartbeat/crash recovery and isolated Compose volume persistence; 10 live
+  tests plus a synthetic PostgreSQL 16-to-18 dump/restore rehearsal. See
+  `postgresql-acceptance-2026-10-21.md`.
 
 ## Before private beta
 
 - [ ] Complete browser authentication/session integration and security review.
 - [ ] Deploy a real protected staging service; current workflow builds/smoke-tests only.
-- [ ] Verify PostgreSQL migrations, lease concurrency, rollback, and backup/restore
-  against a populated database, including the previous application version.
+- [ ] Reproduce PostgreSQL migration/recovery and operational backup/restore on
+  protected staging, including previous-application-version compatibility.
 - [ ] Rehearse provider outages, load, recovery, and observability on staging.
 - [ ] Complete legal/privacy/contact surfaces and sample-text licensing review.
 

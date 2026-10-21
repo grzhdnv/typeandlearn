@@ -12,7 +12,16 @@ import type {
  */
 export const fetchTextTitles = async (): Promise<TextTitle[]> => {
   const json = await getJson<TitlesResponse>("/api/texts/titles");
-  return json.titles ?? [];
+  // Defensive read compatibility with older APIs/records that serialized nulls.
+  const optionalMetadata = (value?: string | null) => {
+    const trimmed = value?.trim();
+    return trimmed && !/^(null|none|undefined)$/i.test(trimmed) ? trimmed : undefined;
+  };
+  return (json.titles ?? []).map(text => ({
+    ...text,
+    author: optionalMetadata(text.author),
+    category: optionalMetadata(text.category),
+  }));
 };
 
 /**

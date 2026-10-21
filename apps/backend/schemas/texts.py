@@ -4,6 +4,8 @@ from typing import List, Optional
 
 from pydantic import BaseModel, ConfigDict, Field
 
+from core.metadata import OptionalMetadata
+
 
 class HintGroup(BaseModel):
     """A group of words and their combined translation hint."""
@@ -53,8 +55,8 @@ class TextData(BaseModel):
     status: str
     language: str = "Unknown"
     difficulty_level: str = "Unrated"
-    author: Optional[str] = None
-    category: Optional[str] = None
+    author: OptionalMetadata = None
+    category: OptionalMetadata = None
     word_count: int = 0
     completed_sentences: int = 0
     total_sentences: int = 0
@@ -94,8 +96,8 @@ class GeneratedMetadata(BaseModel):
     title: str
     difficulty_level: str
     language: str = "Unknown"
-    author: Optional[str] = None
-    category: Optional[str] = None
+    author: OptionalMetadata = None
+    category: OptionalMetadata = None
 
 
 class FilteredWordsResponse(BaseModel):
@@ -116,8 +118,8 @@ class TextUploadRequest(BaseModel):
     language: Optional[str] = None
     title: Optional[str] = None
     difficulty_level: Optional[str] = None
-    author: Optional[str] = None
-    category: Optional[str] = None
+    author: OptionalMetadata = None
+    category: OptionalMetadata = None
     filtering_method: str = "spacy"
 
 
@@ -127,8 +129,8 @@ class TextUpdateRequest(BaseModel):
     title: Optional[str] = None
     language: Optional[str] = None
     difficulty_level: Optional[str] = None
-    author: Optional[str] = None
-    category: Optional[str] = None
+    author: OptionalMetadata = None
+    category: OptionalMetadata = None
 
 
 class RegenerateWordsRequest(BaseModel):
@@ -151,8 +153,8 @@ class TextTitle(BaseModel):
     status: str
     language: str = "Unknown"
     difficulty_level: str = "Unrated"
-    author: Optional[str] = None
-    category: Optional[str] = None
+    author: OptionalMetadata = None
+    category: OptionalMetadata = None
     word_count: int = 0
     completed_sentences: int = 0
     total_sentences: int = 0

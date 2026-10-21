@@ -5,6 +5,7 @@ import logging
 from itertools import groupby
 from typing import Callable, Optional
 
+from core.metadata import normalize_optional_metadata
 from models.cache import compute_sentence_hash
 from models.texts import PracticeSentenceRecord, SentenceRecord, TextRecord, WordFrequencyRecord
 from repositories.cache_repository import CacheRepository, DailyBudgetExceededError
@@ -198,6 +199,8 @@ class TextService:
             raise ValueError("Choose spaCy or AI word filtering")
         if not text.strip():
             raise ValueError("Text cannot be empty")
+        author = normalize_optional_metadata(author)
+        category = normalize_optional_metadata(category)
         provided = {
             "language": final_language,
             "title": title,
@@ -437,13 +440,18 @@ class TextService:
         if record is None or record.id is None:
             raise IndexError("Text not found")
 
-        values = payload.model_dump(exclude_none=True)
-        if "language" in values:
+        # Explicit null/blank clears descriptive fields; omitted fields stay untouched.
+        values = payload.model_dump(exclude_unset=True)
+        values = {name: value for name, value in values.items()
+                  if value is not None or name in {"author", "category"}}
+        if values.get("language") is not None:
             languages = {
                 name.lower(): name
                 for name in ("German", "French", "Italian", "Spanish", "English")
             }
-            language = languages.get(values["language"].strip().lower())
+            language_value = values["language"]
+            assert language_value is not None
+            language = languages.get(language_value.strip().lower())
             if language is None:
                 raise ValueError("Choose German, French, Italian, Spanish, or English")
             values["language"] = language

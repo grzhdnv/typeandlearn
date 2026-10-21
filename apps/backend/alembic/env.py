@@ -4,6 +4,7 @@ from pathlib import Path
 
 from alembic import context
 from sqlmodel import SQLModel
+from sqlalchemy import text
 
 # Ensure apps/backend is in sys.path
 backend_path = Path(__file__).resolve().parents[1]
@@ -38,7 +39,20 @@ def run_migrations_offline() -> None:
 
 def run_migrations_online() -> None:
     """Run migrations in 'online' mode."""
-    with engine.connect() as connection:
+    with engine.begin() as connection:
+        if connection.dialect.name == "postgresql":
+            # Serialize API/worker/CLI startup before Alembic inspects or creates
+            # its version table. Held through the full migration transaction.
+            connection.execute(text("SELECT pg_advisory_xact_lock(76239403)"))
+            # Existing revision IDs exceed Alembic's VARCHAR(32) default. SQLite
+            # did not enforce that limit; keep IDs compatible with existing DBs.
+            connection.execute(text(
+                "CREATE TABLE IF NOT EXISTS alembic_version "
+                "(version_num VARCHAR(128) NOT NULL PRIMARY KEY)"
+            ))
+            connection.execute(text(
+                "ALTER TABLE alembic_version ALTER COLUMN version_num TYPE VARCHAR(128)"
+            ))
         context.configure(
             connection=connection,
             target_metadata=target_metadata,

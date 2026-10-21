@@ -9,9 +9,13 @@ translations, and practice-sentence generation.
 
 Active local v2 prototype. Local repairs verified on 19 October 2026: text intake,
 metadata editing, original and generated practice navigation, reset, saved progress,
-results, and history. The current checks cover 118 backend tests, 32 frontend unit
-tests, and 28 Chromium browser regressions. A live synthetic comparison verified
+results, and history. The current checks cover 121 backend tests, 32 frontend unit
+tests, and 29 Chromium browser regressions. A live synthetic comparison verified
 five languages, metadata, generated exercises, and real DeepSeek fallback.
+
+Absent author/category values are normalized on intake, inference, edits and API
+readback, including legacy serialized nulls. Clearing either field is persisted;
+explicit edits remain protected from later inference.
 
 Core library and original-text practice work without provider credentials when a
 supported language is selected during intake. Automatic metadata, translations,
@@ -23,7 +27,9 @@ but this remains a local development app. API intake, retry, and regeneration no
 use one durable queue consumed by the local embedded worker or standalone workers.
 Upload saves the source and job before any NLP or provider work; preparation and
 metadata/filtering run in the worker with durable checkpoints.
-SQLite concurrency, lease loss, crash budgets, and recovery across owners are tested.
+SQLite and PostgreSQL 18.6 concurrency, lease loss, crash budgets, and recovery
+across owners are tested locally. PostgreSQL startup migrations now serialize
+across API/workers and accept the existing long revision IDs.
 The staging workflow
 builds and smoke-tests containers without deploying a hosted service. Private-beta
 security, cross-browser/accessibility, recovery, and deployment acceptance remain
@@ -40,9 +46,9 @@ was activated in the local profile with user approval: Groq → MiniMax → capp
 DeepSeek. CEFR estimates/exercise style still need review. Repository defaults
 remain Groq/DeepSeek. See the
 [evaluation report](docs/openrouter-evaluation-2026-10-20.md) and
-[session handoff](HANDOFF.md). Next, verify PostgreSQL migrations/lease recovery on
-staging, improve CEFR/exercise quality, and expand realistic multilingual practice
-coverage before private beta.
+[session handoff](HANDOFF.md). Local PostgreSQL 18
+acceptance now passes; reproduce recovery on protected staging, improve CEFR/exercise
+quality, and expand realistic multilingual practice coverage before private beta.
 
 ## Repository layout
 
@@ -123,6 +129,16 @@ npm run dev:backend
 # In another terminal, also from the repository root:
 npm run dev:frontend
 ```
+
+## PostgreSQL development
+
+Compose uses pinned PostgreSQL 18.6 with a new `postgres18_data` volume mounted at
+`/var/lib/postgresql`. Existing PostgreSQL 16 volumes are separate; starting the
+new volume creates a fresh database. The local `npm run dev` flow still defaults
+to SQLite unless `DATABASE_URL` selects PostgreSQL. See the
+[PostgreSQL acceptance and upgrade notes](docs/postgresql-acceptance-2026-10-21.md)
+for the 10 live tests, startup repair, synthetic 16-to-18 rehearsal and remaining
+staging gates.
 
 ## Quality checks
 

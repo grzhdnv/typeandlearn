@@ -1,3 +1,65 @@
+# Resume update — PostgreSQL 18 acceptance, 21 October 2026
+
+This update supersedes older statements that PostgreSQL/Docker are unavailable.
+Read `docs/postgresql-acceptance-2026-10-21.md` first for current database acceptance.
+
+- Shared `postgresql` and `containers` capabilities pass doctor. Docker/Colima works;
+  native PostgreSQL is 18.6. Invoke registered tools through the hub's `bin/` wrappers
+  and select Docker context `colima-hub` explicitly.
+- User requested upgrading TypeAndLearn to PostgreSQL 18 and confirmed there is no
+  valuable database data yet; schema redesign remains possible if justified.
+  Compose now pins PostgreSQL 18.6 by image digest and uses a new `postgres18_data`
+  volume at `/var/lib/postgresql`. Native dev still defaults to SQLite.
+- Live acceptance found Alembic's 32-character version column rejecting existing
+  long revision IDs. The migration environment now widens it to 128 and holds a
+  PostgreSQL transaction advisory lock throughout startup migrations. No learning
+  table redesign or revision-ID rewrite was needed.
+- 10 live PostgreSQL tests pass: populated migrations/guarded rollback/adoption,
+  concurrent startup/claimers/duplicate jobs/requeue, heartbeat/lease expiry and
+  budgets, owner-scoped startup recovery, real API plus two CLI workers, process
+  crash after preparation preserving sentence IDs/progress, provider reservations.
+- Compose persistence across stop/start and a synthetic 16-to-18 dump/restore with
+  sentence/progress readback passed separately. Disposable acceptance resources
+  were cleaned up; no personal database or existing volume was rewritten.
+- Required checks: 121 backend / 32 frontend / 29 Chromium tests, Ruff, Pyright,
+  compilation, frontend types/build. Existing SQLite ResourceWarnings remain.
+- Dedicated PostgreSQL 18 CI job added; remote CI not run. PostgreSQL acceptance
+  and the earlier metadata repair are committed locally on the current branch.
+  No push was requested; leave `opencode.json` alone.
+- Next: CEFR/exercise-quality rubric and labeled synthetic review set, realistic
+  practice/accessibility, then protected staging/security/operational recovery.
+  Local PostgreSQL acceptance does not establish hosted staging or exactly-once
+  processing. See the current roadmap for remaining gates.
+
+---
+
+# Resume update — metadata badge repair, 20 October 2026
+
+Read this update before the older resume section below. The reported category bug
+is fixed in the working tree: read-only inspection confirmed the matching legacy
+record contained the literal string `"null"`; the running development API now returns
+JSON null for it without modifying personal records.
+
+- Shared author/category normalization handles empty strings and case-insensitive
+  `null`, `none`, `undefined` at schema, intake and metadata persistence boundaries.
+  API readback cleans existing records; frontend list reads also tolerate older APIs.
+- Empty/explicit-null edits clear these two fields; omitted fields remain untouched.
+  User-cleared fields are excluded from later inference. Valid labels containing
+  words such as `Null hypothesis` are preserved. Invalid types return validation errors.
+- Full `npm run check`: 121 backend / 32 frontend tests, Ruff, Pyright, compilation,
+  frontend types/build passed. Chromium suite: 29 passed, including legacy badge,
+  editing/reload and clearing coverage. Checks used isolated databases and blank keys.
+  Existing SQLite ResourceWarnings remain a separate finding.
+- Git fetch succeeded; branch remains `codex/restore-local-flow` with no upstream.
+  This session's code/docs are uncommitted; unrelated `opencode.json` is untouched.
+- Local API health is 200. Existing dev services were reused; no duplicate started.
+- PostgreSQL/Docker remain unavailable on this host. The staging workflow only
+  smoke-tests SQLite containers and no hosted staging endpoint is recorded.
+  Live PostgreSQL migrations/concurrency/recovery remain unverified; no tools were
+  installed and no service was deployed. Continue the acceptance/quality backlog below.
+
+---
+
 # Resume here — session handoff, 20 October 2026
 
 The user is stopping for now and will continue in a new session. No automation,
@@ -82,7 +144,7 @@ npm run test:e2e
 Browser configuration supplies temporary services/databases and blank keys itself.
 Never run general checks against the personal development database or active keys.
 
-## Open UI bug reported after handoff
+## UI bug reported after handoff — resolved by update above
 
 The user supplied a screenshot of the first German/A1 library practice card,
 "Hallo Welt. Das ist ein Test.", showing a gray `null` badge below its title.

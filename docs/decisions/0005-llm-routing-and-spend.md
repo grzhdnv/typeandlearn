@@ -104,3 +104,10 @@ lemmas and missing meanings are not guessed. Prompt/cache version is
 configured and reserved through the same governor; other tasks retain 2,048.
 MiniMax's optional routing order is documented, with content-use terms reviewed;
 Groq/DeepSeek remain the defaults. CEFR/style and production acceptance remain open.
+
+## PostgreSQL 18 verification — 21 October 2026
+
+Local PostgreSQL 18.6 migrations, concurrent startup, durable queue/recovery and
+provider-reservation concurrency now pass live acceptance. Startup migrations
+serialize with an advisory lock and widen the Alembic version column for existing
+revision IDs. See [acceptance and remaining staging gates](../postgresql-acceptance-2026-10-21.md).
