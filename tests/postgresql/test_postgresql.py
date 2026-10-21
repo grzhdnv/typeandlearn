@@ -167,13 +167,17 @@ assert not failures, "\\n".join(failures)
             duplicates = list(pool.map(claim, range(16)))
         leases = [j for j in duplicates if j]
         self.assertEqual(len(leases), 1)
-        self.assertEqual(leases[0].id, first_id)
+        # SKIP LOCKED permits either duplicate to win under contention; only
+        # one may be active, and the other must remain claimable afterward.
+        claimed_id = leases[0].id
+        assert claimed_id is not None
+        self.assertIn(claimed_id, {first_id, second_id})
         lease_owner = leases[0].worker_id
         assert lease_owner is not None
-        self.assertTrue(self.repo.complete(first_id, lease_owner))
+        self.assertTrue(self.repo.complete(claimed_id, lease_owner))
         next_job = self.repo.claim_next_job("next")
         assert next_job is not None
-        self.assertEqual(next_job.id, second_id)
+        self.assertEqual({claimed_id, next_job.id}, {first_id, second_id})
 
     def test_expiry_fencing_final_crash_and_retry_budget(self):
         self.head()

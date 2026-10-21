@@ -23,9 +23,12 @@ Read `docs/postgresql-acceptance-2026-10-21.md` first for current database accep
   were cleaned up; no personal database or existing volume was rewritten.
 - Required checks: 121 backend / 32 frontend / 29 Chromium tests, Ruff, Pyright,
   compilation, frontend types/build. Existing SQLite ResourceWarnings remain.
-- Dedicated PostgreSQL 18 CI job added; remote CI not run. PostgreSQL acceptance
-  and the earlier metadata repair are committed locally on the current branch.
-  No push was requested; leave `opencode.json` alone.
+- Branch is pushed with upstream `origin/codex/restore-local-flow`; draft PR #20:
+  https://github.com/grzhdnv/typeandlearn/pull/20. CI runs on the PR; inspect its
+  latest checks before continuing. First run passed every job except a test's
+  unsupported FIFO assumption for duplicate claims. The regression now accepts
+  either SKIP LOCKED winner while requiring one active lease and later claiming
+  the other job. Leave unrelated `opencode.json` alone.
 - Next: CEFR/exercise-quality rubric and labeled synthetic review set, realistic
   practice/accessibility, then protected staging/security/operational recovery.
   Local PostgreSQL acceptance does not establish hosted staging or exactly-once

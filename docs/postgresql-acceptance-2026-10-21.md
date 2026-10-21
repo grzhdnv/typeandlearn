@@ -51,7 +51,10 @@ Each test uses a fresh randomly named schema in a disposable database named
 `typeandlearn_acceptance` and drops only that schema. Other database names are
 rejected. Subprocesses override the application database and blank all provider keys.
 The suite is opt-in locally and has a dedicated PostgreSQL 18 CI service/job; the
-remote CI job has not been run in this session.
+CI runs on [draft PR #20](https://github.com/grzhdnv/typeandlearn/pull/20); use
+its latest checks for remote status. The initial run exposed an unsupported FIFO
+assertion in the duplicate-job test. The corrected test accepts either winner
+while still requiring a single active lease and then claiming the remaining job.
 
 ```sh
 TYPEANDLEARN_TEST_POSTGRES_URL='postgresql+psycopg://USER:PASSWORD@127.0.0.1:PORT/typeandlearn_acceptance' \
